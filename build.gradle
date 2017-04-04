@@ -1,0 +1,58 @@
+plugins {
+    id "de.undercouch.download" version "3.2.0"
+}
+
+def stroomExpressionVersion = '6.0-beta.1-SNAPSHOT'
+
+allprojects {
+    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
+
+    group = 'stroom'
+    version = '6.0-beta.1-SNAPSHOT'
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    repositories {
+        mavenLocal()
+        maven { url "http://repo.maven.apache.org/maven2" }
+    }
+
+    dependencies {
+        testCompile 'junit:junit:4.12'
+        testCompile 'org.mockito:mockito-core:2.0.2-beta'
+    }
+}
+
+project(':stroom-query-api') {
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
+    }
+}
+
+project(':stroom-query-common') {
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
+    }
+}
+
+import de.undercouch.gradle.tasks.download.Download
+task downloadStroomExpression(type: Download) {
+    src "https://github.com/gchq/stroom-expression/releases/download/${stroomExpressionVersion}/stroom-expression-${stroomExpressionVersion}.jar"
+    dest "libs/stroom-expression-${stroomExpressionVersion}.jar"
+    onlyIfNewer true
+}
+check.dependsOn downloadStroomExpression
