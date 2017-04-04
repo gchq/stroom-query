@@ -16,9 +16,3 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
-
-cache:
-  directories:
-  - .autoconf
-  - $HOME/.m2
-  - $HOME/.gradle/wrapper
