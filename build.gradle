@@ -55,4 +55,4 @@ task downloadStroomExpression(type: Download) {
     dest "libs/stroom-expression-${stroomExpressionVersion}.jar"
     onlyIfNewer true
 }
-check.dependsOn downloadStroomExpression
+assemble.dependsOn downloadStroomExpression
