@@ -41,7 +41,7 @@ public final class ResultRequest implements Serializable {
     @XmlElement(name = "key")
     private List<String> openGroups;
     @XmlElement
-    private ResultStyle resultStyle = ResultStyle.TABLE;
+    private ResultStyle resultStyle;
     @XmlElement
     private Boolean fetchData;
 
@@ -64,9 +64,15 @@ public final class ResultRequest implements Serializable {
         this.componentId = componentId;
         this.mappings = mappings;
         this.requestedRange = requestedRange;
+        this.resultStyle = ResultStyle.FLAT;
     }
 
-    public ResultRequest(final String componentId, final List<TableSettings> mappings, final OffsetRange requestedRange, final List<String> openGroups, final ResultStyle resultStyle, final Boolean fetchData) {
+    public ResultRequest(final String componentId,
+                         final List<TableSettings> mappings,
+                         final OffsetRange requestedRange,
+                         final List<String> openGroups,
+                         final ResultStyle resultStyle,
+                         final Boolean fetchData) {
         this.componentId = componentId;
         this.mappings = mappings;
         this.requestedRange = requestedRange;
