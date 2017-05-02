@@ -11,7 +11,7 @@ allprojects {
     apply plugin: 'maven-publish'
 
     group = 'stroom'
-    version = 'v1.0.0-SNAPSHOT.2'
+    version = 'v1.0.0-SNAPSHOT'
 }
 
 ext.stroomExpressionVersion = 'v1.0.0-SNAPSHOT.1'
