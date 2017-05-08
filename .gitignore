@@ -1,7 +1,7 @@
 .gradle/
 **/target
 libs/
-classes
+classes/
 
 # IntelliJ
 # Here we ignore everything and create exceptions for what we want to share.
