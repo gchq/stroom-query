@@ -17,7 +17,6 @@
 package stroom.query.api;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import stroom.query.api.Format.Type;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

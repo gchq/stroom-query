@@ -20,9 +20,7 @@ import stroom.query.api.DocRef;
 import stroom.query.api.TableSettings;
 
 public class TableCoprocessorSettings implements CoprocessorSettings {
-    private static final long serialVersionUID = -4916050910828000494L;
-
-    private TableSettings tableSettings;
+    private final TableSettings tableSettings;
 
     public TableCoprocessorSettings(final TableSettings tableSettings) {
         this.tableSettings = tableSettings;

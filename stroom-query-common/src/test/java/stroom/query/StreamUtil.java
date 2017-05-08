@@ -76,7 +76,7 @@ public final class StreamUtil {
             if (Files.isRegularFile(path)) {
                 try (BufferedReader reader = Files.newBufferedReader(path, charset)) {
                     final char[] buffer = new char[4096];
-                    int len = 0;
+                    int len;
                     while ((len = reader.read(buffer, 0, buffer.length)) != -1) {
                         sb.append(buffer, 0, len);
                     }

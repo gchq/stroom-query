@@ -331,18 +331,15 @@ public class TestTablePayloadHandler {
         final TableResult searchResult = (TableResult) tableComponentResultCreator.create(data,
                 tableResultRequest);
 
-        Assert.assertTrue(searchResult.getTotalResults().intValue() <= 50);
+        Assert.assertTrue(searchResult.getTotalResults() <= 50);
 
-        Object lastValue = null;
+        String lastValue = null;
         for (final Row result : searchResult.getRows()) {
             final String value = result.getValues().get(sortCol);
 
             if (lastValue != null) {
-                if (lastValue instanceof Comparable) {
-                    final Comparable comparable = (Comparable) lastValue;
-                    final int diff = comparable.compareTo(value);
-                    Assert.assertTrue(diff <= 0);
-                }
+                final int diff = lastValue.compareTo(value);
+                Assert.assertTrue(diff <= 0);
             }
             lastValue = value;
         }

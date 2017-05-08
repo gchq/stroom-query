@@ -30,11 +30,6 @@ public class FieldFormatter {
     }
 
     public String format(final Field field, final Object value) {
-        Formatter formatter = formatterCache.get(field);
-        if (formatter == null) {
-            formatter = formatterFactory.create(field);
-            formatterCache.put(field, formatter);
-        }
-        return formatter.format(value);
+        return formatterCache.computeIfAbsent(field, k -> formatterFactory.create(field)).format(value);
     }
 }

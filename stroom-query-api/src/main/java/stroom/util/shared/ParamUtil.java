@@ -26,14 +26,11 @@ public class ParamUtil {
         }
 
         int end = 0;
-        int start = 0;
-
-        start = string.indexOf("${", end);
+        int start = string.indexOf("${", end);
         if (start != -1) {
             end = string.indexOf("}", start);
             if (end != -1) {
-                final String param = string.substring(start + 2, end);
-                return param;
+                return string.substring(start + 2, end);
             }
         }
 
@@ -45,7 +42,7 @@ public class ParamUtil {
             return null;
         }
 
-        final List<String> params = new ArrayList<String>();
+        final List<String> params = new ArrayList<>();
         int end = 0;
         int start = 0;
 

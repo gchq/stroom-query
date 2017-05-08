@@ -23,7 +23,7 @@ import java.util.List;
 public class UnsafePairQueue<K, V> implements PairQueue<K, V> {
     private static final long serialVersionUID = 3205692727588879153L;
 
-    private List<Pair<K, V>> queue = new ArrayList<>();
+    private final List<Pair<K, V>> queue = new ArrayList<>();
 
     public UnsafePairQueue() {
     }

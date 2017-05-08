@@ -28,9 +28,7 @@ public abstract class SimplePartitioner<K2, V2, K3, V3> implements Partitioner<K
 
     public SimplePartitioner() {
         store = new LinkedHashMap<>(10, 0.75F);
-        storeCollector = (key, value) -> {
-            store.computeIfAbsent(key, k -> new ArrayList<>()).add(value);
-        };
+        storeCollector = (key, value) -> store.computeIfAbsent(key, k -> new ArrayList<>()).add(value);
     }
 
     protected void collect(final K2 key, final V2 value) {

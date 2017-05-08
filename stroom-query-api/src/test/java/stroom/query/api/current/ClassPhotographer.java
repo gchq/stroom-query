@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * Only recurses over those classes that match a base package.
  */
 public class ClassPhotographer {
-    private static String newLine = System.getProperty("line.separator");
+    private static final String newLine = System.getProperty("line.separator");
 
     public static String takePortraitOf(Class clazz, String basePackage) {
         Map<Class, List<String>> portrait = new HashMap<>();
@@ -23,8 +23,7 @@ public class ClassPhotographer {
         List<String> flattenedPortrait = flattenPortrait(portrait);
         // If we don't sort the portrait it might have a different order every time.
         flattenedPortrait.sort(String::compareTo);
-        String serialisedPortrait = flattenedPortrait.stream().collect(Collectors.joining(newLine));
-        return serialisedPortrait;
+        return flattenedPortrait.stream().collect(Collectors.joining(newLine));
     }
 
     private static void takePortraitOf(Class clazz, Map<Class, List<String>> portrait, String basePackage) {
@@ -32,7 +31,7 @@ public class ClassPhotographer {
         List<Class> classesForRecursion = new ArrayList<>();
 
         // We don't need to filter by 'public' because `getMethods()` only gets public methods.
-        Arrays.asList(clazz.getMethods()).stream()
+        Arrays.stream(clazz.getMethods())
                 .forEach(method -> {
                             methodSignatures.add(method.toGenericString());
                             classesForRecursion.addAll(getClassesForRecursion(basePackage, method));
@@ -78,7 +77,7 @@ public class ClassPhotographer {
         // Check for parameter types
         Arrays.stream(method.getParameterTypes())
                 .filter(paramType -> paramType.toString().contains(basePackage))
-                .forEach(paramType -> classesForRecursion.add(paramType));
+                .forEach(classesForRecursion::add);
 
         return classesForRecursion;
     }

@@ -82,6 +82,6 @@ public class TestChartResultCreator {
     }
 
     private double getYValue() {
-        return Double.valueOf(Math.random() * 1000D);
+        return Math.random() * 1000D;
     }
 }
