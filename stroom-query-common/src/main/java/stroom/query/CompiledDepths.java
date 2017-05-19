@@ -16,7 +16,7 @@
 
 package stroom.query;
 
-import stroom.query.api.Field;
+import stroom.query.api.v1.Field;
 
 import java.util.List;
 
@@ -60,38 +60,30 @@ public class CompiledDepths {
     }
 
     /**
-     * This is the maximum depth of grouping, 0 based
-     *
-     * @return
+     * @return This is the maximum depth of grouping, 0 based
      */
     public int getMaxGroupDepth() {
         return maxGroupDepth;
     }
 
     /**
-     * This is the maximum depth to output nested rows. We are currently only
+     * @return This is the maximum depth to output nested rows. We are currently only
      * outputting up to group depth but could also output the child ungrouped
      * row if this is one larger - See comment above.
-     *
-     * @return
      */
     public int getMaxDepth() {
         return maxDepth;
     }
 
     /**
-     * An array of all field depths.
-     *
-     * @return
+     * @return An array of all field depths.
      */
     public int[] getDepths() {
         return depths;
     }
 
     /**
-     * True if one of more fields are grouped.
-     *
-     * @return
+     * @return True if one of more fields are grouped.
      */
     public boolean hasGroupBy() {
         return hasGroupBy;

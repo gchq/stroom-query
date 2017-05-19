@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package stroom.query.api;
+package stroom.query.api.v1;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -24,56 +24,56 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 
-@JsonPropertyOrder({"key", "value"})
-@XmlType(name = "Param", propOrder = {"key", "value"})
+@JsonPropertyOrder({"includes", "excludes"})
+@XmlType(name = "Filter", propOrder = {"includes", "excludes"})
 @XmlAccessorType(XmlAccessType.FIELD)
-public final class Param implements Serializable {
-    private static final long serialVersionUID = 9055582579670841979L;
+public final class Filter implements Serializable {
+    private static final long serialVersionUID = 7327802315955158337L;
 
     @XmlElement
-    private String key;
+    private String includes;
     @XmlElement
-    private String value;
+    private String excludes;
 
-    private Param() {
+    private Filter() {
     }
 
-    public Param(final String key, final String value) {
-        this.key = key;
-        this.value = value;
+    public Filter(String includes, String excludes) {
+        this.includes = includes;
+        this.excludes = excludes;
     }
 
-    public String getKey() {
-        return key;
+    public String getIncludes() {
+        return includes;
     }
 
-    public String getValue() {
-        return value;
+    public String getExcludes() {
+        return excludes;
     }
 
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Filter)) return false;
 
-        final Param param = (Param) o;
+        final Filter filter = (Filter) o;
 
-        if (key != null ? !key.equals(param.key) : param.key != null) return false;
-        return value != null ? value.equals(param.value) : param.value == null;
+        if (includes != null ? !includes.equals(filter.includes) : filter.includes != null) return false;
+        return excludes != null ? excludes.equals(filter.excludes) : filter.excludes == null;
     }
 
     @Override
     public int hashCode() {
-        int result = key != null ? key.hashCode() : 0;
-        result = 31 * result + (value != null ? value.hashCode() : 0);
+        int result = includes != null ? includes.hashCode() : 0;
+        result = 31 * result + (excludes != null ? excludes.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return "Param{" +
-                "key='" + key + '\'' +
-                ", value='" + value + '\'' +
+        return "Filter{" +
+                "includes='" + includes + '\'' +
+                ", excludes='" + excludes + '\'' +
                 '}';
     }
 }

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package stroom.datasource.api;
+package stroom.datasource.api.v1;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import stroom.query.api.ExpressionTerm.Condition;
+import stroom.query.api.v1.ExpressionTerm.Condition;
 import stroom.util.shared.HasDisplayValue;
 
 import javax.xml.bind.annotation.XmlAccessType;

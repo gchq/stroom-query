@@ -22,11 +22,6 @@ package stroom.mapreduce;
  * reducer can reduce all items with a matching key. An instance of a
  * partitioner may create tasks for each key so that reducers can be run in
  * parallel either locally or across a cluster.
- *
- * @param <K2>
- * @param <V2>
- * @param <K3>
- * @param <V3>
  */
 public interface Partitioner<K2, V2, K3, V3> extends Reader<K2, V2> {
     void partition();

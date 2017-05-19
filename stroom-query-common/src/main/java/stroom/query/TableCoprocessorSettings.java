@@ -16,8 +16,8 @@
 
 package stroom.query;
 
-import stroom.query.api.DocRef;
-import stroom.query.api.TableSettings;
+import stroom.query.api.v1.DocRef;
+import stroom.query.api.v1.TableSettings;
 
 public class TableCoprocessorSettings implements CoprocessorSettings {
     private static final long serialVersionUID = -4916050910828000494L;

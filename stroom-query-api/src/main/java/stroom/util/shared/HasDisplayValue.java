@@ -24,7 +24,7 @@ package stroom.util.shared;
  */
 public interface HasDisplayValue {
     /**
-     * The string label/description of this object.
+     * @return The string label/description of this object.
      */
     String getDisplayValue();
 }

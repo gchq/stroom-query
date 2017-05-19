@@ -16,7 +16,7 @@
 
 package stroom.query.format;
 
-import stroom.query.api.Field;
+import stroom.query.api.v1.Field;
 
 import java.util.HashMap;
 import java.util.Map;

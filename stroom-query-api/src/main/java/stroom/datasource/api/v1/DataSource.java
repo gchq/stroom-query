@@ -14,34 +14,39 @@
  * limitations under the License.
  */
 
-package stroom.query.api;
+package stroom.datasource.api.v1;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.List;
 
-@JsonPropertyOrder({"uuid"})
-@XmlType(name = "QueryKey", propOrder = {"uuid"})
+@JsonPropertyOrder({"fields"})
+@XmlType(name = "DataSource", propOrder = "fields")
+@XmlRootElement(name = "dataSource")
 @XmlAccessorType(XmlAccessType.FIELD)
-public final class QueryKey implements Serializable {
-    private static final long serialVersionUID = -3222989872764402068L;
+public final class DataSource implements Serializable {
+    private static final long serialVersionUID = 1272545271946712570L;
 
-    @XmlElement
-    private String uuid;
+    @XmlElementWrapper(name = "fields")
+    @XmlElement(name = "field")
+    private List<DataSourceField> fields;
 
-    private QueryKey() {
+    private DataSource() {
     }
 
-    public QueryKey(final String uuid) {
-        this.uuid = uuid;
+    public DataSource(final List<DataSourceField> fields) {
+        this.fields = fields;
     }
 
-    public String getUuid() {
-        return uuid;
+    public List<DataSourceField> getFields() {
+        return fields;
     }
 
     @Override
@@ -49,18 +54,20 @@ public final class QueryKey implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        final QueryKey queryKey = (QueryKey) o;
+        final DataSource that = (DataSource) o;
 
-        return uuid.equals(queryKey.uuid);
+        return fields != null ? fields.equals(that.fields) : that.fields == null;
     }
 
     @Override
     public int hashCode() {
-        return uuid.hashCode();
+        return fields != null ? fields.hashCode() : 0;
     }
 
     @Override
     public String toString() {
-        return uuid;
+        return "DataSource{" +
+                "fields=" + fields +
+                '}';
     }
 }

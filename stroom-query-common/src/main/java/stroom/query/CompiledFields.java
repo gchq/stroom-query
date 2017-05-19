@@ -21,7 +21,7 @@ import stroom.dashboard.expression.ExpressionParser;
 import stroom.dashboard.expression.FieldIndexMap;
 import stroom.dashboard.expression.FunctionFactory;
 import stroom.dashboard.expression.ParamFactory;
-import stroom.query.api.Field;
+import stroom.query.api.v1.Field;
 
 import java.text.ParseException;
 import java.util.ArrayList;

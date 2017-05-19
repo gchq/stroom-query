@@ -16,8 +16,8 @@
 
 package stroom.query;
 
-import stroom.query.api.Result;
-import stroom.query.api.ResultRequest;
+import stroom.query.api.v1.Result;
+import stroom.query.api.v1.ResultRequest;
 
 public interface ResultCreator {
     Result create(Data data, ResultRequest resultRequest);
