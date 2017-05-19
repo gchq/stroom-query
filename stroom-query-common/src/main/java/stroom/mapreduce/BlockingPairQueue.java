@@ -52,7 +52,7 @@ public class BlockingPairQueue<K, V> implements PairQueue<K, V> {
     }
 
     private boolean offer(final Pair<K, V> pair) {
-        boolean success = false;
+        boolean success;
         lock.lock();
         try {
             // We won't allow more than max results to go into the queue.
@@ -76,7 +76,7 @@ public class BlockingPairQueue<K, V> implements PairQueue<K, V> {
 
     @Override
     public Iterator<Pair<K, V>> iterator() {
-        List<Pair<K, V>> local = null;
+        List<Pair<K, V>> local;
         lock.lock();
         try {
             local = queue;

@@ -130,7 +130,6 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
         return toString();
     }
 
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
@@ -139,15 +138,13 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
         final DocRef docRef = (DocRef) o;
 
         if (type != null ? !type.equals(docRef.type) : docRef.type != null) return false;
-        if (uuid != null ? !uuid.equals(docRef.uuid) : docRef.uuid != null) return false;
-        return name != null ? name.equals(docRef.name) : docRef.name == null;
+        return uuid != null ? uuid.equals(docRef.uuid) : docRef.uuid == null;
     }
 
     @Override
     public int hashCode() {
         int result = type != null ? type.hashCode() : 0;
         result = 31 * result + (uuid != null ? uuid.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
     }
 

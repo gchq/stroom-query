@@ -109,7 +109,7 @@ public class ItemMapper extends MapperBase<Object, String[], Key, Item> {
         // key to them.
         if (parentGenerators != null) {
             for (final Generator parent : parentGenerators) {
-                if (parent != null && parent instanceof Generator) {
+                if (parent != null) {
                     parent.addChildKey(key);
                 }
             }

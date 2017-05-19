@@ -21,9 +21,9 @@ import java.io.Serializable;
 public class Item implements Serializable {
     private static final long serialVersionUID = 4371018450667741005L;
 
-    Key key;
-    Object[] values;
-    int depth;
+    final Key key;
+    final Object[] values;
+    final int depth;
 
     public Item(final Key key, final Object[] values, final int depth) {
         this.key = key;

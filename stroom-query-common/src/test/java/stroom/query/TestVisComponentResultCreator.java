@@ -304,7 +304,7 @@ public class TestVisComponentResultCreator {
 //    }
 
     private Data createData() {
-        final Items<Item> items = new ItemsArrayList<Item>();
+        final Items<Item> items = new ItemsArrayList<>();
         int seriesCount = 0;
         for (int i = 100; i < 120; i++) {
             for (int j = 20; j < 30; j++) {

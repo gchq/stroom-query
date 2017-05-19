@@ -86,9 +86,7 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
                 final Field field = fields.get(i);
                 result.add(convert(field, values.get(0)));
             } else {
-                for (final Object obj : values) {
-                    result.add(obj);
-                }
+                result.addAll(values);
             }
             i++;
         }
@@ -162,8 +160,6 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
                             0);
                 }
 
-                final List<List<Object>> values = results;
-
                 final Field parentKey = new FieldBuilder().name(":ParentKey").build();
                 final Field key = new FieldBuilder().name(":Key").build();
                 final Field depth = new FieldBuilder().name(":Depth").build();
@@ -172,11 +168,9 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
                 fields.add(parentKey);
                 fields.add(key);
                 fields.add(depth);
-                for (final Field field : this.fields) {
-                    fields.add(field);
-                }
+                fields.addAll(this.fields);
 
-                return new FlatResult(resultRequest.getComponentId(), fields, values, totalResults, error);
+                return new FlatResult(resultRequest.getComponentId(), fields, results, totalResults, error);
 
             } catch (final Exception e) {
                 error = e.getMessage();

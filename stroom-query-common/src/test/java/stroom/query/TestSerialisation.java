@@ -76,12 +76,10 @@ import java.util.List;
 public class TestSerialisation {
     private static DataSource getDataSource() {
         final DataSourceField field1 = new DataSourceField(DataSourceFieldType.FIELD, "field1", true, Arrays.asList(Condition.EQUALS, Condition.CONTAINS));
-        final DataSourceField field2 = new DataSourceField(DataSourceFieldType.NUMERIC_FIELD, "field2", true, Arrays.asList(Condition.EQUALS));
+        final DataSourceField field2 = new DataSourceField(DataSourceFieldType.NUMERIC_FIELD, "field2", true, Collections.singletonList(Condition.EQUALS));
 
         final List<DataSourceField> fields = Arrays.asList(field1, field2);
-        final DataSource dataSource = new DataSource(fields);
-
-        return dataSource;
+        return new DataSource(fields);
     }
 
     private static SearchRequest getSearchRequest() {
@@ -132,10 +130,7 @@ public class TestSerialisation {
 
     private static DateTimeFormat createDateTimeFormat() {
         final TimeZone timeZone = TimeZone.fromOffset(2, 30);
-
-        final DateTimeFormat dateTimeFormat = new DateTimeFormat("yyyy-MM-dd'T'HH:mm:ss", timeZone);
-
-        return dateTimeFormat;
+        return new DateTimeFormat("yyyy-MM-dd'T'HH:mm:ss", timeZone);
     }
 
     @Test
@@ -262,13 +257,11 @@ public class TestSerialisation {
     }
 
     private SearchResponse getSearchResponse() {
-        final List<String> values = Arrays.asList("test");
+        final List<String> values = Collections.singletonList("test");
         final List<Row> rows = Collections.singletonList(new Row("groupKey", values, 5));
 
         final TableResult tableResult = new TableResult("table-1234", rows, new OffsetRange(1, 2), 1, "tableResultError");
-        final SearchResponse searchResponse = new SearchResponse(Arrays.asList("highlight1", "highlight2"), Arrays.asList(tableResult, getVisResult1()), Arrays.asList("some error"), false);
-
-        return searchResponse;
+        return new SearchResponse(Arrays.asList("highlight1", "highlight2"), Arrays.asList(tableResult, getVisResult1()), Collections.singletonList("some error"), false);
     }
 
     private FlatResult getVisResult1() {

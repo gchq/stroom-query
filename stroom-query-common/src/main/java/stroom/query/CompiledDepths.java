@@ -60,29 +60,33 @@ public class CompiledDepths {
     }
 
     /**
-     * @return This is the maximum depth of grouping, 0 based
+     * This is the maximum depth of grouping, 0 based
+     *
+     * @return The maximum depth for all groups.
      */
     public int getMaxGroupDepth() {
         return maxGroupDepth;
     }
 
     /**
-     * @return This is the maximum depth to output nested rows. We are currently only
-     * outputting up to group depth but could also output the child ungrouped
-     * row if this is one larger - See comment above.
+     * @return The maximum depth (can be equal to max group depth or max group depth + 1 if showing detail).
      */
     public int getMaxDepth() {
         return maxDepth;
     }
 
     /**
-     * @return An array of all field depths.
+     * An array of all field depths.
+     *
+     * @return Get an array of depths for all fields.
      */
     public int[] getDepths() {
         return depths;
     }
 
     /**
+     * True if one of more fields are grouped.
+     *
      * @return True if one of more fields are grouped.
      */
     public boolean hasGroupBy() {

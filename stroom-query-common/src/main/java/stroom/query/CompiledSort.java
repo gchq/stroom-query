@@ -24,14 +24,16 @@ import java.io.Serializable;
 public class CompiledSort implements Serializable {
     private static final long serialVersionUID = 719372020029496497L;
 
-    private int fieldIndex;
-    private int order;
-    private SortDirection direction;
+    private final int fieldIndex;
+    private final int order;
+    private final SortDirection direction;
 
     public CompiledSort(final int fieldIndex, final Sort sort) {
         this.fieldIndex = fieldIndex;
         if (sort.getOrder() != null) {
             this.order = sort.getOrder();
+        } else {
+            this.order = 0;
         }
         this.direction = sort.getDirection();
     }

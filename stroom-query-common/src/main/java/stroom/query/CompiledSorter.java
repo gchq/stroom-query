@@ -73,8 +73,8 @@ public class CompiledSorter implements Serializable, Comparator<Item> {
         for (final CompiledSort compiledSort : compiledSorts) {
             final int fieldPos = compiledSort.getFieldIndex();
 
-            Comparable v1 = null;
-            Comparable v2 = null;
+            Comparable v1;
+            Comparable v2;
 
             if (SortDirection.ASCENDING.equals(compiledSort.getDirection())) {
                 v1 = (Comparable) o1.values[fieldPos];

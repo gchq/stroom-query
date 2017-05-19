@@ -71,9 +71,7 @@ public class TablePayloadHandler implements PayloadHandler {
                 // merging.
                 try {
                     pendingMerges.put(newQueue);
-                } catch (final InterruptedException e) {
-                    LOGGER.error(e.getMessage(), e);
-                } catch (final RuntimeException e) {
+                } catch (final InterruptedException | RuntimeException e) {
                     LOGGER.error(e.getMessage(), e);
                 }
 

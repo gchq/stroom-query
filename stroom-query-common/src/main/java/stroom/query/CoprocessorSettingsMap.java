@@ -73,8 +73,8 @@ public class CoprocessorSettingsMap {
     }
 
     public static class CoprocessorKey implements Serializable {
-        private int id;
-        private String[] componentIds;
+        private final int id;
+        private final String[] componentIds;
 
         public CoprocessorKey(final int id, final String[] componentIds) {
             this.id = id;
