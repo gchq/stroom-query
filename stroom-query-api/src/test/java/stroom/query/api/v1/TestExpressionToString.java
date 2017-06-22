@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package stroom.query.api;
+package stroom.query.api.v1;
 
 import org.junit.Assert;
 import org.junit.Test;
-import stroom.query.api.ExpressionOperator.Op;
-import stroom.query.api.ExpressionTerm.Condition;
+import stroom.query.api.v1.ExpressionOperator.Op;
+import stroom.query.api.v1.ExpressionTerm.Condition;
 
 public class TestExpressionToString {
     @Test
