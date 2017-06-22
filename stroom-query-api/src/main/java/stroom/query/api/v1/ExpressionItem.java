@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package stroom.query.api;
+package stroom.query.api.v1;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -32,48 +32,60 @@ import java.io.Serializable;
         property = "type"
 )
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = TableResult.class, name = "table"),
-        @JsonSubTypes.Type(value = FlatResult.class, name = "vis")
+        @JsonSubTypes.Type(value = ExpressionOperator.class, name = "operator"),
+        @JsonSubTypes.Type(value = ExpressionTerm.class, name = "term")
 })
-@XmlType(name = "Result", propOrder = "componentId")
-@XmlSeeAlso({TableResult.class, FlatResult.class})
+@XmlType(name = "ExpressionItem", propOrder = {"enabled"})
+@XmlSeeAlso({ExpressionOperator.class, ExpressionTerm.class})
 @XmlAccessorType(XmlAccessType.FIELD)
-public abstract class Result implements Serializable {
-    private static final long serialVersionUID = -7455554742243923562L;
+public abstract class ExpressionItem implements Serializable {
+    private static final long serialVersionUID = -8483817637655853635L;
 
     @XmlElement
-    private String componentId;
+    private Boolean enabled;
 
-    Result() {
+    ExpressionItem() {
     }
 
-    public Result(final String componentId) {
-        this.componentId = componentId;
+    public ExpressionItem(final Boolean enabled) {
+        this.enabled = enabled;
     }
 
-    public String getComponentId() {
-        return componentId;
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public boolean enabled() {
+        return enabled == null || enabled;
     }
 
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (!(o instanceof Result)) return false;
+        if (!(o instanceof ExpressionItem)) return false;
 
-        final Result that = (Result) o;
+        final ExpressionItem that = (ExpressionItem) o;
 
-        return componentId != null ? componentId.equals(that.componentId) : that.componentId == null;
+        return enabled != null ? enabled.equals(that.enabled) : that.enabled == null;
     }
 
     @Override
     public int hashCode() {
-        return componentId != null ? componentId.hashCode() : 0;
+        return enabled != null ? enabled.hashCode() : 0;
     }
+
+    abstract void append(final StringBuilder sb, final String pad, final boolean singleLine);
 
     @Override
     public String toString() {
-        return "ComponentResult{" +
-                "componentId='" + componentId + '\'' +
-                '}';
+        final StringBuilder sb = new StringBuilder();
+        append(sb, "", true);
+        return sb.toString();
+    }
+
+    public String toMultiLineString() {
+        final StringBuilder sb = new StringBuilder();
+        append(sb, "", false);
+        return sb.toString();
     }
 }

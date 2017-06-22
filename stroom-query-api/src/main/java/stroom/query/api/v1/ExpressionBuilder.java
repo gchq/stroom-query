@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package stroom.query.api;
+package stroom.query.api.v1;
 
 
-import stroom.query.api.ExpressionOperator.Op;
-import stroom.query.api.ExpressionTerm.Condition;
+import stroom.query.api.v1.ExpressionTerm.Condition;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +25,7 @@ import java.util.List;
 
 public final class ExpressionBuilder {
     private final Boolean enabled;
-    private final Op op;
+    private final ExpressionOperator.Op op;
 
     private final List<Object> children = new ArrayList<>();
 
@@ -34,14 +33,14 @@ public final class ExpressionBuilder {
      * By default an expression builder will create enabled operators and will 'AND' all added terms.
      */
     public ExpressionBuilder() {
-        this(null, Op.AND);
+        this(null, ExpressionOperator.Op.AND);
     }
 
-    public ExpressionBuilder(final Op op) {
+    public ExpressionBuilder(final ExpressionOperator.Op op) {
         this(null, op);
     }
 
-    public ExpressionBuilder(final Boolean enabled, final Op op) {
+    public ExpressionBuilder(final Boolean enabled, final ExpressionOperator.Op op) {
         this.enabled = enabled;
         this.op = op;
     }
@@ -75,11 +74,11 @@ public final class ExpressionBuilder {
         return this;
     }
 
-    public ExpressionBuilder addOperator(final Op op) {
+    public ExpressionBuilder addOperator(final ExpressionOperator.Op op) {
         return addOperator(null, op);
     }
 
-    public ExpressionBuilder addOperator(final Boolean enabled, final Op op) {
+    public ExpressionBuilder addOperator(final Boolean enabled, final ExpressionOperator.Op op) {
         final ExpressionBuilder builder = new ExpressionBuilder(enabled, op);
         children.add(builder);
         return builder;

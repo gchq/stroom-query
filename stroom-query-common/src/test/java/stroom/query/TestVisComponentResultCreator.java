@@ -22,11 +22,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.junit.Ignore;
-import stroom.query.api.Field;
-import stroom.query.api.FieldBuilder;
-import stroom.query.api.Format;
-import stroom.query.api.TableSettings;
-import stroom.query.api.TableSettingsBuilder;
+import stroom.query.api.v1.Field;
+import stroom.query.api.v1.FieldBuilder;
+import stroom.query.api.v1.Format;
+import stroom.query.api.v1.TableSettings;
+import stroom.query.api.v1.TableSettingsBuilder;
 import stroom.util.shared.ParamUtil;
 
 import java.util.Arrays;

@@ -18,8 +18,8 @@ package stroom.query.format;
 
 import stroom.dashboard.expression.DateUtil;
 import stroom.dashboard.expression.TypeConverter;
-import stroom.query.api.DateTimeFormat;
-import stroom.query.api.TimeZone;
+import stroom.query.api.v1.DateTimeFormat;
+import stroom.query.api.v1.TimeZone;
 
 import java.time.Instant;
 import java.time.ZoneId;

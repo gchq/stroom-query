@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package stroom.query.api;
+package stroom.query.api.v1;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -24,56 +24,56 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 
-@JsonPropertyOrder({"pattern", "timeZone"})
-@XmlType(name = "DateTimeFormat", propOrder = {"pattern", "timeZone"})
+@JsonPropertyOrder({"key", "value"})
+@XmlType(name = "Param", propOrder = {"key", "value"})
 @XmlAccessorType(XmlAccessType.FIELD)
-public final class DateTimeFormat implements Serializable {
-    private static final long serialVersionUID = 9145624653060319801L;
+public final class Param implements Serializable {
+    private static final long serialVersionUID = 9055582579670841979L;
 
     @XmlElement
-    private String pattern;
+    private String key;
     @XmlElement
-    private TimeZone timeZone;
+    private String value;
 
-    private DateTimeFormat() {
+    private Param() {
     }
 
-    public DateTimeFormat(final String pattern, final TimeZone timeZone) {
-        this.pattern = pattern;
-        this.timeZone = timeZone;
+    public Param(final String key, final String value) {
+        this.key = key;
+        this.value = value;
     }
 
-    public String getPattern() {
-        return pattern;
+    public String getKey() {
+        return key;
     }
 
-    public TimeZone getTimeZone() {
-        return timeZone;
+    public String getValue() {
+        return value;
     }
 
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (!(o instanceof DateTimeFormat)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        final DateTimeFormat that = (DateTimeFormat) o;
+        final Param param = (Param) o;
 
-        if (pattern != null ? !pattern.equals(that.pattern) : that.pattern != null) return false;
-        return timeZone != null ? timeZone.equals(that.timeZone) : that.timeZone == null;
+        if (key != null ? !key.equals(param.key) : param.key != null) return false;
+        return value != null ? value.equals(param.value) : param.value == null;
     }
 
     @Override
     public int hashCode() {
-        int result = pattern != null ? pattern.hashCode() : 0;
-        result = 31 * result + (timeZone != null ? timeZone.hashCode() : 0);
+        int result = key != null ? key.hashCode() : 0;
+        result = 31 * result + (value != null ? value.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return "DateTimeFormat{" +
-                "pattern='" + pattern + '\'' +
-                ", timeZone=" + timeZone +
+        return "Param{" +
+                "key='" + key + '\'' +
+                ", value='" + value + '\'' +
                 '}';
     }
 }

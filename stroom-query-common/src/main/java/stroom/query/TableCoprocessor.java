@@ -20,8 +20,8 @@ import stroom.dashboard.expression.FieldIndexMap;
 import stroom.mapreduce.BlockingPairQueue;
 import stroom.mapreduce.PairQueue;
 import stroom.mapreduce.UnsafePairQueue;
-import stroom.query.api.Field;
-import stroom.query.api.TableSettings;
+import stroom.query.api.v1.Field;
+import stroom.query.api.v1.TableSettings;
 import stroom.util.shared.HasTerminate;
 
 import java.util.List;

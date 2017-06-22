@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package stroom.query.api;
+package stroom.query.api.v1;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -24,56 +24,56 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 
-@JsonPropertyOrder({"includes", "excludes"})
-@XmlType(name = "Filter", propOrder = {"includes", "excludes"})
+@JsonPropertyOrder({"pattern", "timeZone"})
+@XmlType(name = "DateTimeFormat", propOrder = {"pattern", "timeZone"})
 @XmlAccessorType(XmlAccessType.FIELD)
-public final class Filter implements Serializable {
-    private static final long serialVersionUID = 7327802315955158337L;
+public final class DateTimeFormat implements Serializable {
+    private static final long serialVersionUID = 9145624653060319801L;
 
     @XmlElement
-    private String includes;
+    private String pattern;
     @XmlElement
-    private String excludes;
+    private TimeZone timeZone;
 
-    private Filter() {
+    private DateTimeFormat() {
     }
 
-    public Filter(String includes, String excludes) {
-        this.includes = includes;
-        this.excludes = excludes;
+    public DateTimeFormat(final String pattern, final TimeZone timeZone) {
+        this.pattern = pattern;
+        this.timeZone = timeZone;
     }
 
-    public String getIncludes() {
-        return includes;
+    public String getPattern() {
+        return pattern;
     }
 
-    public String getExcludes() {
-        return excludes;
+    public TimeZone getTimeZone() {
+        return timeZone;
     }
 
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (!(o instanceof Filter)) return false;
+        if (!(o instanceof DateTimeFormat)) return false;
 
-        final Filter filter = (Filter) o;
+        final DateTimeFormat that = (DateTimeFormat) o;
 
-        if (includes != null ? !includes.equals(filter.includes) : filter.includes != null) return false;
-        return excludes != null ? excludes.equals(filter.excludes) : filter.excludes == null;
+        if (pattern != null ? !pattern.equals(that.pattern) : that.pattern != null) return false;
+        return timeZone != null ? timeZone.equals(that.timeZone) : that.timeZone == null;
     }
 
     @Override
     public int hashCode() {
-        int result = includes != null ? includes.hashCode() : 0;
-        result = 31 * result + (excludes != null ? excludes.hashCode() : 0);
+        int result = pattern != null ? pattern.hashCode() : 0;
+        result = 31 * result + (timeZone != null ? timeZone.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return "Filter{" +
-                "includes='" + includes + '\'' +
-                ", excludes='" + excludes + '\'' +
+        return "DateTimeFormat{" +
+                "pattern='" + pattern + '\'' +
+                ", timeZone=" + timeZone +
                 '}';
     }
 }

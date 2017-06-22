@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package stroom.query.api;
+package stroom.query.api.v1;
 
-import stroom.query.api.Format.Type;
+import stroom.query.api.v1.Format.Type;
 
 public final class FieldBuilder {
     private String name;

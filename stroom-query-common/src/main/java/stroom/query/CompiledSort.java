@@ -16,8 +16,8 @@
 
 package stroom.query;
 
-import stroom.query.api.Sort;
-import stroom.query.api.Sort.SortDirection;
+import stroom.query.api.v1.Sort;
+import stroom.query.api.v1.Sort.SortDirection;
 
 import java.io.Serializable;
 
