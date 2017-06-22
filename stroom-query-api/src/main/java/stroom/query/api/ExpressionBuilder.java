@@ -54,11 +54,11 @@ public final class ExpressionBuilder {
         return addTerm(enabled, field, condition, value, null);
     }
 
-    public ExpressionBuilder addTerm(final String field, final Condition condition, final DocRef dictionary) {
+    public ExpressionBuilder addDictionaryTerm(final String field, final Condition condition, final DocRef dictionary) {
         return addTerm(null, field, condition, null, dictionary);
     }
 
-    public ExpressionBuilder addTerm(final Boolean enabled, final String field, final Condition condition, final DocRef dictionary) {
+    public ExpressionBuilder addDictionaryTerm(final Boolean enabled, final String field, final Condition condition, final DocRef dictionary) {
         return addTerm(enabled, field, condition, null, dictionary);
     }
 

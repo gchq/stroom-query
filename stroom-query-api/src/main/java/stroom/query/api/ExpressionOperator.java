@@ -87,7 +87,7 @@ public final class ExpressionOperator extends ExpressionItem {
     }
 
     @Override
-    public void append(final StringBuilder sb, final String pad, final boolean singleLine) {
+    void append(final StringBuilder sb, final String pad, final boolean singleLine) {
         if (enabled()) {
             if (!singleLine && sb.length() > 0) {
                 sb.append("\n");
@@ -95,35 +95,27 @@ public final class ExpressionOperator extends ExpressionItem {
             }
 
             sb.append(op);
-
             if (singleLine) {
                 sb.append(" {");
             }
 
             if (children != null) {
                 final String padding = pad + "  ";
+                boolean firstItem = true;
                 for (final ExpressionItem expressionItem : children) {
                     if (expressionItem.enabled()) {
-                        if (!singleLine) {
-                            sb.append("\n");
-                            sb.append(pad);
+                        if (singleLine && !firstItem) {
+                            sb.append(", ");
                         }
 
                         expressionItem.append(sb, padding, singleLine);
-
-                        if (singleLine) {
-                            sb.append(", ");
-                        }
+                        firstItem = false;
                     }
-                }
-
-                if (singleLine) {
-                    sb.setLength(sb.length() - ", ".length());
                 }
             }
 
             if (singleLine) {
-                sb.append("} ");
+                sb.append("}");
             }
         }
     }

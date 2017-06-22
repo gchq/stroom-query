@@ -101,8 +101,13 @@ public final class ExpressionTerm extends ExpressionItem {
     }
 
     @Override
-    public void append(final StringBuilder sb, final String pad, final boolean singleLine) {
+    void append(final StringBuilder sb, final String pad, final boolean singleLine) {
         if (enabled()) {
+            if (!singleLine && sb.length() > 0) {
+                sb.append("\n");
+                sb.append(pad);
+            }
+
             if (field != null) {
                 sb.append(field);
             }

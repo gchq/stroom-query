@@ -74,18 +74,18 @@ public abstract class ExpressionItem implements Serializable {
         return enabled != null ? enabled.hashCode() : 0;
     }
 
-    public abstract void append(final StringBuilder sb, final String pad, final boolean singleLine);
+    abstract void append(final StringBuilder sb, final String pad, final boolean singleLine);
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         append(sb, "", true);
-        return sb.toString().trim();
+        return sb.toString();
     }
 
     public String toMultiLineString() {
         final StringBuilder sb = new StringBuilder();
         append(sb, "", false);
-        return sb.toString().trim();
+        return sb.toString();
     }
 }
