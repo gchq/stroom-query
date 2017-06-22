@@ -103,7 +103,9 @@ public final class ExpressionTerm extends ExpressionItem {
     @Override
     public void append(final StringBuilder sb, final String pad, final boolean singleLine) {
         if (enabled()) {
-            sb.append(field);
+            if (field != null) {
+                sb.append(field);
+            }
             sb.append(" ");
             if (condition != null) {
                 sb.append(condition.getDisplayValue());
@@ -113,7 +115,7 @@ public final class ExpressionTerm extends ExpressionItem {
                 if (dictionary != null) {
                     sb.append(dictionary.getUuid());
                 }
-            } else {
+            } else if (value != null) {
                 sb.append(value);
             }
         }
