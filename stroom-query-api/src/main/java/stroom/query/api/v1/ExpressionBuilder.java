@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,7 +16,7 @@
 
 package stroom.query.api.v1;
 
-
+import stroom.query.api.v1.ExpressionOperator.Op;
 import stroom.query.api.v1.ExpressionTerm.Condition;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import java.util.List;
 
 public final class ExpressionBuilder {
     private final Boolean enabled;
-    private final ExpressionOperator.Op op;
+    private final Op op;
 
     private final List<Object> children = new ArrayList<>();
 
@@ -33,14 +33,14 @@ public final class ExpressionBuilder {
      * By default an expression builder will create enabled operators and will 'AND' all added terms.
      */
     public ExpressionBuilder() {
-        this(null, ExpressionOperator.Op.AND);
+        this(null, Op.AND);
     }
 
-    public ExpressionBuilder(final ExpressionOperator.Op op) {
+    public ExpressionBuilder(final Op op) {
         this(null, op);
     }
 
-    public ExpressionBuilder(final Boolean enabled, final ExpressionOperator.Op op) {
+    public ExpressionBuilder(final Boolean enabled, final Op op) {
         this.enabled = enabled;
         this.op = op;
     }
@@ -74,11 +74,11 @@ public final class ExpressionBuilder {
         return this;
     }
 
-    public ExpressionBuilder addOperator(final ExpressionOperator.Op op) {
+    public ExpressionBuilder addOperator(final Op op) {
         return addOperator(null, op);
     }
 
-    public ExpressionBuilder addOperator(final Boolean enabled, final ExpressionOperator.Op op) {
+    public ExpressionBuilder addOperator(final Boolean enabled, final Op op) {
         final ExpressionBuilder builder = new ExpressionBuilder(enabled, op);
         children.add(builder);
         return builder;
