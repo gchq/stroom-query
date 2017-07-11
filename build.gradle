@@ -13,6 +13,14 @@ buildscript {
     }
 }
 
+//if the project has a value for the passed property (i.e from the cmd line via -PpropName=xxx)
+//use that, else use a default value
+ext.getPropertyOrDefault = { propName, defaultValue ->
+    return project.hasProperty(propName) ?
+            project.getProperty(propName) :
+            defaultValue
+}
+
 allprojects {
     apply plugin: 'maven'
     apply plugin: 'maven-publish'
