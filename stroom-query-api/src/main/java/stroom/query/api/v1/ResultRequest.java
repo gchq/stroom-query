@@ -43,7 +43,7 @@ public final class ResultRequest implements Serializable {
     @XmlElement
     private ResultStyle resultStyle;
     @XmlElement
-    private Boolean fetchData;
+    private Fetch fetch;
 
     private ResultRequest() {
     }
@@ -72,13 +72,13 @@ public final class ResultRequest implements Serializable {
                          final OffsetRange requestedRange,
                          final List<String> openGroups,
                          final ResultStyle resultStyle,
-                         final Boolean fetchData) {
+                         final Fetch fetch) {
         this.componentId = componentId;
         this.mappings = mappings;
         this.requestedRange = requestedRange;
         this.openGroups = openGroups;
         this.resultStyle = resultStyle;
-        this.fetchData = fetchData;
+        this.fetch = fetch;
     }
 
     public String getComponentId() {
@@ -101,12 +101,13 @@ public final class ResultRequest implements Serializable {
         return resultStyle;
     }
 
-    public Boolean getFetchData() {
-        return fetchData;
-    }
-
-    public boolean fetchData() {
-        return fetchData == null || fetchData;
+    /**
+     * The fetch type determines if the request actually wants data returned or if it only wants data if the data has
+     * changed since the last request was made.
+     * @return The fetch type.
+     */
+    public Fetch getFetch() {
+        return fetch;
     }
 
     @Override
@@ -123,7 +124,7 @@ public final class ResultRequest implements Serializable {
             return false;
         if (openGroups != null ? !openGroups.equals(that.openGroups) : that.openGroups != null) return false;
         if (resultStyle != that.resultStyle) return false;
-        return fetchData != null ? fetchData.equals(that.fetchData) : that.fetchData == null;
+        return fetch != null ? fetch.equals(that.fetch) : that.fetch == null;
     }
 
     @Override
@@ -133,7 +134,7 @@ public final class ResultRequest implements Serializable {
         result = 31 * result + (requestedRange != null ? requestedRange.hashCode() : 0);
         result = 31 * result + (openGroups != null ? openGroups.hashCode() : 0);
         result = 31 * result + (resultStyle != null ? resultStyle.hashCode() : 0);
-        result = 31 * result + (fetchData != null ? fetchData.hashCode() : 0);
+        result = 31 * result + (fetch != null ? fetch.hashCode() : 0);
         return result;
     }
 
@@ -145,11 +146,15 @@ public final class ResultRequest implements Serializable {
                 ", requestedRange=" + requestedRange +
                 ", openGroups=" + openGroups +
                 ", resultStyle=" + resultStyle +
-                ", fetchData=" + fetchData +
+                ", fetch=" + fetch +
                 '}';
     }
 
     public enum ResultStyle {
         FLAT, TABLE
+    }
+
+    public enum Fetch {
+        NONE, CHANGES, ALL
     }
 }

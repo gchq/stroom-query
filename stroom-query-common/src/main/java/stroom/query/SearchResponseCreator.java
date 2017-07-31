@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.query.api.v1.Result;
 import stroom.query.api.v1.ResultRequest;
+import stroom.query.api.v1.ResultRequest.Fetch;
 import stroom.query.api.v1.ResultRequest.ResultStyle;
 import stroom.query.api.v1.SearchRequest;
 import stroom.query.api.v1.SearchResponse;
@@ -57,7 +58,8 @@ public class SearchResponseCreator {
                 final String componentId = resultRequest.getComponentId();
 
                 // Only deliver data to components that actually want it.
-                if (resultRequest.fetchData()) {
+                final Fetch fetch = resultRequest.getFetch();
+                if (!Fetch.NONE.equals(fetch)) {
                     Result result = null;
 
                     final Data data = store.getData(componentId);
@@ -74,38 +76,45 @@ public class SearchResponseCreator {
                     }
 
                     if (result != null) {
-                        // Cache the new result and get the previous one.
-                        final Result lastResult = resultCache.put(componentId, result);
-
-                        // See if we have delivered an identical result before so we
-                        // don't send more data to the client than we need to.
-                        if (!result.equals(lastResult)) {
-                            //
-                            // CODE TO HELP DEBUGGING.
-                            //
-
-                            // try {
-                            // if (lastComponentResult instanceof
-                            // ChartResult) {
-                            // final ChartResult lr = (ChartResult)
-                            // lastComponentResult;
-                            // final ChartResult cr = (ChartResult)
-                            // componentResult;
-                            // final File dir = new
-                            // File(FileUtil.getTempDir());
-                            // StreamUtil.stringToFile(lr.getJSON(), new
-                            // File(dir, "last.json"));
-                            // StreamUtil.stringToFile(cr.getJSON(), new
-                            // File(dir, "current.json"));
-                            // }
-                            // } catch (final Exception e) {
-                            // LOGGER.error(e.getMessage(), e);
-                            // }
-
-                            // Either we haven't returned a result before or this result
-                            // is different from the one delivered previously so deliver it to the client.
+                        if (fetch == null || Fetch.ALL.equals(fetch)) {
+                            // If the fetch option has not been set or is set to ALL we deliver the full result.
                             results.add(result);
                             LOGGER.info("Delivering " + result + " for " + componentId);
+
+                        } else if (Fetch.CHANGES.equals(fetch)) {
+                            // Cache the new result and get the previous one.
+                            final Result lastResult = resultCache.put(componentId, result);
+
+                            // See if we have delivered an identical result before so we
+                            // don't send more data to the client than we need to.
+                            if (!result.equals(lastResult)) {
+                                //
+                                // CODE TO HELP DEBUGGING.
+                                //
+
+                                // try {
+                                // if (lastComponentResult instanceof
+                                // ChartResult) {
+                                // final ChartResult lr = (ChartResult)
+                                // lastComponentResult;
+                                // final ChartResult cr = (ChartResult)
+                                // componentResult;
+                                // final File dir = new
+                                // File(FileUtil.getTempDir());
+                                // StreamUtil.stringToFile(lr.getJSON(), new
+                                // File(dir, "last.json"));
+                                // StreamUtil.stringToFile(cr.getJSON(), new
+                                // File(dir, "current.json"));
+                                // }
+                                // } catch (final Exception e) {
+                                // LOGGER.error(e.getMessage(), e);
+                                // }
+
+                                // Either we haven't returned a result before or this result
+                                // is different from the one delivered previously so deliver it to the client.
+                                results.add(result);
+                                LOGGER.info("Delivering " + result + " for " + componentId);
+                            }
                         }
                     }
                 }
