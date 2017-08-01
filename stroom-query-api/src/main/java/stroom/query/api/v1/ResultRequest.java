@@ -25,7 +25,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-@XmlType(name = "ResultRequest", propOrder = {"componentId", "mappings", "requestedRange", "openGroups", "resultStyle", "fetchData"})
+@XmlType(name = "ResultRequest", propOrder = {"componentId", "mappings", "requestedRange", "openGroups", "resultStyle", "fetch"})
 @XmlAccessorType(XmlAccessType.FIELD)
 public final class ResultRequest implements Serializable {
     private static final long serialVersionUID = -7455554742243923562L;
