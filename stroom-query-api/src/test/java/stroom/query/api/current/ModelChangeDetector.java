@@ -21,15 +21,31 @@ import static org.junit.Assert.assertThat;
  */
 public class ModelChangeDetector {
 
-    private static final String SEARCH_REQUEST_PORTRAIT_FILE = "src/test/resources/searchRequestPortrait.txt";
+    private static final String SEARCH_REQUEST_PORTRAIT_FILE_CURRENT = "src/test/resources/searchRequestPortrait-current.txt";
+    private static final String SEARCH_REQUEST_PORTRAIT_FILE_NEW = "src/test/resources/searchRequestPortrait-new.txt";
 
     @Test
     public void detect_changes_in_SearchRequest() throws IOException {
         String newPortrait = ClassPhotographer.takePortraitOf(SearchRequest.class, "stroom.query.api");
-        // Uncomment this line to update the model portrait
-//        Files.write(Paths.get(SEARCH_REQUEST_PORTRAIT_FILE), newPortrait.getBytes());
 
-        String existingPortrait = new String(Files.readAllBytes(Paths.get(SEARCH_REQUEST_PORTRAIT_FILE)));
-        assertThat(existingPortrait, equalTo(newPortrait));
+        // Uncomment this line to update the model portrait
+//        Files.write(Paths.get(SEARCH_REQUEST_PORTRAIT_FILE_CURRENT), newPortrait.getBytes());
+
+
+
+        //write the new portrait to a file ignored by git so you can diff the old and new if the
+        //assertion fails
+        Files.write(Paths.get(SEARCH_REQUEST_PORTRAIT_FILE_NEW), newPortrait.getBytes());
+
+        String currentPortrait = new String(Files.readAllBytes(Paths.get(SEARCH_REQUEST_PORTRAIT_FILE_CURRENT)));
+
+        System.out.println("If the test fails compare the contents of the following two files to establish how the api has changed");
+        System.out.println(SEARCH_REQUEST_PORTRAIT_FILE_CURRENT);
+        System.out.println(SEARCH_REQUEST_PORTRAIT_FILE_NEW);
+        System.out.println("");
+        System.out.println("If the change is a breaking change you will need to uplift the major version number (see uplift*.sh) on release");
+        System.out.println("If the change is a non-breaking change you will just need to uplift the minor or patch version on release");
+
+        assertThat(currentPortrait, equalTo(newPortrait));
     }
 }

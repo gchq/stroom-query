@@ -2,6 +2,7 @@
 **/target
 libs/
 classes/
+stroom-query-api/src/test/resources/searchRequestPortrait-new.txt
 
 # IntelliJ
 # Here we ignore everything and create exceptions for what we want to share.
