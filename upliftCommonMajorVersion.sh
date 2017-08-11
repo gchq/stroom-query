@@ -2,7 +2,7 @@
 
 PACKAGE_PREFIX_QUERY_API="stroom.query.api"
 PACKAGE_PREFIX_DATASOURCE_API="stroom.datasource.api"
-SRC_DIR="./stroom-query-api/src"
+SRC_DIR="./stroom-query-common/src"
 
 if [ "$#" -ne 2 ]; then
     echo "ERROR Invalid arguments" >&2
