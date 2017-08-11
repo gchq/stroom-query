@@ -20,7 +20,7 @@ echo "Renaming package directories"
 for versionedDir in `find ./stroom-query-api/src -type d -name "*${oldMajorVersion}"`; do 
     newDir=`echo "${versionedDir}" | sed "s/${oldMajorVersion}$/${newMajorVersion}/"`
     echo "renaming directory ${versionedDir} to ${newDir}"; 
-    mv "${versionedDir}" "${newDir}"
+    git mv "${versionedDir}" "${newDir}"
 done
 
 echo ""
