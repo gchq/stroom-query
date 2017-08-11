@@ -3,6 +3,7 @@
 libs/
 classes/
 stroom-query-api/out/
+stroom-query-common/out/
 stroom-query-api/src/test/resources/searchRequestPortrait-new.txt
 
 # IntelliJ
