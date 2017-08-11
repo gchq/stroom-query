@@ -34,11 +34,6 @@ echo "About to change `find . -type f -name "*.java" | xargs grep "${PACKAGE_PRE
 find . -type f -name "*.java" | xargs sed -i "s/${PACKAGE_PREFIX_DATASOURCE_API}\.${oldMajorVersion}/${PACKAGE_PREFIX_DATASOURCE_API}.${newMajorVersion}/g"
 
 
-
-
-
-
-
-
+echo ""
 echo "Completed, ensure you check all changes made before committing"
 exit 0
