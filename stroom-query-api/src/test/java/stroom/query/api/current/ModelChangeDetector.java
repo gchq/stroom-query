@@ -1,7 +1,7 @@
 package stroom.query.api.current;
 
 import org.junit.Test;
-import stroom.query.api.v1.SearchRequest;
+import stroom.query.api.v2.SearchRequest;
 
 import java.io.IOException;
 import java.nio.file.Files;
