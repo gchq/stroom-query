@@ -18,17 +18,12 @@ package stroom.query.v2;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import stroom.mapreduce.v2.Pair;
 import stroom.mapreduce.v2.PairQueue;
-import stroom.mapreduce.v2.Reader;
-import stroom.mapreduce.v2.Source;
 import stroom.mapreduce.v2.UnsafePairQueue;
 import stroom.query.api.v2.Field;
 import stroom.util.shared.HasTerminate;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
@@ -169,7 +164,7 @@ public class TablePayloadHandler implements PayloadHandler {
         // result.
         final PairQueue<Key, Item> remaining = new UnsafePairQueue<>();
         long size = 0;
-        for (final Items<Item> items : resultStoreCreator.childMap.values()) {
+        for (final Items<Item> items : resultStoreCreator.getChildMap().values()) {
             for (final Item item : items) {
                 remaining.collect(item.key, item);
                 size++;
@@ -197,77 +192,4 @@ public class TablePayloadHandler implements PayloadHandler {
         return data;
     }
 
-    private static class ResultStoreCreator implements Reader<Key, Item> {
-        private final CompiledSorter sorter;
-        private final Map<Key, Items<Item>> childMap;
-
-        ResultStoreCreator(final CompiledSorter sorter) {
-            this.sorter = sorter;
-            childMap = new HashMap<>();
-        }
-
-        public Data create(final long size, final long totalSize) {
-            return new Data(childMap, size, totalSize);
-        }
-
-        @Override
-        public void read(final Source<Key, Item> source) {
-            // We should now have a reduction in the reducedQueue.
-            for (final Pair<Key, Item> pair : source) {
-                final Item item = pair.getValue();
-
-                if (item.key != null) {
-                    childMap.computeIfAbsent(item.key.getParent(), k -> new ItemsArrayList<>()).add(item);
-                } else {
-                    childMap.computeIfAbsent(null, k -> new ItemsArrayList<>()).add(item);
-                }
-            }
-        }
-
-        public void trim(final TrimSettings trimSettings) {
-            trim(trimSettings, null, 0);
-        }
-
-        private void trim(final TrimSettings trimSettings, final Key parentKey, final int depth) {
-            final Items<Item> parentItems = childMap.get(parentKey);
-            if (parentItems != null && trimSettings != null) {
-                parentItems.trim(trimSettings.size(depth), sorter, item -> {
-                    // If there is a group key then cascade removal.
-                    if (item.key != null) {
-                        remove(item.key);
-                    }
-                });
-
-                // Ensure remaining items children are also trimmed by cascading
-                // trim operation.
-
-                // // Lower levels of results should be reduced by increasing
-                // amounts so that we don't get an exponential number of
-                // results.
-                // int sz = size / 10;
-                // if (sz < 1) {
-                // sz = 1;
-                // }
-                for (final Item item : parentItems) {
-                    if (item.key != null) {
-                        trim(trimSettings, item.key, depth + 1);
-                    }
-                }
-            }
-        }
-
-        private void remove(final Key parentKey) {
-            final Items<Item> items = childMap.get(parentKey);
-            if (items != null) {
-                childMap.remove(parentKey);
-
-                // Cascade delete.
-                for (final Item item : items) {
-                    if (item.key != null) {
-                        remove(item.key);
-                    }
-                }
-            }
-        }
-    }
 }
