@@ -2,6 +2,8 @@
 
 PACKAGE_PREFIX_QUERY_API="stroom.query.api"
 PACKAGE_PREFIX_DATASOURCE_API="stroom.datasource.api"
+PACKAGE_PREFIX_QUERY="stroom.query"
+PACKAGE_PREFIX_MAPREDUCE="stroom.mapreduce"
 SRC_DIR_API="./stroom-query-api/src"
 SRC_DIR_COMMON="./stroom-query-common/src"
 
@@ -18,8 +20,16 @@ newMajorVersion=$2
 echo "Uplifting major version from $oldMajorVersion to $newMajorVersion"
 
 echo ""
-echo "Renaming package directories"
+echo "Renaming package directories ${SRC_DIR_API}"
 for versionedDir in `find ${SRC_DIR_API} -type d -name "*${oldMajorVersion}"`; do 
+    newDir=`echo "${versionedDir}" | sed "s/${oldMajorVersion}$/${newMajorVersion}/"`
+    echo "renaming directory ${versionedDir} to ${newDir}"; 
+    git mv "${versionedDir}" "${newDir}"
+done
+
+echo ""
+echo "Renaming package directories ${SRC_DIR_COMMON}"
+for versionedDir in `find ${SRC_DIR_COMMON} -type d -name "*${oldMajorVersion}"`; do 
     newDir=`echo "${versionedDir}" | sed "s/${oldMajorVersion}$/${newMajorVersion}/"`
     echo "renaming directory ${versionedDir} to ${newDir}"; 
     git mv "${versionedDir}" "${newDir}"
@@ -45,6 +55,15 @@ echo "Re-versioning ${PACKAGE_PREFIX_DATASOURCE_API} package references in 'stro
 echo "About to change `find ${SRC_DIR_COMMON} -type f -name "*.java" | xargs grep "${PACKAGE_PREFIX_DATASOURCE_API}.${oldMajorVersion}" | wc -l` lines"
 find ${SRC_DIR_COMMON} -type f -name "*.java" | xargs sed -i "s/${PACKAGE_PREFIX_DATASOURCE_API}\.${oldMajorVersion}/${PACKAGE_PREFIX_DATASOURCE_API}.${newMajorVersion}/g"
 
+echo ""
+echo "Re-versioning ${PACKAGE_PREFIX_QUERY} package references in 'stroom-query-common' code"
+echo "About to change `find ${SRC_DIR_COMMON} -type f -name "*.java" | xargs grep "${PACKAGE_PREFIX_QUERY}.${oldMajorVersion}" | wc -l` lines"
+find ${SRC_DIR_COMMON} -type f -name "*.java" | xargs sed -i "s/${PACKAGE_PREFIX_QUERY}\.${oldMajorVersion}/${PACKAGE_PREFIX_QUERY}.${newMajorVersion}/g"
+
+echo ""
+echo "Re-versioning ${PACKAGE_PREFIX_MAPREDUCE} package references in 'stroom-query-common' code"
+echo "About to change `find ${SRC_DIR_COMMON} -type f -name "*.java" | xargs grep "${PACKAGE_PREFIX_MAPREDUCE}.${oldMajorVersion}" | wc -l` lines"
+find ${SRC_DIR_COMMON} -type f -name "*.java" | xargs sed -i "s/${PACKAGE_PREFIX_MAPREDUCE}\.${oldMajorVersion}/${PACKAGE_PREFIX_MAPREDUCE}.${newMajorVersion}/g"
 
 echo ""
 echo "Completed, ensure you check all changes made before committing"
