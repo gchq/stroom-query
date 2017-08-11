@@ -4,6 +4,7 @@ PACKAGE_PREFIX_QUERY_API="stroom.query.api"
 PACKAGE_PREFIX_DATASOURCE_API="stroom.datasource.api"
 
 if [ "$#" -ne 2 ]; then
+    echo "ERROR Invalid arguments" >&2
     echo "Usage: $0 currentMajorVersion newMajorVersion" >&2
     echo "E.g: $0 v1 v2" >&2
     exit 1
@@ -28,7 +29,7 @@ find . -type f -name "*.java" | xargs sed -i "s/${PACKAGE_PREFIX_DATASOURCE_API}
 echo ""
 echo "Renaming package directories"
 for versionedDir in `find ./stroom-query-api/src -type d -name "*${oldMajorVersion}"`; do 
-    newDir=`echo "${versionedDir}" | sed -i "s/${oldMajorVersion}$/${newMajorVersion}/"`
+    newDir=`echo "${versionedDir}" | sed "s/${oldMajorVersion}$/${newMajorVersion}/"`
     echo "renaming directory ${versionedDir} to ${newDir}"; 
     #mv "${versionedDir}" "${newDir}"
 done
