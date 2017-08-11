@@ -16,7 +16,7 @@
 
 package stroom.query;
 
-import stroom.query.api.v1.Field;
+import stroom.query.api.v2.Field;
 
 import java.util.List;
 

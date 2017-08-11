@@ -16,8 +16,8 @@
 
 package stroom.query;
 
-import stroom.query.api.v1.DocRef;
-import stroom.query.api.v1.TableSettings;
+import stroom.query.api.v2.DocRef;
+import stroom.query.api.v2.TableSettings;
 
 public class TableCoprocessorSettings implements CoprocessorSettings {
     private final TableSettings tableSettings;

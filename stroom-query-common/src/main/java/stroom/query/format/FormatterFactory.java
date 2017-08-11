@@ -16,8 +16,8 @@
 
 package stroom.query.format;
 
-import stroom.query.api.v1.Field;
-import stroom.query.api.v1.Format.Type;
+import stroom.query.api.v2.Field;
+import stroom.query.api.v2.Format.Type;
 
 public class FormatterFactory {
     private final String dateTimeLocale;

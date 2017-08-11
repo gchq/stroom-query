@@ -16,7 +16,7 @@
 
 package stroom.query;
 
-import stroom.query.api.v1.DocRef;
+import stroom.query.api.v2.DocRef;
 
 public interface CoprocessorSettings {
     boolean extractValues();

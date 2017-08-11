@@ -18,7 +18,7 @@ package stroom.query;
 
 import stroom.mapreduce.UnsafePairQueue;
 import stroom.query.CoprocessorSettingsMap.CoprocessorKey;
-import stroom.query.api.v1.TableSettings;
+import stroom.query.api.v2.TableSettings;
 import stroom.util.shared.HasTerminate;
 
 import java.util.HashMap;

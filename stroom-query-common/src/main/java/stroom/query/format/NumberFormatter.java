@@ -17,7 +17,7 @@
 package stroom.query.format;
 
 import stroom.dashboard.expression.TypeConverter;
-import stroom.query.api.v1.NumberFormat;
+import stroom.query.api.v2.NumberFormat;
 
 public class NumberFormatter implements Formatter {
     private final NumberFormat numberFormat;

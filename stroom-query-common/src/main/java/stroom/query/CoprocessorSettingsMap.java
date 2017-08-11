@@ -16,9 +16,9 @@
 
 package stroom.query;
 
-import stroom.query.api.v1.ResultRequest;
-import stroom.query.api.v1.SearchRequest;
-import stroom.query.api.v1.TableSettings;
+import stroom.query.api.v2.ResultRequest;
+import stroom.query.api.v2.SearchRequest;
+import stroom.query.api.v2.TableSettings;
 
 import java.io.Serializable;
 import java.util.Arrays;

@@ -23,7 +23,7 @@ import stroom.mapreduce.PairQueue;
 import stroom.mapreduce.Reader;
 import stroom.mapreduce.Source;
 import stroom.mapreduce.UnsafePairQueue;
-import stroom.query.api.v1.Field;
+import stroom.query.api.v2.Field;
 import stroom.util.shared.HasTerminate;
 
 import java.util.HashMap;

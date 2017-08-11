@@ -16,7 +16,7 @@
 
 package stroom.query;
 
-import stroom.query.api.v1.Filter;
+import stroom.query.api.v2.Filter;
 
 import java.util.ArrayList;
 import java.util.List;

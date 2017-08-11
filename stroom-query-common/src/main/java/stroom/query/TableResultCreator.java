@@ -17,12 +17,12 @@
 package stroom.query;
 
 import stroom.dashboard.expression.Generator;
-import stroom.query.api.v1.Field;
-import stroom.query.api.v1.OffsetRange;
-import stroom.query.api.v1.Result;
-import stroom.query.api.v1.ResultRequest;
-import stroom.query.api.v1.Row;
-import stroom.query.api.v1.TableResult;
+import stroom.query.api.v2.Field;
+import stroom.query.api.v2.OffsetRange;
+import stroom.query.api.v2.Result;
+import stroom.query.api.v2.ResultRequest;
+import stroom.query.api.v2.Row;
+import stroom.query.api.v2.TableResult;
 import stroom.query.format.FieldFormatter;
 
 import java.util.ArrayList;

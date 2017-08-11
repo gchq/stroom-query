@@ -18,13 +18,13 @@ package stroom.query;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import stroom.query.api.v1.Result;
-import stroom.query.api.v1.ResultRequest;
-import stroom.query.api.v1.ResultRequest.Fetch;
-import stroom.query.api.v1.ResultRequest.ResultStyle;
-import stroom.query.api.v1.SearchRequest;
-import stroom.query.api.v1.SearchResponse;
-import stroom.query.api.v1.TableResult;
+import stroom.query.api.v2.Result;
+import stroom.query.api.v2.ResultRequest;
+import stroom.query.api.v2.ResultRequest.Fetch;
+import stroom.query.api.v2.ResultRequest.ResultStyle;
+import stroom.query.api.v2.SearchRequest;
+import stroom.query.api.v2.SearchResponse;
+import stroom.query.api.v2.TableResult;
 import stroom.query.format.FieldFormatter;
 import stroom.query.format.FormatterFactory;
 
