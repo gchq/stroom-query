@@ -16,8 +16,8 @@
 
 package stroom.query.v2.format;
 
-import stroom.dashboard.expression.DateUtil;
-import stroom.dashboard.expression.TypeConverter;
+import stroom.dashboard.expression.v1.DateUtil;
+import stroom.dashboard.expression.v1.TypeConverter;
 import stroom.query.api.v2.DateTimeFormat;
 import stroom.query.api.v2.TimeZone;
 

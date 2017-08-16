@@ -30,7 +30,7 @@ allprojects {
 }
 
 ext.versions = [
-    stroomExpression: 'v0.1.0'
+    stroomExpression: 'v1.0.0'
 ]
 
 subprojects {

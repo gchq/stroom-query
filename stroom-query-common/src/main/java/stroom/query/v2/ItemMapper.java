@@ -16,8 +16,8 @@
 
 package stroom.query.v2;
 
-import stroom.dashboard.expression.Expression;
-import stroom.dashboard.expression.Generator;
+import stroom.dashboard.expression.v1.Expression;
+import stroom.dashboard.expression.v1.Generator;
 import stroom.mapreduce.v2.MapperBase;
 import stroom.mapreduce.v2.OutputCollector;
 

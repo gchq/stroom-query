@@ -16,11 +16,11 @@
 
 package stroom.query.v2;
 
-import stroom.dashboard.expression.Expression;
-import stroom.dashboard.expression.ExpressionParser;
-import stroom.dashboard.expression.FieldIndexMap;
-import stroom.dashboard.expression.FunctionFactory;
-import stroom.dashboard.expression.ParamFactory;
+import stroom.dashboard.expression.v1.Expression;
+import stroom.dashboard.expression.v1.ExpressionParser;
+import stroom.dashboard.expression.v1.FieldIndexMap;
+import stroom.dashboard.expression.v1.FunctionFactory;
+import stroom.dashboard.expression.v1.ParamFactory;
 import stroom.query.api.v2.Field;
 
 import java.text.ParseException;

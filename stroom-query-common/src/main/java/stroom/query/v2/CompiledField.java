@@ -16,7 +16,7 @@
 
 package stroom.query.v2;
 
-import stroom.dashboard.expression.Expression;
+import stroom.dashboard.expression.v1.Expression;
 import stroom.query.api.v2.Field;
 
 public class CompiledField {

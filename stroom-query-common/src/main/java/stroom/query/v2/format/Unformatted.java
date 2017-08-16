@@ -16,7 +16,8 @@
 
 package stroom.query.v2.format;
 
-import stroom.dashboard.expression.TypeConverter;
+
+import stroom.dashboard.expression.v1.TypeConverter;
 
 public class Unformatted implements Formatter {
     private Unformatted() {

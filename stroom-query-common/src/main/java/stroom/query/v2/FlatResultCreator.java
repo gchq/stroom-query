@@ -16,9 +16,9 @@
 
 package stroom.query.v2;
 
-import stroom.dashboard.expression.FieldIndexMap;
-import stroom.dashboard.expression.Generator;
-import stroom.dashboard.expression.TypeConverter;
+import stroom.dashboard.expression.v1.FieldIndexMap;
+import stroom.dashboard.expression.v1.Generator;
+import stroom.dashboard.expression.v1.TypeConverter;
 import stroom.query.api.v2.Field;
 import stroom.query.api.v2.FieldBuilder;
 import stroom.query.api.v2.FlatResult;

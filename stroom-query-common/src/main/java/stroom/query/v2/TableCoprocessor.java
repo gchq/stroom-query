@@ -16,7 +16,7 @@
 
 package stroom.query.v2;
 
-import stroom.dashboard.expression.FieldIndexMap;
+import stroom.dashboard.expression.v1.FieldIndexMap;
 import stroom.mapreduce.v2.BlockingPairQueue;
 import stroom.mapreduce.v2.PairQueue;
 import stroom.mapreduce.v2.UnsafePairQueue;
