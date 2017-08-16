@@ -11,7 +11,7 @@ public class ResultStoreCreator implements Reader<Key, Item> {
     private final CompiledSorter sorter;
     private final Map<Key, Items<Item>> childMap;
 
-    ResultStoreCreator(final CompiledSorter sorter) {
+    public ResultStoreCreator(final CompiledSorter sorter) {
         this.sorter = sorter;
         childMap = new HashMap<>();
     }
