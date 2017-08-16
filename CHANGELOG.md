@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Changed ModelChangeDetector to output new model portrait
 
+* Change to use v1.0.0 of stroom-expression
+
 ## [v1.0.1] - 2017-07-11
 
 ### Changed
