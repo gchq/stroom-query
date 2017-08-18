@@ -23,6 +23,7 @@ import stroom.query.api.v2.Result;
 import stroom.query.api.v2.ResultRequest;
 import stroom.query.api.v2.Row;
 import stroom.query.api.v2.TableResult;
+import stroom.query.api.v2.TableSettings;
 import stroom.query.v2.format.FieldFormatter;
 
 import java.util.ArrayList;
@@ -34,9 +35,14 @@ import java.util.Set;
 public class TableResultCreator implements ResultCreator {
     private final FieldFormatter fieldFormatter;
     private volatile List<Field> latestFields;
+    private final List<Integer> defaultMaxResultsSizes;
 
-    public TableResultCreator(final FieldFormatter fieldFormatter) {
+
+    public TableResultCreator(final FieldFormatter fieldFormatter,
+                              final List<Integer> defaultMaxResultsSizes) {
+
         this.fieldFormatter = fieldFormatter;
+        this.defaultMaxResultsSizes = defaultMaxResultsSizes;
     }
 
     @Override
@@ -54,13 +60,19 @@ public class TableResultCreator implements ResultCreator {
                 length = range.getLength().intValue();
             }
 
+            //What is the interaction between the paging and the maxResults? The assumption is that
+            //maxResults defines the max number of records to come back and the paging can happen up to
+            //that maxResults threshold
+
             Set<String> openGroups = Collections.emptySet();
             if (resultRequest.getOpenGroups() != null) {
                 openGroups = new HashSet<>(resultRequest.getOpenGroups());
             }
 
-            latestFields = resultRequest.getMappings().get(0).getFields();
-            totalResults = addTableResults(data, latestFields, offset, length, openGroups, resultList, null, 0,
+            TableSettings tableSettings = resultRequest.getMappings().get(0);
+            latestFields = tableSettings.getFields();
+            final MaxResults maxResults = new MaxResults(tableSettings.getMaxResults(), defaultMaxResultsSizes);
+            totalResults = addTableResults(data, latestFields, maxResults, offset, length, openGroups, resultList, null, 0,
                     0);
         } catch (final Exception e) {
             error = e.getMessage();
@@ -69,15 +81,20 @@ public class TableResultCreator implements ResultCreator {
         return new TableResult(resultRequest.getComponentId(), resultList, new OffsetRange(offset, resultList.size()), totalResults, error);
     }
 
-    private int addTableResults(final Data data, final List<Field> fields, final int offset,
-                                final int length, final Set<String> openGroups, final List<Row> resultList, final Key parentKey,
+    private int addTableResults(final Data data, final List<Field> fields,
+                                final MaxResults maxResults, final int offset,
+                                final int length, final Set<String> openGroups,
+                                final List<Row> resultList, final Key parentKey,
                                 final int depth, final int position) {
+        int maxResultsAtThisDepth = maxResults.size(depth);
         int pos = position;
         // Get top level items.
         final Items<Item> items = data.getChildMap().get(parentKey);
         if (items != null) {
             for (final Item item : items) {
-                if (pos >= offset && resultList.size() < length) {
+                if (pos >= offset &&
+                        resultList.size() < length &&
+                        pos <= maxResultsAtThisDepth) {
                     // Convert all list into fully resolved objects evaluating
                     // functions where necessary.
                     final List<String> values = new ArrayList<>(item.getValues().length);
@@ -120,7 +137,7 @@ public class TableResultCreator implements ResultCreator {
 
                 // Add child results if a node is open.
                 if (item.getKey() != null && openGroups != null && openGroups.contains(item.getKey().toString())) {
-                    pos = addTableResults(data, fields, offset, length, openGroups, resultList,
+                    pos = addTableResults(data, fields, maxResults, offset, length, openGroups, resultList,
                             item.getKey(), depth + 1, pos);
                 }
             }

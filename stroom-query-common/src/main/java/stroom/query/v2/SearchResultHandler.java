@@ -32,7 +32,9 @@ public class SearchResultHandler implements ResultHandler {
     private final Map<CoprocessorKey, TablePayloadHandler> handlerMap = new HashMap<>();
     private final AtomicBoolean complete = new AtomicBoolean();
 
-    public SearchResultHandler(final CoprocessorSettingsMap coprocessorSettingsMap, final List<Integer> defaultStoreTrimSizes) {
+    public SearchResultHandler(final CoprocessorSettingsMap coprocessorSettingsMap,
+                               final List<Integer> defaultMaxResultsSizes,
+                               final StoreSize storeSize) {
         this.coprocessorSettingsMap = coprocessorSettingsMap;
 
         for (final Entry<CoprocessorKey, CoprocessorSettings> entry : coprocessorSettingsMap.getMap().entrySet()) {
@@ -41,9 +43,13 @@ public class SearchResultHandler implements ResultHandler {
             if (coprocessorSettings instanceof TableCoprocessorSettings) {
                 final TableCoprocessorSettings tableCoprocessorSettings = (TableCoprocessorSettings) coprocessorSettings;
                 final TableSettings tableSettings = tableCoprocessorSettings.getTableSettings();
-                final TrimSettings trimSettings = new TrimSettings(tableSettings.getMaxResults(), defaultStoreTrimSizes);
-                handlerMap.put(coprocessorKey, new TablePayloadHandler(tableSettings.getFields(),
-                        tableSettings.showDetail(), trimSettings));
+                final MaxResults maxResults = new MaxResults(tableSettings.getMaxResults(), defaultMaxResultsSizes);
+
+                handlerMap.put(coprocessorKey, new TablePayloadHandler(
+                        tableSettings.getFields(),
+                        tableSettings.showDetail(),
+                        maxResults,
+                        storeSize));
             }
         }
     }

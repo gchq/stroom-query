@@ -137,6 +137,7 @@ public class SearchResponseCreator {
 
         ResultCreator resultCreator = null;
         try {
+            final MaxResults maxResults = new MaxResults(resultRequest.)
             if (ResultStyle.TABLE.equals(resultRequest.getResultStyle())) {
                 final FieldFormatter fieldFormatter = new FieldFormatter(new FormatterFactory(dateTimeLocale));
                 resultCreator = new TableResultCreator(fieldFormatter);

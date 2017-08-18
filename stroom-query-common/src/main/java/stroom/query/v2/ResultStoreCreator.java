@@ -38,14 +38,14 @@ public class ResultStoreCreator implements Reader<Key, Item> {
         }
     }
 
-    public void trim(final TrimSettings trimSettings) {
-        trim(trimSettings, null, 0);
+    public void trim(final StoreSize storeSize) {
+        trim(storeSize, null, 0);
     }
 
-    private void trim(final TrimSettings trimSettings, final Key parentKey, final int depth) {
+    private void trim(final StoreSize storeSize, final Key parentKey, final int depth) {
         final Items<Item> parentItems = childMap.get(parentKey);
-        if (parentItems != null && trimSettings != null) {
-            parentItems.trim(trimSettings.size(depth), sorter, item -> {
+        if (parentItems != null && storeSize != null) {
+            parentItems.trim(storeSize.size(depth), sorter, item -> {
                 // If there is a group key then cascade removal.
                 if (item.key != null) {
                     remove(item.key);
@@ -64,7 +64,7 @@ public class ResultStoreCreator implements Reader<Key, Item> {
             // }
             for (final Item item : parentItems) {
                 if (item.key != null) {
-                    trim(trimSettings, item.key, depth + 1);
+                    trim(storeSize, item.key, depth + 1);
                 }
             }
         }

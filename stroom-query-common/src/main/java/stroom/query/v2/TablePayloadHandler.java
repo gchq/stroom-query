@@ -33,7 +33,8 @@ public class TablePayloadHandler implements PayloadHandler {
 
     private final CompiledSorter compiledSorter;
     private final CompiledDepths compiledDepths;
-    private final TrimSettings trimSettings;
+    private final MaxResults maxResults;
+    private final StoreSize storeSize;
     private final AtomicLong totalResults = new AtomicLong();
     private final LinkedBlockingQueue<UnsafePairQueue<Key, Item>> pendingMerges = new LinkedBlockingQueue<>();
     private final AtomicBoolean merging = new AtomicBoolean();
@@ -41,10 +42,14 @@ public class TablePayloadHandler implements PayloadHandler {
     private volatile PairQueue<Key, Item> currentQueue;
     private volatile Data data;
 
-    public TablePayloadHandler(final List<Field> fields, final boolean showDetails, final TrimSettings trimSettings) {
+    public TablePayloadHandler(final List<Field> fields,
+                               final boolean showDetails,
+                               final MaxResults maxResults,
+                               final StoreSize storeSize) {
         this.compiledSorter = new CompiledSorter(fields);
+        this.maxResults = maxResults;
+        this.storeSize = storeSize;
         this.compiledDepths = new CompiledDepths(fields, showDetails);
-        this.trimSettings = trimSettings;
     }
 
     void clear() {
@@ -158,7 +163,7 @@ public class TablePayloadHandler implements PayloadHandler {
         resultStoreCreator.read(queue);
 
         // Trim the number of results in the store.
-        resultStoreCreator.trim(trimSettings);
+        resultStoreCreator.trim(storeSize);
 
         // Put the remaining items into the current queue ready for the next
         // result.
@@ -181,7 +186,11 @@ public class TablePayloadHandler implements PayloadHandler {
     @Override
     public boolean shouldTerminateSearch() {
         if (!compiledSorter.hasSort() && !compiledDepths.hasGroupBy()) {
-            if (data != null && trimSettings != null && data.getTotalSize() >= trimSettings.size(0)) {
+            //No sorting or grouping so we can stop the search as soon as we have the number
+            //of results requested by the client
+            if (data != null &&
+                    maxResults != null &&
+                    data.getTotalSize() >= maxResults.size(0)) {
                 return true;
             }
         }
