@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 
-## [v2.0.0] - 2017-08-11
+## [v2.0.0] - 2017-08-18
 
 ### Changed
 
@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * Changed ModelChangeDetector to output new model portrait
 
 * Change to use v1.0.0 of stroom-expression
+
+* Move ParamUtil to stroom.query.v2.parameters
 
 ## [v1.0.1] - 2017-07-11
 
