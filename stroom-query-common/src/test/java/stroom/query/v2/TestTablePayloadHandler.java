@@ -33,7 +33,7 @@ import stroom.query.api.v2.TableSettingsBuilder;
 import stroom.query.v2.format.FieldFormatter;
 import stroom.query.v2.format.FormatterFactory;
 import stroom.util.shared.HasTerminate;
-import stroom.util.shared.ParamUtil;
+import stroom.query.v2.parameters.ParamUtil;
 
 import java.util.Arrays;
 import java.util.Collections;
