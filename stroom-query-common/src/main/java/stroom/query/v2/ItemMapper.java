@@ -123,4 +123,13 @@ public class ItemMapper extends MapperBase<Object, String[], Key, Item> {
             addItem(values, key, generators, depth + 1, maxDepth, maxGroupDepth, output);
         }
     }
+
+    @Override
+    public String toString() {
+        return "ItemMapper{" +
+                "fields=" + fields +
+                ", maxDepth=" + maxDepth +
+                ", maxGroupDepth=" + maxGroupDepth +
+                '}';
+    }
 }

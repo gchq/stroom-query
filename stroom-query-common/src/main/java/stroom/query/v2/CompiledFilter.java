@@ -72,4 +72,12 @@ public class CompiledFilter {
 
         return patternList;
     }
+
+    @Override
+    public String toString() {
+        return "CompiledFilter{" +
+                "includes=" + includes +
+                ", excludes=" + excludes +
+                '}';
+    }
 }

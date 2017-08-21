@@ -165,10 +165,12 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
                 if (items != null) {
                     final RangeChecker rangeChecker = RangeCheckerFactory.create(resultRequest.getRequestedRange());
                     final OpenGroups openGroups = OpenGroupsFactory.create(resultRequest.getOpenGroups());
-                    final MaxResults maxResults = new MaxResults(child.getMaxResults(), Collections.singletonList(Integer.MAX_VALUE));
+                    final MaxResults maxResults = new MaxResults(
+                            resultRequest.getMappings().get(0).getMaxResults(),
+                            defaultMaxResultsSizes);
 
                     totalResults = addResults(mappedData, rangeChecker, openGroups, items, results, 0,
-                            0);
+                            0, maxResults);
                 }
 
                 final Field parentKey = new FieldBuilder().name(":ParentKey").build();
@@ -193,12 +195,14 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
 
     private int addResults(final Data data, final RangeChecker rangeChecker,
                            final OpenGroups openGroups, final Items<Item> items, final List<List<Object>> results,
-                           final int depth, final int parentCount) {
+                           final int depth, final int parentCount, final MaxResults maxResults) {
         int count = parentCount;
+        int maxResultsAtThisDepth = maxResults.size(depth);
+        int resultCountAtThisLevel = 0;
 
         for (final Item item : items) {
-            if (count >= )
             if (rangeChecker.check(count)) {
+
                 final List<Object> values = new ArrayList<>(fields.size() + 3);
 
                 if (item.getKey() != null) {
@@ -235,6 +239,7 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
 
                     values.add(val);
                     i++;
+                    resultCountAtThisLevel++;
                 }
 
                 // Add the values.
@@ -245,13 +250,17 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
                     final Items<Item> childItems = data.getChildMap().get(item.getKey());
                     if (childItems != null) {
                         count = addResults(data, rangeChecker, openGroups,
-                                childItems, results, depth + 1, count);
+                                childItems, results, depth + 1, count, maxResults);
                     }
                 }
             }
 
             // Increment the position.
             count++;
+
+            if (resultCountAtThisLevel >= maxResultsAtThisDepth) {
+                break;
+            }
         }
 
         return count;

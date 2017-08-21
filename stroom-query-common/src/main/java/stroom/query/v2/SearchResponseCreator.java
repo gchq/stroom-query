@@ -37,14 +37,16 @@ public class SearchResponseCreator {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchResponseCreator.class);
 
     private final Store store;
+    private final List<Integer> defaultMaxResultsSizes;
 
     private final Map<String, ResultCreator> cachedResultCreators = new HashMap<>();
 
     // Cache the last results for each component.
     private final Map<String, Result> resultCache = new HashMap<>();
 
-    public SearchResponseCreator(final Store store) {
+    public SearchResponseCreator(final Store store, final List<Integer> defaultMaxResultsSizes) {
         this.store = store;
+        this.defaultMaxResultsSizes = defaultMaxResultsSizes;
     }
 
     public SearchResponse create(final SearchRequest searchRequest) {
@@ -137,12 +139,16 @@ public class SearchResponseCreator {
 
         ResultCreator resultCreator = null;
         try {
-            final MaxResults maxResults = new MaxResults(resultRequest.)
             if (ResultStyle.TABLE.equals(resultRequest.getResultStyle())) {
                 final FieldFormatter fieldFormatter = new FieldFormatter(new FormatterFactory(dateTimeLocale));
-                resultCreator = new TableResultCreator(fieldFormatter);
+                resultCreator = new TableResultCreator(fieldFormatter, defaultMaxResultsSizes);
             } else {
-                resultCreator = new FlatResultCreator(resultRequest, null, null);
+                resultCreator = new FlatResultCreator(
+                        resultRequest,
+                        null,
+                        null,
+                        defaultMaxResultsSizes,
+                        store.getStoreSize());
             }
         } catch (final Exception e) {
             throw new RuntimeException(e.getMessage());

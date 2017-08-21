@@ -104,4 +104,12 @@ public class CompiledSorter implements Serializable, Comparator<Item> {
     public boolean hasSort() {
         return hasSort;
     }
+
+    @Override
+    public String toString() {
+        return "CompiledSorter{" +
+                "compiledSorts=" + compiledSorts +
+                ", hasSort=" + hasSort +
+                '}';
+    }
 }

@@ -37,9 +37,12 @@ import stroom.query.v2.parameters.ParamUtil;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 public class TestTablePayloadHandler {
-    private final TrimSettings trimSettings = new TrimSettings(Collections.singletonList(50), Collections.singletonList(50));
+    private final List<Integer> defaultMaxResultsSizes = Collections.singletonList(50);
+    private final MaxResults maxResults = new MaxResults(Collections.singletonList(50), defaultMaxResultsSizes);
+    private final StoreSize storeSize = new StoreSize(Collections.singletonList(100));
 
     @Test
     public void basicTest() {
@@ -74,15 +77,23 @@ public class TestTablePayloadHandler {
             itemMapper.collect(null, values);
         }
 
-        final TablePayloadHandler payloadHandler = new TablePayloadHandler(tableSettings.getFields(),
-                tableSettings.showDetail(), trimSettings);
+        final TablePayloadHandler payloadHandler = new TablePayloadHandler(
+                tableSettings.getFields(),
+                tableSettings.showDetail(),
+                maxResults,
+                storeSize);
         payloadHandler.addQueue(queue, new Terminatable());
         final Data data = payloadHandler.getData();
 
         // Make sure we only get 50 results.
-        final ResultRequest tableResultRequest = new ResultRequest("componentX", tableSettings, new OffsetRange(0, 3000));
-        final TableResultCreator tableComponentResultCreator = new TableResultCreator(fieldFormatter);
-        final TableResult searchResult = (TableResult) tableComponentResultCreator.create(data,
+        final ResultRequest tableResultRequest = new ResultRequest(
+                "componentX",
+                tableSettings, new OffsetRange(0, 3000));
+        final TableResultCreator tableComponentResultCreator = new TableResultCreator(
+                fieldFormatter,
+                defaultMaxResultsSizes);
+        final TableResult searchResult = (TableResult) tableComponentResultCreator.create(
+                data,
                 tableResultRequest);
         Assert.assertEquals(50, searchResult.getTotalResults().intValue());
     }
@@ -122,7 +133,7 @@ public class TestTablePayloadHandler {
         }
 
         final TablePayloadHandler payloadHandler = new TablePayloadHandler(tableSettings.getFields(),
-                tableSettings.showDetail(), trimSettings);
+                tableSettings.showDetail(), maxResults, storeSize);
         payloadHandler.addQueue(queue, new Terminatable());
         final Data data = payloadHandler.getData();
 
@@ -165,7 +176,7 @@ public class TestTablePayloadHandler {
         }
 
         final TablePayloadHandler payloadHandler = new TablePayloadHandler(tableSettings.getFields(),
-                tableSettings.showDetail(), trimSettings);
+                tableSettings.showDetail(), maxResults, storeSize);
         payloadHandler.addQueue(queue, new Terminatable());
         final Data data = payloadHandler.getData();
 
@@ -214,7 +225,7 @@ public class TestTablePayloadHandler {
         }
 
         final TablePayloadHandler payloadHandler = new TablePayloadHandler(tableSettings.getFields(),
-                tableSettings.showDetail(), trimSettings);
+                tableSettings.showDetail(), maxResults, storeSize);
         payloadHandler.addQueue(queue, new Terminatable());
         final Data data = payloadHandler.getData();
 
@@ -263,7 +274,7 @@ public class TestTablePayloadHandler {
         }
 
         final TablePayloadHandler payloadHandler = new TablePayloadHandler(tableSettings.getFields(),
-                tableSettings.showDetail(), trimSettings);
+                tableSettings.showDetail(), maxResults, storeSize);
         payloadHandler.addQueue(queue, new Terminatable());
         final Data data = payloadHandler.getData();
 
@@ -312,11 +323,14 @@ public class TestTablePayloadHandler {
         }
 
         final TablePayloadHandler payloadHandler = new TablePayloadHandler(tableSettings.getFields(),
-                tableSettings.showDetail(), trimSettings);
+                tableSettings.showDetail(), maxResults, storeSize);
         payloadHandler.addQueue(queue, new Terminatable());
         final Data data = payloadHandler.getData();
 
-        final ResultRequest tableResultRequest = new ResultRequest("componentX", tableSettings, new OffsetRange(0, 3000));
+        final ResultRequest tableResultRequest = new ResultRequest(
+                "componentX",
+                tableSettings,
+                new OffsetRange(0, 3000));
         checkResults(data, tableResultRequest, 1);
     }
 
@@ -327,7 +341,9 @@ public class TestTablePayloadHandler {
         final FieldFormatter fieldFormatter = new FieldFormatter(formatterFactory);
 
         // Make sure we only get 2000 results.
-        final TableResultCreator tableComponentResultCreator = new TableResultCreator(fieldFormatter);
+        final TableResultCreator tableComponentResultCreator = new TableResultCreator(
+                fieldFormatter,
+                defaultMaxResultsSizes);
         final TableResult searchResult = (TableResult) tableComponentResultCreator.create(data,
                 tableResultRequest);
 

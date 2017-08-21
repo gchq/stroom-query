@@ -18,6 +18,7 @@ package stroom.query.v2;
 
 import stroom.query.api.v2.Field;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class CompiledDepths {
@@ -91,5 +92,15 @@ public class CompiledDepths {
      */
     public boolean hasGroupBy() {
         return hasGroupBy;
+    }
+
+    @Override
+    public String toString() {
+        return "CompiledDepths{" +
+                "maxGroupDepth=" + maxGroupDepth +
+                ", maxDepth=" + maxDepth +
+                ", depths=" + Arrays.toString(depths) +
+                ", hasGroupBy=" + hasGroupBy +
+                '}';
     }
 }

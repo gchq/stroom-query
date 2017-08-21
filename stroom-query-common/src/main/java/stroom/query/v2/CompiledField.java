@@ -51,6 +51,11 @@ public class CompiledField {
 
     @Override
     public String toString() {
-        return field.toString();
+        return "CompiledField{" +
+                "field=" + field +
+                ", groupDepth=" + groupDepth +
+                ", expression=" + expression +
+                ", compiledFilter=" + compiledFilter +
+                '}';
     }
 }

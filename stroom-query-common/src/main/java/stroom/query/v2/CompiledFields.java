@@ -77,4 +77,11 @@ public class CompiledFields implements Iterable<CompiledField> {
     public CompiledField getField(final int i) {
         return compiledFields.get(i);
     }
+
+    @Override
+    public String toString() {
+        return "CompiledFields{" +
+                "compiledFields=" + compiledFields +
+                '}';
+    }
 }

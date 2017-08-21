@@ -37,7 +37,6 @@ public class TableResultCreator implements ResultCreator {
     private volatile List<Field> latestFields;
     private final List<Integer> defaultMaxResultsSizes;
 
-
     public TableResultCreator(final FieldFormatter fieldFormatter,
                               final List<Integer> defaultMaxResultsSizes) {
 
@@ -72,7 +71,16 @@ public class TableResultCreator implements ResultCreator {
             TableSettings tableSettings = resultRequest.getMappings().get(0);
             latestFields = tableSettings.getFields();
             final MaxResults maxResults = new MaxResults(tableSettings.getMaxResults(), defaultMaxResultsSizes);
-            totalResults = addTableResults(data, latestFields, maxResults, offset, length, openGroups, resultList, null, 0,
+
+            totalResults = addTableResults(data,
+                    latestFields,
+                    maxResults,
+                    offset,
+                    length,
+                    openGroups,
+                    resultList,
+                    null,
+                    0,
                     0);
         } catch (final Exception e) {
             error = e.getMessage();
@@ -88,13 +96,13 @@ public class TableResultCreator implements ResultCreator {
                                 final int depth, final int position) {
         int maxResultsAtThisDepth = maxResults.size(depth);
         int pos = position;
+        int resultCountAtThisLevel = 0;
         // Get top level items.
         final Items<Item> items = data.getChildMap().get(parentKey);
         if (items != null) {
             for (final Item item : items) {
                 if (pos >= offset &&
-                        resultList.size() < length &&
-                        pos <= maxResultsAtThisDepth) {
+                        resultList.size() < length) {
                     // Convert all list into fully resolved objects evaluating
                     // functions where necessary.
                     final List<String> values = new ArrayList<>(item.getValues().length);
@@ -130,6 +138,7 @@ public class TableResultCreator implements ResultCreator {
                     } else {
                         resultList.add(new Row(null, values, item.getDepth()));
                     }
+                    resultCountAtThisLevel++;
                 }
 
                 // Increment the position.
@@ -139,6 +148,9 @@ public class TableResultCreator implements ResultCreator {
                 if (item.getKey() != null && openGroups != null && openGroups.contains(item.getKey().toString())) {
                     pos = addTableResults(data, fields, maxResults, offset, length, openGroups, resultList,
                             item.getKey(), depth + 1, pos);
+                }
+                if (resultCountAtThisLevel >= maxResultsAtThisDepth) {
+                    break;
                 }
             }
         }

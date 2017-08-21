@@ -49,4 +49,13 @@ public class CompiledSort implements Serializable {
     public SortDirection getDirection() {
         return direction;
     }
+
+    @Override
+    public String toString() {
+        return "CompiledSort{" +
+                "fieldIndex=" + fieldIndex +
+                ", order=" + order +
+                ", direction=" + direction +
+                '}';
+    }
 }
