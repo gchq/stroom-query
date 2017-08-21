@@ -3,6 +3,7 @@ package stroom.query.v2;
 import org.junit.Assert;
 import org.junit.Test;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class TestMaxResults {
@@ -11,6 +12,12 @@ public class TestMaxResults {
     public void testSize_bothNull() {
         doTest( null, null, 0, Integer.MAX_VALUE);
         doTest( null, null, 1, Integer.MAX_VALUE);
+    }
+
+    @Test
+    public void testSize_bothEmpty() {
+        doTest( Collections.emptyList(), Collections.emptyList(), 0, Integer.MAX_VALUE);
+        doTest( Collections.emptyList(), Collections.emptyList(), 1, Integer.MAX_VALUE);
     }
 
     @Test
