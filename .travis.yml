@@ -3,10 +3,7 @@ language: java
 jdk: oraclejdk8
 
 script: 
-  - ./gradlew -Pversion=$TRAVIS_TAG downloadUrlDependencies clean build
-  - mkdir gh-pages
-  - unzip -d gh-pages/api/ stroom-query-api/build/libs/stroom-query-api-*javadoc.jar
-  - unzip -d gh-pages/common/ stroom-query-common/build/libs/stroom-query-common-*javadoc.jar
+  - ./gradlew -Pversion=$TRAVIS_TAG downloadUrlDependencies clean build aggregatedJavaDocs
 
 install:
   - git clone https://github.com/gchq/urlDependencies-plugin.git
@@ -19,7 +16,7 @@ deploy:
   - provider: pages
     skip_cleanup: true
     github_token: $GITHUB_TOKEN
-    local_dir: gh-pages
+    local_dir: build/docs/javadoc/
     target_branch: gh-pages
     on:
       branch: master
