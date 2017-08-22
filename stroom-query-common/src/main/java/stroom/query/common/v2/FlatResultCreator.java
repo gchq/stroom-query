@@ -239,11 +239,11 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
 
                     values.add(val);
                     i++;
-                    resultCountAtThisLevel++;
                 }
 
                 // Add the values.
                 results.add(values);
+                resultCountAtThisLevel++;
 
                 // Add child results if a node is open.
                 if (item.getKey() != null && openGroups.isOpen(item.getKey())) {
