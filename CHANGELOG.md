@@ -24,7 +24,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Change to use v1.0.0 of stroom-expression
 
-* Move ParamUtil to stroom.query.v2.parameters
+* Move ParamUtil to stroom.query.shared.v2
+
+* https://github.com/gchq/stroom/issues/98 Replace TrimSettings with MaxResults and StoreSize to separate limiting the data held in memory in the store from limiting the sorted/grouped results returned to the user/client.
+
+* Move common code into stroom.query.common.v2 so it is versioned
 
 ## [v1.0.1] - 2017-07-11
 
