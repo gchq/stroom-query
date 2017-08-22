@@ -1,5 +1,6 @@
 .gradle/
 **/target
+build/
 libs/
 classes/
 stroom-query-api/out/
