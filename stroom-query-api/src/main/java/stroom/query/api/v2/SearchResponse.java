@@ -30,6 +30,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Object describing the response to a {@link SearchRequest searchRequest} which may or may not contains results
+ *
+ */
 @JsonPropertyOrder({"highlights", "results", "errors", "complete"})
 @XmlRootElement(name = "searchResponse")
 @XmlType(name = "SearchResponse", propOrder = {"highlights", "results", "errors", "complete"})
@@ -38,13 +42,16 @@ public final class SearchResponse implements Serializable {
     private static final long serialVersionUID = -2964122512841756795L;
 
     /**
-     * A set of strings to highlight in the UI that should correlate with the
-     * search query.
+     * A set of strings to highlight in the UI that should correlate with the search query.
      */
     @XmlElementWrapper(name = "highlights")
     @XmlElement(name = "highlight")
     private List<String> highlights;
 
+    /**
+     * A set of {@link Result result} objects that each correspond to a {@link ResultRequest resultRequest}
+     * in the {@link SearchRequest searchRequest}
+     */
     @XmlElementWrapper(name = "results")
     @XmlElements({
             @XmlElement(name = "table", type = TableResult.class),
@@ -60,8 +67,7 @@ public final class SearchResponse implements Serializable {
     private List<String> errors;
 
     /**
-     * Complete means that all index shards have been searched across the
-     * cluster and there are no more results to come.
+     * Complete means that the search has finished and there are no more results to come.
      **/
     @XmlElement
     private Boolean complete;
@@ -69,7 +75,10 @@ public final class SearchResponse implements Serializable {
     private SearchResponse() {
     }
 
-    public SearchResponse(final List<String> highlights, final List<Result> results, final List<String> errors, final Boolean complete) {
+    public SearchResponse(final List<String> highlights,
+                          final List<Result> results,
+                          final List<String> errors,
+                          final Boolean complete) {
         this.highlights = highlights;
         this.results = results;
         this.errors = errors;
@@ -128,6 +137,9 @@ public final class SearchResponse implements Serializable {
                 '}';
     }
 
+    /**
+     * Builder for constructing a {@link SearchResponse searchResponse}
+     */
     public static class Builder {
         // Mandatory parameters
         private final Boolean complete;
