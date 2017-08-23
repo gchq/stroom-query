@@ -27,6 +27,10 @@ import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * A class for describing a search request including the query to run and definition(s) of how the results
+ * should be returned
+ */
 @JsonPropertyOrder({"key", "query", "resultRequests", "dateTimeLocale", "incremental"})
 @XmlRootElement(name = "searchRequest")
 @XmlType(name = "SearchRequest", propOrder = {"key", "query", "resultRequests", "dateTimeLocale", "incremental"})
@@ -49,7 +53,26 @@ public final class SearchRequest implements Serializable {
     private SearchRequest() {
     }
 
-    public SearchRequest(final QueryKey key, final Query query, final List<ResultRequest> resultRequests, final String dateTimeLocale, final Boolean incremental) {
+    /**
+     * @param key            A unique key to identify the instance of the search by. This key is used to identify multiple
+     *                       requests for the same search when running in incremental mode.
+     * @param query          The query terms for the search
+     * @param resultRequests A list of {@link ResultRequest resultRequest} definitions. If null or the list is empty
+     *                       no results will be returned. Allows the caller to request that the results of the query
+     *                       are returned in multiple forms, e.g. using a number of different
+     *                       filtering/aggregation/sorting approaches.
+     * @param dateTimeLocale The locale to use when formatting date values in the search results. The value is the
+     *                       string form of a {@link java.time.ZoneId zoneId}
+     * @param incremental    If true the response will contain all results found so far. Future requests for the same
+     *                       query key may return more results. Intended for use on longer running searches to allow
+     *                       partial result sets to be returned as soon as they are available rather than waiting for the
+     *                       full result set.
+     */
+    public SearchRequest(final QueryKey key,
+                         final Query query,
+                         final List<ResultRequest> resultRequests,
+                         final String dateTimeLocale,
+                         final Boolean incremental) {
         this.key = key;
         this.query = query;
         this.resultRequests = resultRequests;
@@ -57,26 +80,46 @@ public final class SearchRequest implements Serializable {
         this.incremental = incremental;
     }
 
+    /**
+     * @return The unique {@link QueryKey queryKey} for the search request
+     */
     public QueryKey getKey() {
         return key;
     }
 
+    /**
+     * @return The {@link Query query} object containing the search terms
+     */
     public Query getQuery() {
         return query;
     }
 
+    /**
+     * @return The list of {@link ResultRequest resultRequest} objects
+     */
     public List<ResultRequest> getResultRequests() {
         return resultRequests;
     }
 
+    /**
+     * @return The locale ID, see {@link java.time.ZoneId}, for the date values uses in the search response.
+     */
     public String getDateTimeLocale() {
         return dateTimeLocale;
     }
 
+    /**
+     * @return Whether the search should return immediately with the results found so far or wait for the search
+     * to finish
+     */
     public Boolean getIncremental() {
         return incremental;
     }
 
+    /**
+     * @return Whether the search should return immediately with the results found so far or wait for the search
+     * to finish
+     */
     public boolean incremental() {
         return incremental != null && incremental;
     }
