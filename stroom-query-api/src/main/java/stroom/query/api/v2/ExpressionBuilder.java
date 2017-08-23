@@ -23,45 +23,77 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * A builder class for constructing a tree of {@link ExpressionItem expressionItems}
+ */
 public final class ExpressionBuilder {
+
     private final Boolean enabled;
     private final Op op;
-
     private final List<Object> children = new ArrayList<>();
 
     /**
-     * By default an expression builder will create enabled operators and will 'AND' all added terms.
+     * Create a builder with an enabled 'AND' operator as its root item
      */
     public ExpressionBuilder() {
         this(null, Op.AND);
     }
 
+    /**
+     * Create a builder with the supplied {@link ExpressionOperator} type as its root item. The root item will be
+     * enabled
+     * @param op The {@link Op operator type} of the root operator
+     */
     public ExpressionBuilder(final Op op) {
         this(null, op);
     }
 
+    /**
+     * Create a builder with the supplied {@link ExpressionOperator} type as its root item. The root item will be
+     * enabled
+     * @param enabled The enabled state of the root operator item. A value of null is take to mean enabled
+     * @param op The {@link Op operator type} of the root operator
+     */
     public ExpressionBuilder(final Boolean enabled, final Op op) {
         this.enabled = enabled;
         this.op = op;
     }
 
-    public ExpressionBuilder addTerm(final String field, final Condition condition, final String value) {
+    public ExpressionBuilder addTerm(final String field,
+                                     final Condition condition,
+                                     final String value) {
+
         return addTerm(null, field, condition, value, null);
     }
 
-    public ExpressionBuilder addTerm(final Boolean enabled, final String field, final Condition condition, final String value) {
+    public ExpressionBuilder addTerm(final Boolean enabled,
+                                     final String field,
+                                     final Condition condition,
+                                     final String value) {
+
         return addTerm(enabled, field, condition, value, null);
     }
 
-    public ExpressionBuilder addDictionaryTerm(final String field, final Condition condition, final DocRef dictionary) {
+    public ExpressionBuilder addDictionaryTerm(final String field,
+                                               final Condition condition,
+                                               final DocRef dictionary) {
+
         return addTerm(null, field, condition, null, dictionary);
     }
 
-    public ExpressionBuilder addDictionaryTerm(final Boolean enabled, final String field, final Condition condition, final DocRef dictionary) {
+    public ExpressionBuilder addDictionaryTerm(final Boolean enabled,
+                                               final String field,
+                                               final Condition condition,
+                                               final DocRef dictionary) {
+
         return addTerm(enabled, field, condition, null, dictionary);
     }
 
-    public ExpressionBuilder addTerm(final Boolean enabled, final String field, final Condition condition, final String value, final DocRef dictionary) {
+    public ExpressionBuilder addTerm(final Boolean enabled, final String field,
+                                     final Condition condition,
+                                     final String value,
+                                     final DocRef dictionary) {
+
         children.add(new ExpressionTerm(enabled, field, condition, value, dictionary));
         return this;
     }
@@ -104,6 +136,10 @@ public final class ExpressionBuilder {
         return null;
     }
 
+    /**
+     * Builds the expression tree, returning the root {@link ExpressionOperator}
+     * @return The {@link ExpressionOperator} that is the root of the expression tree
+     */
     public ExpressionOperator build() {
         if (children.size() == 0) {
             return new ExpressionOperator(enabled, op, Arrays.asList());

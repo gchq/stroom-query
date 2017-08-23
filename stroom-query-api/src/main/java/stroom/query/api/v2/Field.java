@@ -46,7 +46,12 @@ public final class Field implements Serializable {
     public Field() {
     }
 
-    public Field(String name, String expression, Sort sort, Filter filter, Format format, Integer group) {
+    public Field(final String name,
+                 final String expression,
+                 final Sort sort,
+                 final Filter filter,
+                 final Format format,
+                 final Integer group) {
         this.name = name;
         this.expression = expression;
         this.sort = sort;

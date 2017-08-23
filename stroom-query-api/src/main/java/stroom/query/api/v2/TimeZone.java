@@ -127,7 +127,10 @@ public final class TimeZone implements Serializable {
     }
 
     public enum Use implements HasDisplayValue {
-        LOCAL("Local"), UTC("UTC"), ID("Id"), OFFSET("Offset");
+        LOCAL("Local"),
+        UTC("UTC"),
+        ID("Id"),
+        OFFSET("Offset");
 
         private final String displayValue;
 

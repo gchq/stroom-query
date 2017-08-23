@@ -104,7 +104,10 @@ public final class Format implements Serializable {
     }
 
     public enum Type implements HasDisplayValue {
-        GENERAL("General"), NUMBER("Number"), DATE_TIME("Date Time"), TEXT("Text");
+        GENERAL("General"),
+        NUMBER("Number"),
+        DATE_TIME("Date Time"),
+        TEXT("Text");
 
         private final String displayValue;
 

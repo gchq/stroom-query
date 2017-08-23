@@ -24,6 +24,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 
+/**
+ * Class for describing the format to use for formatting a date time value
+ */
 @JsonPropertyOrder({"pattern", "timeZone"})
 @XmlType(name = "DateTimeFormat", propOrder = {"pattern", "timeZone"})
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -38,15 +41,26 @@ public final class DateTimeFormat implements Serializable {
     private DateTimeFormat() {
     }
 
+    /**
+     * @param pattern A date time formatting pattern string conforming to the specification of
+     * {@link java.time.format.DateTimeFormatter}
+     * @param timeZone The time zone to use when formatting the date time value
+     */
     public DateTimeFormat(final String pattern, final TimeZone timeZone) {
         this.pattern = pattern;
         this.timeZone = timeZone;
     }
 
+    /**
+     * @return The format pattern string, conforming to {@link java.time.format.DateTimeFormatter}
+     */
     public String getPattern() {
         return pattern;
     }
 
+    /**
+     * @return The the {@link TimeZone timeZone} to use when formatting the date
+     */
     public TimeZone getTimeZone() {
         return timeZone;
     }
