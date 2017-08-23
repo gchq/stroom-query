@@ -52,7 +52,11 @@ public final class ExpressionTerm extends ExpressionItem {
         this(null, field, condition, null, dictionary);
     }
 
-    public ExpressionTerm(final Boolean enabled, final String field, final Condition condition, final String value, final DocRef dictionary) {
+    public ExpressionTerm(final Boolean enabled,
+                          final String field,
+                          final Condition condition,
+                          final String value,
+                          final DocRef dictionary) {
         super(enabled);
         this.field = field;
         this.condition = condition;
@@ -127,12 +131,26 @@ public final class ExpressionTerm extends ExpressionItem {
     }
 
     public enum Condition implements HasDisplayValue {
-        CONTAINS("contains"), EQUALS("="), GREATER_THAN(">"), GREATER_THAN_OR_EQUAL_TO(">="), LESS_THAN(
-                "<"), LESS_THAN_OR_EQUAL_TO("<="), BETWEEN("between"), IN("in"), IN_DICTIONARY("in dictionary");
+        CONTAINS("contains"),
+        EQUALS("="),
+        GREATER_THAN(">"),
+        GREATER_THAN_OR_EQUAL_TO(">="),
+        LESS_THAN("<"),
+        LESS_THAN_OR_EQUAL_TO("<="),
+        BETWEEN("between"),
+        IN("in"),
+        IN_DICTIONARY("in dictionary");
 
-        public static final List<Condition> SIMPLE_CONDITIONS = Arrays.asList(EQUALS, GREATER_THAN, GREATER_THAN_OR_EQUAL_TO, LESS_THAN,
-                LESS_THAN_OR_EQUAL_TO, BETWEEN);
+        public static final List<Condition> SIMPLE_CONDITIONS = Arrays.asList(
+                EQUALS,
+                GREATER_THAN,
+                GREATER_THAN_OR_EQUAL_TO,
+                LESS_THAN,
+                LESS_THAN_OR_EQUAL_TO,
+                BETWEEN);
+
         public static final String IN_CONDITION_DELIMITER = ",";
+
         private final String displayValue;
 
         Condition(final String displayValue) {
