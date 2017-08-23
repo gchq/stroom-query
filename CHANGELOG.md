@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+* Add ExpressionBuilder.end() method for better chaining of methods.
 
 ### Changed
 
