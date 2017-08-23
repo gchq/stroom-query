@@ -14,6 +14,67 @@
  * limitations under the License.
  */
 
+plugins {
+      id "com.webcohesion.enunciate" version "2.9.1"
+}
+
+apply plugin: 'com.benjaminsproule.swagger'
+apply plugin: "com.webcohesion.enunciate"
+
 dependencies {
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.6'
+    compile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
+    //compile 'io.swagger:swagger-jersey2-jaxrs:1.5.16'
+    compile 'io.swagger:swagger-annotations:1.5.16'
+    //testCompile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
+    //testCompile 'io.swagger:swagger-jersey2-jaxrs:1.5.16'
+}
+
+swagger {
+    apiSource {
+        springmvc = false
+        locations = [ 'stroom.query.api.v2.ExampleEndpoint' ]
+        //locations = []
+        schemes = [ 'http' ]
+        host = 'www.example.com:8080'
+        basePath = '/v2'
+        info {
+            title = 'Swagger Gradle Plugin Sample'
+            version = 'v1'
+            description = 'This is a sample.'
+            termsOfService = 'http://www.example.com/termsOfService'
+            contact {
+                email = 'email@email.com'
+                name = 'Name'
+                url = 'http://www.example.com'
+            }
+            license {
+                url = 'http://www.apache.org/licenses/LICENSE-2.0.html'
+                name = 'Apache 2.0'
+            }
+        }
+        //outputPath = "${project.buildDir}/generated/document.html"
+        //swaggerDirectory = "${project.rootDir}/generated/swagger-ui"
+        swaggerDirectory = "${project.buildDir}/swagger-ui"
+    }
+}
+
+task swaggerClasses(dependsOn: 'build') {
+    doLast {
+        //FileCollection apiClassFiles =files(project(':stroom-query-api').sourceSets['main'].output)
+        //apiClassFiles.each {
+            //buildscript.classLoader.addURL(it.toURI().toURL())
+        //}
+
+    }
+}
+
+tasks.enunciate {
+    configFileName = "enunciate.xml"
+    File enunciateDistDir = file("dist/docs/api")
+    doFirst {
+        enunciateDistDir.deleteDir()
+        enunciateDistDir.mkdirs()
+    }
+    export("docs", enunciateDistDir)
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<enunciate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://enunciate.webcohesion.com/schemas/enunciate-1.27.xsd">
+
+    <facets>
+        <exclude name="internal_api" />
+    </facets>
+
+    <api-classes>
+        <include pattern="stroom.query.api.v2.**" />
+    </api-classes>
+
+
+    <modules>
+        <docs docsDir="target/docs" title="REST API"/>
+    </modules>
+
+</enunciate>
