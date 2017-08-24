@@ -28,11 +28,14 @@ dependencies {
     compile 'io.swagger:swagger-annotations:1.5.16'
     //testCompile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
     //testCompile 'io.swagger:swagger-jersey2-jaxrs:1.5.16'
+    //compile 'org.springframework.boot:spring-boot-starter-jersey:+'
+    //compile 'org.springframework.boot:spring-boot-starter-web:+'
 }
 
 swagger {
     apiSource {
         springmvc = false
+        outputFormats = 'yaml'
         locations = [ 'stroom.query.api.v2.ExampleEndpoint' ]
         //locations = []
         schemes = [ 'http' ]
@@ -59,15 +62,6 @@ swagger {
     }
 }
 
-task swaggerClasses(dependsOn: 'build') {
-    doLast {
-        //FileCollection apiClassFiles =files(project(':stroom-query-api').sourceSets['main'].output)
-        //apiClassFiles.each {
-            //buildscript.classLoader.addURL(it.toURI().toURL())
-        //}
-
-    }
-}
 
 tasks.enunciate {
     configFileName = "enunciate.xml"
@@ -77,4 +71,8 @@ tasks.enunciate {
         enunciateDistDir.mkdirs()
     }
     export("docs", enunciateDistDir)
+}
+
+tasks.generateSwaggerDocumentation {
+    dependsOn classes
 }

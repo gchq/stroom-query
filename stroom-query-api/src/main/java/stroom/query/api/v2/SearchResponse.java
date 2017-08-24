@@ -17,6 +17,7 @@
 package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -42,6 +43,7 @@ public final class SearchResponse implements Serializable {
 
     @XmlElementWrapper(name = "highlights")
     @XmlElement(name = "highlight")
+    @ApiModelProperty(value = "A list of strings to highlight in the UI that should correlate with the search query.")
     private List<String> highlights;
 
     @XmlElementWrapper(name = "results")
