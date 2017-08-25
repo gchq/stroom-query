@@ -39,14 +39,13 @@ swagger {
         springmvc = false //makes it search for jersey annotations
         outputFormats = 'json,yaml'
         locations = [ 'stroom.query.api.v2.ExampleEndpoint' ]
-        schemes = [ 'http' ]
+        schemes = [ 'https' ]
         host = 'localhost:8080'
         basePath = '/v2'
         info {
             title = 'stroom-query'
             version = 'v2'
             description = 'An API for querying data sources including the ability to requset multiple result definitions'
-            termsOfService = 'http://www.example.com/termsOfService'
             contact {
                 name = 'GCHQ'
                 url = 'https://github.com/gchq/stroom'
