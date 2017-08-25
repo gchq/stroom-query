@@ -40,7 +40,7 @@ swagger {
         outputFormats = 'json,yaml'
         locations = [ 'stroom.query.api.v2.ExampleEndpoint' ]
         schemes = [ 'http' ]
-        host = 'http://localhost:8080'
+        host = 'localhost:8080'
         basePath = '/v2'
         info {
             title = 'stroom-query'
