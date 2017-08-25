@@ -17,6 +17,8 @@
 package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -28,24 +30,52 @@ import java.util.List;
 
 @JsonPropertyOrder({"queryId", "fields", "extractValues", "extractionPipeline", "maxResults",
         "showDetail"})
-@XmlType(name = "TableSettings", propOrder = {"queryId", "fields", "extractValues", "extractionPipeline", "maxResults", "showDetail"})
+@XmlType(
+        name = "TableSettings",
+        propOrder = {"queryId", "fields", "extractValues", "extractionPipeline", "maxResults", "showDetail"})
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(description = "An object to describe how the query results should be returned, including which fields " +
+        "should be included and what sorting, grouping, filtering, limiting, etc. should be applied")
 public final class TableSettings implements Serializable {
     private static final long serialVersionUID = -2530827581046882396L;
 
     @XmlElement
+    @ApiModelProperty(
+        value = "TODO",
+        required = true)
     private String queryId;
+
     @XmlElementWrapper(name = "fields")
     @XmlElement(name = "field")
+    @ApiModelProperty(required = true)
     private List<Field> fields;
+
     @XmlElement
+    @ApiModelProperty(
+            value = "TODO",
+            required = false)
     private Boolean extractValues;
+
     @XmlElement
+    @ApiModelProperty(required = false)
     private DocRef extractionPipeline;
+
     @XmlElementWrapper(name = "maxResults")
     @XmlElement(name = "val")
+    @ApiModelProperty(
+            value = "Defines the maximum number of results to return at each grouping level, e.g. '1000,10,1' means " +
+                    "1000 results at group level 0, 10 at level 1 and 1 at level 2. In the absence of this field " +
+                    "system defaults will apply",
+            required = false,
+            example = "1000,10,1")
     private List<Integer> maxResults;
+
     @XmlElement
+    @ApiModelProperty(
+            value = "When grouping is used a value of true indicates that the results will include the full detail of " +
+                    "any results aggregated into a group as well as their aggregates. A value of false will only " +
+                    "include the aggregated values for each group. Defaults to false.",
+            required = false)
     private Boolean showDetail;
 
     private TableSettings() {

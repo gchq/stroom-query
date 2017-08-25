@@ -29,13 +29,19 @@ import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * {@value #CLASS_DESC}
+ */
 @JsonPropertyOrder({"dataSource", "expression", "params"})
 @XmlType(name = "Query", propOrder = {"dataSource", "expression", "params"})
 @XmlRootElement(name = "query")
 @XmlAccessorType(XmlAccessType.FIELD)
-@ApiModel(description = "The query terms for the search")
+@ApiModel(description = Query.CLASS_DESC)
 public final class Query implements Serializable {
+
     private static final long serialVersionUID = 9055582579670841979L;
+
+    public static final String CLASS_DESC = "The query terms for the search";
 
     @XmlElement
     @ApiModelProperty(

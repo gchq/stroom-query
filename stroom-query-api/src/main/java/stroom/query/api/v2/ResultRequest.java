@@ -16,6 +16,9 @@
 
 package stroom.query.api.v2;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -27,22 +30,39 @@ import java.util.List;
 
 @XmlType(name = "ResultRequest", propOrder = {"componentId", "mappings", "requestedRange", "openGroups", "resultStyle", "fetch"})
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(description = "A definition for how to return the raw results of the query in the SearchResponse, " +
+        "e.g. sorted, grouped, limited, etc.")
 public final class ResultRequest implements Serializable {
     private static final long serialVersionUID = -7455554742243923562L;
 
     @XmlElement
+    @ApiModelProperty(
+            value = "The ID of the component that will receive the results corresponding to this ResultRequest",
+            required = true)
     private String componentId;
+
     @XmlElementWrapper(name = "mappings")
     @XmlElement(name = "mappings")
+    @ApiModelProperty(required = true)
     private List<TableSettings> mappings;
+
     @XmlElement
+    @ApiModelProperty(required = true)
     private OffsetRange requestedRange;
+
     @XmlElementWrapper(name = "openGroups")
     @XmlElement(name = "key")
+    @ApiModelProperty(
+            value = "TODO",
+            required = true)
     private List<String> openGroups;
+
     @XmlElement
+    @ApiModelProperty(required = true)
     private ResultStyle resultStyle;
+
     @XmlElement
+    @ApiModelProperty(required = true)
     private Fetch fetch;
 
     private ResultRequest() {

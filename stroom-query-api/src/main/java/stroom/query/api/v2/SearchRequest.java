@@ -42,20 +42,16 @@ public final class SearchRequest implements Serializable {
     private static final long serialVersionUID = -6668626615097471925L;
 
     @XmlElement
-    @ApiModelProperty(
-            required = true)
+    @ApiModelProperty(required = true)
     private QueryKey key;
 
     @XmlElement
-    @ApiModelProperty(
-            required = true)
+    @ApiModelProperty(required = true)
     private Query query;
 
     @XmlElementWrapper(name = "resultRequests")
     @XmlElement(name = "resultRequest")
-    @ApiModelProperty(
-            value = "A list of ResultRequest objects",
-            required = true)
+    @ApiModelProperty(required = true)
     private List<ResultRequest> resultRequests;
 
 

@@ -18,6 +18,7 @@ package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModel;
 import stroom.util.shared.HasDisplayValue;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -29,14 +30,18 @@ import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 
 /**
- * A class for describing a unique reference to a 'document' in stroom.  A 'document' is an entity in stroom such as a data source
- * dictionary or pipeline.
+ * {@value #CLASS_DESC}
  */
 @JsonPropertyOrder({"type", "id", "uuid", "name"})
 @XmlType(name = "DocRef", propOrder = {"type", "id", "uuid", "name"})
 @XmlRootElement(name = "doc")
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(description = Query.CLASS_DESC)
 public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable {
+
+    public static final String CLASS_DESC = "A class for describing a unique reference to a 'document' in stroom.  " +
+            "A 'document' is an entity in stroom such as a data source dictionary or pipeline.";
+
     private static final long serialVersionUID = -2121399789820829359L;
 
     @XmlElement
