@@ -17,6 +17,8 @@
 package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -31,15 +33,24 @@ import java.util.List;
 @XmlType(name = "Query", propOrder = {"dataSource", "expression", "params"})
 @XmlRootElement(name = "query")
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(description = "The query terms for the search")
 public final class Query implements Serializable {
     private static final long serialVersionUID = 9055582579670841979L;
 
     @XmlElement
+    @ApiModelProperty(
+            required = true)
     private DocRef dataSource;
+
     @XmlElement
+    @ApiModelProperty(
+            required = true)
     private ExpressionOperator expression;
+
     @XmlElementWrapper(name = "params")
     @XmlElement(name = "param")
+    @ApiModelProperty(
+            required = false)
     private List<Param> params;
 
     private Query() {

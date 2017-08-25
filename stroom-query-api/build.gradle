@@ -37,7 +37,7 @@ dependencies {
 swagger {
     apiSource {
         springmvc = false
-        outputFormats = 'yaml'
+        outputFormats = 'json,yaml'
         locations = [ 'stroom.query.api.v2.ExampleEndpoint' ]
         //locations = []
         schemes = [ 'http' ]
@@ -101,4 +101,6 @@ generateSwaggerUI {
         '''.stripIndent()
 }
 
-//task build(dependsOn: generateSwaggerUI)
+tasks.build{
+    dependsOn generateSwaggerUI
+}

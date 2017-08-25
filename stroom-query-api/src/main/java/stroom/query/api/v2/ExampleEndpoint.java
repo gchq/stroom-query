@@ -2,6 +2,7 @@ package stroom.query.api.v2;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -20,8 +21,8 @@ public class ExampleEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/search")
     //swagger plugin seems to require APIOperation
-    @ApiOperation(value = "xxxx", response = SearchResponse.class)
-    public SearchResponse search(final SearchRequest request) {
+    @ApiOperation(value = "SearchResponse", response = SearchResponse.class)
+    public SearchResponse search(@ApiParam("SearchRequest") final SearchRequest request) {
         return new SearchResponse(null, null, null, null);
     }
 

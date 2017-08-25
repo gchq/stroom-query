@@ -17,6 +17,7 @@
 package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -38,12 +39,17 @@ import java.util.List;
 @XmlRootElement(name = "searchResponse")
 @XmlType(name = "SearchResponse", propOrder = {"highlights", "results", "errors", "complete"})
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(description = "The response to a search request, that may or may not contain results. The results " +
+        "may only be a partial set if an iterative screech was requested")
 public final class SearchResponse implements Serializable {
+
     private static final long serialVersionUID = -2964122512841756795L;
 
     @XmlElementWrapper(name = "highlights")
     @XmlElement(name = "highlight")
-    @ApiModelProperty(value = "A list of strings to highlight in the UI that should correlate with the search query.")
+    @ApiModelProperty(
+            value = "A list of strings to highlight in the UI that should correlate with the search query.",
+            required = true)
     private List<String> highlights;
 
     @XmlElementWrapper(name = "results")

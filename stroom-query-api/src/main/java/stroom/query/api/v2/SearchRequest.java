@@ -17,6 +17,8 @@
 package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -35,19 +37,42 @@ import java.util.List;
 @XmlRootElement(name = "searchRequest")
 @XmlType(name = "SearchRequest", propOrder = {"key", "query", "resultRequests", "dateTimeLocale", "incremental"})
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(description = "A request for new search or a follow up request for more data for an existing iterative search")
 public final class SearchRequest implements Serializable {
     private static final long serialVersionUID = -6668626615097471925L;
 
     @XmlElement
+    @ApiModelProperty(
+            required = true)
     private QueryKey key;
+
     @XmlElement
+    @ApiModelProperty(
+            required = true)
     private Query query;
+
     @XmlElementWrapper(name = "resultRequests")
     @XmlElement(name = "resultRequest")
+    @ApiModelProperty(
+            value = "A list of ResultRequest objects",
+            required = true)
     private List<ResultRequest> resultRequests;
+
+
     @XmlElement
+    @ApiModelProperty(
+            value = "The locale to use when formatting date values in the search results. The " +
+                    "value is the string form of a {@link java.time.ZoneId zoneId}",
+            required = true)
     private String dateTimeLocale;
+
     @XmlElement
+    @ApiModelProperty(
+            value = "If true the response will contain all results found so far. Future requests " +
+            "for the same query key may return more results. Intended for use on longer running searches to allow " +
+            "partial result sets to be returned as soon as they are available rather than waiting for the full " +
+            "result set.",
+            required = true)
     private Boolean incremental;
 
     private SearchRequest() {
