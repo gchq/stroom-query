@@ -17,6 +17,8 @@
 package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -27,12 +29,22 @@ import java.io.Serializable;
 @JsonPropertyOrder({"decimalPlaces", "useSeparator"})
 @XmlType(name = "NumberFormat", propOrder = {"decimalPlaces", "useSeparator"})
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(description = "The definition of a format to apply to numeric data")
 public final class NumberFormat implements Serializable {
     private static final long serialVersionUID = 9145624653060319801L;
 
     @XmlElement
+    @ApiModelProperty(
+            value = "The number of decimal places",
+            example = "2",
+            required = true)
     private Integer decimalPlaces;
+
     @XmlElement
+    @ApiModelProperty(
+            value = "Whether to use a thousands separator or not. Defaults to false",
+            example = "true",
+            required = false)
     private Boolean useSeparator;
 
     private NumberFormat() {

@@ -17,6 +17,8 @@
 package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import stroom.util.shared.HasDisplayValue;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -28,13 +30,20 @@ import java.io.Serializable;
 @JsonPropertyOrder({"type", "numberFormat", "dateTimeFormat"})
 @XmlType(name = "Format", propOrder = {"type", "numberFormat", "dateTimeFormat"})
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(description = "Describes the formatting that will be applied to values in a field")
 public final class Format implements Serializable {
     private static final long serialVersionUID = -5380825645719299089L;
 
     @XmlElement
+    @ApiModelProperty(
+            value = "The formatting type to apply",
+            example = "NUMBER",
+            required = true)
     private Type type;
+
     @XmlElement
     private NumberFormat numberFormat;
+
     @XmlElement
     private DateTimeFormat dateTimeFormat;
 

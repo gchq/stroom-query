@@ -18,6 +18,7 @@ package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -34,21 +35,35 @@ public final class Field implements Serializable {
     private static final long serialVersionUID = 7327802315955158337L;
 
     @XmlElement
+    @ApiModelProperty(
+            value = "The name of the field for display purposes",
+            required = false)
     private String name;
 
     @XmlElement
+    @ApiModelProperty(
+            value = "The name of the field for display purposes",
+            required = true,
+            example = "SUM(${count})")
     private String expression;
 
     @XmlElement
+    @ApiModelProperty(required = false)
     private Sort sort;
 
     @XmlElement
+    @ApiModelProperty(required = false)
     private Filter filter;
 
     @XmlElement
+    @ApiModelProperty(required = false)
     private Format format;
 
     @XmlElement
+    @ApiModelProperty(
+            value = "If this field is to be grouped then this defines the level of grouping, with 0 being the top " +
+                    "level of grouping, 1 being the next level down, etc.",
+            required = false)
     private Integer group;
 
     public Field() {
