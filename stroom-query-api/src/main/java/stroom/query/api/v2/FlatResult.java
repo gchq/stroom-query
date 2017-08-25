@@ -17,6 +17,8 @@
 package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -25,16 +27,28 @@ import java.util.List;
 
 @JsonPropertyOrder({"componentId", "structure", "values", "size", "error"})
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(
+        description = "A result structure used primarily for visualisation data",
+        parent = Result.class)
 public final class FlatResult extends Result {
+
     private static final long serialVersionUID = 3826654996795750099L;
 
     @XmlElement
     private List<Field> structure;
+
     @XmlElement
+    @ApiModelProperty(value = "The 2 dimensional array containing the result set. The positions in the inner array " +
+            "correspond to the positions in the 'structure' property")
     private List<List<Object>> values;
+
     @XmlElement
+    @ApiModelProperty(value = "The size of the result set being returned")
     private Long size;
+
     @XmlElement
+    @ApiModelProperty(value = "If an error has occurred producing this result set then this will have details " +
+            "of the error")
     private String error;
 
     private FlatResult() {

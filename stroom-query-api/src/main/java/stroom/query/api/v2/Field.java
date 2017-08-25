@@ -17,6 +17,7 @@
 package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModel;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -27,19 +28,26 @@ import java.io.Serializable;
 @JsonPropertyOrder({"name", "expression", "sort", "filter", "format", "group"})
 @XmlType(name = "Field", propOrder = {"name", "expression", "sort", "filter", "format", "group"})
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(description = "Describes a field in a result set. The field can have various expressions applied to it, " +
+        "e.g. SUM(), along with sorting, filtering, formatting and grouping")
 public final class Field implements Serializable {
     private static final long serialVersionUID = 7327802315955158337L;
 
     @XmlElement
     private String name;
+
     @XmlElement
     private String expression;
+
     @XmlElement
     private Sort sort;
+
     @XmlElement
     private Filter filter;
+
     @XmlElement
     private Format format;
+
     @XmlElement
     private Integer group;
 

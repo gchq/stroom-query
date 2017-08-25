@@ -18,6 +18,7 @@ package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.swagger.annotations.ApiModel;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -38,6 +39,9 @@ import java.io.Serializable;
 @XmlType(name = "Result", propOrder = "componentId")
 @XmlSeeAlso({TableResult.class, FlatResult.class})
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(
+        description = "Base object for describing a set of result data",
+        subTypes = {TableResult.class, FlatResult.class})
 public abstract class Result implements Serializable {
     private static final long serialVersionUID = -7455554742243923562L;
 
