@@ -16,11 +16,11 @@
 
 plugins {
     id "com.webcohesion.enunciate" version "2.9.1"
-    id 'org.hidetake.swagger.generator' version '2.4.2'
+    //id 'org.hidetake.swagger.generator' version '2.4.2'
 }
 
 apply plugin: 'com.benjaminsproule.swagger'
-apply plugin: "com.webcohesion.enunciate"
+//apply plugin: "com.webcohesion.enunciate"
 
 dependencies {
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.6'
@@ -31,7 +31,7 @@ dependencies {
     //testCompile 'io.swagger:swagger-jersey2-jaxrs:1.5.16'
     //compile 'org.springframework.boot:spring-boot-starter-jersey:+'
     //compile 'org.springframework.boot:spring-boot-starter-web:+'
-    swaggerUI 'org.webjars:swagger-ui:2.2.6'
+    //swaggerUI 'org.webjars:swagger-ui:2.2.6'
 }
 
 swagger {
@@ -64,26 +64,27 @@ tasks.generateSwaggerDocumentation {
     dependsOn classes
 }
 
-validateSwagger {
-    dependsOn generateSwaggerDocumentation
-      inputFile = file("${project.buildDir}/swagger.yaml")
-}
+//validateSwagger {
+    //dependsOn generateSwaggerDocumentation
+      //inputFile = file("${project.buildDir}/swagger.yaml")
+//}
 
-generateSwaggerUI {
-        dependsOn validateSwagger
+//generateSwaggerUI {
+        //dependsOn validateSwagger
 
-        inputFile = file("${project.buildDir}/swagger.yaml")
+        //inputFile = file("${project.buildDir}/swagger.yaml")
 
-        // Swagger UI options
-        options.docExpansion = 'full'
-        options.supportedSubmitMethods = []
+        //// Swagger UI options
+        //options.docExpansion = 'full'
+        //options.supportedSubmitMethods = []
 
-        // Custom header
-        header = '''\
-        <style>#header { display: none; }</style>
-        '''.stripIndent()
-}
+        //// Custom header
+        //header = '''\
+        //<style>#header { display: none; }</style>
+        //'''.stripIndent()
+//}
 
 tasks.build{
-    dependsOn generateSwaggerUI
+    //dependsOn generateSwaggerUI
+    dependsOn generateSwaggerDocumentation
 }
