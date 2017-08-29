@@ -17,6 +17,8 @@
 package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -30,12 +32,20 @@ import java.io.Serializable;
 @JsonPropertyOrder({"pattern", "timeZone"})
 @XmlType(name = "DateTimeFormat", propOrder = {"pattern", "timeZone"})
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(description = "The string formatting to apply to a date value")
 public final class DateTimeFormat implements Serializable {
     private static final long serialVersionUID = 9145624653060319801L;
 
     @XmlElement
+    @ApiModelProperty(
+            value = "A date time formatting pattern string conforming to the specification of " +
+                    "java.time.format.DateTimeFormatter",
+            required = true)
     private String pattern;
+
     @XmlElement
+    @ApiModelProperty(
+            required = true)
     private TimeZone timeZone;
 
     private DateTimeFormat() {

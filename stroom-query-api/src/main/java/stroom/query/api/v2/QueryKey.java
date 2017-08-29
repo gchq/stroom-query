@@ -37,6 +37,7 @@ public final class QueryKey implements Serializable {
     @XmlElement
     @ApiModelProperty(
             value = "The UUID that makes up the query key",
+            example = "7740bcd0-a49e-4c22-8540-044f85770716",
             required = true)
     private String uuid;
 

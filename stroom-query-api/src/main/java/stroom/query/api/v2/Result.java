@@ -19,6 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -46,6 +47,10 @@ public abstract class Result implements Serializable {
     private static final long serialVersionUID = -7455554742243923562L;
 
     @XmlElement
+    //TODO add an example value
+    @ApiModelProperty(
+            value = "The ID of the component that this result set was requested for. See ResultRequest in SearchRequest",
+            required = true)
     private String componentId;
 
     Result() {

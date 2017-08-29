@@ -58,7 +58,7 @@ public final class SearchRequest implements Serializable {
     @XmlElement
     @ApiModelProperty(
             value = "The locale to use when formatting date values in the search results. The " +
-                    "value is the string form of a {@link java.time.ZoneId zoneId}",
+                    "value is the string form of a java.time.ZoneId",
             required = true)
     private String dateTimeLocale;
 

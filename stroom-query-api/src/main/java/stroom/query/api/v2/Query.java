@@ -50,12 +50,14 @@ public final class Query implements Serializable {
 
     @XmlElement
     @ApiModelProperty(
+            value = "The root logical operator in the query expression tree",
             required = true)
     private ExpressionOperator expression;
 
     @XmlElementWrapper(name = "params")
     @XmlElement(name = "param")
     @ApiModelProperty(
+            value = "A list of key/value pairs that provide additional information about the query",
             required = false)
     private List<Param> params;
 

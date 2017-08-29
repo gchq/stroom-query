@@ -17,6 +17,8 @@
 package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import stroom.util.shared.HasDisplayValue;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -31,16 +33,25 @@ import java.util.List;
 @JsonPropertyOrder({"op", "children"})
 @XmlType(name = "ExpressionOperator", propOrder = {"op", "children"})
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(
+        description = "A logical operator term in a query expression tree",
+        parent = ExpressionItem.class)
 public final class ExpressionOperator extends ExpressionItem {
     private static final long serialVersionUID = 6602004424564268512L;
 
     @XmlElement(name = "op")
+    @ApiModelProperty(
+            value = "The logical operator type",
+            required = true)
     private Op op = Op.AND;
+
     @XmlElementWrapper(name = "children")
     @XmlElements({
             @XmlElement(name = "operator", type = ExpressionOperator.class),
             @XmlElement(name = "term", type = ExpressionTerm.class)
     })
+    @ApiModelProperty(
+            required = false)
     private List<ExpressionItem> children;
 
     private ExpressionOperator() {

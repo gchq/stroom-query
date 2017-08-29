@@ -17,6 +17,8 @@
 package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import stroom.util.shared.HasDisplayValue;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -29,16 +31,34 @@ import java.util.List;
 @JsonPropertyOrder({"field", "condition", "value", "dictionary"})
 @XmlType(name = "ExpressionTerm", propOrder = {"field", "condition", "value", "dictionary"})
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(
+        description = "A predicate term in a query expression tree",
+        parent = ExpressionItem.class)
 public final class ExpressionTerm extends ExpressionItem {
     private static final long serialVersionUID = 9035311895540457146L;
 
     @XmlElement
+    @ApiModelProperty(
+            value = "The name of the field that is being evaluated in this predicate term",
+            required = true)
     private String field;
+
     @XmlElement
+    @ApiModelProperty(
+            value = "The condition of the predicate term",
+            required = true)
     private Condition condition;
+
     @XmlElement
+    @ApiModelProperty(
+            value = "The value that the field value is being evaluated against. Not required if a dictionary is supplied",
+            required = false)
     private String value;
+
     @XmlElement
+    @ApiModelProperty(
+            value = "The DocRef for the dictionary that this predicate is using for its evaluation",
+            required = true)
     private DocRef dictionary;
 
     private ExpressionTerm() {

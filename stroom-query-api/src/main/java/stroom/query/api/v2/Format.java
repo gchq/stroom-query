@@ -42,9 +42,13 @@ public final class Format implements Serializable {
     private Type type;
 
     @XmlElement
+    @ApiModelProperty(
+            required = false)
     private NumberFormat numberFormat;
 
     @XmlElement
+    @ApiModelProperty(
+            required = false)
     private DateTimeFormat dateTimeFormat;
 
     private Format() {

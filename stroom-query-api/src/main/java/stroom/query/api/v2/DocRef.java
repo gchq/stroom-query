@@ -19,6 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import stroom.util.shared.HasDisplayValue;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -45,14 +46,31 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
     private static final long serialVersionUID = -2121399789820829359L;
 
     @XmlElement
+    @ApiModelProperty(
+            value = "The type of the 'document' that this DocRef refers to",
+            example = "StroomStatsStore",
+            required = true)
     private String type;
+
     @XmlElement
+    @ApiModelProperty(
+            value = "The unique identifier for this 'document'",
+            example = "9f6184b4-bd78-48bc-b0cd-6e51a357f6a6",
+            required = true)
     private String uuid;
+
     @XmlElement
+    @ApiModelProperty(
+            value = "The name for the data source",
+            example = "MyStatistic",
+            required = true)
     private String name;
 
     @Deprecated
     @XmlElement
+    @ApiModelProperty(
+            value = "DEPRECATED",
+            required = false)
     private Long id;
 
     //TODO should we have a no-args ctor?

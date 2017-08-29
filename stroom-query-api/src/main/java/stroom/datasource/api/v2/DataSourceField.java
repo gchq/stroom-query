@@ -18,6 +18,8 @@ package stroom.datasource.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import stroom.query.api.v2.ExpressionTerm.Condition;
 import stroom.util.shared.HasDisplayValue;
 
@@ -33,14 +35,28 @@ import java.util.List;
 @JsonPropertyOrder({"type", "name", "queryable", "conditions"})
 @XmlType(name = "DataSourceField", propOrder = {"type", "name", "queryable", "conditions"})
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(description = "The definition of a field within a data source")
 public final class DataSourceField implements Serializable, HasDisplayValue {
     private static final long serialVersionUID = 1272545271946712570L;
 
     @XmlElement
+    @ApiModelProperty(
+            value = "The data type for the field",
+            required = true)
     private DataSourceFieldType type;
+
     @XmlElement
+    @ApiModelProperty(
+            value = "The name of the field",
+            example = "field1",
+            required = true)
     private String name;
+
     @XmlElement
+    @ApiModelProperty(
+            value = "Whether the field can be used in predicate in a query",
+            example = "true",
+            required = true)
     private Boolean queryable;
 
     /**
@@ -50,6 +66,9 @@ public final class DataSourceField implements Serializable, HasDisplayValue {
      */
     @XmlElementWrapper(name = "conditions")
     @XmlElement(name = "condition")
+    @ApiModelProperty(
+            value = "The supported predicate conditions for this field",
+            required = true)
     private List<Condition> conditions;
 
     private DataSourceField() {
@@ -122,7 +141,10 @@ public final class DataSourceField implements Serializable, HasDisplayValue {
     }
 
     public enum DataSourceFieldType implements HasDisplayValue {
-        FIELD("Text", false), NUMERIC_FIELD("Number", true), DATE_FIELD("Date", false), ID("Id", true);
+        FIELD("Text", false),
+        NUMERIC_FIELD("Number", true),
+        DATE_FIELD("Date", false),
+        ID("Id", true);
 
         private final String displayValue;
         private final boolean numeric;

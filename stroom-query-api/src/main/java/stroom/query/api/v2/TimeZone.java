@@ -17,6 +17,8 @@
 package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import stroom.util.shared.HasDisplayValue;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -28,16 +30,36 @@ import java.io.Serializable;
 @JsonPropertyOrder({"use", "id", "offsetHours", "offsetMinutes"})
 @XmlType(name = "TimeZone", propOrder = {"use", "id", "offsetHours", "offsetMinutes"})
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(description = "The timezone to apply to a date time value")
 public final class TimeZone implements Serializable {
     private static final long serialVersionUID = 1200175661441813029L;
 
     @XmlElement
+    //TODO needs better description
+    @ApiModelProperty(
+            value = "The required type of time zone",
+            required = true)
     private Use use;
+
     @XmlElement
+    @ApiModelProperty(
+            value = "The id of the time zone, conforming to java.time.ZoneId",
+            example = "GMT",
+            required = false)
     private String id;
+
     @XmlElement
+    @ApiModelProperty(
+            value = "The number of hours this timezone is offset from UTC",
+            example = "-1",
+            required = false)
     private Integer offsetHours;
+
     @XmlElement
+    @ApiModelProperty(
+            value = "The number of minutes this timezone is offset from UTC",
+            example = "-30",
+            required = false)
     private Integer offsetMinutes;
 
     private TimeZone() {

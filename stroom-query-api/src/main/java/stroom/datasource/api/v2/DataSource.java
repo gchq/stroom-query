@@ -17,6 +17,8 @@
 package stroom.datasource.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -31,11 +33,13 @@ import java.util.List;
 @XmlType(name = "DataSource", propOrder = "fields")
 @XmlRootElement(name = "dataSource")
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(description = "The definition of a data source, describing the fields available")
 public final class DataSource implements Serializable {
     private static final long serialVersionUID = 1272545271946712570L;
 
     @XmlElementWrapper(name = "fields")
     @XmlElement(name = "field")
+    @ApiModelProperty(required = true)
     private List<DataSourceField> fields;
 
     private DataSource() {
