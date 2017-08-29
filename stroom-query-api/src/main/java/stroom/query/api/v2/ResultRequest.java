@@ -52,17 +52,24 @@ public final class ResultRequest implements Serializable {
 
     @XmlElementWrapper(name = "openGroups")
     @XmlElement(name = "key")
+    //TODO complete documentation
     @ApiModelProperty(
             value = "TODO",
             required = true)
     private List<String> openGroups;
 
     @XmlElement
-    @ApiModelProperty(required = true)
+    @ApiModelProperty(
+            value = "The style of results required. FLAT will provide a FlatResult object, while TABLE will " +
+                    "provide a TableResult object",
+            required = true)
     private ResultStyle resultStyle;
 
     @XmlElement
-    @ApiModelProperty(required = true)
+    @ApiModelProperty(
+            value = "The fetch mode for the query. NONE means fetch no data, ALL means fetch all known results, " +
+                    "CHANGES means fetch only those records not see in previous requests",
+            required = false)
     private Fetch fetch;
 
     private ResultRequest() {
@@ -171,10 +178,13 @@ public final class ResultRequest implements Serializable {
     }
 
     public enum ResultStyle {
-        FLAT, TABLE
+        FLAT,
+        TABLE
     }
 
     public enum Fetch {
-        NONE, CHANGES, ALL
+        NONE,
+        CHANGES,
+        ALL
     }
 }

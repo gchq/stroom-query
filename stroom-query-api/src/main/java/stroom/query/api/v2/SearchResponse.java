@@ -61,9 +61,15 @@ public final class SearchResponse implements Serializable {
 
     @XmlElementWrapper(name = "errors")
     @XmlElement(name = "error")
+    @ApiModelProperty(
+            value = "A list of errors that occurred in running the query",
+            required = false)
     private List<String> errors;
 
     @XmlElement
+    @ApiModelProperty(
+            value = "True if the query has returned all known results",
+            required = false)
     private Boolean complete;
 
     private SearchResponse() {

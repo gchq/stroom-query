@@ -46,8 +46,7 @@ public final class Sort implements Serializable {
     @ApiModelProperty(
             value = "The direction to sort in, ASCENDING or DESCENDING",
             example = "ASCENDING",
-            required = true
-    )
+            required = true)
     private SortDirection direction;
 
     private Sort() {

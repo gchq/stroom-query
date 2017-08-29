@@ -17,6 +17,8 @@
 package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -29,15 +31,29 @@ import java.util.List;
 @JsonPropertyOrder({"groupKey", "values", "depth"})
 @XmlType(name = "Row", propOrder = {"groupKey", "values", "depth"})
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(description = "A row of data in a result set")
 public final class Row implements Serializable {
     private static final long serialVersionUID = 4379892306375080112L;
 
     @XmlElement
+    @ApiModelProperty(
+            value = "TODO",
+            required = true)
     private String groupKey;
+
     @XmlElementWrapper(name = "values")
     @XmlElement(name = "value")
+    @ApiModelProperty(
+            value = "The value for this row of data. The values in the list are in the same order as the fields in " +
+                    "the ResultRequest",
+            required = true)
     private List<String> values;
+
     @XmlElement
+    @ApiModelProperty(
+            value = "The grouping depth, where 0 is the top level of grouping, or where there is no grouping",
+            example = "0",
+            required = true)
     private Integer depth;
 
     private Row() {
