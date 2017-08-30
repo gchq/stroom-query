@@ -34,6 +34,7 @@ import java.util.List;
 @XmlType(name = "ExpressionOperator", propOrder = {"op", "children"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(
+        value = "ExpressionOperator",
         description = "A logical operator term in a query expression tree",
         parent = ExpressionItem.class)
 public final class ExpressionOperator extends ExpressionItem {

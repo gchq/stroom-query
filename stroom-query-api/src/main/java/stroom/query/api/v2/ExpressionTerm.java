@@ -32,6 +32,7 @@ import java.util.List;
 @XmlType(name = "ExpressionTerm", propOrder = {"field", "condition", "value", "dictionary"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(
+        value = "ExpressionTerm",
         description = "A predicate term in a query expression tree",
         parent = ExpressionItem.class)
 public final class ExpressionTerm extends ExpressionItem {
