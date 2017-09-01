@@ -17,6 +17,8 @@
 package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -27,12 +29,23 @@ import java.io.Serializable;
 @JsonPropertyOrder({"includes", "excludes"})
 @XmlType(name = "Filter", propOrder = {"includes", "excludes"})
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(description = "A pair of regular expression filters (inclusion and exclusion) to apply to the field.  Either or " +
+        "both can be supplied")
 public final class Filter implements Serializable {
     private static final long serialVersionUID = 7327802315955158337L;
 
     @XmlElement
+    @ApiModelProperty(
+            value = "Only results matching this filter will be included",
+            example = "^[0-9]{3}$",
+            required = false)
     private String includes;
+
     @XmlElement
+    @ApiModelProperty(
+            value = "Only results NOT matching this filter will be included",
+            example = "^[0-9]{3}$",
+            required = false)
     private String excludes;
 
     private Filter() {

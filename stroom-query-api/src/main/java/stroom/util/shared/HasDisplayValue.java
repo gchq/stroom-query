@@ -18,8 +18,7 @@ package stroom.util.shared;
 
 /**
  * <p>
- * Used by classes that have a string key and value (e.g. used to populate drop
- * downs etc).
+ * Used by classes that have some form of name or value that can be displayed as a String
  * </p>
  */
 public interface HasDisplayValue {

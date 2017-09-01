@@ -18,6 +18,8 @@ package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -38,10 +40,17 @@ import java.io.Serializable;
 @XmlType(name = "ExpressionItem", propOrder = {"enabled"})
 @XmlSeeAlso({ExpressionOperator.class, ExpressionTerm.class})
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(
+        description = "Base type for an item in an expression tree",
+        subTypes = {ExpressionOperator.class, ExpressionTerm.class})
 public abstract class ExpressionItem implements Serializable {
     private static final long serialVersionUID = -8483817637655853635L;
 
     @XmlElement
+    @ApiModelProperty(
+            value = "Whether this item in the expression tree is enabled or not",
+            example = "true",
+            required = true)
     private Boolean enabled;
 
     ExpressionItem() {

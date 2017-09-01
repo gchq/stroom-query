@@ -17,6 +17,8 @@
 package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -27,26 +29,52 @@ import java.io.Serializable;
 @JsonPropertyOrder({"name", "expression", "sort", "filter", "format", "group"})
 @XmlType(name = "Field", propOrder = {"name", "expression", "sort", "filter", "format", "group"})
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(description = "Describes a field in a result set. The field can have various expressions applied to it, " +
+        "e.g. SUM(), along with sorting, filtering, formatting and grouping")
 public final class Field implements Serializable {
     private static final long serialVersionUID = 7327802315955158337L;
 
     @XmlElement
+    @ApiModelProperty(
+            value = "The name of the field for display purposes",
+            required = false)
     private String name;
+
     @XmlElement
+    @ApiModelProperty(
+            value = "The name of the field for display purposes",
+            required = true,
+            example = "SUM(${count})")
     private String expression;
+
     @XmlElement
+    @ApiModelProperty(required = false)
     private Sort sort;
+
     @XmlElement
+    @ApiModelProperty(required = false)
     private Filter filter;
+
     @XmlElement
+    @ApiModelProperty(required = false)
     private Format format;
+
     @XmlElement
+    @ApiModelProperty(
+            value = "If this field is to be grouped then this defines the level of grouping, with 0 being the top " +
+                    "level of grouping, 1 being the next level down, etc.",
+            required = false)
     private Integer group;
 
     public Field() {
     }
 
-    public Field(String name, String expression, Sort sort, Filter filter, Format format, Integer group) {
+    public Field(final String name,
+                 final String expression,
+                 final Sort sort,
+                 final Filter filter,
+                 final Format format,
+                 final Integer group) {
         this.name = name;
         this.expression = expression;
         this.sort = sort;

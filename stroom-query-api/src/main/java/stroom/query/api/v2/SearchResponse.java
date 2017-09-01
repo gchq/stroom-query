@@ -17,6 +17,8 @@
 package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -30,19 +32,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Object describing the response to a {@link SearchRequest searchRequest} which may or may not contains results
+ */
 @JsonPropertyOrder({"highlights", "results", "errors", "complete"})
 @XmlRootElement(name = "searchResponse")
 @XmlType(name = "SearchResponse", propOrder = {"highlights", "results", "errors", "complete"})
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(description = "The response to a search request, that may or may not contain results. The results " +
+        "may only be a partial set if an iterative screech was requested")
 public final class SearchResponse implements Serializable {
+
     private static final long serialVersionUID = -2964122512841756795L;
 
-    /**
-     * A set of strings to highlight in the UI that should correlate with the
-     * search query.
-     */
     @XmlElementWrapper(name = "highlights")
     @XmlElement(name = "highlight")
+    @ApiModelProperty(
+            value = "A list of strings to highlight in the UI that should correlate with the search query.",
+            required = true)
     private List<String> highlights;
 
     @XmlElementWrapper(name = "results")
@@ -52,46 +59,72 @@ public final class SearchResponse implements Serializable {
     })
     private List<Result> results;
 
-    /**
-     * Any errors that have been generated during searching.
-     */
     @XmlElementWrapper(name = "errors")
     @XmlElement(name = "error")
+    @ApiModelProperty(
+            value = "A list of errors that occurred in running the query",
+            required = false)
     private List<String> errors;
 
-    /**
-     * Complete means that all index shards have been searched across the
-     * cluster and there are no more results to come.
-     **/
     @XmlElement
+    @ApiModelProperty(
+            value = "True if the query has returned all known results",
+            required = false)
     private Boolean complete;
 
     private SearchResponse() {
     }
 
-    public SearchResponse(final List<String> highlights, final List<Result> results, final List<String> errors, final Boolean complete) {
+    /**
+     * @param highlights A list of strings to highlight in the UI that should correlate with the search query.
+     * @param results    A list of {@link Result result} objects that each correspond to a
+     *                   {@link ResultRequest resultRequest} in the {@link SearchRequest searchRequest}
+     * @param errors     Any errors that have been generated during searching.
+     * @param complete   Complete means that the search has finished and there are no more results to come.
+     */
+    public SearchResponse(final List<String> highlights,
+                          final List<Result> results,
+                          final List<String> errors,
+                          final Boolean complete) {
         this.highlights = highlights;
         this.results = results;
         this.errors = errors;
         this.complete = complete;
     }
 
+    /**
+     * @return A list of strings to highlight in the UI that should correlate with the search query.
+     */
     public List<String> getHighlights() {
         return highlights;
     }
 
+    /**
+     * @return A list of {@link Result result} objects, corresponding to the {@link ResultRequest resultRequests} in
+     * the {@link SearchRequest searchRequest}
+     */
     public List<Result> getResults() {
         return results;
     }
 
+    /**
+     * @return A list of errors found when performing the search
+     */
     public List<String> getErrors() {
         return errors;
     }
 
+    /**
+     * @return The completed status of the search.  A value of false or null indicates the search has not yet
+     * found all results.
+     */
     public Boolean getComplete() {
         return complete;
     }
 
+    /**
+     * @return The completed status of the search.  A value of false indicates the search has not yet found all results
+     */
     public boolean complete() {
         return complete != null && complete;
     }
@@ -128,6 +161,9 @@ public final class SearchResponse implements Serializable {
                 '}';
     }
 
+    /**
+     * Builder for constructing a {@link SearchResponse searchResponse}
+     */
     public static class Builder {
         // Mandatory parameters
         private final Boolean complete;
@@ -137,26 +173,55 @@ public final class SearchResponse implements Serializable {
         private final List<Result> results = new ArrayList<>();
         private final List<String> errors = new ArrayList<>();
 
-        public Builder(Boolean complete){
+        /**
+         * Create a {@link Builder builder} object for building a {@link SearchResponse searchResponse}
+         *
+         * @param complete Defines whether the search response being built is from a completed search or
+         *                 a search that has not finished
+         */
+        public Builder(Boolean complete) {
             this.complete = complete;
         }
 
+        /**
+         * Adds zero-many highlights to the search response
+         *
+         * @param highlights A set of strings to highlight in the UI that should correlate with the search query.
+         * @return this builder instance
+         */
         public Builder addHighlights(String... highlights) {
             this.highlights.addAll(Arrays.asList(highlights));
             return this;
         }
 
-        public Builder addResults(Result... results){
+        /**
+         * Adds zero-many
+         *
+         * @param results
+         * @return this builder instance
+         */
+        public Builder addResults(Result... results) {
             this.results.addAll(Arrays.asList(results));
             return this;
         }
 
-        public Builder addErrors(String... errors){
+        /**
+         * Adds zero-many
+         *
+         * @param errors
+         * @return this builder instance
+         */
+        public Builder addErrors(String... errors) {
             this.errors.addAll(Arrays.asList(errors));
             return this;
         }
 
-        public SearchResponse build(){
+        /**
+         * Builds the {@link SearchResponse searchResponse} object
+         *
+         * @return A populated {@link SearchResponse searchResponse} object
+         */
+        public SearchResponse build() {
             return new SearchResponse(highlights, results, errors, complete);
         }
 

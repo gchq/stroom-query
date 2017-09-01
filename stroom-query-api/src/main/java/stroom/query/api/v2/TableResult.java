@@ -17,16 +17,34 @@
 package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
 @JsonPropertyOrder({"componentId", "rows", "resultRange", "totalResults", "error"})
+@ApiModel(
+        description = "Object for describing a set of results in a table form that supports grouped data",
+        parent = Result.class)
 public final class TableResult extends Result {
     private static final long serialVersionUID = -2964122512841756795L;
 
+    @ApiModelProperty(
+            required = true)
     private List<Row> rows;
+
+    @ApiModelProperty(
+            required = true)
     private OffsetRange resultRange;
+
+    @ApiModelProperty(
+            value = "The total number of results in this result set",
+            required = false)
     private Integer totalResults;
+
+    @ApiModelProperty(
+            value = "The details of the error if an error occurred in producing the result set",
+            required = false)
     private String error;
 
     TableResult() {

@@ -17,6 +17,8 @@
 package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -27,10 +29,16 @@ import java.io.Serializable;
 @JsonPropertyOrder({"uuid"})
 @XmlType(name = "QueryKey", propOrder = {"uuid"})
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(description = "A unique key to identify the instance of the search by. This key is used to " +
+        "identify multiple requests for the same search when running in incremental mode.")
 public final class QueryKey implements Serializable {
     private static final long serialVersionUID = -3222989872764402068L;
 
     @XmlElement
+    @ApiModelProperty(
+            value = "The UUID that makes up the query key",
+            example = "7740bcd0-a49e-4c22-8540-044f85770716",
+            required = true)
     private String uuid;
 
     private QueryKey() {

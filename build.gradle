@@ -2,17 +2,6 @@ task wrapper(type: Wrapper) {
     gradleVersion = '4.1'
 }
 
-buildscript {
-    repositories {
-        mavenLocal()
-        jcenter()
-    }
-    dependencies {
-        classpath group: 'gchq', name: 'urlDependencyPlugin', version: 'v0.1'
-        classpath group: 'ca.cutterslade.gradle', name: 'gradle-dependency-analyze', version: '1.1.0'
-    }
-}
-
 // If the project has a value for the passed property (i.e from the cmd line via -PpropName=xxx) use that, else use a default value.
 ext.getPropertyOrDefault = { propName, defaultValue ->
     return project.hasProperty(propName) ?
@@ -20,18 +9,59 @@ ext.getPropertyOrDefault = { propName, defaultValue ->
             defaultValue
 }
 
+ext.versions = [
+    //----------Stroom-----------------
+    stroomQuery: getPropertyOrDefault('version', 'SNAPSHOT'),
+
+    //------Stroom-repos---------------
+    stroomExpression: 'v1.0.0', 
+
+    //------------3rd-party------------
+    jackson: '2.8.6',
+    slf4j: '1.7.24', //in line with dropwizard 1.1.0
+    swagger: '1.5.16',
+    zzDUMMYzz: 'makes sorting this list easier'
+]
+
+//lib names for urlDependenciesPlugin
+ext.urlLibs = [
+    stroomExpression: "stroom-expression-$versions.stroomExpression"
+]
+
+//dependency strings for use in sub projects
+ext.libs = [
+    jackson_annotations: "com.fasterxml.jackson.core:jackson-annotations:$versions.jackson",
+    jackson_core: "com.fasterxml.jackson.core:jackson-core:$versions.jackson",
+    jackson_databind: "com.fasterxml.jackson.core:jackson-databind:$versions.jackson", 
+    junit: "junit:junit:4.12",
+    mockito_core: "org.mockito:mockito-core:2.0.2-beta",
+    slf4j_api: "org.slf4j:slf4j-api:$versions.slf4j",
+    swagger_annotations: "io.swagger:swagger-annotations:$versions.swagger",
+    ws_rs_api: "javax.ws.rs:javax.ws.rs-api:2.0.1",
+    zzDUMMYzz: "makes sorting easier"
+]
+
+buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+    dependencies {
+        classpath 'gchq:urlDependencyPlugin:v0.1'
+        classpath 'ca.cutterslade.gradle:gradle-dependency-analyze:1.1.0'
+        classpath 'com.benjaminsproule:swagger-gradle-plugin:0.1.2'
+    }
+}
+
+
 allprojects {
     apply plugin: 'maven'
     apply plugin: 'maven-publish'
     apply plugin: 'gchq.urldependencies'
 
     group = 'stroom'
-    version = getPropertyOrDefault('version', 'SNAPSHOT')
+    version = versions.stroomQuery
 }
-
-ext.versions = [
-    stroomExpression: 'v1.0.0'
-]
 
 subprojects {
     apply plugin: 'java'
@@ -45,8 +75,8 @@ subprojects {
     }
 
     dependencies {
-        testCompile 'junit:junit:4.12'
-        testCompile 'org.mockito:mockito-core:2.0.2-beta'
+        testCompile libs.junit
+        testCompile libs.mockito_core
     }
 
     task sourcesJar(type: Jar, dependsOn: classes) {
@@ -85,18 +115,18 @@ project(':stroom-query-common') {
     }
 }
 
-//lib names for urlDependenciesPlugin
-ext.urlLibs = [
-        stroomExpression: "stroom-expression-$versions.stroomExpression"
-]
-
 urlDependencies {
     libs "${libs}"
-    compile(urlLibs.stroomExpression,
-            "https://github.com/gchq/stroom-expression/releases/download/$versions.stroomExpression/${urlLibs.stroomExpression}.jar")
+    compile(
+        urlLibs.stroomExpression,
+        "https://github.com/gchq/stroom-expression/releases/download/$versions.stroomExpression/${urlLibs.stroomExpression}.jar")
 }
 
-task aggregatedJavadocs(type: Javadoc, description: 'Generate javadocs from all child projects as if it was a single project', group: 'Documentation') {
+task aggregatedJavadocs(
+    type: Javadoc, 
+    description: 'Generate javadocs from all child projects as if it was a single project', 
+    group: 'Documentation') {
+
 	destinationDir = file("$buildDir/docs/javadoc")
 	title = "$project.name $version API"
 	options.author true

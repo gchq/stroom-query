@@ -18,6 +18,9 @@ package stroom.query.api.v2;
 
 import java.util.List;
 
+/**
+ * A builder for constructing a {@link TableSettings} object
+ */
 public class TableSettingsBuilder {
     private String queryId;
     private List<Field> fields;

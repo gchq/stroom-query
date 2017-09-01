@@ -16,6 +16,9 @@
 
 package stroom.query.api.v2;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -27,22 +30,46 @@ import java.util.List;
 
 @XmlType(name = "ResultRequest", propOrder = {"componentId", "mappings", "requestedRange", "openGroups", "resultStyle", "fetch"})
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(description = "A definition for how to return the raw results of the query in the SearchResponse, " +
+        "e.g. sorted, grouped, limited, etc.")
 public final class ResultRequest implements Serializable {
     private static final long serialVersionUID = -7455554742243923562L;
 
     @XmlElement
+    @ApiModelProperty(
+            value = "The ID of the component that will receive the results corresponding to this ResultRequest",
+            required = true)
     private String componentId;
+
     @XmlElementWrapper(name = "mappings")
     @XmlElement(name = "mappings")
+    @ApiModelProperty(required = true)
     private List<TableSettings> mappings;
+
     @XmlElement
+    @ApiModelProperty(required = true)
     private OffsetRange requestedRange;
+
     @XmlElementWrapper(name = "openGroups")
     @XmlElement(name = "key")
+    //TODO complete documentation
+    @ApiModelProperty(
+            value = "TODO",
+            required = true)
     private List<String> openGroups;
+
     @XmlElement
+    @ApiModelProperty(
+            value = "The style of results required. FLAT will provide a FlatResult object, while TABLE will " +
+                    "provide a TableResult object",
+            required = true)
     private ResultStyle resultStyle;
+
     @XmlElement
+    @ApiModelProperty(
+            value = "The fetch mode for the query. NONE means fetch no data, ALL means fetch all known results, " +
+                    "CHANGES means fetch only those records not see in previous requests",
+            required = false)
     private Fetch fetch;
 
     private ResultRequest() {
@@ -151,10 +178,13 @@ public final class ResultRequest implements Serializable {
     }
 
     public enum ResultStyle {
-        FLAT, TABLE
+        FLAT,
+        TABLE
     }
 
     public enum Fetch {
-        NONE, CHANGES, ALL
+        NONE,
+        CHANGES,
+        ALL
     }
 }

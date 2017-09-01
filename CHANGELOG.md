@@ -8,8 +8,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-
 ### Changed
+
+## [v2.0.0-alpha.2] - 2017-09-01
+
+### Added
+
+* Add ExpressionBuilder.end() method for better chaining of methods.
+
+* Add Swagger annotations to API model classes
+
+* Add stroom-query-sample module for testing swagger generation
 
 
 ## [v2.0.0-alpha.1] - 2017-08-22
@@ -42,7 +51,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.1...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.2...HEAD
+[v2.0.0-alpha.2]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.1...v2.0.0-alpha.2
 [v2.0.0-alpha.1]: https://github.com/gchq/stroom-query/compare/v1.0.1...v2.0.0-alpha.1
 [v1.0.1]: https://github.com/gchq/stroom-query/compare/v1.0.0...v1.0.1
 [v1.0.0]: https://github.com/gchq/stroom-query/releases/tag/v1.0.0

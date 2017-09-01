@@ -17,6 +17,8 @@
 package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -27,12 +29,21 @@ import java.io.Serializable;
 @JsonPropertyOrder({"key", "value"})
 @XmlType(name = "Param", propOrder = {"key", "value"})
 @XmlAccessorType(XmlAccessType.FIELD)
+@ApiModel(description = "A key value pair that describes a property of a query")
 public final class Param implements Serializable {
+
     private static final long serialVersionUID = 9055582579670841979L;
 
     @XmlElement
+    @ApiModelProperty(
+            value = "The property key",
+            required = true)
     private String key;
+
     @XmlElement
+    @ApiModelProperty(
+            value = "The property value",
+            required = true)
     private String value;
 
     private Param() {

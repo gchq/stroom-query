@@ -18,7 +18,11 @@ package stroom.query.api.v2;
 
 import stroom.query.api.v2.Format.Type;
 
+/**
+ * A builder class for constructing a {@link Field}
+ */
 public final class FieldBuilder {
+
     private String name;
     private String expression;
     private Sort sort;
