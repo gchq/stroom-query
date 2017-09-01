@@ -14,77 +14,9 @@
  * limitations under the License.
  */
 
-plugins {
-    //id "com.webcohesion.enunciate" version "2.9.1"
-    //id 'org.hidetake.swagger.generator' version '2.4.2'
-}
-
-apply plugin: 'com.benjaminsproule.swagger'
-//apply plugin: "com.webcohesion.enunciate"
 
 dependencies {
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.6'
-    compile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
-    //compile 'io.swagger:swagger-jersey2-jaxrs:1.5.16'
-    compile 'io.swagger:swagger-annotations:1.5.16'
-    //testCompile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
-    //testCompile 'io.swagger:swagger-jersey2-jaxrs:1.5.16'
-    //compile 'org.springframework.boot:spring-boot-starter-jersey:+'
-    //compile 'org.springframework.boot:spring-boot-starter-web:+'
-    //swaggerUI 'org.webjars:swagger-ui:2.2.6'
+    compile libs.jackson_annotations
+    compile libs.swagger_annotations
 }
 
-swagger {
-    apiSource {
-        springmvc = false //makes it search for jersey annotations
-        outputFormats = 'json,yaml'
-        locations = [ 'stroom.query.api.v2.ExampleEndpoint' ]
-        schemes = [ 'https' ]
-        host = 'localhost:8080'
-        basePath = '/v2'
-        info {
-            title = 'stroom-query'
-            version = 'v2'
-            description = 'An API for querying data sources including the ability to requset multiple result definitions'
-            contact {
-                name = 'GCHQ'
-                url = 'https://github.com/gchq/stroom'
-            }
-            license {
-                url = 'http://www.apache.org/licenses/LICENSE-2.0.html'
-                name = 'Apache 2.0'
-            }
-        }
-        outputPath = "${project.buildDir}/generated/document.html"
-        swaggerDirectory = "${project.buildDir}"
-    }
-}
-
-tasks.generateSwaggerDocumentation {
-    dependsOn classes
-}
-
-//validateSwagger {
-    //dependsOn generateSwaggerDocumentation
-      //inputFile = file("${project.buildDir}/swagger.yaml")
-//}
-
-//generateSwaggerUI {
-        //dependsOn validateSwagger
-
-        //inputFile = file("${project.buildDir}/swagger.yaml")
-
-        //// Swagger UI options
-        //options.docExpansion = 'full'
-        //options.supportedSubmitMethods = []
-
-        //// Custom header
-        //header = '''\
-        //<style>#header { display: none; }</style>
-        //'''.stripIndent()
-//}
-
-tasks.build{
-    //dependsOn generateSwaggerUI
-    dependsOn generateSwaggerDocumentation
-}
