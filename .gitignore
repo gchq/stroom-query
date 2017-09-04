@@ -11,7 +11,7 @@ stroom-query-api/src/test/resources/searchRequestPortrait-new.txt
 
 # IntelliJ
 # Here we ignore everything and create exceptions for what we want to share.
-/out/
+out/
 *.iml
 /.idea/*
 !/.idea/runConfigurations
