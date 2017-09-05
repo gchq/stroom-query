@@ -17,6 +17,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Collections;
 
+/**
+ * This class serves as a basic example for a standard set of endpoints for a query API.
+ */
 @Api(value = "Example Query Endpoint", description = "En example endpoint for testing swagger annotations on the stroom-query-api model classes")
 @Path("/v2")
 @Produces(MediaType.APPLICATION_JSON)
