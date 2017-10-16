@@ -24,44 +24,49 @@ import stroom.dashboard.expression.v1.ParamFactory;
 import stroom.query.api.v2.Field;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.Collections;
+import java.util.Iterator;
 
 public class CompiledFields implements Iterable<CompiledField> {
     private final List<CompiledField> compiledFields;
 
     public CompiledFields(final List<Field> fields,
                           final FieldIndexMap fieldIndexMap, final Map<String, String> paramMap) {
-        compiledFields = new ArrayList<>(fields.size());
+        if (null != fields) {
+            compiledFields = new ArrayList<>(fields.size());
 
-        final ExpressionParser expressionParser = new ExpressionParser(new FunctionFactory(), new ParamFactory());
-        for (final Field field : fields) {
-            // Create compiled field.
-            int groupDepth = -1;
-            if (field.getGroup() != null) {
-                groupDepth = field.getGroup();
-            }
-            Expression expression = null;
-            if (fieldIndexMap != null && field.getExpression() != null && field.getExpression().trim().length() > 0) {
-                try {
-                    expression = expressionParser.parse(fieldIndexMap, field.getExpression());
-                } catch (final ParseException e) {
-                    throw new RuntimeException(e.getMessage(), e);
+            final ExpressionParser expressionParser = new ExpressionParser(new FunctionFactory(), new ParamFactory());
+            for (final Field field : fields) {
+                // Create compiled field.
+                int groupDepth = -1;
+                if (field.getGroup() != null) {
+                    groupDepth = field.getGroup();
                 }
+                Expression expression = null;
+                if (fieldIndexMap != null && field.getExpression() != null && field.getExpression().trim().length() > 0) {
+                    try {
+                        expression = expressionParser.parse(fieldIndexMap, field.getExpression());
+                    } catch (final ParseException e) {
+                        throw new RuntimeException(e.getMessage(), e);
+                    }
+                }
+
+                CompiledFilter filter = null;
+                if (field.getFilter() != null) {
+                    filter = new CompiledFilter(field.getFilter(), paramMap);
+                }
+
+                final CompiledField compiledField = new CompiledField(field, groupDepth, expression, filter);
+
+                // Only include this field if it is used for display, grouping,
+                // sorting.
+                compiledFields.add(compiledField);
             }
-
-            CompiledFilter filter = null;
-            if (field.getFilter() != null) {
-                filter = new CompiledFilter(field.getFilter(), paramMap);
-            }
-
-            final CompiledField compiledField = new CompiledField(field, groupDepth, expression, filter);
-
-            // Only include this field if it is used for display, grouping,
-            // sorting.
-            compiledFields.add(compiledField);
+        } else {
+            compiledFields = Collections.emptyList();
         }
     }
 
