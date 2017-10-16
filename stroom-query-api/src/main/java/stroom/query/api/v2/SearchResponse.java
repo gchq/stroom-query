@@ -197,7 +197,7 @@ public final class SearchResponse implements Serializable {
         /**
          * Adds zero-many
          *
-         * @param results
+         * @param results The results that where found
          * @return this builder instance
          */
         public Builder addResults(Result... results) {
@@ -208,7 +208,7 @@ public final class SearchResponse implements Serializable {
         /**
          * Adds zero-many
          *
-         * @param errors
+         * @param errors The errors that have occurred
          * @return this builder instance
          */
         public Builder addErrors(String... errors) {
