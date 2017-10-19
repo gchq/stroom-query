@@ -162,11 +162,39 @@ public final class SearchResponse implements Serializable {
                 '}';
     }
 
+    public static class TableResultBuilder extends Builder<TableResult, TableResult.Builder, TableResultBuilder> {
+
+        @Override
+        public TableResult.Builder<TableResultBuilder> addResult() {
+            return new TableResult.Builder<TableResultBuilder>().parent(this, this::addResults);
+        }
+
+        @Override
+        public TableResultBuilder self() {
+            return this;
+        }
+    }
+
+    public static class FlatResultBuilder extends Builder<FlatResult, FlatResult.Builder, FlatResultBuilder> {
+
+        @Override
+        public FlatResult.Builder<FlatResultBuilder> addResult() {
+            return new FlatResult.Builder<FlatResultBuilder>().parent(this, this::addResults);
+        }
+
+        @Override
+        public FlatResultBuilder self() {
+            return this;
+        }
+    }
+
     /**
      * Builder for constructing a {@link SearchResponse searchResponse}
      */
-    public static class Builder
-            extends PojoBuilder<Builder, SearchResponse, Builder> {
+    private abstract static class Builder<ResultClass extends Result,
+                                            ResultBuilderClass extends Result.Builder,
+                                            CHILD_CLASS extends Builder<ResultClass, ResultBuilderClass, ?>>
+            extends PojoBuilder<Builder, SearchResponse, CHILD_CLASS> {
         // Mandatory parameters
         private Boolean complete;
 
@@ -192,7 +220,7 @@ public final class SearchResponse implements Serializable {
 
         }
 
-        public Builder complete(final Boolean complete) {
+        public CHILD_CLASS complete(final Boolean complete) {
             this.complete = complete;
             return self();
         }
@@ -203,7 +231,7 @@ public final class SearchResponse implements Serializable {
          * @param highlights A set of strings to highlight in the UI that should correlate with the search query.
          * @return this builder instance
          */
-        public Builder addHighlights(String... highlights) {
+        public CHILD_CLASS addHighlights(String... highlights) {
             this.highlights.addAll(Arrays.asList(highlights));
             return self();
         }
@@ -214,18 +242,12 @@ public final class SearchResponse implements Serializable {
          * @param results The results that where found
          * @return this builder instance
          */
-        public Builder addResults(Result... results) {
+        public CHILD_CLASS addResults(ResultClass... results) {
             this.results.addAll(Arrays.asList(results));
             return self();
         }
 
-        public TableResult.Builder<Builder> addTableResult() {
-            return new TableResult.Builder<Builder>().parent(this, this::addResults);
-        }
-
-        public FlatResult.Builder<Builder> addFlatResult() {
-            return new FlatResult.Builder<Builder>().parent(this, this::addResults);
-        }
+        public abstract ResultBuilderClass addResult();
 
         /**
          * Adds zero-many
@@ -233,7 +255,7 @@ public final class SearchResponse implements Serializable {
          * @param errors The errors that have occurred
          * @return this builder instance
          */
-        public Builder addErrors(String... errors) {
+        public CHILD_CLASS addErrors(String... errors) {
             this.errors.addAll(Arrays.asList(errors));
             return self();
         }
@@ -247,12 +269,6 @@ public final class SearchResponse implements Serializable {
         protected SearchResponse pojoBuild() {
             return new SearchResponse(highlights, results, errors, complete);
         }
-
-        @Override
-        public Builder self() {
-            return this;
-        }
-
     }
 
 }

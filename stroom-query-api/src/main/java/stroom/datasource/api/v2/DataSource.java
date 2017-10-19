@@ -19,6 +19,7 @@ package stroom.datasource.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.PojoBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -27,6 +28,8 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @JsonPropertyOrder({"fields"})
@@ -73,5 +76,31 @@ public final class DataSource implements Serializable {
         return "DataSource{" +
                 "fields=" + fields +
                 '}';
+    }
+
+    public static class Builder<ParentBuilder extends PojoBuilder>
+        extends PojoBuilder<ParentBuilder, DataSource, Builder<ParentBuilder>> {
+
+        private final List<DataSourceField> fields = new ArrayList<>();
+
+        public Builder<ParentBuilder> addFields(final DataSourceField...values) {
+            this.fields.addAll(Arrays.asList(values));
+            return self();
+        }
+
+        public DataSourceField.Builder<Builder<ParentBuilder>> addField() {
+            return new DataSourceField.Builder<Builder<ParentBuilder>>()
+                    .parent(this, this::addFields);
+        }
+
+        @Override
+        protected DataSource pojoBuild() {
+            return new DataSource(fields);
+        }
+
+        @Override
+        public Builder<ParentBuilder> self() {
+            return this;
+        }
     }
 }

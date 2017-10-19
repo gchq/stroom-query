@@ -3,7 +3,6 @@ package stroom.query.api.v2;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class SearchResponseBuilderTest {
@@ -18,17 +17,17 @@ public class SearchResponseBuilderTest {
         final String flatResultComponentId2 = "flatResult2";
 
         // When
-        final SearchResponse searchResponse = new SearchResponse.Builder()
+        final SearchResponse searchResponse = new SearchResponse.FlatResultBuilder()
                 .complete(true)
                 .addErrors(error0, error1)
                 .addHighlights(highlight0)
-                .addFlatResult()
+                .addResult()
                     .componentId(flatResultComponentId0)
                     .end()
-                .addFlatResult()
+                .addResult()
                     .componentId(flatResultComponentId1)
                     .end()
-                .addFlatResult()
+                .addResult()
                     .componentId(flatResultComponentId2)
                     .end()
                 .build();
@@ -60,17 +59,17 @@ public class SearchResponseBuilderTest {
         final String flatResultComponentId2 = "tableResult2";
 
         // When
-        final SearchResponse searchResponse = new SearchResponse.Builder()
+        final SearchResponse searchResponse = new SearchResponse.TableResultBuilder()
                 .complete(true)
                 .addErrors(error0, error1)
                 .addHighlights(highlight0)
-                .addTableResult()
+                .addResult()
                     .componentId(flatResultComponentId0)
                     .end()
-                .addTableResult()
+                .addResult()
                     .componentId(flatResultComponentId1)
                     .end()
-                .addTableResult()
+                .addResult()
                     .componentId(flatResultComponentId2)
                     .end()
                 .build();

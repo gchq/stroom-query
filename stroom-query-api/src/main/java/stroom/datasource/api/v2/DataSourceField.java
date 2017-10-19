@@ -22,6 +22,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import stroom.query.api.v2.ExpressionTerm.Condition;
 import stroom.util.shared.HasDisplayValue;
+import stroom.util.shared.PojoBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -30,6 +31,8 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @JsonPropertyOrder({"type", "name", "queryable", "conditions"})
@@ -161,6 +164,45 @@ public final class DataSourceField implements Serializable, HasDisplayValue {
         @Override
         public String getDisplayValue() {
             return displayValue;
+        }
+    }
+
+    public static class Builder<ParentBuilder extends PojoBuilder>
+        extends PojoBuilder<ParentBuilder, DataSourceField, Builder<ParentBuilder>> {
+
+        private DataSourceFieldType type;
+        private String name;
+        private Boolean queryable;
+        private final List<Condition> conditions = new ArrayList<>();
+
+        public Builder<ParentBuilder> type(final DataSourceFieldType value) {
+            this.type = value;
+            return self();
+        }
+
+        public Builder<ParentBuilder> name(final String value) {
+            this.name = value;
+            return self();
+        }
+
+        public Builder<ParentBuilder> queryable(final Boolean value) {
+            this.queryable = value;
+            return self();
+        }
+
+        public Builder<ParentBuilder> addConditions(final Condition...values) {
+            this.conditions.addAll(Arrays.asList(values));
+            return self();
+        }
+
+        @Override
+        protected DataSourceField pojoBuild() {
+            return new DataSourceField(type, name, queryable, conditions);
+        }
+
+        @Override
+        public Builder<ParentBuilder> self() {
+            return this;
         }
     }
 }
