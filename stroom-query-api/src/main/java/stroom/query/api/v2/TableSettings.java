@@ -19,6 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.PojoBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -26,6 +27,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @JsonPropertyOrder({"queryId", "fields", "extractValues", "extractionPipeline", "maxResults",
@@ -166,5 +169,68 @@ public final class TableSettings implements Serializable {
                 ", maxResults=" + maxResults +
                 ", showDetail=" + showDetail +
                 '}';
+    }
+
+    /**
+     * Builder for constructing a {@link TableSettings tableSettings}
+     */
+    public static class Builder<ParentBuilder extends PojoBuilder>
+            extends PojoBuilder<ParentBuilder, TableSettings, Builder<ParentBuilder>> {
+        private String queryId;
+        private final List<Field> fields = new ArrayList<>();
+        private Boolean extractValues;
+        private DocRef extractionPipeline;
+        private Boolean showDetail;
+
+        private final List<Integer> maxResults = new ArrayList<>();
+
+        public Builder<ParentBuilder> queryId(final String value) {
+            this.queryId = value;
+            return self();
+        }
+
+        public Builder<ParentBuilder> addFields(final Field...values) {
+            this.fields.addAll(Arrays.asList(values));
+            return self();
+        }
+
+        public Field.Builder<Builder<ParentBuilder>> addField() {
+            return new Field.Builder<Builder<ParentBuilder>>()
+                    .parent(this, this::addFields);
+        }
+
+        public Builder<ParentBuilder> addMaxResults(final Integer...values) {
+            this.maxResults.addAll(Arrays.asList(values));
+            return self();
+        }
+
+        public Builder<ParentBuilder> extractValues(final Boolean value) {
+            this.extractValues = value;
+            return self();
+        }
+
+        public Builder<ParentBuilder> extractionPipeline(final DocRef value) {
+            this.extractionPipeline = value;
+            return self();
+        }
+
+        public DocRef.Builder<Builder<ParentBuilder>> extractionPipeline() {
+            return new DocRef.Builder<Builder<ParentBuilder>>()
+                    .parent(this, this::extractionPipeline);
+        }
+
+        public Builder<ParentBuilder> showDetail(final Boolean value) {
+            this.showDetail = value;
+            return self();
+        }
+
+        protected TableSettings pojoBuild() {
+            return new TableSettings(queryId, fields, extractValues, extractionPipeline, maxResults, showDetail);
+        }
+
+        @Override
+        public Builder<ParentBuilder> self() {
+            return this;
+        }
     }
 }

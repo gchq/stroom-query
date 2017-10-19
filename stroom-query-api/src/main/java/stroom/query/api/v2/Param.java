@@ -19,6 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.PojoBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -87,4 +88,33 @@ public final class Param implements Serializable {
                 ", value='" + value + '\'' +
                 '}';
     }
+
+    /**
+     * Builder for constructing a {@link Param param}
+     */
+    public static class Builder<ParentBuilder extends PojoBuilder>
+            extends PojoBuilder<ParentBuilder, Param, Builder<ParentBuilder>> {
+        private String key;
+        private String value;
+
+        public Builder<ParentBuilder> key(final String value) {
+            this.key = value;
+            return self();
+        }
+
+        public Builder<ParentBuilder> value(final String value) {
+            this.value = value;
+            return self();
+        }
+
+        protected Param pojoBuild() {
+            return new Param(key, value);
+        }
+
+        @Override
+        public Builder<ParentBuilder> self() {
+            return this;
+        }
+    }
+
 }

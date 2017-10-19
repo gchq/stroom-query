@@ -19,6 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.PojoBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -27,6 +28,8 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -181,4 +184,69 @@ public final class SearchRequest implements Serializable {
                 ", incremental=" + incremental +
                 '}';
     }
+
+    /**
+     * Builder for constructing a {@link SearchRequest searchRequest}
+     */
+    public static class Builder<ParentBuilder extends PojoBuilder>
+            extends PojoBuilder<ParentBuilder, SearchRequest, Builder<ParentBuilder>> {
+
+        private QueryKey key;
+
+        private Query query;
+
+        private final List<ResultRequest> resultRequests = new ArrayList<>();
+
+        private String dateTimeLocale;
+
+        private Boolean incremental;
+
+        public Builder<ParentBuilder> key(final QueryKey value) {
+            this.key = value;
+            return self();
+        }
+
+        public QueryKey.Builder<Builder<ParentBuilder>> key() {
+            return new QueryKey.Builder<Builder<ParentBuilder>>().parent(this, this::key);
+        }
+
+        public Builder<ParentBuilder> query(final Query value) {
+            this.query = value;
+            return self();
+        }
+
+        public Query.Builder<Builder<ParentBuilder>> query() {
+            return new Query.Builder<Builder<ParentBuilder>>().parent(this, this::query);
+        }
+
+        public Builder<ParentBuilder> addResultRequests(final ResultRequest...values) {
+            this.resultRequests.addAll(Arrays.asList(values));
+            return self();
+        }
+
+        public ResultRequest.Builder<Builder<ParentBuilder>> addResultRequest() {
+            return new ResultRequest.Builder<Builder<ParentBuilder>>()
+                    .parent(this, this::addResultRequests);
+        }
+
+        public Builder<ParentBuilder> dateTimeLocale(final String value) {
+            this.dateTimeLocale = value;
+            return self();
+        }
+
+        public Builder<ParentBuilder> incremental(final Boolean value) {
+            this.incremental = value;
+            return self();
+        }
+
+        protected SearchRequest pojoBuild() {
+            return new SearchRequest(key, query, resultRequests, dateTimeLocale, incremental);
+        }
+
+        @Override
+        public Builder<ParentBuilder> self() {
+            return this;
+        }
+    }
+
 }

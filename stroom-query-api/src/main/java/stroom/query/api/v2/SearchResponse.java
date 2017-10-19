@@ -19,6 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.PojoBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -164,9 +165,10 @@ public final class SearchResponse implements Serializable {
     /**
      * Builder for constructing a {@link SearchResponse searchResponse}
      */
-    public static class Builder {
+    public static class Builder
+            extends PojoBuilder<Builder, SearchResponse, Builder> {
         // Mandatory parameters
-        private final Boolean complete;
+        private Boolean complete;
 
         // Optional parameters
         private final List<String> highlights = new ArrayList<>();
@@ -179,8 +181,20 @@ public final class SearchResponse implements Serializable {
          * @param complete Defines whether the search response being built is from a completed search or
          *                 a search that has not finished
          */
-        public Builder(Boolean complete) {
+        public Builder(final Boolean complete) {
             this.complete = complete;
+        }
+
+        /**
+         * Create a {@link Builder builder} object for building a {@link SearchResponse searchResponse}
+         */
+        public Builder() {
+
+        }
+
+        public Builder complete(final Boolean complete) {
+            this.complete = complete;
+            return self();
         }
 
         /**
@@ -191,7 +205,7 @@ public final class SearchResponse implements Serializable {
          */
         public Builder addHighlights(String... highlights) {
             this.highlights.addAll(Arrays.asList(highlights));
-            return this;
+            return self();
         }
 
         /**
@@ -202,7 +216,15 @@ public final class SearchResponse implements Serializable {
          */
         public Builder addResults(Result... results) {
             this.results.addAll(Arrays.asList(results));
-            return this;
+            return self();
+        }
+
+        public TableResult.Builder<Builder> addTableResult() {
+            return new TableResult.Builder<Builder>().parent(this, this::addResults);
+        }
+
+        public FlatResult.Builder<Builder> addFlatResult() {
+            return new FlatResult.Builder<Builder>().parent(this, this::addResults);
         }
 
         /**
@@ -213,7 +235,7 @@ public final class SearchResponse implements Serializable {
          */
         public Builder addErrors(String... errors) {
             this.errors.addAll(Arrays.asList(errors));
-            return this;
+            return self();
         }
 
         /**
@@ -221,8 +243,14 @@ public final class SearchResponse implements Serializable {
          *
          * @return A populated {@link SearchResponse searchResponse} object
          */
-        public SearchResponse build() {
+        @Override
+        protected SearchResponse pojoBuild() {
             return new SearchResponse(highlights, results, errors, complete);
+        }
+
+        @Override
+        public Builder self() {
+            return this;
         }
 
     }

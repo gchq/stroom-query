@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import stroom.util.shared.HasDisplayValue;
+import stroom.util.shared.PojoBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -205,4 +206,41 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
                 ", name='" + name + '\'' +
                 '}';
     }
+
+    /**
+     * Builder for constructing a {@link DocRef docRef}
+     */
+    public static class Builder<ParentBuilder extends PojoBuilder>
+            extends PojoBuilder<ParentBuilder, DocRef, Builder<ParentBuilder>> {
+        private String type;
+
+        private String uuid;
+
+        private String name;
+
+        public Builder<ParentBuilder> type(final String value) {
+            this.type = value;
+            return self();
+        }
+
+        public Builder<ParentBuilder> uuid(final String value) {
+            this.uuid = value;
+            return self();
+        }
+
+        public Builder<ParentBuilder> name(final String value) {
+            this.name = value;
+            return self();
+        }
+
+        protected DocRef pojoBuild() {
+            return new DocRef(type, uuid, name);
+        }
+
+        @Override
+        public Builder<ParentBuilder> self() {
+            return this;
+        }
+    }
+
 }

@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import stroom.util.shared.HasDisplayValue;
+import stroom.util.shared.PojoBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -131,6 +132,46 @@ public final class Format implements Serializable {
         @Override
         public String getDisplayValue() {
             return displayValue;
+        }
+    }
+
+    public static final class Builder<ParentBuilder extends PojoBuilder>
+            extends PojoBuilder<ParentBuilder, Format, Builder<ParentBuilder>> {
+        private Type type;
+
+        private NumberFormat numberFormat;
+
+        private DateTimeFormat dateTimeFormat;
+
+        public Builder<ParentBuilder> type(final Type value) {
+            this.type = value;
+            return self();
+        }
+
+        public NumberFormat.Builder<Builder<ParentBuilder>> number() {
+            return new NumberFormat.Builder<Builder<ParentBuilder>>()
+                    .parent(this, f -> {
+                        this.type = Type.NUMBER;
+                        this.numberFormat = f;
+                    });
+        }
+
+        public DateTimeFormat.Builder<Builder<ParentBuilder>> dateTime() {
+            return new DateTimeFormat.Builder<Builder<ParentBuilder>>()
+                    .parent(this, f -> {
+                        this.type = Type.DATE_TIME;
+                        this.dateTimeFormat = f;
+                    });
+        }
+
+        @Override
+        protected Format pojoBuild() {
+            return new Format(type, numberFormat, dateTimeFormat);
+        }
+
+        @Override
+        public Builder<ParentBuilder> self() {
+            return this;
         }
     }
 }

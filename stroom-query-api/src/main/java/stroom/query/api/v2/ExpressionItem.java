@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.PojoBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -34,7 +35,7 @@ import java.io.Serializable;
         property = "type"
 )
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = ExpressionOperator.class, name = "operator"),
+        @JsonSubTypes.Type(value = ExpressionOperator.class, name = "addOperator"),
         @JsonSubTypes.Type(value = ExpressionTerm.class, name = "term")
 })
 @XmlType(name = "ExpressionItem", propOrder = {"enabled"})
@@ -96,5 +97,24 @@ public abstract class ExpressionItem implements Serializable {
         final StringBuilder sb = new StringBuilder();
         append(sb, "", false);
         return sb.toString();
+    }
+
+
+    public static abstract class Builder<
+                ParentBuilder extends PojoBuilder,
+                T extends ExpressionItem,
+                CHILD_CLASS extends Builder<ParentBuilder, T, ?>>
+            extends PojoBuilder<ParentBuilder, T, CHILD_CLASS> {
+
+        private Boolean enabled;
+
+        public CHILD_CLASS enabled(final Boolean value) {
+            this.enabled = value;
+            return self();
+        }
+
+        protected Boolean getEnabled() {
+            return enabled;
+        }
     }
 }

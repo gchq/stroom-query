@@ -19,6 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.PojoBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -93,4 +94,33 @@ public final class NumberFormat implements Serializable {
                 ", useSeparator=" + useSeparator +
                 '}';
     }
+
+    /**
+     * Builder for constructing a {@link NumberFormat numberFormat}
+     */
+    public static class Builder<ParentBuilder extends PojoBuilder>
+            extends PojoBuilder<ParentBuilder, NumberFormat, Builder<ParentBuilder>> {
+        private Integer decimalPlaces;
+        private Boolean useSeparator;
+
+        public Builder<ParentBuilder> decimalPlaces(final Integer value) {
+            this.decimalPlaces = value;
+            return self();
+        }
+
+        public Builder<ParentBuilder> useSeparator(final Boolean value) {
+            this.useSeparator = value;
+            return self();
+        }
+
+        protected NumberFormat pojoBuild() {
+            return new NumberFormat(decimalPlaces, useSeparator);
+        }
+
+        @Override
+        public Builder<ParentBuilder> self() {
+            return this;
+        }
+    }
+
 }

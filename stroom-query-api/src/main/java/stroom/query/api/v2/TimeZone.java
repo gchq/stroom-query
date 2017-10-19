@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import stroom.util.shared.HasDisplayValue;
+import stroom.util.shared.PojoBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -168,6 +169,46 @@ public final class TimeZone implements Serializable {
         @Override
         public String toString() {
             return getDisplayValue();
+        }
+    }
+
+    public static class Builder<ParentBuilder extends PojoBuilder>
+            extends PojoBuilder<ParentBuilder, TimeZone, Builder<ParentBuilder>> {
+        private Use use;
+
+        private String id;
+
+        private Integer offsetHours;
+
+        private Integer offsetMinutes;
+
+        public Builder<ParentBuilder> use(final Use value) {
+            this.use = value;
+            return self();
+        }
+
+        public Builder<ParentBuilder> id(final String value) {
+            this.id = value;
+            return self();
+        }
+
+        public Builder<ParentBuilder> offsetHours(final Integer value) {
+            this.offsetHours = value;
+            return self();
+        }
+
+        public Builder<ParentBuilder> offsetMinutes(final Integer value) {
+            this.offsetMinutes = value;
+            return self();
+        }
+
+        protected TimeZone pojoBuild() {
+            return new TimeZone(use, id, offsetHours, offsetMinutes);
+        }
+
+        @Override
+        public Builder<ParentBuilder> self() {
+            return this;
         }
     }
 }

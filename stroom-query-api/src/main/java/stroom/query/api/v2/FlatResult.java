@@ -19,10 +19,13 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.PojoBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @JsonPropertyOrder({"componentId", "structure", "values", "size", "error"})
@@ -46,20 +49,28 @@ public final class FlatResult extends Result {
     @ApiModelProperty(value = "The size of the result set being returned")
     private Long size;
 
-    @XmlElement
-    @ApiModelProperty(value = "If an error has occurred producing this result set then this will have details " +
-            "of the error")
-    private String error;
-
     private FlatResult() {
     }
 
-    public FlatResult(final String componentId, final List<Field> structure, final List<List<Object>> values, final Long size, final String error) {
-        super(componentId);
+    public FlatResult(final String componentId,
+                      final List<Field> structure,
+                      final List<List<Object>> values,
+                      final String error) {
+        super(componentId, error);
+        this.structure = structure;
+        this.values = values;
+        this.size = (long) values.size();
+    }
+
+    public FlatResult(final String componentId,
+                      final List<Field> structure,
+                      final List<List<Object>> values,
+                      final Long size,
+                      final String error) {
+        super(componentId, error);
         this.structure = structure;
         this.values = values;
         this.size = size;
-        this.error = error;
     }
 
     public List<Field> getStructure() {
@@ -74,10 +85,6 @@ public final class FlatResult extends Result {
         return size;
     }
 
-    public String getError() {
-        return error;
-    }
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
@@ -88,8 +95,7 @@ public final class FlatResult extends Result {
 
         if (structure != null ? !structure.equals(that.structure) : that.structure != null) return false;
         if (values != null ? !values.equals(that.values) : that.values != null) return false;
-        if (size != null ? !size.equals(that.size) : that.size != null) return false;
-        return error != null ? error.equals(that.error) : that.error == null;
+        return (size != null ? !size.equals(that.size) : that.size != null);
     }
 
     @Override
@@ -98,12 +104,68 @@ public final class FlatResult extends Result {
         result = 31 * result + (structure != null ? structure.hashCode() : 0);
         result = 31 * result + (values != null ? values.hashCode() : 0);
         result = 31 * result + (size != null ? size.hashCode() : 0);
-        result = 31 * result + (error != null ? error.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
         return size + " rows";
+    }
+
+    /**
+     * Builder for constructing a {@link FlatResult flatResult}
+     */
+    public static class Builder<ParentBuilder extends PojoBuilder>
+            extends Result.Builder<ParentBuilder, FlatResult, Builder<ParentBuilder>> {
+        private final List<Field> structure = new ArrayList<>();
+
+        private final List<List<Object>> values = new ArrayList<>();
+
+        public Builder<ParentBuilder> addFields(final Field...fields) {
+            structure.addAll(Arrays.asList(fields));
+            return self();
+        }
+
+        public Field.Builder<Builder<ParentBuilder>> addField() {
+            return new Field.Builder<Builder<ParentBuilder>>().parent(this, this::addFields);
+        }
+
+        public Builder<ParentBuilder> addValues(final List<Object>... values) {
+            this.values.addAll(Arrays.asList(values));
+            return self();
+        }
+
+        public ValueListBuilder<ParentBuilder> addValues() {
+            return new ValueListBuilder<ParentBuilder>().parent(this, this::addValues);
+        }
+
+        protected FlatResult pojoBuild() {
+            return new FlatResult(getComponentId(), structure, values, getError());
+        }
+
+        @Override
+        public Builder<ParentBuilder> self() {
+            return this;
+        }
+    }
+
+    public static class ValueListBuilder<GrandparentBuilder extends PojoBuilder>
+            extends PojoBuilder<Builder<GrandparentBuilder>, List<Object>, ValueListBuilder<GrandparentBuilder>> {
+        private final List<Object> childValues = new ArrayList<>();
+
+        public ValueListBuilder value(final Object...values) {
+            this.childValues.addAll(Arrays.asList(values));
+            return this;
+        }
+
+        @Override
+        protected List<Object> pojoBuild() {
+            return childValues;
+        }
+
+        @Override
+        public ValueListBuilder self() {
+            return this;
+        }
     }
 }

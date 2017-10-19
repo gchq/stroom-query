@@ -19,7 +19,10 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.PojoBuilder;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @JsonPropertyOrder({"componentId", "rows", "resultRange", "totalResults", "error"})
@@ -42,20 +45,28 @@ public final class TableResult extends Result {
             required = false)
     private Integer totalResults;
 
-    @ApiModelProperty(
-            value = "The details of the error if an error occurred in producing the result set",
-            required = false)
-    private String error;
-
     TableResult() {
     }
 
-    public TableResult(final String componentId, final List<Row> rows, final OffsetRange resultRange, final Integer totalResults, final String error) {
-        super(componentId);
+    public TableResult(final String componentId,
+                       final List<Row> rows,
+                       final OffsetRange resultRange,
+                       final Integer totalResults,
+                       final String error) {
+        super(componentId, error);
         this.rows = rows;
         this.resultRange = resultRange;
         this.totalResults = totalResults;
-        this.error = error;
+    }
+
+    public TableResult(final String componentId,
+                       final List<Row> rows,
+                       final OffsetRange resultRange,
+                       final String error) {
+        super(componentId, error);
+        this.rows = rows;
+        this.resultRange = resultRange;
+        this.totalResults = rows.size();
     }
 
     public List<Row> getRows() {
@@ -70,10 +81,6 @@ public final class TableResult extends Result {
         return totalResults;
     }
 
-    public String getError() {
-        return error;
-    }
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
@@ -84,8 +91,7 @@ public final class TableResult extends Result {
 
         if (rows != null ? !rows.equals(that.rows) : that.rows != null) return false;
         if (resultRange != null ? !resultRange.equals(that.resultRange) : that.resultRange != null) return false;
-        if (totalResults != null ? !totalResults.equals(that.totalResults) : that.totalResults != null) return false;
-        return error != null ? error.equals(that.error) : that.error == null;
+        return (totalResults != null ? !totalResults.equals(that.totalResults) : that.totalResults != null);
     }
 
     @Override
@@ -94,7 +100,6 @@ public final class TableResult extends Result {
         result = 31 * result + (rows != null ? rows.hashCode() : 0);
         result = 31 * result + (resultRange != null ? resultRange.hashCode() : 0);
         result = 31 * result + (totalResults != null ? totalResults.hashCode() : 0);
-        result = 31 * result + (error != null ? error.hashCode() : 0);
         return result;
     }
 
@@ -105,5 +110,40 @@ public final class TableResult extends Result {
         }
 
         return rows.size() + " rows";
+    }
+
+    /**
+     * Builder for constructing a {@link TableResult tableResult}
+     */
+    public static class Builder<ParentBuilder extends PojoBuilder>
+            extends Result.Builder<ParentBuilder, TableResult, Builder<ParentBuilder>> {
+        private final List<Row> rows = new ArrayList<>();
+        private OffsetRange resultRange;
+
+        public Builder<ParentBuilder> addRows(final Row...values) {
+            this.rows.addAll(Arrays.asList(values));
+            return self();
+        }
+        public Row.Builder<Builder<ParentBuilder>> addRow() {
+            return new Row.Builder<Builder<ParentBuilder>>().parent(this, this::addRows);
+        }
+
+        public Builder<ParentBuilder> resultRange(final OffsetRange value) {
+            this.resultRange = value;
+            return self();
+        }
+
+        public OffsetRange.Builder<Builder<ParentBuilder>> resultRange() {
+            return new OffsetRange.Builder<Builder<ParentBuilder>>().parent(this, this::resultRange);
+        }
+
+        protected TableResult pojoBuild() {
+            return new TableResult(getComponentId(), rows, resultRange, getError());
+        }
+
+        @Override
+        public Builder<ParentBuilder> self() {
+            return this;
+        }
     }
 }

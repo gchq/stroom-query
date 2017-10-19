@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import stroom.util.shared.HasDisplayValue;
+import stroom.util.shared.PojoBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -181,6 +182,52 @@ public final class ExpressionTerm extends ExpressionItem {
         @Override
         public String getDisplayValue() {
             return displayValue;
+        }
+    }
+
+    public static class Builder<ParentBuilder extends PojoBuilder>
+            extends ExpressionItem.Builder<ParentBuilder, ExpressionTerm, Builder<ParentBuilder>> {
+        private String field;
+
+        private Condition condition;
+
+        private String value;
+
+        private DocRef dictionary;
+
+        public Builder<ParentBuilder> field(final String value) {
+            this.field = value;
+            return self();
+        }
+
+        public Builder<ParentBuilder> condition(final Condition value) {
+            this.condition = value;
+            return self();
+        }
+
+        public Builder<ParentBuilder> value(final String value) {
+            this.value = value;
+            return self();
+        }
+
+        public Builder<ParentBuilder> dictionary(final DocRef value) {
+            this.dictionary = value;
+            return self();
+        }
+
+        public DocRef.Builder<Builder<ParentBuilder>> dictionary() {
+            return new DocRef.Builder<Builder<ParentBuilder>>()
+                    .parent(this, this::dictionary);
+        }
+
+        @Override
+        protected ExpressionTerm pojoBuild() {
+            return new ExpressionTerm(getEnabled(), field, condition, value, dictionary);
+        }
+
+        @Override
+        public Builder<ParentBuilder> self() {
+            return this;
         }
     }
 }

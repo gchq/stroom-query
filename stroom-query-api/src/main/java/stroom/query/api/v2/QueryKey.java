@@ -19,6 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.PojoBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -70,5 +71,26 @@ public final class QueryKey implements Serializable {
     @Override
     public String toString() {
         return uuid;
+    }
+
+    public static class Builder<ParentBuilder extends PojoBuilder>
+        extends PojoBuilder<ParentBuilder, QueryKey, Builder<ParentBuilder>> {
+
+        private String uuid;
+
+        public Builder<ParentBuilder> uuid(final String value) {
+            this.uuid = value;
+            return self();
+        }
+
+        @Override
+        protected QueryKey pojoBuild() {
+            return new QueryKey(uuid);
+        }
+
+        @Override
+        public Builder<ParentBuilder> self() {
+            return this;
+        }
     }
 }

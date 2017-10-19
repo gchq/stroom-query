@@ -19,6 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.PojoBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -89,4 +90,32 @@ public final class Filter implements Serializable {
                 ", excludes='" + excludes + '\'' +
                 '}';
     }
+
+    /**
+     * Builder for constructing a {@link Filter filter}
+     */
+    public static class Builder<ParentBuilder extends PojoBuilder>
+            extends PojoBuilder<ParentBuilder, Filter, Builder<ParentBuilder>> {
+        private String includes;
+        private String excludes;
+
+        public Builder<ParentBuilder> includes(final String value) {
+            this.includes = value;
+            return self();
+        }
+        public Builder<ParentBuilder> excludes(final String value) {
+            this.excludes = value;
+            return self();
+        }
+
+        protected Filter pojoBuild() {
+            return new Filter(includes, excludes);
+        }
+
+        @Override
+        public Builder<ParentBuilder> self() {
+            return this;
+        }
+    }
+
 }

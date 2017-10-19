@@ -19,6 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.PojoBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -156,4 +157,76 @@ public final class Field implements Serializable {
                 ", group=" + group +
                 '}';
     }
+
+    public static final class Builder<ParentBuilder extends PojoBuilder>
+            extends PojoBuilder<ParentBuilder, Field, Builder<ParentBuilder>> {
+
+        private String name;
+        private String expression;
+        private Sort sort;
+        private Filter filter;
+        private Format format;
+        private Integer group;
+
+        public Builder<ParentBuilder> name(final String name) {
+            this.name = name;
+            return self();
+        }
+
+        public Builder<ParentBuilder>expression(final String expression) {
+            this.expression = expression;
+            return self();
+        }
+
+        public Builder<ParentBuilder> sort(final Sort sort) {
+            this.sort = sort;
+            return self();
+        }
+
+        public Sort.Builder<Builder<ParentBuilder>> sort() {
+            return new Sort.Builder<Builder<ParentBuilder>>()
+                    .parent(this, this::sort);
+        }
+
+        public Builder<ParentBuilder> filter(final Filter filter) {
+            this.filter = filter;
+            return self();
+        }
+
+        public Filter.Builder<Builder<ParentBuilder>> filter() {
+            return new Filter.Builder<Builder<ParentBuilder>>()
+                    .parent(this, this::filter);
+        }
+
+        public Builder<ParentBuilder> format(final Format format) {
+            this.format = format;
+            return self();
+        }
+
+        public Builder<ParentBuilder> format(final Format.Type type) {
+            this.format = new Format(type);
+            return self();
+        }
+
+        public Format.Builder<Builder<ParentBuilder>> format() {
+            return new Format.Builder<Builder<ParentBuilder>>()
+                    .parent(this, this::format);
+        }
+
+        public Builder<ParentBuilder> group(final Integer group) {
+            this.group = group;
+            return self();
+        }
+
+        @Override
+        protected Field pojoBuild() {
+            return new Field(name, expression, sort, filter, format, group);
+        }
+
+        @Override
+        public Builder<ParentBuilder> self() {
+            return this;
+        }
+    }
+
 }

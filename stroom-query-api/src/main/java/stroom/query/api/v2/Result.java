@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.PojoBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -53,15 +54,25 @@ public abstract class Result implements Serializable {
             required = true)
     private String componentId;
 
+    @XmlElement
+    @ApiModelProperty(value = "If an error has occurred producing this result set then this will have details " +
+            "of the error")
+    private String error;
+
     Result() {
     }
 
-    public Result(final String componentId) {
+    public Result(final String componentId, final String error) {
         this.componentId = componentId;
+        this.error = error;
     }
 
     public String getComponentId() {
         return componentId;
+    }
+
+    public String getError() {
+        return error;
     }
 
     @Override
@@ -71,18 +82,54 @@ public abstract class Result implements Serializable {
 
         final Result that = (Result) o;
 
+        if (error != null ? !error.equals(that.error) : that.error != null) return false;
         return componentId != null ? componentId.equals(that.componentId) : that.componentId == null;
     }
 
     @Override
     public int hashCode() {
-        return componentId != null ? componentId.hashCode() : 0;
+        int result = (error != null ? error.hashCode() : 0);
+        result = 31 * result + (componentId != null ? componentId.hashCode() : 0);
+        return result;
     }
 
     @Override
     public String toString() {
         return "ComponentResult{" +
-                "componentId='" + componentId + '\'' +
+                "componentId='" + componentId + "\', " +
+                "error='" + error + '\'' +
                 '}';
     }
+
+    /**
+     * Builder for constructing a {@link Result result}
+     */
+    public static abstract class Builder<
+                ParentBuilder extends PojoBuilder,
+                T extends Result,
+                CHILD_CLASS extends Builder<ParentBuilder, T, ?>>
+            extends PojoBuilder<ParentBuilder, T, CHILD_CLASS> {
+
+        private String componentId;
+        private String error;
+
+        public CHILD_CLASS componentId(final String value) {
+            this.componentId = value;
+            return self();
+        }
+
+        public CHILD_CLASS error(final String value) {
+            this.error = value;
+            return self();
+        }
+
+        protected String getComponentId() {
+            return componentId;
+        }
+
+        protected String getError() {
+            return error;
+        }
+    }
+
 }

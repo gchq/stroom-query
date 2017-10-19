@@ -19,6 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.PojoBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -95,4 +96,33 @@ public final class OffsetRange implements Serializable {
                 ", length=" + length +
                 '}';
     }
+
+    /**
+     * Builder for constructing a {@link OffsetRange offsetRange}
+     */
+    public static class Builder<ParentBuilder extends PojoBuilder>
+            extends PojoBuilder<ParentBuilder, OffsetRange, Builder<ParentBuilder>> {
+        private Long offset;
+        private Long length;
+
+        public Builder<ParentBuilder> offset(final Long value) {
+            this.offset = value;
+            return self();
+        }
+
+        public Builder<ParentBuilder> length(final Long value) {
+            this.length = value;
+            return self();
+        }
+
+        protected OffsetRange pojoBuild() {
+            return new OffsetRange(offset, length);
+        }
+
+        @Override
+        public Builder<ParentBuilder> self() {
+            return this;
+        }
+    }
+
 }

@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import stroom.util.shared.HasDisplayValue;
+import stroom.util.shared.PojoBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -27,6 +28,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,20 +37,20 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(
         value = "ExpressionOperator",
-        description = "A logical operator term in a query expression tree",
+        description = "A logical addOperator term in a query expression tree",
         parent = ExpressionItem.class)
 public final class ExpressionOperator extends ExpressionItem {
     private static final long serialVersionUID = 6602004424564268512L;
 
     @XmlElement(name = "op")
     @ApiModelProperty(
-            value = "The logical operator type",
+            value = "The logical addOperator type",
             required = true)
     private Op op = Op.AND;
 
     @XmlElementWrapper(name = "children")
     @XmlElements({
-            @XmlElement(name = "operator", type = ExpressionOperator.class),
+            @XmlElement(name = "addOperator", type = ExpressionOperator.class),
             @XmlElement(name = "term", type = ExpressionTerm.class)
     })
     @ApiModelProperty(
@@ -144,6 +146,43 @@ public final class ExpressionOperator extends ExpressionItem {
         @Override
         public String getDisplayValue() {
             return displayValue;
+        }
+    }
+
+    public static class Builder<ParentBuilder extends PojoBuilder>
+            extends ExpressionItem.Builder<ParentBuilder, ExpressionOperator, ExpressionOperator.Builder<ParentBuilder>> {
+        private Op op = Op.AND;
+
+        private List<ExpressionItem> children = new ArrayList<>();
+
+        public Builder<ParentBuilder> op(final Op value) {
+            this.op = value;
+            return self();
+        }
+
+        public Builder<ParentBuilder> addOperators(ExpressionItem...items) {
+            this.children.addAll(Arrays.asList(items));
+            return self();
+        }
+
+        public Builder<Builder<ParentBuilder>> addOperator() {
+            return new Builder<Builder<ParentBuilder>>()
+                    .parent(this, this::addOperators);
+        }
+
+        public ExpressionTerm.Builder<Builder<ParentBuilder>> addTerm() {
+            return new ExpressionTerm.Builder<Builder<ParentBuilder>>()
+                    .parent(this, this::addOperators);
+        }
+
+        @Override
+        protected ExpressionOperator pojoBuild() {
+            return new ExpressionOperator(getEnabled(), op, children);
+        }
+
+        @Override
+        public ExpressionOperator.Builder<ParentBuilder> self() {
+            return this;
         }
     }
 }

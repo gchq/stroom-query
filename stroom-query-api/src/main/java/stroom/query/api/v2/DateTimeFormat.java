@@ -19,6 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.PojoBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -100,4 +101,39 @@ public final class DateTimeFormat implements Serializable {
                 ", timeZone=" + timeZone +
                 '}';
     }
+
+    /**
+     * Builder for constructing a {@link DateTimeFormat dateTimeFormat}
+     */
+    public static class Builder<ParentBuilder extends PojoBuilder>
+            extends PojoBuilder<ParentBuilder, DateTimeFormat, Builder<ParentBuilder>> {
+        private String pattern;
+
+        private TimeZone timeZone;
+
+        public Builder<ParentBuilder> pattern(final String value) {
+            this.pattern = value;
+            return self();
+        }
+
+        public Builder<ParentBuilder> timeZone(final TimeZone value) {
+            this.timeZone = value;
+            return self();
+        }
+
+        public TimeZone.Builder<Builder<ParentBuilder>> timeZone() {
+            return new TimeZone.Builder<Builder<ParentBuilder>>()
+                    .parent(this, this::timeZone);
+        }
+
+        protected DateTimeFormat pojoBuild() {
+            return new DateTimeFormat(pattern, timeZone);
+        }
+
+        @Override
+        public Builder<ParentBuilder> self() {
+            return this;
+        }
+    }
+
 }

@@ -18,6 +18,7 @@ package stroom.query.api.v2;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.PojoBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -25,6 +26,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -187,4 +190,72 @@ public final class ResultRequest implements Serializable {
         CHANGES,
         ALL
     }
+
+    /**
+     * Builder for constructing a {@link ResultRequest resultRequest}
+     */
+    public static class Builder<ParentBuilder extends PojoBuilder>
+            extends PojoBuilder<ParentBuilder, ResultRequest, Builder<ParentBuilder>> {
+        private String componentId;
+
+        private final List<TableSettings> mappings = new ArrayList<>();
+
+        private OffsetRange requestedRange;
+
+        private final List<String> openGroups = new ArrayList<>();
+
+        private ResultRequest.ResultStyle resultStyle;
+
+        private ResultRequest.Fetch fetch;
+
+        public Builder<ParentBuilder> componentId(final String value) {
+            this.componentId = value;
+            return self();
+        }
+
+        public Builder<ParentBuilder> requestedRange(final OffsetRange value) {
+            this.requestedRange = value;
+            return self();
+        }
+
+        public OffsetRange.Builder<Builder<ParentBuilder>> requestedRange() {
+            return new OffsetRange.Builder<Builder<ParentBuilder>>()
+                    .parent(this, this::requestedRange);
+        }
+
+        public Builder<ParentBuilder> addMappings(final TableSettings... values) {
+            this.mappings.addAll(Arrays.asList(values));
+            return self();
+        }
+
+        public TableSettings.Builder<Builder<ParentBuilder>> addMapping() {
+            return new TableSettings.Builder<Builder<ParentBuilder>>()
+                    .parent(this, this::addMappings);
+        }
+
+        public Builder<ParentBuilder> addOpenGroups(final String...values) {
+            this.openGroups.addAll(Arrays.asList(values));
+            return self();
+        }
+
+        public Builder<ParentBuilder> resultStyle(final ResultRequest.ResultStyle value) {
+            this.resultStyle = value;
+            return self();
+        }
+
+        public Builder<ParentBuilder> fetch(final ResultRequest.Fetch value) {
+            this.fetch = value;
+            return self();
+        }
+
+        protected ResultRequest pojoBuild() {
+            return new ResultRequest(componentId, mappings, requestedRange, openGroups, resultStyle, fetch);
+        }
+
+        @Override
+        public Builder<ParentBuilder> self() {
+            return this;
+        }
+    }
+
 }

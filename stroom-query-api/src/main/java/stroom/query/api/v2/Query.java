@@ -19,6 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.PojoBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -27,6 +28,8 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -50,7 +53,7 @@ public final class Query implements Serializable {
 
     @XmlElement
     @ApiModelProperty(
-            value = "The root logical operator in the query expression tree",
+            value = "The root logical addOperator in the query expression tree",
             required = true)
     private ExpressionOperator expression;
 
@@ -114,4 +117,57 @@ public final class Query implements Serializable {
                 ", params=" + params +
                 '}';
     }
+
+    /**
+     * Builder for constructing a {@link Query query}
+     */
+    public static class Builder<ParentBuilder extends PojoBuilder>
+            extends PojoBuilder<ParentBuilder, Query, Builder<ParentBuilder>> {
+
+        private DocRef dataSource;
+
+        private ExpressionOperator expression;
+
+        private final List<Param> params = new ArrayList<>();
+
+        public Builder<ParentBuilder> dataSource(final DocRef value) {
+            this.dataSource = value;
+            return self();
+        }
+
+        public DocRef.Builder<Builder<ParentBuilder>> dataSource() {
+            return new DocRef.Builder<Builder<ParentBuilder>>()
+                    .parent(this, this::dataSource);
+        }
+
+        public Builder<ParentBuilder> expression(final ExpressionOperator value) {
+            this.expression = value;
+            return self();
+        }
+
+        public ExpressionOperator.Builder<Builder<ParentBuilder>> expression() {
+            return new ExpressionOperator.Builder<Builder<ParentBuilder>>()
+                    .parent(this, this::expression);
+        }
+
+        public Param.Builder<Builder<ParentBuilder>> addParam() {
+            return new Param.Builder<Builder<ParentBuilder>>()
+                    .parent(this, this::addParams);
+        }
+
+        public Builder<ParentBuilder> addParams(final Param...values) {
+            this.params.addAll(Arrays.asList(values));
+            return self();
+        }
+
+        protected Query pojoBuild() {
+            return new Query(dataSource, expression, params);
+        }
+
+        @Override
+        public Builder<ParentBuilder> self() {
+            return this;
+        }
+    }
+
 }

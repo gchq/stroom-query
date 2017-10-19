@@ -19,6 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.PojoBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -26,6 +27,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @JsonPropertyOrder({"groupKey", "values", "depth"})
@@ -106,4 +109,41 @@ public final class Row implements Serializable {
                 ", depth=" + depth +
                 '}';
     }
+
+    /**
+     * Builder for constructing a {@link Row row}
+     */
+    public static class Builder<ParentBuilder extends PojoBuilder>
+            extends PojoBuilder<ParentBuilder, Row, Builder<ParentBuilder>> {
+        private String groupKey;
+
+        private final List<String> values = new ArrayList<>();
+
+        private Integer depth;
+
+        public Builder<ParentBuilder> groupKey(final String value) {
+            this.groupKey = value;
+            return self();
+        }
+
+        public Builder<ParentBuilder> addValues(final String...values) {
+            this.values.addAll(Arrays.asList(values));
+            return self();
+        }
+
+        public Builder<ParentBuilder> depth(final Integer value) {
+            this.depth = value;
+            return self();
+        }
+
+        protected Row pojoBuild() {
+            return new Row(groupKey, values, depth);
+        }
+
+        @Override
+        public Builder<ParentBuilder> self() {
+            return this;
+        }
+    }
+
 }

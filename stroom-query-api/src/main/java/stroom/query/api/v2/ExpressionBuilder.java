@@ -44,7 +44,7 @@ public final class ExpressionBuilder {
     private final ExpressionBuilder parentBuilder;
 
     /**
-     * Create a builder with an enabled 'AND' operator as its root item
+     * Create a builder with an enabled 'AND' addOperator as its root item
      */
     public ExpressionBuilder() {
         this(null, Op.AND);
@@ -53,7 +53,7 @@ public final class ExpressionBuilder {
     /**
      * Create a builder with the supplied {@link ExpressionOperator} type as its root item. The root item will be
      * enabled
-     * @param op The {@link Op operator type} of the root operator
+     * @param op The {@link Op addOperator type} of the root addOperator
      */
     public ExpressionBuilder(final Op op) {
         this(null, op);
@@ -62,8 +62,8 @@ public final class ExpressionBuilder {
     /**
      * Create a builder with the supplied {@link Op} as the type of its root {@link ExpressionOperator}.
      * The root item will be enabled.
-     * @param enabled The enabled state of the root operator item. A value of null is take to mean enabled
-     * @param op The {@link Op operator type} of the root operator
+     * @param enabled The enabled state of the root addOperator item. A value of null is take to mean enabled
+     * @param op The {@link Op addOperator type} of the root addOperator
      */
     public ExpressionBuilder(final Boolean enabled, final Op op) {
         this(enabled, op, null);

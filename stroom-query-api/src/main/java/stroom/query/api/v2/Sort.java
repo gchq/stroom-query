@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import stroom.util.shared.HasDisplayValue;
+import stroom.util.shared.PojoBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -103,6 +104,35 @@ public final class Sort implements Serializable {
         @Override
         public String getDisplayValue() {
             return displayValue;
+        }
+    }
+
+    /**
+     * Builder for constructing a {@link Sort sort}
+     */
+    public static class Builder<ParentBuilder extends PojoBuilder>
+            extends PojoBuilder<ParentBuilder, Sort, Builder<ParentBuilder>> {
+        private Integer order;
+
+        private SortDirection direction;
+
+        public Builder<ParentBuilder> order(final Integer value) {
+            this.order = value;
+            return self();
+        }
+
+        public Builder<ParentBuilder> direction(final SortDirection value) {
+            this.direction = value;
+            return self();
+        }
+
+        protected Sort pojoBuild() {
+            return new Sort(order, direction);
+        }
+
+        @Override
+        public Builder<ParentBuilder> self() {
+            return this;
         }
     }
 }
