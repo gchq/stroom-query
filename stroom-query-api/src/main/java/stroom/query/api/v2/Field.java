@@ -174,6 +174,25 @@ public final class Field implements Serializable {
         private Integer group;
 
         /**
+         * @param name The name of the field for display purposes
+         * @param expression The expression to use to generate the value for this field
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public Builder(final String name,
+                       final String expression) {
+            this.name = name;
+            this.expression = expression;
+        }
+
+        /**
+         * No args constructor, allow all building using chained methods
+         */
+        public Builder() {
+
+        }
+
+        /**
          * @param value The name of the field for display purposes
          *
          * @return The {@link Builder}, enabling method chaining

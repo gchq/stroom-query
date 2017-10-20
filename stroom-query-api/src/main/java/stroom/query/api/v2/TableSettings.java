@@ -221,6 +221,17 @@ public final class TableSettings implements Serializable {
         }
 
         /**
+         * Start building a field to add to the expected list
+         * @param name  The field name
+         * @param expression The expression to use to generate the field value
+         * @return The Field.Builder, configured to pop back to this one when complete
+         */
+        public Field.Builder<Builder<OwningBuilder>> addField(final String name, final String expression) {
+            return new Field.Builder<Builder<OwningBuilder>>(name, expression)
+                    .popToWhenComplete(this, this::addFields);
+        }
+
+        /**
          * @param values The max result value
          *
          * @return The {@link Builder}, enabling method chaining

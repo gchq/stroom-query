@@ -6,31 +6,13 @@ import org.junit.Test;
 public class ExpressionBuilderTest {
     @Test
     public void doesBuild() throws Exception {
-        ExpressionOperator root = new ExpressionOperator.Builder<>()
-                .op(ExpressionOperator.Op.AND)
-                    .addTerm()
-                        .field("fieldX")
-                        .condition(ExpressionTerm.Condition.EQUALS)
-                        .value("abc")
+        ExpressionOperator root = new ExpressionOperator.Builder<>(ExpressionOperator.Op.AND)
+                    .addTerm("fieldX", ExpressionTerm.Condition.EQUALS, "abc")
+                    .addOperator(ExpressionOperator.Op.OR)
+                        .addTerm("fieldA", ExpressionTerm.Condition.EQUALS, "Fred")
+                        .addTerm("fieldA", ExpressionTerm.Condition.EQUALS, "Fred")
                         .end()
-                    .addOperator()
-                        .op(ExpressionOperator.Op.OR)
-                            .addTerm()
-                                .field("fieldA")
-                                .condition(ExpressionTerm.Condition.EQUALS)
-                                .value("Fred")
-                            .end()
-                            .addTerm()
-                                .field("fieldA")
-                                .condition(ExpressionTerm.Condition.EQUALS)
-                                .value("Fred")
-                            .end()
-                        .end()
-                    .addTerm()
-                        .field("fieldY")
-                        .condition(ExpressionTerm.Condition.BETWEEN)
-                        .value("10,20")
-                    .end()
+                    .addTerm("fieldY", ExpressionTerm.Condition.BETWEEN, "10,20")
                 .build();
 
         Assert.assertEquals(3, root.getChildren().size());

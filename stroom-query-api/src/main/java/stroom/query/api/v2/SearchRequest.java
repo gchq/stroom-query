@@ -224,6 +224,15 @@ public final class SearchRequest implements Serializable {
         }
 
         /**
+         * Shortcut function to add a key value in one go
+         * @param uuid The UUID of the query key
+         * @return This builder
+         */
+        public Builder key(final String uuid) {
+            return key().uuid(uuid).end();
+        }
+
+        /**
          * @param value The query terms for the search
          *
          * @return The {@link Builder}, enabling method chaining

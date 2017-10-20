@@ -259,7 +259,7 @@ public final class ResultRequest implements Serializable {
         }
 
         /**
-         * @param values XXXXXXXXXXXXXXXX
+         * @param values TODO
          *
          * @return The {@link Builder}, enabling method chaining
          */

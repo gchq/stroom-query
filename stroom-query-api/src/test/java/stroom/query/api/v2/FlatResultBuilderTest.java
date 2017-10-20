@@ -23,8 +23,7 @@ public class FlatResultBuilderTest {
                 .error(error);
         IntStream.range(0, numberFields).forEach(x ->
                 flatResultBuilder
-                        .addField()
-                            .name(String.format("field%d", x))
+                        .addField(String.format("field%d", x), "expression")
         );
         IntStream.range(0, numberResultSets).forEach(x -> {
             final ListBuilder<?, Object> valuesBuilder = flatResultBuilder.addValues();

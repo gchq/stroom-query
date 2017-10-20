@@ -163,10 +163,11 @@ public final class Query implements Serializable {
 
         /**
          * Start construction of the root expression to apply for this query
+         * @param rootOp The logical operator to apply at the root level
          * @return The expression builder, configured to pop back to this builder when complete
          */
-        public ExpressionOperator.Builder<Builder<OwningBuilder>> expression() {
-            return new ExpressionOperator.Builder<Builder<OwningBuilder>>()
+        public ExpressionOperator.Builder<Builder<OwningBuilder>> expression(final ExpressionOperator.Op rootOp) {
+            return new ExpressionOperator.Builder<Builder<OwningBuilder>>(rootOp)
                     .popToWhenComplete(this, this::expression);
         }
 
@@ -177,6 +178,16 @@ public final class Query implements Serializable {
         public Param.Builder<Builder<OwningBuilder>> addParam() {
             return new Param.Builder<Builder<OwningBuilder>>()
                     .popToWhenComplete(this, this::addParams);
+        }
+
+        /**
+         * Shortcut function to add a parameter and go straight back to building the query
+         * @param key The parameter key
+         * @param value The parameter value
+         * @return
+         */
+        public Builder<OwningBuilder> addParam(final String key, final String value) {
+            return addParam().key(key).value(value).end();
         }
 
         /**

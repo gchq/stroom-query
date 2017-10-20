@@ -157,18 +157,15 @@ public final class ExpressionOperator extends ExpressionItem {
      */
     public static class Builder<OwningBuilder extends OwnedBuilder>
             extends ExpressionItem.Builder<OwningBuilder, ExpressionOperator, Builder<OwningBuilder>> {
-        private Op op = Op.AND;
+        private final Op op;
 
         private List<ExpressionItem> children = new ArrayList<>();
 
         /**
          * @param value Set the logical operator to apply to all the children items
-         *
-         * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<OwningBuilder> op(final Op value) {
+        public Builder(final Op value) {
             this.op = value;
-            return self();
         }
 
         /**
@@ -192,10 +189,11 @@ public final class ExpressionOperator extends ExpressionItem {
 
         /**
          * Begin construction of a new child {@link ExpressionOperator}
+         * @param op The logical operator to apply
          * @return A new operator builder, configured to pop back to this builder when complete
          */
-        public Builder<Builder<OwningBuilder>> addOperator() {
-            return new Builder<Builder<OwningBuilder>>()
+        public Builder<Builder<OwningBuilder>> addOperator(final Op op) {
+            return new Builder<Builder<OwningBuilder>>(op)
                     .popToWhenComplete(this, this::addOperators);
         }
 
@@ -206,6 +204,19 @@ public final class ExpressionOperator extends ExpressionItem {
         public ExpressionTerm.Builder<Builder<OwningBuilder>> addTerm() {
             return new ExpressionTerm.Builder<Builder<OwningBuilder>>()
                     .popToWhenComplete(this, this::addOperators);
+        }
+
+        /**
+         * A convenience function for adding terms in one go, the parameters should read fairly clearly
+         * @param field The field name
+         * @param condition The condition to apply to the valud
+         * @param value The value
+         * @return
+         */
+        public Builder<OwningBuilder> addTerm(final String field,
+                                              final ExpressionTerm.Condition condition,
+                                              final String value) {
+            return addTerm().field(field).condition(condition).value(value).end();
         }
 
         @Override

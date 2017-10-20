@@ -138,8 +138,25 @@ public final class FlatResult extends Result {
             return self();
         }
 
+        /**
+         * Start building a field within this result
+         * @return The field builder, configured to pop back to this when complete
+         */
         public Field.Builder<Builder<OwningBuilder>> addField() {
-            return new Field.Builder<Builder<OwningBuilder>>().popToWhenComplete(this, this::addFields);
+            return new Field.Builder<Builder<OwningBuilder>>()
+                    .popToWhenComplete(this, this::addFields);
+        }
+
+        /**
+         * Start building a field within this result, allow specification of name and expression in line
+         * as they are essential parts of the field
+         * @param name  The field name
+         * @param expression The expression to use to generate the field value
+         * @return The field builder, configured to pop back to this when complete
+         */
+        public Field.Builder<Builder<OwningBuilder>> addField(final String name, final String expression) {
+            return new Field.Builder<Builder<OwningBuilder>>(name, expression)
+                    .popToWhenComplete(this, this::addFields);
         }
 
         /**
