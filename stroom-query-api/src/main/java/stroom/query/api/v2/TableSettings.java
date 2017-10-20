@@ -184,11 +184,21 @@ public final class TableSettings implements Serializable {
 
         private final List<Integer> maxResults = new ArrayList<>();
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> queryId(final String value) {
             this.queryId = value;
             return self();
         }
 
+        /**
+         * @param values XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> addFields(final Field...values) {
             this.fields.addAll(Arrays.asList(values));
             return self();
@@ -199,16 +209,31 @@ public final class TableSettings implements Serializable {
                     .parent(this, this::addFields);
         }
 
+        /**
+         * @param values XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> addMaxResults(final Integer...values) {
             this.maxResults.addAll(Arrays.asList(values));
             return self();
         }
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> extractValues(final Boolean value) {
             this.extractValues = value;
             return self();
         }
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> extractionPipeline(final DocRef value) {
             this.extractionPipeline = value;
             return self();
@@ -219,6 +244,11 @@ public final class TableSettings implements Serializable {
                     .parent(this, this::extractionPipeline);
         }
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> showDetail(final Boolean value) {
             this.showDetail = value;
             return self();

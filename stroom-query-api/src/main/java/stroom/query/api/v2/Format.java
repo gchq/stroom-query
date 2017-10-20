@@ -143,6 +143,11 @@ public final class Format implements Serializable {
 
         private DateTimeFormat dateTimeFormat;
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> type(final Type value) {
             this.type = value;
             return self();

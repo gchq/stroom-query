@@ -99,10 +99,21 @@ public final class Filter implements Serializable {
         private String includes;
         private String excludes;
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> includes(final String value) {
             this.includes = value;
             return self();
         }
+
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> excludes(final String value) {
             this.excludes = value;
             return self();

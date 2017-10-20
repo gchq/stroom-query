@@ -120,6 +120,11 @@ public final class TableResult extends Result {
         private final List<Row> rows = new ArrayList<>();
         private OffsetRange resultRange;
 
+        /**
+         * @param values XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> addRows(final Row...values) {
             this.rows.addAll(Arrays.asList(values));
             return self();
@@ -128,6 +133,11 @@ public final class TableResult extends Result {
             return new Row.Builder<Builder<ParentBuilder>>().parent(this, this::addRows);
         }
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> resultRange(final OffsetRange value) {
             this.resultRange = value;
             return self();

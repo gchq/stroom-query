@@ -182,21 +182,41 @@ public final class TimeZone implements Serializable {
 
         private Integer offsetMinutes;
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> use(final Use value) {
             this.use = value;
             return self();
         }
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> id(final String value) {
             this.id = value;
             return self();
         }
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> offsetHours(final Integer value) {
             this.offsetHours = value;
             return self();
         }
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> offsetMinutes(final Integer value) {
             this.offsetMinutes = value;
             return self();

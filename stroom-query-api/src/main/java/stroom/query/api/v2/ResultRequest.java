@@ -208,11 +208,21 @@ public final class ResultRequest implements Serializable {
 
         private ResultRequest.Fetch fetch;
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> componentId(final String value) {
             this.componentId = value;
             return self();
         }
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> requestedRange(final OffsetRange value) {
             this.requestedRange = value;
             return self();
@@ -223,6 +233,11 @@ public final class ResultRequest implements Serializable {
                     .parent(this, this::requestedRange);
         }
 
+        /**
+         * @param values XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> addMappings(final TableSettings... values) {
             this.mappings.addAll(Arrays.asList(values));
             return self();
@@ -233,16 +248,31 @@ public final class ResultRequest implements Serializable {
                     .parent(this, this::addMappings);
         }
 
+        /**
+         * @param values XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> addOpenGroups(final String...values) {
             this.openGroups.addAll(Arrays.asList(values));
             return self();
         }
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> resultStyle(final ResultRequest.ResultStyle value) {
             this.resultStyle = value;
             return self();
         }
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> fetch(final ResultRequest.Fetch value) {
             this.fetch = value;
             return self();

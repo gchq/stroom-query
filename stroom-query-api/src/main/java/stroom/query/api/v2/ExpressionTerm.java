@@ -195,21 +195,41 @@ public final class ExpressionTerm extends ExpressionItem {
 
         private DocRef dictionary;
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> field(final String value) {
             this.field = value;
             return self();
         }
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> condition(final Condition value) {
             this.condition = value;
             return self();
         }
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> value(final String value) {
             this.value = value;
             return self();
         }
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> dictionary(final DocRef value) {
             this.dictionary = value;
             return self();

@@ -49,6 +49,9 @@ public final class DateTimeFormat implements Serializable {
             required = true)
     private TimeZone timeZone;
 
+    /**
+     * Default constructor for deserialisation
+     */
     private DateTimeFormat() {
     }
 
@@ -104,6 +107,8 @@ public final class DateTimeFormat implements Serializable {
 
     /**
      * Builder for constructing a {@link DateTimeFormat dateTimeFormat}
+     *
+     * @param <ParentBuilder> The class of the parent builder, allows nested building
      */
     public static class Builder<ParentBuilder extends PojoBuilder>
             extends PojoBuilder<ParentBuilder, DateTimeFormat, Builder<ParentBuilder>> {
@@ -111,16 +116,30 @@ public final class DateTimeFormat implements Serializable {
 
         private TimeZone timeZone;
 
+        /**
+         * @param value The format pattern string, conforming to {@link java.time.format.DateTimeFormatter}
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> pattern(final String value) {
             this.pattern = value;
             return self();
         }
-
+        /**
+         * @param value Set the {@link TimeZone timeZone} to use when formatting the date
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> timeZone(final TimeZone value) {
             this.timeZone = value;
             return self();
         }
 
+        /**
+         * Construct a new timeZone
+         *
+         * @return The {@link TimeZone.Builder} for method chaining the child construction
+         */
         public TimeZone.Builder<Builder<ParentBuilder>> timeZone() {
             return new TimeZone.Builder<Builder<ParentBuilder>>()
                     .parent(this, this::timeZone);

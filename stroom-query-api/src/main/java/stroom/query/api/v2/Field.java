@@ -168,18 +168,33 @@ public final class Field implements Serializable {
         private Format format;
         private Integer group;
 
-        public Builder<ParentBuilder> name(final String name) {
-            this.name = name;
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public Builder<ParentBuilder> name(final String value) {
+            this.name = value;
             return self();
         }
 
-        public Builder<ParentBuilder>expression(final String expression) {
-            this.expression = expression;
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public Builder<ParentBuilder> expression(final String value) {
+            this.expression = value;
             return self();
         }
 
-        public Builder<ParentBuilder> sort(final Sort sort) {
-            this.sort = sort;
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public Builder<ParentBuilder> sort(final Sort value) {
+            this.sort = value;
             return self();
         }
 
@@ -188,8 +203,13 @@ public final class Field implements Serializable {
                     .parent(this, this::sort);
         }
 
-        public Builder<ParentBuilder> filter(final Filter filter) {
-            this.filter = filter;
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public Builder<ParentBuilder> filter(final Filter value) {
+            this.filter = value;
             return self();
         }
 
@@ -198,13 +218,23 @@ public final class Field implements Serializable {
                     .parent(this, this::filter);
         }
 
-        public Builder<ParentBuilder> format(final Format format) {
-            this.format = format;
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public Builder<ParentBuilder> format(final Format value) {
+            this.format = value;
             return self();
         }
 
-        public Builder<ParentBuilder> format(final Format.Type type) {
-            this.format = new Format(type);
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public Builder<ParentBuilder> format(final Format.Type value) {
+            this.format = new Format(value);
             return self();
         }
 

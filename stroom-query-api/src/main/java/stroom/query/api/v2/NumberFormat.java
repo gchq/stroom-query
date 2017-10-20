@@ -103,11 +103,21 @@ public final class NumberFormat implements Serializable {
         private Integer decimalPlaces;
         private Boolean useSeparator;
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> decimalPlaces(final Integer value) {
             this.decimalPlaces = value;
             return self();
         }
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> useSeparator(final Boolean value) {
             this.useSeparator = value;
             return self();

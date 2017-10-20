@@ -121,16 +121,31 @@ public final class Row implements Serializable {
 
         private Integer depth;
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> groupKey(final String value) {
             this.groupKey = value;
             return self();
         }
 
+        /**
+         * @param values XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> addValues(final String...values) {
             this.values.addAll(Arrays.asList(values));
             return self();
         }
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> depth(final Integer value) {
             this.depth = value;
             return self();

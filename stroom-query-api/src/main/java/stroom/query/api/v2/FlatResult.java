@@ -121,6 +121,11 @@ public final class FlatResult extends Result {
 
         private final List<List<Object>> values = new ArrayList<>();
 
+        /**
+         * @param fields XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> addFields(final Field...fields) {
             structure.addAll(Arrays.asList(fields));
             return self();
@@ -130,6 +135,11 @@ public final class FlatResult extends Result {
             return new Field.Builder<Builder<ParentBuilder>>().parent(this, this::addFields);
         }
 
+        /**
+         * @param values XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> addValues(final List<Object>... values) {
             this.values.addAll(Arrays.asList(values));
             return self();

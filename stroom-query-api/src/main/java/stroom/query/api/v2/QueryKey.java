@@ -78,6 +78,11 @@ public final class QueryKey implements Serializable {
 
         private String uuid;
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> uuid(final String value) {
             this.uuid = value;
             return self();

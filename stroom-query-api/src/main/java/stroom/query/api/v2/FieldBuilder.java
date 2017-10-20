@@ -30,38 +30,73 @@ public final class FieldBuilder {
     private Format format;
     private Integer group;
 
-    public FieldBuilder name(final String name) {
-        this.name = name;
+    /**
+     * @param value XXXXXXXXXXXXXXXX
+     *
+     * @return The {@link Builder}, enabling method chaining
+     */
+    public FieldBuilder name(final String value) {
+        this.name = value;
         return this;
     }
 
-    public FieldBuilder expression(final String expression) {
-        this.expression = expression;
+    /**
+     * @param value XXXXXXXXXXXXXXXX
+     *
+     * @return The {@link Builder}, enabling method chaining
+     */
+    public FieldBuilder expression(final String value) {
+        this.expression = value;
         return this;
     }
 
-    public FieldBuilder sort(final Sort sort) {
-        this.sort = sort;
+    /**
+     * @param value XXXXXXXXXXXXXXXX
+     *
+     * @return The {@link Builder}, enabling method chaining
+     */
+    public FieldBuilder sort(final Sort value) {
+        this.sort = value;
         return this;
     }
 
-    public FieldBuilder filter(final Filter filter) {
-        this.filter = filter;
+    /**
+     * @param value XXXXXXXXXXXXXXXX
+     *
+     * @return The {@link Builder}, enabling method chaining
+     */
+    public FieldBuilder filter(final Filter value) {
+        this.filter = value;
         return this;
     }
 
-    public FieldBuilder format(final Format format) {
-        this.format = format;
+    /**
+     * @param value XXXXXXXXXXXXXXXX
+     *
+     * @return The {@link Builder}, enabling method chaining
+     */
+    public FieldBuilder format(final Format value) {
+        this.format = value;
         return this;
     }
 
-    public FieldBuilder format(final Type type) {
-        this.format = new Format(type);
+    /**
+     * @param value XXXXXXXXXXXXXXXX
+     *
+     * @return The {@link Builder}, enabling method chaining
+     */
+    public FieldBuilder format(final Type value) {
+        this.format = new Format(value);
         return this;
     }
 
-    public FieldBuilder group(final Integer group) {
-        this.group = group;
+    /**
+     * @param value XXXXXXXXXXXXXXXX
+     *
+     * @return The {@link Builder}, enabling method chaining
+     */
+    public FieldBuilder group(final Integer value) {
+        this.group = value;
         return this;
     }
 

@@ -116,11 +116,21 @@ public final class Sort implements Serializable {
 
         private SortDirection direction;
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> order(final Integer value) {
             this.order = value;
             return self();
         }
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> direction(final SortDirection value) {
             this.direction = value;
             return self();

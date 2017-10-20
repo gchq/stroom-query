@@ -29,33 +29,63 @@ public class TableSettingsBuilder {
     private List<Integer> maxResults;
     private Boolean showDetail;
 
-    public TableSettingsBuilder queryId(final String queryId) {
-        this.queryId = queryId;
+    /**
+     * @param value XXXXXXXXXXXXXXXX
+     *
+     * @return The {@link Builder}, enabling method chaining
+     */
+    public TableSettingsBuilder queryId(final String value) {
+        this.queryId = value;
         return this;
     }
 
-    public TableSettingsBuilder fields(final List<Field> fields) {
-        this.fields = fields;
+    /**
+     * @param values XXXXXXXXXXXXXXXX
+     *
+     * @return The {@link Builder}, enabling method chaining
+     */
+    public TableSettingsBuilder fields(final List<Field> values) {
+        this.fields = values;
         return this;
     }
 
-    public TableSettingsBuilder extractValues(final Boolean extractValues) {
-        this.extractValues = extractValues;
+    /**
+     * @param value XXXXXXXXXXXXXXXX
+     *
+     * @return The {@link Builder}, enabling method chaining
+     */
+    public TableSettingsBuilder extractValues(final Boolean value) {
+        this.extractValues = value;
         return this;
     }
 
-    public TableSettingsBuilder extractionPipeline(final DocRef extractionPipeline) {
-        this.extractionPipeline = extractionPipeline;
+    /**
+     * @param value XXXXXXXXXXXXXXXX
+     *
+     * @return The {@link Builder}, enabling method chaining
+     */
+    public TableSettingsBuilder extractionPipeline(final DocRef value) {
+        this.extractionPipeline = value;
         return this;
     }
 
-    public TableSettingsBuilder maxResults(final List<Integer> maxResults) {
-        this.maxResults = maxResults;
+    /**
+     * @param values XXXXXXXXXXXXXXXX
+     *
+     * @return The {@link Builder}, enabling method chaining
+     */
+    public TableSettingsBuilder maxResults(final List<Integer> values) {
+        this.maxResults = values;
         return this;
     }
 
-    public TableSettingsBuilder showDetail(final Boolean showDetail) {
-        this.showDetail = showDetail;
+    /**
+     * @param value XXXXXXXXXXXXXXXX
+     *
+     * @return The {@link Builder}, enabling method chaining
+     */
+    public TableSettingsBuilder showDetail(final Boolean value) {
+        this.showDetail = value;
         return this;
     }
 

@@ -220,8 +220,13 @@ public final class SearchResponse implements Serializable {
 
         }
 
-        public CHILD_CLASS complete(final Boolean complete) {
-            this.complete = complete;
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public CHILD_CLASS complete(final Boolean value) {
+            this.complete = value;
             return self();
         }
 

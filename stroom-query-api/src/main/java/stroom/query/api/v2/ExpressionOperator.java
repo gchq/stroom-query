@@ -155,6 +155,11 @@ public final class ExpressionOperator extends ExpressionItem {
 
         private List<ExpressionItem> children = new ArrayList<>();
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> op(final Op value) {
             this.op = value;
             return self();

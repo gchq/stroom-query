@@ -105,11 +105,21 @@ public final class OffsetRange implements Serializable {
         private Long offset;
         private Long length;
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> offset(final Long value) {
             this.offset = value;
             return self();
         }
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> length(final Long value) {
             this.length = value;
             return self();

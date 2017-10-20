@@ -201,6 +201,11 @@ public final class SearchRequest implements Serializable {
 
         private Boolean incremental;
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> key(final QueryKey value) {
             this.key = value;
             return self();
@@ -210,6 +215,11 @@ public final class SearchRequest implements Serializable {
             return new QueryKey.Builder<Builder<ParentBuilder>>().parent(this, this::key);
         }
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> query(final Query value) {
             this.query = value;
             return self();
@@ -219,6 +229,11 @@ public final class SearchRequest implements Serializable {
             return new Query.Builder<Builder<ParentBuilder>>().parent(this, this::query);
         }
 
+        /**
+         * @param values XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> addResultRequests(final ResultRequest...values) {
             this.resultRequests.addAll(Arrays.asList(values));
             return self();
@@ -229,11 +244,21 @@ public final class SearchRequest implements Serializable {
                     .parent(this, this::addResultRequests);
         }
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> dateTimeLocale(final String value) {
             this.dateTimeLocale = value;
             return self();
         }
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> incremental(final Boolean value) {
             this.incremental = value;
             return self();

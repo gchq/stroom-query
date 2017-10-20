@@ -97,11 +97,21 @@ public final class Param implements Serializable {
         private String key;
         private String value;
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> key(final String value) {
             this.key = value;
             return self();
         }
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> value(final String value) {
             this.value = value;
             return self();

@@ -113,11 +113,21 @@ public abstract class Result implements Serializable {
         private String componentId;
         private String error;
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public CHILD_CLASS componentId(final String value) {
             this.componentId = value;
             return self();
         }
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public CHILD_CLASS error(final String value) {
             this.error = value;
             return self();

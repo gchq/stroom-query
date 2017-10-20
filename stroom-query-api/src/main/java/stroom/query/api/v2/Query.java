@@ -130,6 +130,11 @@ public final class Query implements Serializable {
 
         private final List<Param> params = new ArrayList<>();
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> dataSource(final DocRef value) {
             this.dataSource = value;
             return self();
@@ -140,6 +145,11 @@ public final class Query implements Serializable {
                     .parent(this, this::dataSource);
         }
 
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> expression(final ExpressionOperator value) {
             this.expression = value;
             return self();
@@ -155,6 +165,11 @@ public final class Query implements Serializable {
                     .parent(this, this::addParams);
         }
 
+        /**
+         * @param values XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
         public Builder<ParentBuilder> addParams(final Param...values) {
             this.params.addAll(Arrays.asList(values));
             return self();

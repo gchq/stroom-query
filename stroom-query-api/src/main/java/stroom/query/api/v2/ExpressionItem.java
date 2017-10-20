@@ -99,7 +99,14 @@ public abstract class ExpressionItem implements Serializable {
         return sb.toString();
     }
 
-
+    /**
+     * Builder for constructing a {@link ExpressionItem docRef}. This is an abstract type, each subclass
+     * of ExpressionItem should provide a builder that extends this one.
+     *
+     * @param <ParentBuilder> The class of the parent builder, allows nested building
+     * @param <T> The subclass of {@link ExpressionItem}
+     * @param <CHILD_CLASS> The class of the specific ExpressionItem builder.
+     */
     public static abstract class Builder<
                 ParentBuilder extends PojoBuilder,
                 T extends ExpressionItem,
@@ -108,11 +115,21 @@ public abstract class ExpressionItem implements Serializable {
 
         private Boolean enabled;
 
+        /**
+         * @param value Whether the expression is enabled or not
+         *
+         * @return The {@link CHILD_CLASS} Builder, enabling method chaining
+         */
         public CHILD_CLASS enabled(final Boolean value) {
             this.enabled = value;
             return self();
         }
 
+        /**
+         * Accessible to child classes when buildPojo() is called.
+         *
+         * @return Whether the expression is enabled or not
+         */
         protected Boolean getEnabled() {
             return enabled;
         }
