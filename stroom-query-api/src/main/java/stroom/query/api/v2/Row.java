@@ -19,7 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.PojoBuilder;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -111,10 +111,12 @@ public final class Row implements Serializable {
     }
 
     /**
-     * Builder for constructing a {@link Row row}
+     * Builder for constructing a {@link Row}
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static class Builder<ParentBuilder extends PojoBuilder>
-            extends PojoBuilder<ParentBuilder, Row, Builder<ParentBuilder>> {
+    public static class Builder<OwningBuilder extends OwnedBuilder>
+            extends OwnedBuilder<OwningBuilder, Row, Builder<OwningBuilder>> {
         private String groupKey;
 
         private final List<String> values = new ArrayList<>();
@@ -122,31 +124,32 @@ public final class Row implements Serializable {
         private Integer depth;
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value TODO
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> groupKey(final String value) {
+        public Builder<OwningBuilder> groupKey(final String value) {
             this.groupKey = value;
             return self();
         }
 
         /**
-         * @param values XXXXXXXXXXXXXXXX
+         * @param values The value for this row of data.
+         *               The values in the list are in the same order as the fields in the ResultRequest
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> addValues(final String...values) {
+        public Builder<OwningBuilder> addValues(final String...values) {
             this.values.addAll(Arrays.asList(values));
             return self();
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value The grouping depth, where 0 is the top level of grouping, or where there is no grouping
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> depth(final Integer value) {
+        public Builder<OwningBuilder> depth(final Integer value) {
             this.depth = value;
             return self();
         }
@@ -156,7 +159,7 @@ public final class Row implements Serializable {
         }
 
         @Override
-        public Builder<ParentBuilder> self() {
+        public Builder<OwningBuilder> self() {
             return this;
         }
     }

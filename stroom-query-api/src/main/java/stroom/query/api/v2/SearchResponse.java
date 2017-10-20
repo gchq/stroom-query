@@ -19,7 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.PojoBuilder;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -166,7 +166,7 @@ public final class SearchResponse implements Serializable {
 
         @Override
         public TableResult.Builder<TableResultBuilder> addResult() {
-            return new TableResult.Builder<TableResultBuilder>().parent(this, this::addResults);
+            return new TableResult.Builder<TableResultBuilder>().popToWhenComplete(this, this::addResults);
         }
 
         @Override
@@ -179,7 +179,7 @@ public final class SearchResponse implements Serializable {
 
         @Override
         public FlatResult.Builder<FlatResultBuilder> addResult() {
-            return new FlatResult.Builder<FlatResultBuilder>().parent(this, this::addResults);
+            return new FlatResult.Builder<FlatResultBuilder>().popToWhenComplete(this, this::addResults);
         }
 
         @Override
@@ -189,12 +189,14 @@ public final class SearchResponse implements Serializable {
     }
 
     /**
-     * Builder for constructing a {@link SearchResponse searchResponse}
+     * Builder for constructing a {@link SearchResponse}
+     *
+     * @param <ResultClass> The class of the popToWhenComplete builder, allows nested building
      */
     private abstract static class Builder<ResultClass extends Result,
                                             ResultBuilderClass extends Result.Builder,
                                             CHILD_CLASS extends Builder<ResultClass, ResultBuilderClass, ?>>
-            extends PojoBuilder<Builder, SearchResponse, CHILD_CLASS> {
+            extends OwnedBuilder<Builder, SearchResponse, CHILD_CLASS> {
         // Mandatory parameters
         private Boolean complete;
 
@@ -221,7 +223,7 @@ public final class SearchResponse implements Serializable {
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value are the results considered complete
          *
          * @return The {@link Builder}, enabling method chaining
          */

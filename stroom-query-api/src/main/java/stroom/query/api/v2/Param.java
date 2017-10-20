@@ -19,7 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.PojoBuilder;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -90,29 +90,31 @@ public final class Param implements Serializable {
     }
 
     /**
-     * Builder for constructing a {@link Param param}
+     * Builder for constructing a {@link Param}
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static class Builder<ParentBuilder extends PojoBuilder>
-            extends PojoBuilder<ParentBuilder, Param, Builder<ParentBuilder>> {
+    public static class Builder<OwningBuilder extends OwnedBuilder>
+            extends OwnedBuilder<OwningBuilder, Param, Builder<OwningBuilder>> {
         private String key;
         private String value;
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value The property key
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> key(final String value) {
+        public Builder<OwningBuilder> key(final String value) {
             this.key = value;
             return self();
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value The property value
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> value(final String value) {
+        public Builder<OwningBuilder> value(final String value) {
             this.value = value;
             return self();
         }
@@ -122,7 +124,7 @@ public final class Param implements Serializable {
         }
 
         @Override
-        public Builder<ParentBuilder> self() {
+        public Builder<OwningBuilder> self() {
             return this;
         }
     }

@@ -19,7 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.PojoBuilder;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -119,10 +119,12 @@ public final class Query implements Serializable {
     }
 
     /**
-     * Builder for constructing a {@link Query query}
+     * Builder for constructing a {@link Query}
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static class Builder<ParentBuilder extends PojoBuilder>
-            extends PojoBuilder<ParentBuilder, Query, Builder<ParentBuilder>> {
+    public static class Builder<OwningBuilder extends OwnedBuilder>
+            extends OwnedBuilder<OwningBuilder, Query, Builder<OwningBuilder>> {
 
         private DocRef dataSource;
 
@@ -131,46 +133,58 @@ public final class Query implements Serializable {
         private final List<Param> params = new ArrayList<>();
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value A DocRef that points to the data source of the query
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> dataSource(final DocRef value) {
+        public Builder<OwningBuilder> dataSource(final DocRef value) {
             this.dataSource = value;
             return self();
         }
 
-        public DocRef.Builder<Builder<ParentBuilder>> dataSource() {
-            return new DocRef.Builder<Builder<ParentBuilder>>()
-                    .parent(this, this::dataSource);
+        /**
+         * Start construction of the DocRef that points to the data source of the query
+         * @return A DocRef builder, configured to pop back to this builder when complete
+         */
+        public DocRef.Builder<Builder<OwningBuilder>> dataSource() {
+            return new DocRef.Builder<Builder<OwningBuilder>>()
+                    .popToWhenComplete(this, this::dataSource);
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value he root logical addOperator in the query expression tree
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> expression(final ExpressionOperator value) {
+        public Builder<OwningBuilder> expression(final ExpressionOperator value) {
             this.expression = value;
             return self();
         }
 
-        public ExpressionOperator.Builder<Builder<ParentBuilder>> expression() {
-            return new ExpressionOperator.Builder<Builder<ParentBuilder>>()
-                    .parent(this, this::expression);
-        }
-
-        public Param.Builder<Builder<ParentBuilder>> addParam() {
-            return new Param.Builder<Builder<ParentBuilder>>()
-                    .parent(this, this::addParams);
+        /**
+         * Start construction of the root expression to apply for this query
+         * @return The expression builder, configured to pop back to this builder when complete
+         */
+        public ExpressionOperator.Builder<Builder<OwningBuilder>> expression() {
+            return new ExpressionOperator.Builder<Builder<OwningBuilder>>()
+                    .popToWhenComplete(this, this::expression);
         }
 
         /**
-         * @param values XXXXXXXXXXXXXXXX
+         * Start construction of a parameter to add to the query
+         * @return The parameter builder, configured to pop back to this builder when complete
+         */
+        public Param.Builder<Builder<OwningBuilder>> addParam() {
+            return new Param.Builder<Builder<OwningBuilder>>()
+                    .popToWhenComplete(this, this::addParams);
+        }
+
+        /**
+         * @param values A list of key/value pairs that provide additional information about the query
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> addParams(final Param...values) {
+        public Builder<OwningBuilder> addParams(final Param...values) {
             this.params.addAll(Arrays.asList(values));
             return self();
         }
@@ -180,7 +194,7 @@ public final class Query implements Serializable {
         }
 
         @Override
-        public Builder<ParentBuilder> self() {
+        public Builder<OwningBuilder> self() {
             return this;
         }
     }

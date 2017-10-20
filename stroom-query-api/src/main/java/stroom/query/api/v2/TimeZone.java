@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import stroom.util.shared.HasDisplayValue;
-import stroom.util.shared.PojoBuilder;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -172,8 +172,14 @@ public final class TimeZone implements Serializable {
         }
     }
 
-    public static class Builder<ParentBuilder extends PojoBuilder>
-            extends PojoBuilder<ParentBuilder, TimeZone, Builder<ParentBuilder>> {
+
+    /**
+     * Builder for constructing a {@link TimeZone timeZone}
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
+     */
+    public static class Builder<OwningBuilder extends OwnedBuilder>
+            extends OwnedBuilder<OwningBuilder, TimeZone, Builder<OwningBuilder>> {
         private Use use;
 
         private String id;
@@ -183,41 +189,41 @@ public final class TimeZone implements Serializable {
         private Integer offsetMinutes;
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value The required type of time zone
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> use(final Use value) {
+        public Builder<OwningBuilder> use(final Use value) {
             this.use = value;
             return self();
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value The id of the time zone, conforming to java.time.ZoneId
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> id(final String value) {
+        public Builder<OwningBuilder> id(final String value) {
             this.id = value;
             return self();
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value The number of hours this timezone is offset from UTC
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> offsetHours(final Integer value) {
+        public Builder<OwningBuilder> offsetHours(final Integer value) {
             this.offsetHours = value;
             return self();
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value The number of minutes this timezone is offset from UTC
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> offsetMinutes(final Integer value) {
+        public Builder<OwningBuilder> offsetMinutes(final Integer value) {
             this.offsetMinutes = value;
             return self();
         }
@@ -227,7 +233,7 @@ public final class TimeZone implements Serializable {
         }
 
         @Override
-        public Builder<ParentBuilder> self() {
+        public Builder<OwningBuilder> self() {
             return this;
         }
     }

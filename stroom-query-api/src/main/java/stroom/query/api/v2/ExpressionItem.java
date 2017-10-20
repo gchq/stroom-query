@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.PojoBuilder;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -100,25 +100,25 @@ public abstract class ExpressionItem implements Serializable {
     }
 
     /**
-     * Builder for constructing a {@link ExpressionItem docRef}. This is an abstract type, each subclass
+     * Builder for constructing a {@link ExpressionItem}. This is an abstract type, each subclass
      * of ExpressionItem should provide a builder that extends this one.
      *
-     * @param <ParentBuilder> The class of the parent builder, allows nested building
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      * @param <T> The subclass of {@link ExpressionItem}
      * @param <CHILD_CLASS> The class of the specific ExpressionItem builder.
      */
     public static abstract class Builder<
-                ParentBuilder extends PojoBuilder,
+                OwningBuilder extends OwnedBuilder,
                 T extends ExpressionItem,
-                CHILD_CLASS extends Builder<ParentBuilder, T, ?>>
-            extends PojoBuilder<ParentBuilder, T, CHILD_CLASS> {
+                CHILD_CLASS extends Builder<OwningBuilder, T, ?>>
+            extends OwnedBuilder<OwningBuilder, T, CHILD_CLASS> {
 
         private Boolean enabled;
 
         /**
-         * @param value Whether the expression is enabled or not
+         * @param value Sets the terms state to enabled if true or null, disabled if false
          *
-         * @return The {@link CHILD_CLASS} Builder, enabling method chaining
+         * @return The CHILD_CLASS Builder, enabling method chaining
          */
         public CHILD_CLASS enabled(final Boolean value) {
             this.enabled = value;

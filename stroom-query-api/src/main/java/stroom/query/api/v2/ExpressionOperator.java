@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import stroom.util.shared.HasDisplayValue;
-import stroom.util.shared.PojoBuilder;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 @JsonPropertyOrder({"op", "children"})
@@ -149,35 +150,62 @@ public final class ExpressionOperator extends ExpressionItem {
         }
     }
 
-    public static class Builder<ParentBuilder extends PojoBuilder>
-            extends ExpressionItem.Builder<ParentBuilder, ExpressionOperator, ExpressionOperator.Builder<ParentBuilder>> {
+    /**
+     * Builder for constructing a {@link ExpressionOperator}
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
+     */
+    public static class Builder<OwningBuilder extends OwnedBuilder>
+            extends ExpressionItem.Builder<OwningBuilder, ExpressionOperator, Builder<OwningBuilder>> {
         private Op op = Op.AND;
 
         private List<ExpressionItem> children = new ArrayList<>();
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value Set the logical operator to apply to all the children items
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> op(final Op value) {
+        public Builder<OwningBuilder> op(final Op value) {
             this.op = value;
             return self();
         }
 
-        public Builder<ParentBuilder> addOperators(ExpressionItem...items) {
-            this.children.addAll(Arrays.asList(items));
+        /**
+         * Adds an {@link ExpressionTerm} to this builder
+         * @param items The expression items to add as children
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public Builder<OwningBuilder> addOperators(ExpressionItem...items) {
+            return addOperators(Arrays.asList(items));
+        }
+
+        /**
+         * Adds an {@link ExpressionTerm} to this builder
+         * @param items The expression items to add as children
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public Builder<OwningBuilder> addOperators(Collection<ExpressionItem> items) {
+            this.children.addAll(items);
             return self();
         }
 
-        public Builder<Builder<ParentBuilder>> addOperator() {
-            return new Builder<Builder<ParentBuilder>>()
-                    .parent(this, this::addOperators);
+        /**
+         * Begin construction of a new child {@link ExpressionOperator}
+         * @return A new operator builder, configured to pop back to this builder when complete
+         */
+        public Builder<Builder<OwningBuilder>> addOperator() {
+            return new Builder<Builder<OwningBuilder>>()
+                    .popToWhenComplete(this, this::addOperators);
         }
 
-        public ExpressionTerm.Builder<Builder<ParentBuilder>> addTerm() {
-            return new ExpressionTerm.Builder<Builder<ParentBuilder>>()
-                    .parent(this, this::addOperators);
+        /**
+         * Begin construction of a new child {@link ExpressionTerm}
+         * @return A new term builder, configured to pop back to this builder when complete
+         */
+        public ExpressionTerm.Builder<Builder<OwningBuilder>> addTerm() {
+            return new ExpressionTerm.Builder<Builder<OwningBuilder>>()
+                    .popToWhenComplete(this, this::addOperators);
         }
 
         @Override
@@ -186,7 +214,7 @@ public final class ExpressionOperator extends ExpressionItem {
         }
 
         @Override
-        public ExpressionOperator.Builder<ParentBuilder> self() {
+        public ExpressionOperator.Builder<OwningBuilder> self() {
             return this;
         }
     }

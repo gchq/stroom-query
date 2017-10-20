@@ -19,7 +19,7 @@ public class SearchRequestBuilderTest {
         final String dataSourceUuid = UUID.randomUUID().toString();
 
         // When
-        final SearchRequest searchRequest = new SearchRequest.Builder<>()
+        final SearchRequest searchRequest = new SearchRequest.Builder()
                 .dateTimeLocale(dateTimeLocale)
                 .incremental(incremental)
                 .key()

@@ -27,7 +27,7 @@ public class FlatResultBuilderTest {
                             .name(String.format("field%d", x))
         );
         IntStream.range(0, numberResultSets).forEach(x -> {
-            final FlatResult.ValueListBuilder valuesBuilder = flatResultBuilder.addValues();
+            final ListBuilder<?, Object> valuesBuilder = flatResultBuilder.addValues();
             IntStream.range(0, numberFields).forEach(y ->
                     valuesBuilder
                             .value(String.format("field%d_value%d", y, x)));

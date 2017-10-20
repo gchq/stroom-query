@@ -19,7 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.PojoBuilder;
+import stroom.util.shared.OwnedBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -114,37 +114,44 @@ public final class TableResult extends Result {
 
     /**
      * Builder for constructing a {@link TableResult tableResult}
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static class Builder<ParentBuilder extends PojoBuilder>
-            extends Result.Builder<ParentBuilder, TableResult, Builder<ParentBuilder>> {
+    public static class Builder<OwningBuilder extends OwnedBuilder>
+            extends Result.Builder<OwningBuilder, TableResult, Builder<OwningBuilder>> {
         private final List<Row> rows = new ArrayList<>();
         private OffsetRange resultRange;
 
         /**
-         * @param values XXXXXXXXXXXXXXXX
+         * @param values add rows of data to our table
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> addRows(final Row...values) {
+        public Builder<OwningBuilder> addRows(final Row...values) {
             this.rows.addAll(Arrays.asList(values));
             return self();
         }
-        public Row.Builder<Builder<ParentBuilder>> addRow() {
-            return new Row.Builder<Builder<ParentBuilder>>().parent(this, this::addRows);
+
+        /**
+         * Start construction on a row.
+         * @return The Row.Builder configured to pop back to this one when complete
+         */
+        public Row.Builder<Builder<OwningBuilder>> addRow() {
+            return new Row.Builder<Builder<OwningBuilder>>().popToWhenComplete(this, this::addRows);
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value The offset range used to generate the results
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> resultRange(final OffsetRange value) {
+        public Builder<OwningBuilder> resultRange(final OffsetRange value) {
             this.resultRange = value;
             return self();
         }
 
-        public OffsetRange.Builder<Builder<ParentBuilder>> resultRange() {
-            return new OffsetRange.Builder<Builder<ParentBuilder>>().parent(this, this::resultRange);
+        public OffsetRange.Builder<Builder<OwningBuilder>> resultRange() {
+            return new OffsetRange.Builder<Builder<OwningBuilder>>().popToWhenComplete(this, this::resultRange);
         }
 
         protected TableResult pojoBuild() {
@@ -152,7 +159,7 @@ public final class TableResult extends Result {
         }
 
         @Override
-        public Builder<ParentBuilder> self() {
+        public Builder<OwningBuilder> self() {
             return this;
         }
     }

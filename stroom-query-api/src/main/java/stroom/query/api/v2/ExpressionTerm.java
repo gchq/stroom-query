@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import stroom.util.shared.HasDisplayValue;
-import stroom.util.shared.PojoBuilder;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -185,8 +185,13 @@ public final class ExpressionTerm extends ExpressionItem {
         }
     }
 
-    public static class Builder<ParentBuilder extends PojoBuilder>
-            extends ExpressionItem.Builder<ParentBuilder, ExpressionTerm, Builder<ParentBuilder>> {
+    /**
+     * Builder for constructing a {@link ExpressionTerm}
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
+     */
+    public static class Builder<OwningBuilder extends OwnedBuilder>
+            extends ExpressionItem.Builder<OwningBuilder, ExpressionTerm, Builder<OwningBuilder>> {
         private String field;
 
         private Condition condition;
@@ -196,48 +201,56 @@ public final class ExpressionTerm extends ExpressionItem {
         private DocRef dictionary;
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value The name of the field that is being evaluated in this predicate term"
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> field(final String value) {
+        public Builder<OwningBuilder> field(final String value) {
             this.field = value;
             return self();
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value The condition of the predicate term
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> condition(final Condition value) {
+        public Builder<OwningBuilder> condition(final Condition value) {
             this.condition = value;
             return self();
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value The value that the field value is being evaluated against. Not required if a dictionary is supplied
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> value(final String value) {
+        public Builder<OwningBuilder> value(final String value) {
             this.value = value;
             return self();
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * Add a dictionary term to the builder, e.g fieldX|IN_DICTIONARY|docRefToDictionaryY
+         * Term is enabled by default. Not all data sources support dictionary terms and only certain
+         * conditions are supported for a dictionary term.
+         *
+         * @param value The DocRef for the dictionary that this predicate is using for its evaluation
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> dictionary(final DocRef value) {
+        public Builder<OwningBuilder> dictionary(final DocRef value) {
             this.dictionary = value;
             return self();
         }
 
-        public DocRef.Builder<Builder<ParentBuilder>> dictionary() {
-            return new DocRef.Builder<Builder<ParentBuilder>>()
-                    .parent(this, this::dictionary);
+        /**
+         * Begin construction of the {@link DocRef} for the dictionary that this predicate is using for evaluation
+         * @return The DocRef.Builder, configured to pop back to this builder when complete
+         */
+        public DocRef.Builder<Builder<OwningBuilder>> dictionary() {
+            return new DocRef.Builder<Builder<OwningBuilder>>()
+                    .popToWhenComplete(this, this::dictionary);
         }
 
         @Override
@@ -246,7 +259,7 @@ public final class ExpressionTerm extends ExpressionItem {
         }
 
         @Override
-        public Builder<ParentBuilder> self() {
+        public Builder<OwningBuilder> self() {
             return this;
         }
     }

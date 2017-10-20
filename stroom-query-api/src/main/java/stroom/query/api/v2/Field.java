@@ -19,7 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.PojoBuilder;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -43,7 +43,7 @@ public final class Field implements Serializable {
 
     @XmlElement
     @ApiModelProperty(
-            value = "The name of the field for display purposes",
+            value = "The expression to use to generate the value for this field",
             required = true,
             example = "SUM(${count})")
     private String expression;
@@ -158,8 +158,13 @@ public final class Field implements Serializable {
                 '}';
     }
 
-    public static final class Builder<ParentBuilder extends PojoBuilder>
-            extends PojoBuilder<ParentBuilder, Field, Builder<ParentBuilder>> {
+    /**
+     * Builder for constructing a {@link Field}
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
+     */
+    public static final class Builder<OwningBuilder extends OwnedBuilder>
+            extends OwnedBuilder<OwningBuilder, Field, Builder<OwningBuilder>> {
 
         private String name;
         private String expression;
@@ -169,81 +174,90 @@ public final class Field implements Serializable {
         private Integer group;
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value The name of the field for display purposes
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> name(final String value) {
+        public Builder<OwningBuilder> name(final String value) {
             this.name = value;
             return self();
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value The expression to use to generate the value for this field
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> expression(final String value) {
+        public Builder<OwningBuilder> expression(final String value) {
             this.expression = value;
             return self();
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value The sorting configuration to use
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> sort(final Sort value) {
+        public Builder<OwningBuilder> sort(final Sort value) {
             this.sort = value;
             return self();
         }
 
-        public Sort.Builder<Builder<ParentBuilder>> sort() {
-            return new Sort.Builder<Builder<ParentBuilder>>()
-                    .parent(this, this::sort);
+        public Sort.Builder<Builder<OwningBuilder>> sort() {
+            return new Sort.Builder<Builder<OwningBuilder>>()
+                    .popToWhenComplete(this, this::sort);
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value Any regex filtering to apply to the values
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> filter(final Filter value) {
+        public Builder<OwningBuilder> filter(final Filter value) {
             this.filter = value;
             return self();
         }
 
-        public Filter.Builder<Builder<ParentBuilder>> filter() {
-            return new Filter.Builder<Builder<ParentBuilder>>()
-                    .parent(this, this::filter);
+        public Filter.Builder<Builder<OwningBuilder>> filter() {
+            return new Filter.Builder<Builder<OwningBuilder>>()
+                    .popToWhenComplete(this, this::filter);
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value Formatting to apply to the value
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> format(final Format value) {
+        public Builder<OwningBuilder> format(final Format value) {
             this.format = value;
             return self();
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value Formatting type to apply to the value
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> format(final Format.Type value) {
+        public Builder<OwningBuilder> format(final Format.Type value) {
             this.format = new Format(value);
             return self();
         }
 
-        public Format.Builder<Builder<ParentBuilder>> format() {
-            return new Format.Builder<Builder<ParentBuilder>>()
-                    .parent(this, this::format);
+        /**
+         * Start building a format to apply to the value
+         * @return The format builder, configured to popback to this builder when complete
+         */
+        public Format.Builder<Builder<OwningBuilder>> format() {
+            return new Format.Builder<Builder<OwningBuilder>>()
+                    .popToWhenComplete(this, this::format);
         }
 
-        public Builder<ParentBuilder> group(final Integer group) {
+        /**
+         * Set the group level
+         * @param group The group level to apply to this field
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public Builder<OwningBuilder> group(final Integer group) {
             this.group = group;
             return self();
         }
@@ -254,7 +268,7 @@ public final class Field implements Serializable {
         }
 
         @Override
-        public Builder<ParentBuilder> self() {
+        public Builder<OwningBuilder> self() {
             return this;
         }
     }

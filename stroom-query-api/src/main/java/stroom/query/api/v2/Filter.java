@@ -19,7 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.PojoBuilder;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -92,29 +92,33 @@ public final class Filter implements Serializable {
     }
 
     /**
-     * Builder for constructing a {@link Filter filter}
+     * Builder for constructing a {@link Filter}
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static class Builder<ParentBuilder extends PojoBuilder>
-            extends PojoBuilder<ParentBuilder, Filter, Builder<ParentBuilder>> {
+    public static class Builder<OwningBuilder extends OwnedBuilder>
+            extends OwnedBuilder<OwningBuilder, Filter, Builder<OwningBuilder>> {
         private String includes;
         private String excludes;
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * Set the inclusion regex
+         * @param value Only results matching this filter will be included
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> includes(final String value) {
+        public Builder<OwningBuilder> includes(final String value) {
             this.includes = value;
             return self();
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * Set the exclusion regex
+         * @param value Only results NOT matching this filter will be included
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> excludes(final String value) {
+        public Builder<OwningBuilder> excludes(final String value) {
             this.excludes = value;
             return self();
         }
@@ -124,7 +128,7 @@ public final class Filter implements Serializable {
         }
 
         @Override
-        public Builder<ParentBuilder> self() {
+        public Builder<OwningBuilder> self() {
             return this;
         }
     }

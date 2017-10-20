@@ -105,7 +105,7 @@ public class ItemMapper extends MapperBase<Object, String[], Key, Item> {
             key = new Key(parentKey, groupValues);
         }
 
-        // If the parent row has child group key sets then add this child group
+        // If the popToWhenComplete row has child group key sets then add this child group
         // key to them.
         if (parentGenerators != null) {
             for (final Generator parent : parentGenerators) {

@@ -19,13 +19,14 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.PojoBuilder;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Class for describing the format to use for formatting a date time value
@@ -108,10 +109,10 @@ public final class DateTimeFormat implements Serializable {
     /**
      * Builder for constructing a {@link DateTimeFormat dateTimeFormat}
      *
-     * @param <ParentBuilder> The class of the parent builder, allows nested building
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static class Builder<ParentBuilder extends PojoBuilder>
-            extends PojoBuilder<ParentBuilder, DateTimeFormat, Builder<ParentBuilder>> {
+    public static class Builder<OwningBuilder extends OwnedBuilder>
+            extends OwnedBuilder<OwningBuilder, DateTimeFormat, Builder<OwningBuilder>> {
         private String pattern;
 
         private TimeZone timeZone;
@@ -121,7 +122,7 @@ public final class DateTimeFormat implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> pattern(final String value) {
+        public Builder<OwningBuilder> pattern(final String value) {
             this.pattern = value;
             return self();
         }
@@ -130,7 +131,7 @@ public final class DateTimeFormat implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> timeZone(final TimeZone value) {
+        public Builder<OwningBuilder> timeZone(final TimeZone value) {
             this.timeZone = value;
             return self();
         }
@@ -140,9 +141,9 @@ public final class DateTimeFormat implements Serializable {
          *
          * @return The {@link TimeZone.Builder} for method chaining the child construction
          */
-        public TimeZone.Builder<Builder<ParentBuilder>> timeZone() {
-            return new TimeZone.Builder<Builder<ParentBuilder>>()
-                    .parent(this, this::timeZone);
+        public TimeZone.Builder<Builder<OwningBuilder>> timeZone() {
+            return new TimeZone.Builder<Builder<OwningBuilder>>()
+                    .popToWhenComplete(this, this::timeZone);
         }
 
         protected DateTimeFormat pojoBuild() {
@@ -150,7 +151,7 @@ public final class DateTimeFormat implements Serializable {
         }
 
         @Override
-        public Builder<ParentBuilder> self() {
+        public Builder<OwningBuilder> self() {
             return this;
         }
     }

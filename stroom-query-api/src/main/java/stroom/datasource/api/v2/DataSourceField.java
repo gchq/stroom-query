@@ -22,7 +22,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import stroom.query.api.v2.ExpressionTerm.Condition;
 import stroom.util.shared.HasDisplayValue;
-import stroom.util.shared.PojoBuilder;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -167,30 +167,30 @@ public final class DataSourceField implements Serializable, HasDisplayValue {
         }
     }
 
-    public static class Builder<ParentBuilder extends PojoBuilder>
-        extends PojoBuilder<ParentBuilder, DataSourceField, Builder<ParentBuilder>> {
+    public static class Builder<OwningBuilder extends OwnedBuilder>
+        extends OwnedBuilder<OwningBuilder, DataSourceField, Builder<OwningBuilder>> {
 
         private DataSourceFieldType type;
         private String name;
         private Boolean queryable;
         private final List<Condition> conditions = new ArrayList<>();
 
-        public Builder<ParentBuilder> type(final DataSourceFieldType value) {
+        public Builder<OwningBuilder> type(final DataSourceFieldType value) {
             this.type = value;
             return self();
         }
 
-        public Builder<ParentBuilder> name(final String value) {
+        public Builder<OwningBuilder> name(final String value) {
             this.name = value;
             return self();
         }
 
-        public Builder<ParentBuilder> queryable(final Boolean value) {
+        public Builder<OwningBuilder> queryable(final Boolean value) {
             this.queryable = value;
             return self();
         }
 
-        public Builder<ParentBuilder> addConditions(final Condition...values) {
+        public Builder<OwningBuilder> addConditions(final Condition...values) {
             this.conditions.addAll(Arrays.asList(values));
             return self();
         }
@@ -201,7 +201,7 @@ public final class DataSourceField implements Serializable, HasDisplayValue {
         }
 
         @Override
-        public Builder<ParentBuilder> self() {
+        public Builder<OwningBuilder> self() {
             return this;
         }
     }

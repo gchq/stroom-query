@@ -20,7 +20,6 @@ import stroom.dashboard.expression.v1.FieldIndexMap;
 import stroom.dashboard.expression.v1.Generator;
 import stroom.dashboard.expression.v1.TypeConverter;
 import stroom.query.api.v2.Field;
-import stroom.query.api.v2.FieldBuilder;
 import stroom.query.api.v2.FlatResult;
 import stroom.query.api.v2.Format.Type;
 import stroom.query.api.v2.OffsetRange;
@@ -176,17 +175,21 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
                             0, maxResults);
                 }
 
-                final Field parentKey = new FieldBuilder().name(":ParentKey").build();
-                final Field key = new FieldBuilder().name(":Key").build();
-                final Field depth = new FieldBuilder().name(":Depth").build();
-
-                final List<Field> fields = new ArrayList<>(this.fields.size() + 3);
-                fields.add(parentKey);
-                fields.add(key);
-                fields.add(depth);
-                fields.addAll(this.fields);
-
-                return new FlatResult(resultRequest.getComponentId(), fields, results, totalResults, error);
+                return new FlatResult.Builder<>()
+                        .componentId(resultRequest.getComponentId())
+                        .size(totalResults)
+                        .error(error)
+                        .addValues(results)
+                        .addField()
+                            .name(":ParentKey")
+                            .end()
+                        .addField()
+                            .name(":Key")
+                            .end()
+                        .addField()
+                            .name(":Depth")
+                            .end()
+                        .build();
 
             } catch (final Exception e) {
                 error = e.getMessage();

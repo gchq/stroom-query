@@ -18,7 +18,7 @@ package stroom.query.api.v2;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.PojoBuilder;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -192,10 +192,12 @@ public final class ResultRequest implements Serializable {
     }
 
     /**
-     * Builder for constructing a {@link ResultRequest resultRequest}
+     * Builder for constructing a {@link ResultRequest}
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static class Builder<ParentBuilder extends PojoBuilder>
-            extends PojoBuilder<ParentBuilder, ResultRequest, Builder<ParentBuilder>> {
+    public static class Builder<OwningBuilder extends OwnedBuilder>
+            extends OwnedBuilder<OwningBuilder, ResultRequest, Builder<OwningBuilder>> {
         private String componentId;
 
         private final List<TableSettings> mappings = new ArrayList<>();
@@ -209,43 +211,51 @@ public final class ResultRequest implements Serializable {
         private ResultRequest.Fetch fetch;
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value The ID of the component that will receive the results corresponding to this ResultRequest
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> componentId(final String value) {
+        public Builder<OwningBuilder> componentId(final String value) {
             this.componentId = value;
             return self();
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value Set the requested range of the results.
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> requestedRange(final OffsetRange value) {
+        public Builder<OwningBuilder> requestedRange(final OffsetRange value) {
             this.requestedRange = value;
             return self();
         }
 
-        public OffsetRange.Builder<Builder<ParentBuilder>> requestedRange() {
-            return new OffsetRange.Builder<Builder<ParentBuilder>>()
-                    .parent(this, this::requestedRange);
+        /**
+         * Start construction of the requested range to use for the results.
+         * @return The OffsetRange.Builder, configured to pop back to this builder when complete
+         */
+        public OffsetRange.Builder<Builder<OwningBuilder>> requestedRange() {
+            return new OffsetRange.Builder<Builder<OwningBuilder>>()
+                    .popToWhenComplete(this, this::requestedRange);
         }
 
         /**
-         * @param values XXXXXXXXXXXXXXXX
+         * @param values Adding a set of TableSettings which are used to map the raw results to the output
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> addMappings(final TableSettings... values) {
+        public Builder<OwningBuilder> addMappings(final TableSettings... values) {
             this.mappings.addAll(Arrays.asList(values));
             return self();
         }
 
-        public TableSettings.Builder<Builder<ParentBuilder>> addMapping() {
-            return new TableSettings.Builder<Builder<ParentBuilder>>()
-                    .parent(this, this::addMappings);
+        /**
+         * Begin construction of a TableSettings, which will be used to map the raw results to the output
+         * @return A TableSettings.Builder configured to pop back to this builder when complete
+         */
+        public TableSettings.Builder<Builder<OwningBuilder>> addMapping() {
+            return new TableSettings.Builder<Builder<OwningBuilder>>()
+                    .popToWhenComplete(this, this::addMappings);
         }
 
         /**
@@ -253,27 +263,32 @@ public final class ResultRequest implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> addOpenGroups(final String...values) {
+        public Builder<OwningBuilder> addOpenGroups(final String...values) {
             this.openGroups.addAll(Arrays.asList(values));
             return self();
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value The style of results required.
+         *              FLAT will provide a FlatResult object,
+         *              while TABLE will provide a TableResult object
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> resultStyle(final ResultRequest.ResultStyle value) {
+        public Builder<OwningBuilder> resultStyle(final ResultRequest.ResultStyle value) {
             this.resultStyle = value;
             return self();
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value The fetch mode for the query.
+         *              NONE means fetch no data,
+         *              ALL means fetch all known results,
+         *              CHANGES means fetch only those records not see in previous requests
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> fetch(final ResultRequest.Fetch value) {
+        public Builder<OwningBuilder> fetch(final ResultRequest.Fetch value) {
             this.fetch = value;
             return self();
         }
@@ -283,7 +298,7 @@ public final class ResultRequest implements Serializable {
         }
 
         @Override
-        public Builder<ParentBuilder> self() {
+        public Builder<OwningBuilder> self() {
             return this;
         }
     }

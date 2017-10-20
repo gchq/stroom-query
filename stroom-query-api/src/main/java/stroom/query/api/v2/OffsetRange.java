@@ -19,7 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.PojoBuilder;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -98,29 +98,32 @@ public final class OffsetRange implements Serializable {
     }
 
     /**
-     * Builder for constructing a {@link OffsetRange offsetRange}
+     * Builder for constructing a {@link OffsetRange}
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static class Builder<ParentBuilder extends PojoBuilder>
-            extends PojoBuilder<ParentBuilder, OffsetRange, Builder<ParentBuilder>> {
+    public static class Builder<OwningBuilder extends OwnedBuilder>
+            extends OwnedBuilder<OwningBuilder, OffsetRange, Builder<OwningBuilder>> {
         private Long offset;
         private Long length;
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value The start offset for this sub-set of data,
+         *              where zero is the offset of the first record in the full result set
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> offset(final Long value) {
+        public Builder<OwningBuilder> offset(final Long value) {
             this.offset = value;
             return self();
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value The length in records of the sub-set of results
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> length(final Long value) {
+        public Builder<OwningBuilder> length(final Long value) {
             this.length = value;
             return self();
         }
@@ -130,7 +133,7 @@ public final class OffsetRange implements Serializable {
         }
 
         @Override
-        public Builder<ParentBuilder> self() {
+        public Builder<OwningBuilder> self() {
             return this;
         }
     }

@@ -19,7 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.PojoBuilder;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -73,17 +73,22 @@ public final class QueryKey implements Serializable {
         return uuid;
     }
 
-    public static class Builder<ParentBuilder extends PojoBuilder>
-        extends PojoBuilder<ParentBuilder, QueryKey, Builder<ParentBuilder>> {
+    /**
+     * Builder for constructing a {@link QueryKey}
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
+     */
+    public static class Builder<OwningBuilder extends OwnedBuilder>
+        extends OwnedBuilder<OwningBuilder, QueryKey, Builder<OwningBuilder>> {
 
         private String uuid;
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value The UUID of the query
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> uuid(final String value) {
+        public Builder<OwningBuilder> uuid(final String value) {
             this.uuid = value;
             return self();
         }
@@ -94,7 +99,7 @@ public final class QueryKey implements Serializable {
         }
 
         @Override
-        public Builder<ParentBuilder> self() {
+        public Builder<OwningBuilder> self() {
             return this;
         }
     }

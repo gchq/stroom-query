@@ -19,7 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.PojoBuilder;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -84,7 +84,12 @@ public final class TableSettings implements Serializable {
     private TableSettings() {
     }
 
-    public TableSettings(final String queryId, final List<Field> fields, final Boolean extractValues, final DocRef extractionPipeline, final List<Integer> maxResults, final Boolean showDetail) {
+    public TableSettings(final String queryId,
+                         final List<Field> fields,
+                         final Boolean extractValues,
+                         final DocRef extractionPipeline,
+                         final List<Integer> maxResults,
+                         final Boolean showDetail) {
         this.queryId = queryId;
         this.fields = fields;
         this.extractValues = extractValues;
@@ -173,9 +178,11 @@ public final class TableSettings implements Serializable {
 
     /**
      * Builder for constructing a {@link TableSettings tableSettings}
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static class Builder<ParentBuilder extends PojoBuilder>
-            extends PojoBuilder<ParentBuilder, TableSettings, Builder<ParentBuilder>> {
+    public static class Builder<OwningBuilder extends OwnedBuilder>
+            extends OwnedBuilder<OwningBuilder, TableSettings, Builder<OwningBuilder>> {
         private String queryId;
         private final List<Field> fields = new ArrayList<>();
         private Boolean extractValues;
@@ -185,71 +192,81 @@ public final class TableSettings implements Serializable {
         private final List<Integer> maxResults = new ArrayList<>();
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value The ID for the query that wants these results
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> queryId(final String value) {
+        public Builder<OwningBuilder> queryId(final String value) {
             this.queryId = value;
             return self();
         }
 
         /**
-         * @param values XXXXXXXXXXXXXXXX
+         * @param values Add expected fields to the output table
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> addFields(final Field...values) {
+        public Builder<OwningBuilder> addFields(final Field...values) {
             this.fields.addAll(Arrays.asList(values));
             return self();
         }
 
-        public Field.Builder<Builder<ParentBuilder>> addField() {
-            return new Field.Builder<Builder<ParentBuilder>>()
-                    .parent(this, this::addFields);
+        /**
+         * Start building a field to add to the expected list
+         * @return The Field.Builder, configured to pop back to this one when complete
+         */
+        public Field.Builder<Builder<OwningBuilder>> addField() {
+            return new Field.Builder<Builder<OwningBuilder>>()
+                    .popToWhenComplete(this, this::addFields);
         }
 
         /**
-         * @param values XXXXXXXXXXXXXXXX
+         * @param values The max result value
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> addMaxResults(final Integer...values) {
+        public Builder<OwningBuilder> addMaxResults(final Integer...values) {
             this.maxResults.addAll(Arrays.asList(values));
             return self();
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> extractValues(final Boolean value) {
+        public Builder<OwningBuilder> extractValues(final Boolean value) {
             this.extractValues = value;
             return self();
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value The reference to the extraction pipeline that will be used on the results
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> extractionPipeline(final DocRef value) {
+        public Builder<OwningBuilder> extractionPipeline(final DocRef value) {
             this.extractionPipeline = value;
             return self();
         }
 
-        public DocRef.Builder<Builder<ParentBuilder>> extractionPipeline() {
-            return new DocRef.Builder<Builder<ParentBuilder>>()
-                    .parent(this, this::extractionPipeline);
+        /**
+         * Start building the DocRef which points to the extraction pipeline
+         * @return The DocRef.Builder, configured to pop back to this one when complete
+         */
+        public DocRef.Builder<Builder<OwningBuilder>> extractionPipeline() {
+            return new DocRef.Builder<Builder<OwningBuilder>>()
+                    .popToWhenComplete(this, this::extractionPipeline);
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value When grouping is used a value of true indicates that the results will include
+         *              the full detail of any results aggregated into a group as well as their aggregates.
+         *              A value of false will only include the aggregated values for each group. Defaults to false.
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> showDetail(final Boolean value) {
+        public Builder<OwningBuilder> showDetail(final Boolean value) {
             this.showDetail = value;
             return self();
         }
@@ -259,7 +276,7 @@ public final class TableSettings implements Serializable {
         }
 
         @Override
-        public Builder<ParentBuilder> self() {
+        public Builder<OwningBuilder> self() {
             return this;
         }
     }

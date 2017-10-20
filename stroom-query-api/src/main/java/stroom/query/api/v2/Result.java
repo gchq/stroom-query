@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.PojoBuilder;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -102,19 +102,24 @@ public abstract class Result implements Serializable {
     }
 
     /**
-     * Builder for constructing a {@link Result result}
+     * Builder for constructing a {@link Result}. This class is abstract and must be overridden for
+     * each known Result implementation class.
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
+     * @param <T> The result class type, either Flat or Table
+     * @param <CHILD_CLASS> The subclass, allowing us to template OwnedBuilder correctly
      */
     public static abstract class Builder<
-                ParentBuilder extends PojoBuilder,
+                OwningBuilder extends OwnedBuilder,
                 T extends Result,
-                CHILD_CLASS extends Builder<ParentBuilder, T, ?>>
-            extends PojoBuilder<ParentBuilder, T, CHILD_CLASS> {
+                CHILD_CLASS extends Builder<OwningBuilder, T, ?>>
+            extends OwnedBuilder<OwningBuilder, T, CHILD_CLASS> {
 
         private String componentId;
         private String error;
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value The ID of the component that this result set was requested for. See ResultRequest in SearchRequest
          *
          * @return The {@link Builder}, enabling method chaining
          */
@@ -124,7 +129,7 @@ public abstract class Result implements Serializable {
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value If an error has occurred producing this result set then this will have details
          *
          * @return The {@link Builder}, enabling method chaining
          */

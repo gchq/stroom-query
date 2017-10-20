@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import stroom.util.shared.HasDisplayValue;
-import stroom.util.shared.PojoBuilder;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -210,10 +210,10 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
     /**
      * Builder for constructing a {@link DocRef docRef}
      *
-     * @param <ParentBuilder> The class of the parent builder, allows nested building
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static class Builder<ParentBuilder extends PojoBuilder>
-            extends PojoBuilder<ParentBuilder, DocRef, Builder<ParentBuilder>> {
+    public static class Builder<OwningBuilder extends OwnedBuilder>
+            extends OwnedBuilder<OwningBuilder, DocRef, Builder<OwningBuilder>> {
         private String type;
 
         private String uuid;
@@ -226,7 +226,7 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> type(final String value) {
+        public Builder<OwningBuilder> type(final String value) {
             this.type = value;
             return self();
         }
@@ -236,7 +236,7 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> uuid(final String value) {
+        public Builder<OwningBuilder> uuid(final String value) {
             this.uuid = value;
             return self();
         }
@@ -246,7 +246,7 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> name(final String value) {
+        public Builder<OwningBuilder> name(final String value) {
             this.name = value;
             return self();
         }
@@ -256,7 +256,7 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
         }
 
         @Override
-        public Builder<ParentBuilder> self() {
+        public Builder<OwningBuilder> self() {
             return this;
         }
     }

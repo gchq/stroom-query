@@ -19,7 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.PojoBuilder;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -96,29 +96,31 @@ public final class NumberFormat implements Serializable {
     }
 
     /**
-     * Builder for constructing a {@link NumberFormat numberFormat}
+     * Builder for constructing a {@link NumberFormat}
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static class Builder<ParentBuilder extends PojoBuilder>
-            extends PojoBuilder<ParentBuilder, NumberFormat, Builder<ParentBuilder>> {
+    public static class Builder<OwningBuilder extends OwnedBuilder>
+            extends OwnedBuilder<OwningBuilder, NumberFormat, Builder<OwningBuilder>> {
         private Integer decimalPlaces;
         private Boolean useSeparator;
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value Number of decimal places to apply to the number format
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> decimalPlaces(final Integer value) {
+        public Builder<OwningBuilder> decimalPlaces(final Integer value) {
             this.decimalPlaces = value;
             return self();
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value Whether to use a thousands separator or not.
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> useSeparator(final Boolean value) {
+        public Builder<OwningBuilder> useSeparator(final Boolean value) {
             this.useSeparator = value;
             return self();
         }
@@ -128,7 +130,7 @@ public final class NumberFormat implements Serializable {
         }
 
         @Override
-        public Builder<ParentBuilder> self() {
+        public Builder<OwningBuilder> self() {
             return this;
         }
     }

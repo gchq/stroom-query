@@ -19,13 +19,14 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.PojoBuilder;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 @JsonPropertyOrder({"componentId", "structure", "values", "size", "error"})
@@ -113,68 +114,81 @@ public final class FlatResult extends Result {
     }
 
     /**
-     * Builder for constructing a {@link FlatResult flatResult}
+     * Builder for constructing a {@link FlatResult}
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static class Builder<ParentBuilder extends PojoBuilder>
-            extends Result.Builder<ParentBuilder, FlatResult, Builder<ParentBuilder>> {
+    public static class Builder<OwningBuilder extends OwnedBuilder>
+            extends Result.Builder<OwningBuilder, FlatResult, Builder<OwningBuilder>> {
         private final List<Field> structure = new ArrayList<>();
 
         private final List<List<Object>> values = new ArrayList<>();
 
+        private Long overriddenSize = null;
+
         /**
-         * @param fields XXXXXXXXXXXXXXXX
+         * Add headings to our data
+         *
+         * @param fields the fields which act as headings for our data
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> addFields(final Field...fields) {
+        public Builder<OwningBuilder> addFields(final Field...fields) {
             structure.addAll(Arrays.asList(fields));
             return self();
         }
 
-        public Field.Builder<Builder<ParentBuilder>> addField() {
-            return new Field.Builder<Builder<ParentBuilder>>().parent(this, this::addFields);
+        public Field.Builder<Builder<OwningBuilder>> addField() {
+            return new Field.Builder<Builder<OwningBuilder>>().popToWhenComplete(this, this::addFields);
         }
 
         /**
-         * @param values XXXXXXXXXXXXXXXX
+         * @param values 'rows' to add to our values
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> addValues(final List<Object>... values) {
-            this.values.addAll(Arrays.asList(values));
+        public Builder<OwningBuilder> addValues(final List<Object>... values) {
+            return addValues(Arrays.asList(values));
+        }
+
+        /**
+         * @param values A collection of 'rows' to add to our values
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public Builder<OwningBuilder> addValues(final Collection<List<Object>> values) {
+            this.values.addAll(values);
             return self();
         }
 
-        public ValueListBuilder<ParentBuilder> addValues() {
-            return new ValueListBuilder<ParentBuilder>().parent(this, this::addValues);
+        /**
+         * Start constructing a row of values for our data.
+         * @return The value list builder, configured to pop back to the flat result when complete
+         */
+        public ListBuilder<OwningBuilder, Object> addValues() {
+            return new ListBuilder<OwningBuilder, Object>().popToWhenComplete(this, this::addValues);
+        }
+
+        /**
+         * Fix the reported size of the result set.
+         * @param value The size to use
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public Builder<OwningBuilder> size(final Long value) {
+            this.overriddenSize = value;
+            return self();
         }
 
         protected FlatResult pojoBuild() {
-            return new FlatResult(getComponentId(), structure, values, getError());
+            if (null != overriddenSize) {
+                return new FlatResult(getComponentId(), structure, values, overriddenSize, getError());
+            } else {
+                return new FlatResult(getComponentId(), structure, values, getError());
+            }
         }
 
         @Override
-        public Builder<ParentBuilder> self() {
-            return this;
-        }
-    }
-
-    public static class ValueListBuilder<GrandparentBuilder extends PojoBuilder>
-            extends PojoBuilder<Builder<GrandparentBuilder>, List<Object>, ValueListBuilder<GrandparentBuilder>> {
-        private final List<Object> childValues = new ArrayList<>();
-
-        public ValueListBuilder value(final Object...values) {
-            this.childValues.addAll(Arrays.asList(values));
-            return this;
-        }
-
-        @Override
-        protected List<Object> pojoBuild() {
-            return childValues;
-        }
-
-        @Override
-        public ValueListBuilder self() {
+        public Builder<OwningBuilder> self() {
             return this;
         }
     }

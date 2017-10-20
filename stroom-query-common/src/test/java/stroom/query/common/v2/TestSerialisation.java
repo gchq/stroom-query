@@ -26,33 +26,11 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import stroom.datasource.api.v2.DataSource;
-import stroom.datasource.api.v2.DataSourceField;
 import stroom.datasource.api.v2.DataSourceField.DataSourceFieldType;
-import stroom.query.api.v2.DateTimeFormat;
-import stroom.query.api.v2.DocRef;
-import stroom.query.api.v2.ExpressionBuilder;
+import stroom.query.api.v2.*;
 import stroom.query.api.v2.ExpressionOperator.Op;
 import stroom.query.api.v2.ExpressionTerm.Condition;
-import stroom.query.api.v2.Field;
-import stroom.query.api.v2.FieldBuilder;
-import stroom.query.api.v2.Filter;
-import stroom.query.api.v2.FlatResult;
-import stroom.query.api.v2.Format;
 import stroom.query.api.v2.Format.Type;
-import stroom.query.api.v2.NumberFormat;
-import stroom.query.api.v2.OffsetRange;
-import stroom.query.api.v2.Param;
-import stroom.query.api.v2.Query;
-import stroom.query.api.v2.QueryKey;
-import stroom.query.api.v2.ResultRequest;
-import stroom.query.api.v2.Row;
-import stroom.query.api.v2.SearchRequest;
-import stroom.query.api.v2.SearchResponse;
-import stroom.query.api.v2.Sort;
-import stroom.query.api.v2.TableResult;
-import stroom.query.api.v2.TableSettings;
-import stroom.query.api.v2.TableSettingsBuilder;
-import stroom.query.api.v2.TimeZone;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -75,57 +53,89 @@ import java.util.List;
 @Ignore("TODO: fails intermittently")
 public class TestSerialisation {
     private static DataSource getDataSource() {
-        final DataSourceField field1 = new DataSourceField(DataSourceFieldType.FIELD, "field1", true, Arrays.asList(Condition.EQUALS, Condition.CONTAINS));
-        final DataSourceField field2 = new DataSourceField(DataSourceFieldType.NUMERIC_FIELD, "field2", true, Collections.singletonList(Condition.EQUALS));
-
-        final List<DataSourceField> fields = Arrays.asList(field1, field2);
-        return new DataSource(fields);
+        return new DataSource.Builder<>()
+                .addField()
+                    .type(DataSourceFieldType.FIELD)
+                    .name("field1")
+                    .queryable(true)
+                    .addConditions(Condition.EQUALS, Condition.CONTAINS)
+                    .end()
+                .addField()
+                    .type(DataSourceFieldType.NUMERIC_FIELD)
+                    .name("field2")
+                    .queryable(true)
+                    .addConditions(Condition.EQUALS)
+                    .end()
+                .build();
     }
 
     private static SearchRequest getSearchRequest() {
-        final DocRef docRef = new DocRef("docRefType", "docRefUuid", "docRefName");
+        return new SearchRequest.Builder()
+                .key()
+                    .uuid("1234")
+                    .end()
+                .query()
+                    .dataSource()
+                        .type("docRefType")
+                        .uuid("docRefUuid")
+                        .name("docRefName")
+                        .end()
+                    .expression()
+                        .addOperator().op(Op.AND).end()
+                        .addTerm()
+                            .field("field1")
+                            .condition(Condition.EQUALS)
+                            .value("value1")
+                            .end()
+                        .addTerm()
+                            .field("field2")
+                            .condition(Condition.BETWEEN)
+                            .value("value2")
+                            .end()
+                        .end()
+                    .addParam()
+                        .key("param1")
+                        .value("val1")
+                        .end()
+                    .addParam()
+                        .key("param2")
+                        .value("val2")
+                        .end()
+                    .end()
+                .addResultRequest()
+                    .componentId("componentX")
+                    .requestedRange()
+                        .offset(1L)
+                        .length(100L)
+                        .end()
+                    .addMapping()
+                        .queryId("someQueryId")
+                        .addField()
+                            .name("name1")
+                            .expression("expression1")
+                            .sort(new Sort(1, Sort.SortDirection.ASCENDING))
+                            .filter(new Filter("include1", "exclude1"))
+                            .format(new Format(new NumberFormat(1, false)))
+                            .group(1)
+                            .end()
+                        .addField()
+                            .name("name2")
+                            .expression( "expression2")
+                            .sort(new Sort(2, Sort.SortDirection.DESCENDING))
+                            .filter(new Filter("include2", "exclude2"))
+                            .format(new Format(createDateTimeFormat()))
+                            .group(2)
+                            .end()
+                        .extractValues(false)
+                        .extractionPipeline(new DocRef("docRefType2", "docRefUuid2", "docRefName2"))
+                        .addMaxResults(1, 2)
+                        .showDetail(false)
+                        .end()
+                    .end()
 
-        final ExpressionBuilder expressionBuilder = new ExpressionBuilder();
-        expressionBuilder.addTerm("field1", Condition.EQUALS, "value1");
-        expressionBuilder.addOperator(Op.AND);
-        expressionBuilder.addTerm("field2", Condition.BETWEEN, "value2");
-
-        final List<Field> fields = new ArrayList<>();
-        fields.add(new FieldBuilder()
-                .name("name1")
-                .expression("expression1")
-                .sort(new Sort(1, Sort.SortDirection.ASCENDING))
-                .filter(new Filter("include1", "exclude1"))
-                .format(new Format(new NumberFormat(1, false)))
-                .group(1)
-                .build());
-        fields.add(new FieldBuilder()
-                .name("name2")
-                .expression( "expression2")
-                .sort(new Sort(2, Sort.SortDirection.DESCENDING))
-                .filter(new Filter("include2", "exclude2"))
-                .format(new Format(createDateTimeFormat()))
-                .group(2)
-                .build());
-
-        final TableSettings tableSettings = new TableSettingsBuilder()
-                .queryId("someQueryId")
-                .fields(fields)
-                .extractValues(false)
-                .extractionPipeline(new DocRef("docRefType2", "docRefUuid2", "docRefName2"))
-                .maxResults(Arrays.asList(1, 2))
-                .showDetail(false)
+                .dateTimeLocale("en-gb")
+                .incremental(true)
                 .build();
-
-//        Map<String, TableSettings> componentSettingsMap = new HashMap<>();
-//        componentSettingsMap.put("componentSettingsMapKey", tableSettings);
-
-        final List<Param> params = Arrays.asList(new Param("param1", "val1"), new Param("param2", "val2"));
-        final Query query = new Query(docRef, expressionBuilder.build(), params);
-
-        final List<ResultRequest> resultRequests = Collections.singletonList(new ResultRequest("componentX", tableSettings, new OffsetRange(1, 100)));
-
-        return new SearchRequest(new QueryKey("1234"), query, resultRequests, "en-gb", true);
     }
 
     private static DateTimeFormat createDateTimeFormat() {
@@ -266,10 +276,10 @@ public class TestSerialisation {
 
     private FlatResult getVisResult1() {
         final List<Field> structure = new ArrayList<>();
-        structure.add(new FieldBuilder().name("val1").format(Type.GENERAL).build());
-        structure.add(new FieldBuilder().name("val2").format(Type.NUMBER).build());
-        structure.add(new FieldBuilder().name("val3").format(Type.NUMBER).build());
-        structure.add(new FieldBuilder().name("val4").format(Type.GENERAL).build());
+        structure.add(new Field.Builder<>().name("val1").format(Type.GENERAL).build());
+        structure.add(new Field.Builder<>().name("val2").format(Type.NUMBER).build());
+        structure.add(new Field.Builder<>().name("val3").format(Type.NUMBER).build());
+        structure.add(new Field.Builder<>().name("val4").format(Type.GENERAL).build());
 
         final List<List<Object>> data = new ArrayList<>();
         data.add(Arrays.asList("test0", 0.4, 234, "this0"));

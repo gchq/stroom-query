@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import stroom.util.shared.HasDisplayValue;
-import stroom.util.shared.PojoBuilder;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -135,8 +135,13 @@ public final class Format implements Serializable {
         }
     }
 
-    public static final class Builder<ParentBuilder extends PojoBuilder>
-            extends PojoBuilder<ParentBuilder, Format, Builder<ParentBuilder>> {
+    /**
+     * Builder for constructing a {@link Format}
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
+     */
+    public static final class Builder<OwningBuilder extends OwnedBuilder>
+            extends OwnedBuilder<OwningBuilder, Format, Builder<OwningBuilder>> {
         private Type type;
 
         private NumberFormat numberFormat;
@@ -148,22 +153,22 @@ public final class Format implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> type(final Type value) {
+        public Builder<OwningBuilder> type(final Type value) {
             this.type = value;
             return self();
         }
 
-        public NumberFormat.Builder<Builder<ParentBuilder>> number() {
-            return new NumberFormat.Builder<Builder<ParentBuilder>>()
-                    .parent(this, f -> {
+        public NumberFormat.Builder<Builder<OwningBuilder>> number() {
+            return new NumberFormat.Builder<Builder<OwningBuilder>>()
+                    .popToWhenComplete(this, f -> {
                         this.type = Type.NUMBER;
                         this.numberFormat = f;
                     });
         }
 
-        public DateTimeFormat.Builder<Builder<ParentBuilder>> dateTime() {
-            return new DateTimeFormat.Builder<Builder<ParentBuilder>>()
-                    .parent(this, f -> {
+        public DateTimeFormat.Builder<Builder<OwningBuilder>> dateTime() {
+            return new DateTimeFormat.Builder<Builder<OwningBuilder>>()
+                    .popToWhenComplete(this, f -> {
                         this.type = Type.DATE_TIME;
                         this.dateTimeFormat = f;
                     });
@@ -175,7 +180,7 @@ public final class Format implements Serializable {
         }
 
         @Override
-        public Builder<ParentBuilder> self() {
+        public Builder<OwningBuilder> self() {
             return this;
         }
     }

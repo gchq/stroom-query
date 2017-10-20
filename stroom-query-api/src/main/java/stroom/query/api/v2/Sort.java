@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import stroom.util.shared.HasDisplayValue;
-import stroom.util.shared.PojoBuilder;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -109,29 +109,32 @@ public final class Sort implements Serializable {
 
     /**
      * Builder for constructing a {@link Sort sort}
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static class Builder<ParentBuilder extends PojoBuilder>
-            extends PojoBuilder<ParentBuilder, Sort, Builder<ParentBuilder>> {
+    public static class Builder<OwningBuilder extends OwnedBuilder>
+            extends OwnedBuilder<OwningBuilder, Sort, Builder<OwningBuilder>> {
         private Integer order;
 
         private SortDirection direction;
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value Where multiple fields are sorted this value describes the sort order,
+         *              with 0 being the first field to sort on
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> order(final Integer value) {
+        public Builder<OwningBuilder> order(final Integer value) {
             this.order = value;
             return self();
         }
 
         /**
-         * @param value XXXXXXXXXXXXXXXX
+         * @param value The direction to sort in, ASCENDING or DESCENDING
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<ParentBuilder> direction(final SortDirection value) {
+        public Builder<OwningBuilder> direction(final SortDirection value) {
             this.direction = value;
             return self();
         }
@@ -141,7 +144,7 @@ public final class Sort implements Serializable {
         }
 
         @Override
-        public Builder<ParentBuilder> self() {
+        public Builder<OwningBuilder> self() {
             return this;
         }
     }
