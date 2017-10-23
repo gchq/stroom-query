@@ -17,7 +17,7 @@ public class QueryBuilderTest {
         final String dataSourceUuid = UUID.randomUUID().toString();
 
         final Query query = new Query.Builder<>()
-                .dataSource(dataSourceName, dataSourceType, dataSourceUuid)
+                .dataSource(dataSourceType, dataSourceUuid, dataSourceName)
                 .addParam("someKey0", "someValue0")
                 .addParam("someKey1", "someValue1")
                 .expression(ExpressionOperator.Op.AND)

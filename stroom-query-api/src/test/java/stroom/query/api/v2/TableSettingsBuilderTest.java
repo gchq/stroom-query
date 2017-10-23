@@ -84,7 +84,7 @@ public class TableSettingsBuilderTest {
                         .end()
                     .end()
                 .end()
-                .extractionPipeline(extractPipelineName, extractPipelineUuid, extractPipelineType)
+                .extractionPipeline(extractPipelineType, extractPipelineUuid, extractPipelineName)
                 .build();
         
         assertEquals(extractValues, tableSettings.getExtractValues());
