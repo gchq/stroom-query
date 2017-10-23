@@ -195,7 +195,7 @@ public final class Query implements Serializable {
          * Shortcut function to add a parameter and go straight back to building the query
          * @param key The parameter key
          * @param value The parameter value
-         * @return
+         * @return This builder with the completed parameter added.
          */
         public Builder<OwningBuilder> addParam(final String key, final String value) {
             return addParam().key(key).value(value).end();
