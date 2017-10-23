@@ -13,7 +13,7 @@ public class DocRefBuilderTest {
         final String type = "someType";
         final String uuid = UUID.randomUUID().toString();
 
-        final DocRef docRef = new DocRef.Builder<>()
+        final DocRef docRef = new DocRef.Builder()
                 .name(name)
                 .type(type)
                 .uuid(uuid)

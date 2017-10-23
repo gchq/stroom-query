@@ -100,8 +100,8 @@ public final class NumberFormat implements Serializable {
      *
      * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static class Builder<OwningBuilder extends OwnedBuilder>
-            extends OwnedBuilder<OwningBuilder, NumberFormat, Builder<OwningBuilder>> {
+    public static abstract class ABuilder<OwningBuilder extends OwnedBuilder, CHILD_CLASS extends ABuilder<OwningBuilder, ?>>
+            extends OwnedBuilder<OwningBuilder, NumberFormat, CHILD_CLASS> {
         private Integer decimalPlaces;
         private Boolean useSeparator;
 
@@ -110,7 +110,7 @@ public final class NumberFormat implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<OwningBuilder> decimalPlaces(final Integer value) {
+        public CHILD_CLASS decimalPlaces(final Integer value) {
             this.decimalPlaces = value;
             return self();
         }
@@ -120,7 +120,7 @@ public final class NumberFormat implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<OwningBuilder> useSeparator(final Boolean value) {
+        public CHILD_CLASS useSeparator(final Boolean value) {
             this.useSeparator = value;
             return self();
         }
@@ -128,11 +128,29 @@ public final class NumberFormat implements Serializable {
         protected NumberFormat pojoBuild() {
             return new NumberFormat(decimalPlaces, useSeparator);
         }
+    }
 
+    /**
+     * A builder that is owned by another builder, used for popping back up a stack
+     *
+     * @param <OwningBuilder> The class of the parent builder
+     */
+    public static final class OBuilder<OwningBuilder extends OwnedBuilder>
+            extends ABuilder<OwningBuilder, OBuilder<OwningBuilder>> {
         @Override
-        public Builder<OwningBuilder> self() {
+        public OBuilder<OwningBuilder> self() {
             return this;
         }
     }
 
+    /**
+     * A builder that is created independently of any parent builder
+     */
+    public static final class Builder extends ABuilder<Builder, Builder> {
+
+        @Override
+        public Builder self() {
+            return this;
+        }
+    }
 }

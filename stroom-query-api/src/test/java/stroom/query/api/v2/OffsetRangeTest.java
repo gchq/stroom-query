@@ -10,7 +10,7 @@ public class OffsetRangeTest {
         final Long offset = 30L;
         final Long length = 1000L;
 
-        final OffsetRange offsetRange = new OffsetRange.Builder<>()
+        final OffsetRange offsetRange = new OffsetRange.Builder()
                 .offset(offset)
                 .length(length)
                 .build();

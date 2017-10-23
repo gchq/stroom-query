@@ -10,7 +10,7 @@ public class ParamBuilderTest {
         final String key = "someKey";
         final String value = "someValue";
 
-        final Param param = new Param.Builder<>()
+        final Param param = new Param.Builder()
                 .key(key)
                 .value(value)
                 .build();

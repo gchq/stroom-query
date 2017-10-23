@@ -10,7 +10,7 @@ public class SortBuilderTest {
         final Sort.SortDirection direction = Sort.SortDirection.DESCENDING;
         final Integer order = 3;
 
-        final Sort sort = new Sort.Builder<>()
+        final Sort sort = new Sort.Builder()
                 .direction(direction)
                 .order(order)
                 .build();

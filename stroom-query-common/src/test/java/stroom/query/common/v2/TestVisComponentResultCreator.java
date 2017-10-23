@@ -185,7 +185,7 @@ public class TestVisComponentResultCreator {
 //    }
 
     private TableSettings getParentTableSettings() {
-        return new TableSettings.Builder<>()
+        return new TableSettings.Builder()
                 .addField()
                     .name("x")
                     .expression("${x}")
@@ -344,7 +344,7 @@ public class TestVisComponentResultCreator {
     }
 
     private Field createField(final String fieldName, final Format.Type type) {
-        return new Field.Builder<>().name(fieldName).expression(ParamUtil.makeParam(fieldName)).format(type).build();
+        return new Field.Builder().name(fieldName).expression(ParamUtil.makeParam(fieldName)).format(type).build();
     }
 
     private ObjectMapper createMapper(final boolean indent) {

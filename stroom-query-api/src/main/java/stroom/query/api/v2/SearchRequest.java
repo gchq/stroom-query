@@ -215,21 +215,12 @@ public final class SearchRequest implements Serializable {
         }
 
         /**
-         * Start building the query key, A unique key to identify the instance of the search by. This key is used to identify multiple
-         * requests for the same search when running in incremental mode.
-         * @return The QueryKey.Builder, configured to pop back to this one when complete
-         */
-        public QueryKey.Builder<Builder> key() {
-            return new QueryKey.Builder<Builder>().popToWhenComplete(this, this::key);
-        }
-
-        /**
          * Shortcut function to add a key value in one go
          * @param uuid The UUID of the query key
          * @return This builder
          */
         public Builder key(final String uuid) {
-            return key().uuid(uuid).end();
+            return key(new QueryKey.OBuilder<Builder>().uuid(uuid).build());
         }
 
         /**
@@ -246,8 +237,8 @@ public final class SearchRequest implements Serializable {
          * Start building the query, which specifies all the terms to apply to our search.
          * @return The Query.Builder, configured to pop back to this builder when complete
          */
-        public Query.Builder<Builder> query() {
-            return new Query.Builder<Builder>().popToWhenComplete(this, this::query);
+        public Query.OBuilder<Builder> query() {
+            return new Query.OBuilder<Builder>().popToWhenComplete(this, this::query);
         }
 
         /**
@@ -264,8 +255,8 @@ public final class SearchRequest implements Serializable {
          * Begin construction on a resultRequest
          * @return The ResultRequest.Builder, configured to pop back to this builder when complete
          */
-        public ResultRequest.Builder<Builder> addResultRequest() {
-            return new ResultRequest.Builder<Builder>()
+        public ResultRequest.OBuilder<Builder> addResultRequest() {
+            return new ResultRequest.OBuilder<Builder>()
                     .popToWhenComplete(this, this::addResultRequests);
         }
 

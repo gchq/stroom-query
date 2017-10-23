@@ -18,7 +18,7 @@ public class FlatResultBuilderTest {
         final int numberResultSets = 10;
 
         // When
-        final FlatResult.Builder<?> flatResultBuilder = new FlatResult.Builder<>()
+        final FlatResult.Builder flatResultBuilder = new FlatResult.Builder()
                 .componentId(componentId)
                 .error(error);
         IntStream.range(0, numberFields).forEach(x ->

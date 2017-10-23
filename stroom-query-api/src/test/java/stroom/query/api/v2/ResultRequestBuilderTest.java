@@ -21,7 +21,7 @@ public class ResultRequestBuilderTest {
         final String queryId2 = "someQueryId2";
 
         // When
-        final ResultRequest resultRequest = new ResultRequest.Builder<>()
+        final ResultRequest resultRequest = new ResultRequest.Builder()
                 .componentId(componentId)
                 .fetch(fetch)
                 .addOpenGroups(openGroup0, openGroup1)

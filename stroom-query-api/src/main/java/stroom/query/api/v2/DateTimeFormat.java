@@ -111,8 +111,8 @@ public final class DateTimeFormat implements Serializable {
      *
      * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static class Builder<OwningBuilder extends OwnedBuilder>
-            extends OwnedBuilder<OwningBuilder, DateTimeFormat, Builder<OwningBuilder>> {
+    public static abstract class ABuilder<OwningBuilder extends OwnedBuilder, CHILD_CLASS extends ABuilder<OwningBuilder, ?>>
+            extends OwnedBuilder<OwningBuilder, DateTimeFormat, CHILD_CLASS> {
         private String pattern;
 
         private TimeZone timeZone;
@@ -120,18 +120,18 @@ public final class DateTimeFormat implements Serializable {
         /**
          * @param value The format pattern string, conforming to {@link java.time.format.DateTimeFormatter}
          *
-         * @return The {@link Builder}, enabling method chaining
+         * @return The {@link CHILD_CLASS}, enabling method chaining
          */
-        public Builder<OwningBuilder> pattern(final String value) {
+        public CHILD_CLASS pattern(final String value) {
             this.pattern = value;
             return self();
         }
         /**
          * @param value Set the {@link TimeZone timeZone} to use when formatting the date
          *
-         * @return The {@link Builder}, enabling method chaining
+         * @return The {@link CHILD_CLASS}, enabling method chaining
          */
-        public Builder<OwningBuilder> timeZone(final TimeZone value) {
+        public CHILD_CLASS timeZone(final TimeZone value) {
             this.timeZone = value;
             return self();
         }
@@ -141,19 +141,37 @@ public final class DateTimeFormat implements Serializable {
          *
          * @return The {@link TimeZone.Builder} for method chaining the child construction
          */
-        public TimeZone.Builder<Builder<OwningBuilder>> timeZone() {
-            return new TimeZone.Builder<Builder<OwningBuilder>>()
-                    .popToWhenComplete(this, this::timeZone);
+        public TimeZone.OBuilder<CHILD_CLASS> timeZone() {
+            return new TimeZone.OBuilder<CHILD_CLASS>()
+                    .popToWhenComplete(self(), this::timeZone);
         }
 
         protected DateTimeFormat pojoBuild() {
             return new DateTimeFormat(pattern, timeZone);
         }
+    }
 
+    /**
+     * A builder that is owned by another builder, used for popping back up a stack
+     *
+     * @param <OwningBuilder> The class of the parent builder
+     */
+    public static final class OBuilder<OwningBuilder extends OwnedBuilder>
+            extends ABuilder<OwningBuilder, OBuilder<OwningBuilder>> {
         @Override
-        public Builder<OwningBuilder> self() {
+        public OBuilder<OwningBuilder> self() {
             return this;
         }
     }
 
+    /**
+     * A builder that is created independently of any parent builder
+     */
+    public static final class Builder extends ABuilder<Builder, Builder> {
+
+        @Override
+        public Builder self() {
+            return this;
+        }
+    }
 }

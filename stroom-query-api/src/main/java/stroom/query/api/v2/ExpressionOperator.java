@@ -155,17 +155,36 @@ public final class ExpressionOperator extends ExpressionItem {
      *
      * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static class Builder<OwningBuilder extends OwnedBuilder>
-            extends ExpressionItem.Builder<OwningBuilder, ExpressionOperator, Builder<OwningBuilder>> {
+    public static abstract class ABuilder<
+                    OwningBuilder extends OwnedBuilder,
+                    CHILD_CLASS extends ABuilder<OwningBuilder, ?>>
+            extends ExpressionItem.Builder<OwningBuilder, ExpressionOperator, CHILD_CLASS> {
         private final Op op;
 
         private List<ExpressionItem> children = new ArrayList<>();
 
         /**
+         * No args constructor, defaults to using AND as the operator.
+         */
+        public ABuilder() {
+            this(Op.AND);
+        }
+
+        /**
          * @param value Set the logical operator to apply to all the children items
          */
-        public Builder(final Op value) {
+        public ABuilder(final Op value) {
             this.op = value;
+        }
+
+        /**
+         * Construct a builder setting enabled and op
+         * @param enabled Is this Expression Operator enabled
+         * @param op The op
+         */
+        public ABuilder(final Boolean enabled, final Op op) {
+            super(enabled);
+            this.op = op;
         }
 
         /**
@@ -173,7 +192,7 @@ public final class ExpressionOperator extends ExpressionItem {
          * @param items The expression items to add as children
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<OwningBuilder> addOperators(ExpressionItem...items) {
+        public CHILD_CLASS addOperators(ExpressionItem...items) {
             return addOperators(Arrays.asList(items));
         }
 
@@ -182,7 +201,7 @@ public final class ExpressionOperator extends ExpressionItem {
          * @param items The expression items to add as children
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<OwningBuilder> addOperators(Collection<ExpressionItem> items) {
+        public CHILD_CLASS addOperators(Collection<ExpressionItem> items) {
             this.children.addAll(items);
             return self();
         }
@@ -192,18 +211,29 @@ public final class ExpressionOperator extends ExpressionItem {
          * @param op The logical operator to apply
          * @return A new operator builder, configured to pop back to this builder when complete
          */
-        public Builder<Builder<OwningBuilder>> addOperator(final Op op) {
-            return new Builder<Builder<OwningBuilder>>(op)
-                    .popToWhenComplete(this, this::addOperators);
+        public OBuilder<CHILD_CLASS> addOperator(final Op op) {
+            return new OBuilder<CHILD_CLASS>(op)
+                    .popToWhenComplete(self(), this::addOperators);
+        }
+
+        /**
+         * Begin construction of a new child {@link ExpressionOperator}
+         * @param enabled Indicates if the operator is enabled
+         * @param op The logical operator to apply
+         * @return A new operator builder, configured to pop back to this builder when complete
+         */
+        public OBuilder<CHILD_CLASS> addOperator(final Boolean enabled, final Op op) {
+            return new OBuilder<CHILD_CLASS>(enabled, op)
+                    .popToWhenComplete(self(), this::addOperators);
         }
 
         /**
          * Begin construction of a new child {@link ExpressionTerm}
          * @return A new term builder, configured to pop back to this builder when complete
          */
-        public ExpressionTerm.Builder<Builder<OwningBuilder>> addTerm() {
-            return new ExpressionTerm.Builder<Builder<OwningBuilder>>()
-                    .popToWhenComplete(this, this::addOperators);
+        public ExpressionTerm.OBuilder<CHILD_CLASS> addTerm() {
+            return new ExpressionTerm.OBuilder<CHILD_CLASS>()
+                    .popToWhenComplete(self(), this::addOperators);
         }
 
         /**
@@ -213,19 +243,72 @@ public final class ExpressionOperator extends ExpressionItem {
          * @param value The value
          * @return This builder, with the completed term added.
          */
-        public Builder<OwningBuilder> addTerm(final String field,
+        public CHILD_CLASS addTerm(final String field,
                                               final ExpressionTerm.Condition condition,
                                               final String value) {
             return addTerm().field(field).condition(condition).value(value).end();
+        }
+
+        /**
+         * A convenience function for adding dictionary terms in one go, the parameters should read fairly clearly
+         * @param field The field name
+         * @param condition The condition to apply to the valud
+         * @param dictionary The dictionary
+         * @return This builder, with the completed term added.
+         */
+        public CHILD_CLASS addDictionaryTerm(final String field,
+                                             final ExpressionTerm.Condition condition,
+                                             final DocRef dictionary) {
+            return addTerm().field(field).condition(condition).dictionary(dictionary).end();
         }
 
         @Override
         protected ExpressionOperator pojoBuild() {
             return new ExpressionOperator(getEnabled(), op, children);
         }
+    }
+
+    /**
+     * An expression operator that is owned by some parent builder.
+     *
+     * @param <OwningBuilder> The class of the owning builder
+     */
+    public static final class OBuilder<OwningBuilder extends OwnedBuilder>
+            extends ABuilder<OwningBuilder, OBuilder<OwningBuilder>> {
+
+        public OBuilder() {
+            super(Op.AND);
+        }
+        public OBuilder(final Op value) {
+            super(value);
+        }
+        public OBuilder(final Boolean enabled, final Op op) {
+            super(enabled, op);
+        }
 
         @Override
-        public ExpressionOperator.Builder<OwningBuilder> self() {
+        public OBuilder self() {
+            return this;
+        }
+    }
+
+    /**
+     * An expression operator that is created independently of any builder tree
+     */
+    public static final class Builder extends ABuilder<Builder, Builder> {
+
+        public Builder() {
+            super(Op.AND);
+        }
+        public Builder(final Op value) {
+            super(value);
+        }
+        public Builder(final Boolean enabled, final Op op) {
+            super(enabled, op);
+        }
+
+        @Override
+        public Builder self() {
             return this;
         }
     }

@@ -6,7 +6,7 @@ import org.junit.Test;
 public class ExpressionBuilderTest {
     @Test
     public void doesBuild() throws Exception {
-        ExpressionOperator root = new ExpressionOperator.Builder<>(ExpressionOperator.Op.AND)
+        ExpressionOperator root = new ExpressionOperator.Builder(ExpressionOperator.Op.AND)
                     .addTerm("fieldX", ExpressionTerm.Condition.EQUALS, "abc")
                     .addOperator(ExpressionOperator.Op.OR)
                         .addTerm("fieldA", ExpressionTerm.Condition.EQUALS, "Fred")

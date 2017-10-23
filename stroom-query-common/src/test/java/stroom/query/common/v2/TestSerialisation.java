@@ -250,10 +250,10 @@ public class TestSerialisation {
 
     private FlatResult getVisResult1() {
         final List<Field> structure = new ArrayList<>();
-        structure.add(new Field.Builder<>().name("val1").format(Type.GENERAL).build());
-        structure.add(new Field.Builder<>().name("val2").format(Type.NUMBER).build());
-        structure.add(new Field.Builder<>().name("val3").format(Type.NUMBER).build());
-        structure.add(new Field.Builder<>().name("val4").format(Type.GENERAL).build());
+        structure.add(new Field.Builder().name("val1").format(Type.GENERAL).build());
+        structure.add(new Field.Builder().name("val2").format(Type.NUMBER).build());
+        structure.add(new Field.Builder().name("val3").format(Type.NUMBER).build());
+        structure.add(new Field.Builder().name("val4").format(Type.GENERAL).build());
 
         final List<List<Object>> data = new ArrayList<>();
         data.add(Arrays.asList("test0", 0.4, 234, "this0"));

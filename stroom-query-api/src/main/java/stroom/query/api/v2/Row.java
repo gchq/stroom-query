@@ -115,8 +115,8 @@ public final class Row implements Serializable {
      *
      * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static class Builder<OwningBuilder extends OwnedBuilder>
-            extends OwnedBuilder<OwningBuilder, Row, Builder<OwningBuilder>> {
+    public static abstract class ABuilder<OwningBuilder extends OwnedBuilder, CHILD_CLASS extends ABuilder<OwningBuilder, ?>>
+            extends OwnedBuilder<OwningBuilder, Row, CHILD_CLASS> {
         private String groupKey;
 
         private final List<String> values = new ArrayList<>();
@@ -128,7 +128,7 @@ public final class Row implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<OwningBuilder> groupKey(final String value) {
+        public CHILD_CLASS groupKey(final String value) {
             this.groupKey = value;
             return self();
         }
@@ -139,7 +139,7 @@ public final class Row implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<OwningBuilder> addValues(final String...values) {
+        public CHILD_CLASS addValues(final String...values) {
             this.values.addAll(Arrays.asList(values));
             return self();
         }
@@ -149,7 +149,7 @@ public final class Row implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<OwningBuilder> depth(final Integer value) {
+        public CHILD_CLASS depth(final Integer value) {
             this.depth = value;
             return self();
         }
@@ -157,9 +157,28 @@ public final class Row implements Serializable {
         protected Row pojoBuild() {
             return new Row(groupKey, values, depth);
         }
+    }
+
+    /**
+     * A builder that is owned by another builder, used for popping back up a stack
+     *
+     * @param <OwningBuilder> The class of the parent builder
+     */
+    public static final class OBuilder<OwningBuilder extends OwnedBuilder>
+            extends ABuilder<OwningBuilder, OBuilder<OwningBuilder>> {
+        @Override
+        public OBuilder<OwningBuilder> self() {
+            return this;
+        }
+    }
+
+    /**
+     * A builder that is created independently of any parent builder
+     */
+    public static final class Builder extends ABuilder<Builder, Builder> {
 
         @Override
-        public Builder<OwningBuilder> self() {
+        public Builder self() {
             return this;
         }
     }

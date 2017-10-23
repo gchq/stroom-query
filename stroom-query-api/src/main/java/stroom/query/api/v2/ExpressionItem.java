@@ -115,6 +115,14 @@ public abstract class ExpressionItem implements Serializable {
 
         private Boolean enabled;
 
+        public Builder() {
+
+        }
+
+        public Builder(final boolean enabled) {
+            this.enabled = enabled;
+        }
+
         /**
          * @param value Sets the terms state to enabled if true or null, disabled if false
          *

@@ -19,7 +19,7 @@ public class FieldBuilderTest {
         final Integer numberFormatDecimalPlaces = 5;
         final Boolean numberFormatUseSeperator = true;
 
-        final Field field = new Field.Builder<>()
+        final Field field = new Field.Builder()
                 .name(name)
                 .expression(expression)
                 .sort()

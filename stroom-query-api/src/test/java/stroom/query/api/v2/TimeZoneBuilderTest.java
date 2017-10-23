@@ -12,7 +12,7 @@ public class TimeZoneBuilderTest {
         final Integer offsetHours = 3;
         final Integer offsetMinutes = 5;
 
-        final TimeZone timeZone = new TimeZone.Builder<>()
+        final TimeZone timeZone = new TimeZone.Builder()
                 .id(id)
                 .use(use)
                 .offsetHours(offsetHours)

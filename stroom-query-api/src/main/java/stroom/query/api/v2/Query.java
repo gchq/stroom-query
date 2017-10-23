@@ -123,8 +123,8 @@ public final class Query implements Serializable {
      *
      * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static class Builder<OwningBuilder extends OwnedBuilder>
-            extends OwnedBuilder<OwningBuilder, Query, Builder<OwningBuilder>> {
+    public static abstract class ABuilder<OwningBuilder extends OwnedBuilder, CHILD_CLASS extends ABuilder<OwningBuilder, ?>>
+            extends OwnedBuilder<OwningBuilder, Query, CHILD_CLASS> {
 
         private DocRef dataSource;
 
@@ -137,7 +137,7 @@ public final class Query implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<OwningBuilder> dataSource(final DocRef value) {
+        public CHILD_CLASS dataSource(final DocRef value) {
             this.dataSource = value;
             return self();
         }
@@ -146,9 +146,9 @@ public final class Query implements Serializable {
          * Start construction of the DocRef that points to the data source of the query
          * @return A DocRef builder, configured to pop back to this builder when complete
          */
-        public DocRef.Builder<Builder<OwningBuilder>> dataSource() {
-            return new DocRef.Builder<Builder<OwningBuilder>>()
-                    .popToWhenComplete(this, this::dataSource);
+        public DocRef.OBuilder<CHILD_CLASS> dataSource() {
+            return new DocRef.OBuilder<CHILD_CLASS>()
+                    .popToWhenComplete(self(), this::dataSource);
         }
 
         /**
@@ -158,7 +158,7 @@ public final class Query implements Serializable {
          * @param name The name of the datasource
          * @return This builder, with the completed datasource added.
          */
-        public Builder<OwningBuilder> dataSource(final String type, final String uuid, final String name) {
+        public CHILD_CLASS dataSource(final String type, final String uuid, final String name) {
             return this.dataSource().type(type).uuid(uuid).name(name).end();
         }
 
@@ -167,7 +167,7 @@ public final class Query implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<OwningBuilder> expression(final ExpressionOperator value) {
+        public CHILD_CLASS expression(final ExpressionOperator value) {
             this.expression = value;
             return self();
         }
@@ -177,18 +177,18 @@ public final class Query implements Serializable {
          * @param rootOp The logical operator to apply at the root level
          * @return The expression builder, configured to pop back to this builder when complete
          */
-        public ExpressionOperator.Builder<Builder<OwningBuilder>> expression(final ExpressionOperator.Op rootOp) {
-            return new ExpressionOperator.Builder<Builder<OwningBuilder>>(rootOp)
-                    .popToWhenComplete(this, this::expression);
+        public ExpressionOperator.OBuilder<CHILD_CLASS> expression(final ExpressionOperator.Op rootOp) {
+            return new ExpressionOperator.OBuilder<CHILD_CLASS>(rootOp)
+                    .popToWhenComplete(self(), this::expression);
         }
 
         /**
          * Start construction of a parameter to add to the query
          * @return The parameter builder, configured to pop back to this builder when complete
          */
-        public Param.Builder<Builder<OwningBuilder>> addParam() {
-            return new Param.Builder<Builder<OwningBuilder>>()
-                    .popToWhenComplete(this, this::addParams);
+        public Param.OBuilder<CHILD_CLASS> addParam() {
+            return new Param.OBuilder<CHILD_CLASS>()
+                    .popToWhenComplete(self(), this::addParams);
         }
 
         /**
@@ -197,7 +197,7 @@ public final class Query implements Serializable {
          * @param value The parameter value
          * @return This builder with the completed parameter added.
          */
-        public Builder<OwningBuilder> addParam(final String key, final String value) {
+        public CHILD_CLASS addParam(final String key, final String value) {
             return addParam().key(key).value(value).end();
         }
 
@@ -206,7 +206,7 @@ public final class Query implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<OwningBuilder> addParams(final Param...values) {
+        public CHILD_CLASS addParams(final Param...values) {
             this.params.addAll(Arrays.asList(values));
             return self();
         }
@@ -214,11 +214,29 @@ public final class Query implements Serializable {
         protected Query pojoBuild() {
             return new Query(dataSource, expression, params);
         }
+    }
 
+    /**
+     * A builder that is owned by another builder, used for popping back up a stack
+     *
+     * @param <OwningBuilder> The class of the parent builder
+     */
+    public static final class OBuilder<OwningBuilder extends OwnedBuilder>
+            extends ABuilder<OwningBuilder, OBuilder<OwningBuilder>> {
         @Override
-        public Builder<OwningBuilder> self() {
+        public OBuilder<OwningBuilder> self() {
             return this;
         }
     }
 
+    /**
+     * A builder that is created independently of any parent builder
+     */
+    public static final class Builder extends ABuilder<Builder, Builder> {
+
+        @Override
+        public Builder self() {
+            return this;
+        }
+    }
 }

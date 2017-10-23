@@ -196,8 +196,8 @@ public final class ResultRequest implements Serializable {
      *
      * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static class Builder<OwningBuilder extends OwnedBuilder>
-            extends OwnedBuilder<OwningBuilder, ResultRequest, Builder<OwningBuilder>> {
+    public static abstract class ABuilder<OwningBuilder extends OwnedBuilder, CHILD_CLASS extends ABuilder<OwningBuilder, ?>>
+            extends OwnedBuilder<OwningBuilder, ResultRequest, CHILD_CLASS> {
         private String componentId;
 
         private final List<TableSettings> mappings = new ArrayList<>();
@@ -215,7 +215,7 @@ public final class ResultRequest implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<OwningBuilder> componentId(final String value) {
+        public CHILD_CLASS componentId(final String value) {
             this.componentId = value;
             return self();
         }
@@ -225,7 +225,7 @@ public final class ResultRequest implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<OwningBuilder> requestedRange(final OffsetRange value) {
+        public CHILD_CLASS requestedRange(final OffsetRange value) {
             this.requestedRange = value;
             return self();
         }
@@ -234,9 +234,9 @@ public final class ResultRequest implements Serializable {
          * Start construction of the requested range to use for the results.
          * @return The OffsetRange.Builder, configured to pop back to this builder when complete
          */
-        public OffsetRange.Builder<Builder<OwningBuilder>> requestedRange() {
-            return new OffsetRange.Builder<Builder<OwningBuilder>>()
-                    .popToWhenComplete(this, this::requestedRange);
+        public OffsetRange.OBuilder<CHILD_CLASS> requestedRange() {
+            return new OffsetRange.OBuilder<CHILD_CLASS>()
+                    .popToWhenComplete(self(), this::requestedRange);
         }
 
         /**
@@ -244,7 +244,7 @@ public final class ResultRequest implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<OwningBuilder> addMappings(final TableSettings... values) {
+        public CHILD_CLASS addMappings(final TableSettings... values) {
             this.mappings.addAll(Arrays.asList(values));
             return self();
         }
@@ -253,9 +253,9 @@ public final class ResultRequest implements Serializable {
          * Begin construction of a TableSettings, which will be used to map the raw results to the output
          * @return A TableSettings.Builder configured to pop back to this builder when complete
          */
-        public TableSettings.Builder<Builder<OwningBuilder>> addMapping() {
-            return new TableSettings.Builder<Builder<OwningBuilder>>()
-                    .popToWhenComplete(this, this::addMappings);
+        public TableSettings.OBuilder<CHILD_CLASS> addMapping() {
+            return new TableSettings.OBuilder<CHILD_CLASS>()
+                    .popToWhenComplete(self(), this::addMappings);
         }
 
         /**
@@ -263,7 +263,7 @@ public final class ResultRequest implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<OwningBuilder> addOpenGroups(final String...values) {
+        public CHILD_CLASS addOpenGroups(final String...values) {
             this.openGroups.addAll(Arrays.asList(values));
             return self();
         }
@@ -275,7 +275,7 @@ public final class ResultRequest implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<OwningBuilder> resultStyle(final ResultRequest.ResultStyle value) {
+        public CHILD_CLASS resultStyle(final ResultRequest.ResultStyle value) {
             this.resultStyle = value;
             return self();
         }
@@ -288,7 +288,7 @@ public final class ResultRequest implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<OwningBuilder> fetch(final ResultRequest.Fetch value) {
+        public CHILD_CLASS fetch(final ResultRequest.Fetch value) {
             this.fetch = value;
             return self();
         }
@@ -296,11 +296,29 @@ public final class ResultRequest implements Serializable {
         protected ResultRequest pojoBuild() {
             return new ResultRequest(componentId, mappings, requestedRange, openGroups, resultStyle, fetch);
         }
+    }
 
+    /**
+     * A builder that is owned by another builder, used for popping back up a stack
+     *
+     * @param <OwningBuilder> The class of the parent builder
+     */
+    public static final class OBuilder<OwningBuilder extends OwnedBuilder>
+            extends ABuilder<OwningBuilder, OBuilder<OwningBuilder>> {
         @Override
-        public Builder<OwningBuilder> self() {
+        public OBuilder<OwningBuilder> self() {
             return this;
         }
     }
 
+    /**
+     * A builder that is created independently of any parent builder
+     */
+    public static final class Builder extends ABuilder<Builder, Builder> {
+
+        @Override
+        public Builder self() {
+            return this;
+        }
+    }
 }

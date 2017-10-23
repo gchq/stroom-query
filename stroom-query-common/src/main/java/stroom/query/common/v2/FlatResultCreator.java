@@ -175,7 +175,7 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
                             0, maxResults);
                 }
 
-                return new FlatResult.Builder<>()
+                return new FlatResult.Builder()
                         .componentId(resultRequest.getComponentId())
                         .size(totalResults)
                         .error(error)

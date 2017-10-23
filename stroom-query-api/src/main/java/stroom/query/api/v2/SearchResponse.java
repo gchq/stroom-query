@@ -162,11 +162,11 @@ public final class SearchResponse implements Serializable {
                 '}';
     }
 
-    public static class TableResultBuilder extends Builder<TableResult, TableResult.Builder, TableResultBuilder> {
+    public static class TableResultBuilder extends Builder<TableResult, TableResult.OBuilder, TableResultBuilder> {
 
         @Override
-        public TableResult.Builder<TableResultBuilder> addResult() {
-            return new TableResult.Builder<TableResultBuilder>().popToWhenComplete(this, this::addResults);
+        public TableResult.OBuilder<TableResultBuilder> addResult() {
+            return new TableResult.OBuilder<TableResultBuilder>().popToWhenComplete(this, this::addResults);
         }
 
         @Override
@@ -175,11 +175,11 @@ public final class SearchResponse implements Serializable {
         }
     }
 
-    public static class FlatResultBuilder extends Builder<FlatResult, FlatResult.Builder, FlatResultBuilder> {
+    public static class FlatResultBuilder extends Builder<FlatResult, FlatResult.OBuilder, FlatResultBuilder> {
 
         @Override
-        public FlatResult.Builder<FlatResultBuilder> addResult() {
-            return new FlatResult.Builder<FlatResultBuilder>().popToWhenComplete(this, this::addResults);
+        public FlatResult.OBuilder<FlatResultBuilder> addResult() {
+            return new FlatResult.OBuilder<FlatResultBuilder>().popToWhenComplete(this, this::addResults);
         }
 
         @Override

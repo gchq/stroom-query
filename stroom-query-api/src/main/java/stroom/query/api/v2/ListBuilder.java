@@ -12,7 +12,7 @@ import java.util.List;
  * @param <ListedPojo> The classes being put into the list under construction
  */
 public class ListBuilder<OwningBuilder extends OwnedBuilder, ListedPojo>
-        extends OwnedBuilder<FlatResult.Builder<OwningBuilder>, List<ListedPojo>, ListBuilder<OwningBuilder, ListedPojo>> {
+        extends OwnedBuilder<OwningBuilder, List<ListedPojo>, ListBuilder<OwningBuilder, ListedPojo>> {
     private final List<ListedPojo> childValues = new ArrayList<>();
 
     /**

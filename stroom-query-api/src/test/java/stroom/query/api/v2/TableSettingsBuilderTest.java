@@ -42,7 +42,7 @@ public class TableSettingsBuilderTest {
         final Integer field2NumberFormatDecimalPlaces = 6;
         final Boolean field2NumberFormatUseSeperator = false;
         
-        final TableSettings tableSettings = new TableSettings.Builder<>()
+        final TableSettings tableSettings = new TableSettings.Builder()
                 .extractValues(extractValues)
                 .showDetail(showDetail)
                 .queryId(queryId)

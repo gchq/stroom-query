@@ -16,7 +16,7 @@ public class QueryBuilderTest {
         final String dataSourceType = "someDocRefType";
         final String dataSourceUuid = UUID.randomUUID().toString();
 
-        final Query query = new Query.Builder<>()
+        final Query query = new Query.Builder()
                 .dataSource(dataSourceType, dataSourceUuid, dataSourceName)
                 .addParam("someKey0", "someValue0")
                 .addParam("someKey1", "someValue1")

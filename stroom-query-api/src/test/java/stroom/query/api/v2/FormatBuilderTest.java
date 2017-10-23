@@ -12,7 +12,7 @@ public class FormatBuilderTest {
         final Integer decimalPlaces = 5;
         final Boolean useSeperator = true;
 
-        final Format format = new Format.Builder<>()
+        final Format format = new Format.Builder()
                 .number()
                     .decimalPlaces(decimalPlaces)
                     .useSeparator(useSeperator)
@@ -35,7 +35,7 @@ public class FormatBuilderTest {
         final Integer offsetHours = 3;
         final Integer offsetMinutes = 5;
 
-        final Format format = new Format.Builder<>()
+        final Format format = new Format.Builder()
                     .dateTime()
                         .pattern(pattern)
                         .timeZone()

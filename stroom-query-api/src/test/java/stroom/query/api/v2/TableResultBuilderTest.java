@@ -20,7 +20,7 @@ public class TableResultBuilderTest {
         final Integer numberResults = 20;
 
         // When
-        final TableResult.Builder<?> builder = new TableResult.Builder<>()
+        final TableResult.Builder builder = new TableResult.Builder()
                 .componentId(componentId)
                 .error(error)
                 .resultRange()

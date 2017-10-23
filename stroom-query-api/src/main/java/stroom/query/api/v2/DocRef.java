@@ -212,8 +212,8 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
      *
      * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static class Builder<OwningBuilder extends OwnedBuilder>
-            extends OwnedBuilder<OwningBuilder, DocRef, Builder<OwningBuilder>> {
+    public static abstract class ABuilder<OwningBuilder extends OwnedBuilder, CHILD_CLASS extends ABuilder<OwningBuilder, ?>>
+            extends OwnedBuilder<OwningBuilder, DocRef, CHILD_CLASS> {
         private String type;
 
         private String uuid;
@@ -226,7 +226,7 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<OwningBuilder> type(final String value) {
+        public CHILD_CLASS type(final String value) {
             this.type = value;
             return self();
         }
@@ -236,7 +236,7 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<OwningBuilder> uuid(final String value) {
+        public CHILD_CLASS uuid(final String value) {
             this.uuid = value;
             return self();
         }
@@ -246,7 +246,7 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<OwningBuilder> name(final String value) {
+        public CHILD_CLASS name(final String value) {
             this.name = value;
             return self();
         }
@@ -254,11 +254,29 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
         protected DocRef pojoBuild() {
             return new DocRef(type, uuid, name);
         }
+    }
 
+    /**
+     * A builder that is owned by another builder, used for popping back up a stack
+     *
+     * @param <OwningBuilder> The class of the parent builder
+     */
+    public static final class OBuilder<OwningBuilder extends OwnedBuilder>
+            extends ABuilder<OwningBuilder, OBuilder<OwningBuilder>> {
         @Override
-        public Builder<OwningBuilder> self() {
+        public OBuilder<OwningBuilder> self() {
             return this;
         }
     }
 
+    /**
+     * A builder that is created independently of any parent builder
+     */
+    public static final class Builder extends ABuilder<Builder, Builder> {
+
+        @Override
+        public Builder self() {
+            return this;
+        }
+    }
 }

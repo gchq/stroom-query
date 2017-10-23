@@ -118,8 +118,8 @@ public final class FlatResult extends Result {
      *
      * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static class Builder<OwningBuilder extends OwnedBuilder>
-            extends Result.Builder<OwningBuilder, FlatResult, Builder<OwningBuilder>> {
+    public static abstract class ABuilder<OwningBuilder extends OwnedBuilder, CHILD_CLASS extends ABuilder<OwningBuilder, ?>>
+            extends Result.Builder<OwningBuilder, FlatResult, CHILD_CLASS> {
         private final List<Field> structure = new ArrayList<>();
 
         private final List<List<Object>> values = new ArrayList<>();
@@ -133,7 +133,7 @@ public final class FlatResult extends Result {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<OwningBuilder> addFields(final Field...fields) {
+        public CHILD_CLASS addFields(final Field...fields) {
             structure.addAll(Arrays.asList(fields));
             return self();
         }
@@ -142,9 +142,9 @@ public final class FlatResult extends Result {
          * Start building a field within this result
          * @return The field builder, configured to pop back to this when complete
          */
-        public Field.Builder<Builder<OwningBuilder>> addField() {
-            return new Field.Builder<Builder<OwningBuilder>>()
-                    .popToWhenComplete(this, this::addFields);
+        public Field.OBuilder<CHILD_CLASS> addField() {
+            return new Field.OBuilder<CHILD_CLASS>()
+                    .popToWhenComplete(self(), this::addFields);
         }
 
         /**
@@ -154,9 +154,9 @@ public final class FlatResult extends Result {
          * @param expression The expression to use to generate the field value
          * @return The field builder, configured to pop back to this when complete
          */
-        public Field.Builder<Builder<OwningBuilder>> addField(final String name, final String expression) {
-            return new Field.Builder<Builder<OwningBuilder>>(name, expression)
-                    .popToWhenComplete(this, this::addFields);
+        public Field.OBuilder<CHILD_CLASS> addField(final String name, final String expression) {
+            return new Field.OBuilder<CHILD_CLASS>(name, expression)
+                    .popToWhenComplete(self(), this::addFields);
         }
 
         /**
@@ -164,7 +164,7 @@ public final class FlatResult extends Result {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<OwningBuilder> addValues(final List<Object>... values) {
+        public CHILD_CLASS addValues(final List<Object>... values) {
             return addValues(Arrays.asList(values));
         }
 
@@ -173,7 +173,7 @@ public final class FlatResult extends Result {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<OwningBuilder> addValues(final Collection<List<Object>> values) {
+        public CHILD_CLASS addValues(final Collection<List<Object>> values) {
             this.values.addAll(values);
             return self();
         }
@@ -182,8 +182,8 @@ public final class FlatResult extends Result {
          * Start constructing a row of values for our data.
          * @return The value list builder, configured to pop back to the flat result when complete
          */
-        public ListBuilder<OwningBuilder, Object> addValues() {
-            return new ListBuilder<OwningBuilder, Object>().popToWhenComplete(this, this::addValues);
+        public ListBuilder<CHILD_CLASS, Object> addValues() {
+            return new ListBuilder<CHILD_CLASS, Object>().popToWhenComplete(self(), this::addValues);
         }
 
         /**
@@ -191,7 +191,7 @@ public final class FlatResult extends Result {
          * @param value The size to use
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder<OwningBuilder> size(final Long value) {
+        public CHILD_CLASS size(final Long value) {
             this.overriddenSize = value;
             return self();
         }
@@ -203,9 +203,28 @@ public final class FlatResult extends Result {
                 return new FlatResult(getComponentId(), structure, values, getError());
             }
         }
+    }
+
+    /**
+     * A builder that is owned by another builder, used for popping back up a stack
+     *
+     * @param <OwningBuilder> The class of the parent builder
+     */
+    public static final class OBuilder<OwningBuilder extends OwnedBuilder>
+            extends ABuilder<OwningBuilder, OBuilder<OwningBuilder>> {
+        @Override
+        public OBuilder<OwningBuilder> self() {
+            return this;
+        }
+    }
+
+    /**
+     * A builder that is created independently of any parent builder
+     */
+    public static final class Builder extends ABuilder<Builder, Builder> {
 
         @Override
-        public Builder<OwningBuilder> self() {
+        public Builder self() {
             return this;
         }
     }

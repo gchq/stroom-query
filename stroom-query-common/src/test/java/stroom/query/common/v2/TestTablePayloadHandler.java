@@ -52,7 +52,7 @@ public class TestTablePayloadHandler {
 //        final DataSourceField indexField = new DataSourceField(DataSourceFieldType.FIELD, "Text");
 //        dataSourceFieldsMap.put(indexField);
 
-        final TableSettings tableSettings = new TableSettings.Builder<>()
+        final TableSettings tableSettings = new TableSettings.Builder()
                 .addField()
                     .name("Text")
                     .expression(ParamUtil.makeParam("Text"))
@@ -107,7 +107,7 @@ public class TestTablePayloadHandler {
 //        indexField.setFieldType(IndexFieldType.FIELD);
 //        dataSourceFieldsMap.put(indexField);
 
-        final TableSettings tableSettings = new TableSettings.Builder<>()
+        final TableSettings tableSettings = new TableSettings.Builder()
                 .addField()
                     .name("Text")
                     .expression(ParamUtil.makeParam("Text"))
@@ -151,7 +151,7 @@ public class TestTablePayloadHandler {
 //        dataSourceFieldsMap.put(indexField);
 
 
-        final TableSettings tableSettings = new TableSettings.Builder<>()
+        final TableSettings tableSettings = new TableSettings.Builder()
             .addField()
                 .name("Number")
                 .expression(ParamUtil.makeParam("Number"))
@@ -189,7 +189,7 @@ public class TestTablePayloadHandler {
 
 //        final DataSourceFieldsMap dataSourceFieldsMap = new DataSourceFieldsMap();
 
-        final Field count = new Field.Builder<>()
+        final Field count = new Field.Builder()
                 .name("Count")
                 .expression("count()")
                 .sort(sort)
@@ -200,7 +200,7 @@ public class TestTablePayloadHandler {
 //        indexField.setFieldType(IndexFieldType.FIELD);
 //        dataSourceFieldsMap.put(indexField);
 
-        final TableSettings tableSettings = new TableSettings.Builder<>()
+        final TableSettings tableSettings = new TableSettings.Builder()
                 .addField()
                     .name("Text")
                     .expression(ParamUtil.makeParam("Text"))
@@ -244,7 +244,7 @@ public class TestTablePayloadHandler {
 //        indexField.setFieldType(IndexFieldType.FIELD);
 //        dataSourceFieldsMap.put(indexField);
 
-        final TableSettings tableSettings = new TableSettings.Builder<>()
+        final TableSettings tableSettings = new TableSettings.Builder()
                 .addField()
                     .name("Count")
                     .expression("count()")
@@ -292,7 +292,7 @@ public class TestTablePayloadHandler {
 //        indexField.setFieldType(IndexFieldType.FIELD);
 //        dataSourceFieldsMap.put(indexField);
 
-        final TableSettings tableSettings = new TableSettings.Builder<>()
+        final TableSettings tableSettings = new TableSettings.Builder()
                 .addField()
                     .name("Count")
                     .expression("count()")
