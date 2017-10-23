@@ -152,6 +152,17 @@ public final class Query implements Serializable {
         }
 
         /**
+         * Shortcut function for creating the datasource {@link DocRef} in one go
+         * @param type The type of the datasource
+         * @param uuid The UUID of the datasource
+         * @param name The name of the datasource
+         * @return This builder, with the completed datasource added.
+         */
+        public Builder<OwningBuilder> dataSource(final String type, final String uuid, final String name) {
+            return this.dataSource().type(type).uuid(uuid).name(name).end();
+        }
+
+        /**
          * @param value he root logical addOperator in the query expression tree
          *
          * @return The {@link Builder}, enabling method chaining

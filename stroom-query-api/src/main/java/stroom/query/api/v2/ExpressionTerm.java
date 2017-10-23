@@ -253,6 +253,17 @@ public final class ExpressionTerm extends ExpressionItem {
                     .popToWhenComplete(this, this::dictionary);
         }
 
+        /**
+         * A shortcut method for specifying the dictionary DocRef inline
+         * @param type The element type
+         * @param uuid The UUID of the dictionary
+         * @param name The name of the dictionary
+         * @return This builder, with the completed dictionary added,
+         */
+        public Builder<OwningBuilder> dictionary(final String type, final String uuid, final String name) {
+            return this.dictionary().type(type).uuid(uuid).name(name).end();
+        }
+
         @Override
         protected ExpressionTerm pojoBuild() {
             return new ExpressionTerm(getEnabled(), field, condition, value, dictionary);

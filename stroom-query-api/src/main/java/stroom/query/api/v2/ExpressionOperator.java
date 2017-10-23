@@ -211,7 +211,7 @@ public final class ExpressionOperator extends ExpressionItem {
          * @param field The field name
          * @param condition The condition to apply to the valud
          * @param value The value
-         * @return
+         * @return This builder, with the completed term added.
          */
         public Builder<OwningBuilder> addTerm(final String field,
                                               final ExpressionTerm.Condition condition,

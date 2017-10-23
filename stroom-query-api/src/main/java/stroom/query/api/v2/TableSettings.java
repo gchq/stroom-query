@@ -242,7 +242,7 @@ public final class TableSettings implements Serializable {
         }
 
         /**
-         * @param value
+         * @param value TODO - unknown purpose
          *
          * @return The {@link Builder}, enabling method chaining
          */
@@ -268,6 +268,17 @@ public final class TableSettings implements Serializable {
         public DocRef.Builder<Builder<OwningBuilder>> extractionPipeline() {
             return new DocRef.Builder<Builder<OwningBuilder>>()
                     .popToWhenComplete(this, this::extractionPipeline);
+        }
+
+        /**
+         * Shortcut function for creating the extractionPipeline {@link DocRef} in one go
+         * @param type The type of the extractionPipeline
+         * @param uuid The UUID of the extractionPipeline
+         * @param name The name of the extractionPipeline
+         * @return This builder, with the completed extractionPipeline added.
+         */
+        public Builder<OwningBuilder> extractionPipeline(final String type, final String uuid, final String name) {
+            return this.extractionPipeline().type(type).uuid(uuid).name(name).end();
         }
 
         /**

@@ -176,8 +176,6 @@ public final class Field implements Serializable {
         /**
          * @param name The name of the field for display purposes
          * @param expression The expression to use to generate the value for this field
-         *
-         * @return The {@link Builder}, enabling method chaining
          */
         public Builder(final String name,
                        final String expression) {
