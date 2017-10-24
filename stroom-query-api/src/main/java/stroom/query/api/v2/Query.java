@@ -53,7 +53,7 @@ public final class Query implements Serializable {
 
     @XmlElement
     @ApiModelProperty(
-            value = "The root logical addOperator in the query expression tree",
+            value = "The root logical operator in the query expression tree",
             required = true)
     private ExpressionOperator expression;
 

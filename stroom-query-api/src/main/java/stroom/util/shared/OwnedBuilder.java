@@ -27,8 +27,8 @@ public abstract class OwnedBuilder<OwningBuilder extends OwnedBuilder, Pojo, Bui
 
     /**
      * If this builder instance was created as a child of another builder instance then this method returns the
-     * popToWhenComplete builder instance so you can continue to add items to the popToWhenComplete.
-     * @return The popToWhenComplete builder instance if there is one, else returns this builder instance
+     * parent builder instance so you can continue to add items to the popToWhenComplete.
+     * @return The parent builder instance if there is one, else returns this builder instance
      */
     public OwningBuilder end() {
         final Pojo childPojo = this.build();
