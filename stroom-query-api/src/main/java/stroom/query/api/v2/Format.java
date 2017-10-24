@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import stroom.util.shared.HasDisplayValue;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -131,6 +132,75 @@ public final class Format implements Serializable {
         @Override
         public String getDisplayValue() {
             return displayValue;
+        }
+    }
+
+    /**
+     * Builder for constructing a {@link Format}
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
+     */
+    public static abstract class ABuilder<OwningBuilder extends OwnedBuilder, CHILD_CLASS extends ABuilder<OwningBuilder, ?>>
+            extends OwnedBuilder<OwningBuilder, Format, CHILD_CLASS> {
+        private Type type;
+
+        private NumberFormat numberFormat;
+
+        private DateTimeFormat dateTimeFormat;
+
+        /**
+         * @param value XXXXXXXXXXXXXXXX
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public CHILD_CLASS type(final Type value) {
+            this.type = value;
+            return self();
+        }
+
+        public NumberFormat.OBuilder<CHILD_CLASS> number() {
+            return new NumberFormat.OBuilder<CHILD_CLASS>()
+                    .popToWhenComplete(self(), f -> {
+                        this.type = Type.NUMBER;
+                        this.numberFormat = f;
+                    });
+        }
+
+        public DateTimeFormat.OBuilder<CHILD_CLASS> dateTime() {
+            return new DateTimeFormat.OBuilder<CHILD_CLASS>()
+                    .popToWhenComplete(self(), f -> {
+                        this.type = Type.DATE_TIME;
+                        this.dateTimeFormat = f;
+                    });
+        }
+
+        @Override
+        protected Format pojoBuild() {
+            return new Format(type, numberFormat, dateTimeFormat);
+        }
+    }
+
+    /**
+     * A builder that is owned by another builder, used for popping back up a stack
+     *
+     * @param <OwningBuilder> The class of the parent builder
+     */
+    public static final class OBuilder<OwningBuilder extends OwnedBuilder>
+            extends ABuilder<OwningBuilder, OBuilder<OwningBuilder>> {
+        @Override
+        public OBuilder<OwningBuilder> self() {
+            return this;
+        }
+    }
+
+    /**
+     * A builder that is created independently of any parent builder
+     */
+    public static final class Builder extends ABuilder<Builder, Builder> {
+
+        @Override
+        public Builder self() {
+            return this;
         }
     }
 }

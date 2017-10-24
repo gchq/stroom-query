@@ -19,6 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -89,4 +90,66 @@ public final class Filter implements Serializable {
                 ", excludes='" + excludes + '\'' +
                 '}';
     }
+
+    /**
+     * Builder for constructing a {@link Filter}
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
+     */
+    public static abstract class ABuilder<OwningBuilder extends OwnedBuilder, CHILD_CLASS extends ABuilder<OwningBuilder, ?>>
+            extends OwnedBuilder<OwningBuilder, Filter, CHILD_CLASS> {
+        private String includes;
+        private String excludes;
+
+        /**
+         * Set the inclusion regex
+         * @param value Only results matching this filter will be included
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public CHILD_CLASS includes(final String value) {
+            this.includes = value;
+            return self();
+        }
+
+        /**
+         * Set the exclusion regex
+         * @param value Only results NOT matching this filter will be included
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public CHILD_CLASS excludes(final String value) {
+            this.excludes = value;
+            return self();
+        }
+
+        protected Filter pojoBuild() {
+            return new Filter(includes, excludes);
+        }
+    }
+
+    /**
+     * A builder that is owned by another builder, used for popping back up a stack
+     *
+     * @param <OwningBuilder> The class of the parent builder
+     */
+    public static final class OBuilder<OwningBuilder extends OwnedBuilder>
+            extends ABuilder<OwningBuilder, OBuilder<OwningBuilder>> {
+        @Override
+        public OBuilder<OwningBuilder> self() {
+            return this;
+        }
+    }
+
+    /**
+     * A builder that is created independently of any parent builder
+     */
+    public static final class Builder extends ABuilder<Builder, Builder> {
+
+        @Override
+        public Builder self() {
+            return this;
+        }
+    }
+
 }

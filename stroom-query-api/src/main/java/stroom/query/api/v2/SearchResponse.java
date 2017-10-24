@@ -19,6 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -161,12 +162,43 @@ public final class SearchResponse implements Serializable {
                 '}';
     }
 
+    public static class TableResultBuilder extends Builder<TableResult, TableResult.OBuilder, TableResultBuilder> {
+
+        @Override
+        public TableResult.OBuilder<TableResultBuilder> addResult() {
+            return new TableResult.OBuilder<TableResultBuilder>().popToWhenComplete(this, this::addResults);
+        }
+
+        @Override
+        public TableResultBuilder self() {
+            return this;
+        }
+    }
+
+    public static class FlatResultBuilder extends Builder<FlatResult, FlatResult.OBuilder, FlatResultBuilder> {
+
+        @Override
+        public FlatResult.OBuilder<FlatResultBuilder> addResult() {
+            return new FlatResult.OBuilder<FlatResultBuilder>().popToWhenComplete(this, this::addResults);
+        }
+
+        @Override
+        public FlatResultBuilder self() {
+            return this;
+        }
+    }
+
     /**
-     * Builder for constructing a {@link SearchResponse searchResponse}
+     * Builder for constructing a {@link SearchResponse}
+     *
+     * @param <ResultClass> The class of the popToWhenComplete builder, allows nested building
      */
-    public static class Builder {
+    private abstract static class Builder<ResultClass extends Result,
+                                            ResultBuilderClass extends Result.Builder,
+                                            CHILD_CLASS extends Builder<ResultClass, ResultBuilderClass, ?>>
+            extends OwnedBuilder<Builder, SearchResponse, CHILD_CLASS> {
         // Mandatory parameters
-        private final Boolean complete;
+        private Boolean complete;
 
         // Optional parameters
         private final List<String> highlights = new ArrayList<>();
@@ -179,8 +211,25 @@ public final class SearchResponse implements Serializable {
          * @param complete Defines whether the search response being built is from a completed search or
          *                 a search that has not finished
          */
-        public Builder(Boolean complete) {
+        public Builder(final Boolean complete) {
             this.complete = complete;
+        }
+
+        /**
+         * Create a {@link Builder builder} object for building a {@link SearchResponse searchResponse}
+         */
+        public Builder() {
+
+        }
+
+        /**
+         * @param value are the results considered complete
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public CHILD_CLASS complete(final Boolean value) {
+            this.complete = value;
+            return self();
         }
 
         /**
@@ -189,9 +238,9 @@ public final class SearchResponse implements Serializable {
          * @param highlights A set of strings to highlight in the UI that should correlate with the search query.
          * @return this builder instance
          */
-        public Builder addHighlights(String... highlights) {
+        public CHILD_CLASS addHighlights(String... highlights) {
             this.highlights.addAll(Arrays.asList(highlights));
-            return this;
+            return self();
         }
 
         /**
@@ -200,10 +249,12 @@ public final class SearchResponse implements Serializable {
          * @param results The results that where found
          * @return this builder instance
          */
-        public Builder addResults(Result... results) {
+        public CHILD_CLASS addResults(ResultClass... results) {
             this.results.addAll(Arrays.asList(results));
-            return this;
+            return self();
         }
+
+        public abstract ResultBuilderClass addResult();
 
         /**
          * Adds zero-many
@@ -211,9 +262,9 @@ public final class SearchResponse implements Serializable {
          * @param errors The errors that have occurred
          * @return this builder instance
          */
-        public Builder addErrors(String... errors) {
+        public CHILD_CLASS addErrors(String... errors) {
             this.errors.addAll(Arrays.asList(errors));
-            return this;
+            return self();
         }
 
         /**
@@ -221,10 +272,10 @@ public final class SearchResponse implements Serializable {
          *
          * @return A populated {@link SearchResponse searchResponse} object
          */
-        public SearchResponse build() {
+        @Override
+        protected SearchResponse pojoBuild() {
             return new SearchResponse(highlights, results, errors, complete);
         }
-
     }
 
 }

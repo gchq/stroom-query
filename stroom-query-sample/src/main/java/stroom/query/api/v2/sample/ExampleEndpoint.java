@@ -35,7 +35,7 @@ public class ExampleEndpoint {
     public Response getDataSource(@ApiParam("DocRef") final DocRef docRef) {
 
         return Response
-                .accepted(new DataSource(Collections.emptyList()))
+                .ok(new DataSource(Collections.emptyList()))
                 .build();
     }
 
@@ -47,7 +47,7 @@ public class ExampleEndpoint {
     public Response search(@ApiParam("SearchRequest") final SearchRequest request) {
 
         return Response
-                .accepted(new SearchResponse(null, null, null, null))
+                .ok(new SearchResponse(null, null, null, null))
                 .build();
     }
 
@@ -61,7 +61,7 @@ public class ExampleEndpoint {
     public Response destroy(@ApiParam("QueryKey") final QueryKey queryKey) {
 
         return Response
-                .accepted(Boolean.TRUE)
+                .ok(Boolean.TRUE)
                 .build();
     }
 

@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## [v2.0.0-alpha.5] - 2017-24-16
+
+### Changed
+
+* Pojo Builders for all classes in the API project
+
 ## [v2.0.0-alpha.4] - 2017-10-16
 
 ### Changed
@@ -63,7 +69,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.4...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.5...HEAD
+[v2.0.0-alpha.4]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.4...v2.0.0-alpha.5
 [v2.0.0-alpha.4]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.3...v2.0.0-alpha.4
 [v2.0.0-alpha.3]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.2...v2.0.0-alpha.3
 [v2.0.0-alpha.2]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.1...v2.0.0-alpha.2

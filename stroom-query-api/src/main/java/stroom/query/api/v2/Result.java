@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -53,15 +54,25 @@ public abstract class Result implements Serializable {
             required = true)
     private String componentId;
 
+    @XmlElement
+    @ApiModelProperty(value = "If an error has occurred producing this result set then this will have details " +
+            "of the error")
+    private String error;
+
     Result() {
     }
 
-    public Result(final String componentId) {
+    public Result(final String componentId, final String error) {
         this.componentId = componentId;
+        this.error = error;
     }
 
     public String getComponentId() {
         return componentId;
+    }
+
+    public String getError() {
+        return error;
     }
 
     @Override
@@ -71,18 +82,69 @@ public abstract class Result implements Serializable {
 
         final Result that = (Result) o;
 
+        if (error != null ? !error.equals(that.error) : that.error != null) return false;
         return componentId != null ? componentId.equals(that.componentId) : that.componentId == null;
     }
 
     @Override
     public int hashCode() {
-        return componentId != null ? componentId.hashCode() : 0;
+        int result = (error != null ? error.hashCode() : 0);
+        result = 31 * result + (componentId != null ? componentId.hashCode() : 0);
+        return result;
     }
 
     @Override
     public String toString() {
         return "ComponentResult{" +
-                "componentId='" + componentId + '\'' +
+                "componentId='" + componentId + "\', " +
+                "error='" + error + '\'' +
                 '}';
     }
+
+    /**
+     * Builder for constructing a {@link Result}. This class is abstract and must be overridden for
+     * each known Result implementation class.
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
+     * @param <T> The result class type, either Flat or Table
+     * @param <CHILD_CLASS> The subclass, allowing us to template OwnedBuilder correctly
+     */
+    public static abstract class Builder<
+                OwningBuilder extends OwnedBuilder,
+                T extends Result,
+                CHILD_CLASS extends Builder<OwningBuilder, T, ?>>
+            extends OwnedBuilder<OwningBuilder, T, CHILD_CLASS> {
+
+        private String componentId;
+        private String error;
+
+        /**
+         * @param value The ID of the component that this result set was requested for. See ResultRequest in SearchRequest
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public CHILD_CLASS componentId(final String value) {
+            this.componentId = value;
+            return self();
+        }
+
+        /**
+         * @param value If an error has occurred producing this result set then this will have details
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public CHILD_CLASS error(final String value) {
+            this.error = value;
+            return self();
+        }
+
+        protected String getComponentId() {
+            return componentId;
+        }
+
+        protected String getError() {
+            return error;
+        }
+    }
+
 }

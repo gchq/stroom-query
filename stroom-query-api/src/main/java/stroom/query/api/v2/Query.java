@@ -19,6 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -27,6 +28,8 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -113,5 +116,127 @@ public final class Query implements Serializable {
                 ", expression=" + expression +
                 ", params=" + params +
                 '}';
+    }
+
+    /**
+     * Builder for constructing a {@link Query}
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
+     */
+    public static abstract class ABuilder<OwningBuilder extends OwnedBuilder, CHILD_CLASS extends ABuilder<OwningBuilder, ?>>
+            extends OwnedBuilder<OwningBuilder, Query, CHILD_CLASS> {
+
+        private DocRef dataSource;
+
+        private ExpressionOperator expression;
+
+        private final List<Param> params = new ArrayList<>();
+
+        /**
+         * @param value A DocRef that points to the data source of the query
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public CHILD_CLASS dataSource(final DocRef value) {
+            this.dataSource = value;
+            return self();
+        }
+
+        /**
+         * Start construction of the DocRef that points to the data source of the query
+         * @return A DocRef builder, configured to pop back to this builder when complete
+         */
+        public DocRef.OBuilder<CHILD_CLASS> dataSource() {
+            return new DocRef.OBuilder<CHILD_CLASS>()
+                    .popToWhenComplete(self(), this::dataSource);
+        }
+
+        /**
+         * Shortcut function for creating the datasource {@link DocRef} in one go
+         * @param type The type of the datasource
+         * @param uuid The UUID of the datasource
+         * @param name The name of the datasource
+         * @return This builder, with the completed datasource added.
+         */
+        public CHILD_CLASS dataSource(final String type, final String uuid, final String name) {
+            return this.dataSource().type(type).uuid(uuid).name(name).end();
+        }
+
+        /**
+         * @param value he root logical addOperator in the query expression tree
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public CHILD_CLASS expression(final ExpressionOperator value) {
+            this.expression = value;
+            return self();
+        }
+
+        /**
+         * Start construction of the root expression to apply for this query
+         * @param rootOp The logical operator to apply at the root level
+         * @return The expression builder, configured to pop back to this builder when complete
+         */
+        public ExpressionOperator.OBuilder<CHILD_CLASS> expression(final ExpressionOperator.Op rootOp) {
+            return new ExpressionOperator.OBuilder<CHILD_CLASS>(rootOp)
+                    .popToWhenComplete(self(), this::expression);
+        }
+
+        /**
+         * Start construction of a parameter to add to the query
+         * @return The parameter builder, configured to pop back to this builder when complete
+         */
+        public Param.OBuilder<CHILD_CLASS> addParam() {
+            return new Param.OBuilder<CHILD_CLASS>()
+                    .popToWhenComplete(self(), this::addParams);
+        }
+
+        /**
+         * Shortcut function to add a parameter and go straight back to building the query
+         * @param key The parameter key
+         * @param value The parameter value
+         * @return This builder with the completed parameter added.
+         */
+        public CHILD_CLASS addParam(final String key, final String value) {
+            return addParam().key(key).value(value).end();
+        }
+
+        /**
+         * @param values A list of key/value pairs that provide additional information about the query
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public CHILD_CLASS addParams(final Param...values) {
+            this.params.addAll(Arrays.asList(values));
+            return self();
+        }
+
+        protected Query pojoBuild() {
+            return new Query(dataSource, expression, params);
+        }
+    }
+
+    /**
+     * A builder that is owned by another builder, used for popping back up a stack
+     *
+     * @param <OwningBuilder> The class of the parent builder
+     */
+    public static final class OBuilder<OwningBuilder extends OwnedBuilder>
+            extends ABuilder<OwningBuilder, OBuilder<OwningBuilder>> {
+        @Override
+        public OBuilder<OwningBuilder> self() {
+            return this;
+        }
+    }
+
+    /**
+     * A builder that is created independently of any parent builder
+     */
+    public static final class Builder extends ABuilder<Builder, Builder> {
+
+        @Override
+        public Builder self() {
+            return this;
+        }
     }
 }

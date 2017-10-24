@@ -25,8 +25,8 @@ import javax.xml.bind.annotation.XmlType;
 import java.util.Collections;
 import java.util.List;
 
-@JsonPropertyOrder({"parent", "values"})
-@XmlType(name = "Key", propOrder = {"parent", "values"})
+@JsonPropertyOrder({"popToWhenComplete", "values"})
+@XmlType(name = "Key", propOrder = {"popToWhenComplete", "values"})
 public class Key {
     private final int depth;
     private final Key parent;

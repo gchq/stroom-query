@@ -19,6 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -27,7 +28,10 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.time.format.DateTimeFormatter;
 
 /**
  * A class for describing a search request including the query to run and definition(s) of how the results
@@ -181,4 +185,112 @@ public final class SearchRequest implements Serializable {
                 ", incremental=" + incremental +
                 '}';
     }
+
+    /**
+     * Builder for constructing a {@link SearchRequest}
+     *
+     */
+    public static class Builder
+            extends OwnedBuilder<Builder, SearchRequest, Builder> {
+
+        private QueryKey key;
+
+        private Query query;
+
+        private final List<ResultRequest> resultRequests = new ArrayList<>();
+
+        private String dateTimeLocale;
+
+        private Boolean incremental;
+
+        /**
+         * @param value A unique key to identify the instance of the search by. This key is used to identify multiple
+         * requests for the same search when running in incremental mode.
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public Builder key(final QueryKey value) {
+            this.key = value;
+            return self();
+        }
+
+        /**
+         * Shortcut function to add a key value in one go
+         * @param uuid The UUID of the query key
+         * @return This builder
+         */
+        public Builder key(final String uuid) {
+            return key(new QueryKey.OBuilder<Builder>().uuid(uuid).build());
+        }
+
+        /**
+         * @param value The query terms for the search
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public Builder query(final Query value) {
+            this.query = value;
+            return self();
+        }
+
+        /**
+         * Start building the query, which specifies all the terms to apply to our search.
+         * @return The Query.Builder, configured to pop back to this builder when complete
+         */
+        public Query.OBuilder<Builder> query() {
+            return new Query.OBuilder<Builder>().popToWhenComplete(this, this::query);
+        }
+
+        /**
+         * @param values The various forms of results required by the caller.
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public Builder addResultRequests(final ResultRequest...values) {
+            this.resultRequests.addAll(Arrays.asList(values));
+            return self();
+        }
+
+        /**
+         * Begin construction on a resultRequest
+         * @return The ResultRequest.Builder, configured to pop back to this builder when complete
+         */
+        public ResultRequest.OBuilder<Builder> addResultRequest() {
+            return new ResultRequest.OBuilder<Builder>()
+                    .popToWhenComplete(this, this::addResultRequests);
+        }
+
+        /**
+         * @param value The date time locale to apply to any date/time results
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public Builder dateTimeLocale(final String value) {
+            this.dateTimeLocale = value;
+            return self();
+        }
+
+        /**
+         * @param value If true the response will contain all results found so far. Future requests for the same
+         *              query key may return more results. Intended for use on longer running searches to allow
+         *              partial result sets to be returned as soon as they are available rather than waiting for the
+         *              full result set.
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public Builder incremental(final Boolean value) {
+            this.incremental = value;
+            return self();
+        }
+
+        protected SearchRequest pojoBuild() {
+            return new SearchRequest(key, query, resultRequests, dateTimeLocale, incremental);
+        }
+
+        @Override
+        public Builder self() {
+            return this;
+        }
+    }
+
 }

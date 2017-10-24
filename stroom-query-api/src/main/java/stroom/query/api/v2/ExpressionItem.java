@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -34,7 +35,7 @@ import java.io.Serializable;
         property = "type"
 )
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = ExpressionOperator.class, name = "operator"),
+        @JsonSubTypes.Type(value = ExpressionOperator.class, name = "addOperator"),
         @JsonSubTypes.Type(value = ExpressionTerm.class, name = "term")
 })
 @XmlType(name = "ExpressionItem", propOrder = {"enabled"})
@@ -96,5 +97,49 @@ public abstract class ExpressionItem implements Serializable {
         final StringBuilder sb = new StringBuilder();
         append(sb, "", false);
         return sb.toString();
+    }
+
+    /**
+     * Builder for constructing a {@link ExpressionItem}. This is an abstract type, each subclass
+     * of ExpressionItem should provide a builder that extends this one.
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
+     * @param <T> The subclass of {@link ExpressionItem}
+     * @param <CHILD_CLASS> The class of the specific ExpressionItem builder.
+     */
+    public static abstract class Builder<
+                OwningBuilder extends OwnedBuilder,
+                T extends ExpressionItem,
+                CHILD_CLASS extends Builder<OwningBuilder, T, ?>>
+            extends OwnedBuilder<OwningBuilder, T, CHILD_CLASS> {
+
+        private Boolean enabled;
+
+        public Builder() {
+
+        }
+
+        public Builder(final boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        /**
+         * @param value Sets the terms state to enabled if true or null, disabled if false
+         *
+         * @return The CHILD_CLASS Builder, enabling method chaining
+         */
+        public CHILD_CLASS enabled(final Boolean value) {
+            this.enabled = value;
+            return self();
+        }
+
+        /**
+         * Accessible to child classes when buildPojo() is called.
+         *
+         * @return Whether the expression is enabled or not
+         */
+        protected Boolean getEnabled() {
+            return enabled;
+        }
     }
 }

@@ -3,18 +3,16 @@ package stroom.query.api.v2;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestExpressionBuilder {
-
+public class ExpressionBuilderTest {
     @Test
-    public void testEnd() throws Exception {
-        ExpressionOperator root = new ExpressionBuilder(ExpressionOperator.Op.AND)
-                .addTerm("fieldX", ExpressionTerm.Condition.EQUALS, "abc")
-                .addOperator(ExpressionOperator.Op.OR)
-                    .addTerm("fieldA", ExpressionTerm.Condition.EQUALS, "Fred")
-                    .addTerm("fieldA", ExpressionTerm.Condition.EQUALS, "Fred")
-                    .end()
-                .addTerm("fieldY", ExpressionTerm.Condition.BETWEEN, "10,20")
-                .end() //not needed here but testing to make sure it doesn't break it
+    public void doesBuild() throws Exception {
+        ExpressionOperator root = new ExpressionOperator.Builder(ExpressionOperator.Op.AND)
+                    .addTerm("fieldX", ExpressionTerm.Condition.EQUALS, "abc")
+                    .addOperator(ExpressionOperator.Op.OR)
+                        .addTerm("fieldA", ExpressionTerm.Condition.EQUALS, "Fred")
+                        .addTerm("fieldA", ExpressionTerm.Condition.EQUALS, "Fred")
+                        .end()
+                    .addTerm("fieldY", ExpressionTerm.Condition.BETWEEN, "10,20")
                 .build();
 
         Assert.assertEquals(3, root.getChildren().size());

@@ -18,6 +18,7 @@ package stroom.query.api.v2;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -25,6 +26,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -186,5 +189,136 @@ public final class ResultRequest implements Serializable {
         NONE,
         CHANGES,
         ALL
+    }
+
+    /**
+     * Builder for constructing a {@link ResultRequest}
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
+     */
+    public static abstract class ABuilder<OwningBuilder extends OwnedBuilder, CHILD_CLASS extends ABuilder<OwningBuilder, ?>>
+            extends OwnedBuilder<OwningBuilder, ResultRequest, CHILD_CLASS> {
+        private String componentId;
+
+        private final List<TableSettings> mappings = new ArrayList<>();
+
+        private OffsetRange requestedRange;
+
+        private final List<String> openGroups = new ArrayList<>();
+
+        private ResultRequest.ResultStyle resultStyle;
+
+        private ResultRequest.Fetch fetch;
+
+        /**
+         * @param value The ID of the component that will receive the results corresponding to this ResultRequest
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public CHILD_CLASS componentId(final String value) {
+            this.componentId = value;
+            return self();
+        }
+
+        /**
+         * @param value Set the requested range of the results.
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public CHILD_CLASS requestedRange(final OffsetRange value) {
+            this.requestedRange = value;
+            return self();
+        }
+
+        /**
+         * Start construction of the requested range to use for the results.
+         * @return The OffsetRange.Builder, configured to pop back to this builder when complete
+         */
+        public OffsetRange.OBuilder<CHILD_CLASS> requestedRange() {
+            return new OffsetRange.OBuilder<CHILD_CLASS>()
+                    .popToWhenComplete(self(), this::requestedRange);
+        }
+
+        /**
+         * @param values Adding a set of TableSettings which are used to map the raw results to the output
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public CHILD_CLASS addMappings(final TableSettings... values) {
+            this.mappings.addAll(Arrays.asList(values));
+            return self();
+        }
+
+        /**
+         * Begin construction of a TableSettings, which will be used to map the raw results to the output
+         * @return A TableSettings.Builder configured to pop back to this builder when complete
+         */
+        public TableSettings.OBuilder<CHILD_CLASS> addMapping() {
+            return new TableSettings.OBuilder<CHILD_CLASS>()
+                    .popToWhenComplete(self(), this::addMappings);
+        }
+
+        /**
+         * @param values TODO
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public CHILD_CLASS addOpenGroups(final String...values) {
+            this.openGroups.addAll(Arrays.asList(values));
+            return self();
+        }
+
+        /**
+         * @param value The style of results required.
+         *              FLAT will provide a FlatResult object,
+         *              while TABLE will provide a TableResult object
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public CHILD_CLASS resultStyle(final ResultRequest.ResultStyle value) {
+            this.resultStyle = value;
+            return self();
+        }
+
+        /**
+         * @param value The fetch mode for the query.
+         *              NONE means fetch no data,
+         *              ALL means fetch all known results,
+         *              CHANGES means fetch only those records not see in previous requests
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public CHILD_CLASS fetch(final ResultRequest.Fetch value) {
+            this.fetch = value;
+            return self();
+        }
+
+        protected ResultRequest pojoBuild() {
+            return new ResultRequest(componentId, mappings, requestedRange, openGroups, resultStyle, fetch);
+        }
+    }
+
+    /**
+     * A builder that is owned by another builder, used for popping back up a stack
+     *
+     * @param <OwningBuilder> The class of the parent builder
+     */
+    public static final class OBuilder<OwningBuilder extends OwnedBuilder>
+            extends ABuilder<OwningBuilder, OBuilder<OwningBuilder>> {
+        @Override
+        public OBuilder<OwningBuilder> self() {
+            return this;
+        }
+    }
+
+    /**
+     * A builder that is created independently of any parent builder
+     */
+    public static final class Builder extends ABuilder<Builder, Builder> {
+
+        @Override
+        public Builder self() {
+            return this;
+        }
     }
 }

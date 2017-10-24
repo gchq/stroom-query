@@ -19,12 +19,14 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Class for describing the format to use for formatting a date time value
@@ -48,6 +50,9 @@ public final class DateTimeFormat implements Serializable {
             required = true)
     private TimeZone timeZone;
 
+    /**
+     * Default constructor for deserialisation
+     */
     private DateTimeFormat() {
     }
 
@@ -99,5 +104,74 @@ public final class DateTimeFormat implements Serializable {
                 "pattern='" + pattern + '\'' +
                 ", timeZone=" + timeZone +
                 '}';
+    }
+
+    /**
+     * Builder for constructing a {@link DateTimeFormat dateTimeFormat}
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
+     */
+    public static abstract class ABuilder<OwningBuilder extends OwnedBuilder, CHILD_CLASS extends ABuilder<OwningBuilder, ?>>
+            extends OwnedBuilder<OwningBuilder, DateTimeFormat, CHILD_CLASS> {
+        private String pattern;
+
+        private TimeZone timeZone;
+
+        /**
+         * @param value The format pattern string, conforming to {@link java.time.format.DateTimeFormatter}
+         *
+         * @return The {@link CHILD_CLASS}, enabling method chaining
+         */
+        public CHILD_CLASS pattern(final String value) {
+            this.pattern = value;
+            return self();
+        }
+        /**
+         * @param value Set the {@link TimeZone timeZone} to use when formatting the date
+         *
+         * @return The {@link CHILD_CLASS}, enabling method chaining
+         */
+        public CHILD_CLASS timeZone(final TimeZone value) {
+            this.timeZone = value;
+            return self();
+        }
+
+        /**
+         * Construct a new timeZone
+         *
+         * @return The {@link TimeZone.Builder} for method chaining the child construction
+         */
+        public TimeZone.OBuilder<CHILD_CLASS> timeZone() {
+            return new TimeZone.OBuilder<CHILD_CLASS>()
+                    .popToWhenComplete(self(), this::timeZone);
+        }
+
+        protected DateTimeFormat pojoBuild() {
+            return new DateTimeFormat(pattern, timeZone);
+        }
+    }
+
+    /**
+     * A builder that is owned by another builder, used for popping back up a stack
+     *
+     * @param <OwningBuilder> The class of the parent builder
+     */
+    public static final class OBuilder<OwningBuilder extends OwnedBuilder>
+            extends ABuilder<OwningBuilder, OBuilder<OwningBuilder>> {
+        @Override
+        public OBuilder<OwningBuilder> self() {
+            return this;
+        }
+    }
+
+    /**
+     * A builder that is created independently of any parent builder
+     */
+    public static final class Builder extends ABuilder<Builder, Builder> {
+
+        @Override
+        public Builder self() {
+            return this;
+        }
     }
 }

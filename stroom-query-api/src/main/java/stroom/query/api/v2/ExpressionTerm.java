@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import stroom.util.shared.HasDisplayValue;
+import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -181,6 +182,117 @@ public final class ExpressionTerm extends ExpressionItem {
         @Override
         public String getDisplayValue() {
             return displayValue;
+        }
+    }
+
+    /**
+     * Builder for constructing a {@link ExpressionTerm}
+     *
+     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
+     */
+    public static abstract class ABuilder<
+                    OwningBuilder extends OwnedBuilder,
+                    CHILD_CLASS extends ABuilder<OwningBuilder, ?>>
+            extends ExpressionItem.Builder<OwningBuilder, ExpressionTerm, CHILD_CLASS> {
+        private String field;
+
+        private Condition condition;
+
+        private String value;
+
+        private DocRef dictionary;
+
+        /**
+         * @param value The name of the field that is being evaluated in this predicate term"
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public CHILD_CLASS field(final String value) {
+            this.field = value;
+            return self();
+        }
+
+        /**
+         * @param value The condition of the predicate term
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public CHILD_CLASS condition(final Condition value) {
+            this.condition = value;
+            return self();
+        }
+
+        /**
+         * @param value The value that the field value is being evaluated against. Not required if a dictionary is supplied
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public CHILD_CLASS value(final String value) {
+            this.value = value;
+            return self();
+        }
+
+        /**
+         * Add a dictionary term to the builder, e.g fieldX|IN_DICTIONARY|docRefToDictionaryY
+         * Term is enabled by default. Not all data sources support dictionary terms and only certain
+         * conditions are supported for a dictionary term.
+         *
+         * @param value The DocRef for the dictionary that this predicate is using for its evaluation
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public CHILD_CLASS dictionary(final DocRef value) {
+            this.dictionary = value;
+            return self();
+        }
+
+        /**
+         * Begin construction of the {@link DocRef} for the dictionary that this predicate is using for evaluation
+         * @return The DocRef.Builder, configured to pop back to this builder when complete
+         */
+        public DocRef.OBuilder<CHILD_CLASS> dictionary() {
+            return new DocRef.OBuilder<CHILD_CLASS>()
+                    .popToWhenComplete(self(), this::dictionary);
+        }
+
+        /**
+         * A shortcut method for specifying the dictionary DocRef inline
+         * @param type The element type
+         * @param uuid The UUID of the dictionary
+         * @param name The name of the dictionary
+         * @return This builder, with the completed dictionary added,
+         */
+        public CHILD_CLASS dictionary(final String type, final String uuid, final String name) {
+            return this.dictionary().type(type).uuid(uuid).name(name).end();
+        }
+
+        @Override
+        protected ExpressionTerm pojoBuild() {
+            return new ExpressionTerm(getEnabled(), field, condition, value, dictionary);
+        }
+    }
+
+    /**
+     * A builder that is owned by another builder, used for popping back up a stack
+     *
+     * @param <OwningBuilder> The class of the parent builder
+     */
+    public static final class OBuilder<OwningBuilder extends OwnedBuilder>
+            extends ABuilder<OwningBuilder, OBuilder<OwningBuilder>> {
+        @Override
+        public OBuilder<OwningBuilder> self() {
+            return this;
+        }
+    }
+
+    /**
+     * A builder that is created independently of any parent builder
+     */
+    public static final class Builder extends ABuilder<Builder, Builder> {
+
+        @Override
+        public Builder self() {
+            return this;
         }
     }
 }
