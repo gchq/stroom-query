@@ -2,3 +2,6 @@ rootProject.name = 'stroom-query'
 include 'stroom-query-api'
 include 'stroom-query-common'
 include 'stroom-query-sample'
+include 'stroom-query-audit'
+include 'stroom-query-hibernate'
+

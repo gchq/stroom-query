@@ -1,0 +1,2 @@
+stroom.query.audit.KafkaLogbackAppenderFactory
+stroom.query.audit.FifoLogbackAppenderFactory

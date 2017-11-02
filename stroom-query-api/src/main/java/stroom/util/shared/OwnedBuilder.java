@@ -1,5 +1,6 @@
 package stroom.util.shared;
 
+import java.io.Serializable;
 import java.util.function.Consumer;
 
 /**
@@ -10,7 +11,8 @@ import java.util.function.Consumer;
  * @param <Pojo> The class being constructed by this builder
  * @param <BuilderClass> This builder class, allows for type safe method chaining
  */
-public abstract class OwnedBuilder<OwningBuilder extends OwnedBuilder, Pojo, BuilderClass extends OwnedBuilder<?, Pojo, ?>> {
+public abstract class OwnedBuilder<OwningBuilder extends OwnedBuilder, Pojo, BuilderClass extends OwnedBuilder<?, Pojo, ?>>
+        implements Serializable {
     private OwningBuilder owningBuilder;
     private Consumer<Pojo> onCompletion;
     private OwnedBuilder pendingChild;

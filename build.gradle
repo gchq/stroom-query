@@ -14,10 +14,13 @@ ext.versions = [
     stroomQuery: getPropertyOrDefault('version', 'SNAPSHOT'),
 
     //------Stroom-repos---------------
-    stroomExpression: 'v1.0.0', 
+    stroomExpression: 'v1.0.0',
+    eventLogging: 'v3.1.0',
 
     //------------3rd-party------------
+    dropwizard: '1.2.0',
     jackson: '2.8.6',
+    kafka: '0.10.0.1',
     slf4j: '1.7.24', //in line with dropwizard 1.1.0
     swagger: '1.5.16',
     zzDUMMYzz: 'makes sorting this list easier'
@@ -25,15 +28,19 @@ ext.versions = [
 
 //lib names for urlDependenciesPlugin
 ext.urlLibs = [
-    stroomExpression: "stroom-expression-$versions.stroomExpression"
+    stroomExpression: "stroom-expression-$versions.stroomExpression",
+    eventLogging: "event-logging-$versions.eventLogging",
 ]
 
 //dependency strings for use in sub projects
 ext.libs = [
+    dropwizard_core: "io.dropwizard:dropwizard-core:$versions.dropwizard",
+    dropwizard_hibernate: "io.dropwizard:dropwizard-hibernate:$versions.dropwizard",
     jackson_annotations: "com.fasterxml.jackson.core:jackson-annotations:$versions.jackson",
     jackson_core: "com.fasterxml.jackson.core:jackson-core:$versions.jackson",
     jackson_databind: "com.fasterxml.jackson.core:jackson-databind:$versions.jackson", 
     junit: "junit:junit:4.12",
+    kafka: "org.apache.kafka:kafka-clients:$versions.kafka", //CDH5.10 uses kafka 10.0, Kafka <10.2 is picky about client and server versions.
     mockito_core: "org.mockito:mockito-core:2.0.2-beta",
     slf4j_api: "org.slf4j:slf4j-api:$versions.slf4j",
     swagger_annotations: "io.swagger:swagger-annotations:$versions.swagger",
@@ -58,6 +65,7 @@ allprojects {
     apply plugin: 'maven'
     apply plugin: 'maven-publish'
     apply plugin: 'gchq.urldependencies'
+    apply plugin: 'maven-publish'
 
     group = 'stroom'
     version = versions.stroomQuery
@@ -115,11 +123,33 @@ project(':stroom-query-common') {
     }
 }
 
+project(':stroom-query-audit') {
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
+    }
+}
+
+project(':stroom-query-hibernate') {
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
+    }
+}
+
 urlDependencies {
     libs "${libs}"
     compile(
         urlLibs.stroomExpression,
         "https://github.com/gchq/stroom-expression/releases/download/$versions.stroomExpression/${urlLibs.stroomExpression}.jar")
+    compile(urlLibs.eventLogging,
+            "https://github.com/gchq/event-logging/releases/download/$versions.eventLogging/${urlLibs.eventLogging}.jar")
 }
 
 task aggregatedJavadocs(
