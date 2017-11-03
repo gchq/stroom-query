@@ -22,6 +22,13 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+/**
+ * A generic implementation of Query Resource that can be used over any hibernate based datasource that stores
+ * a single Java data type.
+ *
+ * It will use the {@link IsDataSourceField} annotation to find fields to expose as it's data source.
+ * @param <T> The annotated hibernate class.
+ */
 public class QueryResourceCriteriaImpl<T> implements QueryResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(QueryResourceCriteriaImpl.class);
 

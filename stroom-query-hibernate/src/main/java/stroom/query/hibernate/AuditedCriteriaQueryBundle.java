@@ -12,6 +12,13 @@ import stroom.query.audit.AuditedQueryResourceImpl;
 import stroom.query.audit.QueryEventLoggingService;
 import stroom.query.audit.QueryResource;
 
+/**
+ * This Dropwizard bundle can be used to build the entire Query Resource implementation stack when the data source is
+ * an SQL database, storing one annotated data type. The annotated data type will need to also annotate it's fields with
+ * {@link IsDataSourceField}
+ * @param <C> The configuration class
+ * @param <T> The hibernate annotated class.
+ */
 public abstract class AuditedCriteriaQueryBundle<C extends Configuration, T> implements ConfiguredBundle<C> {
 
     protected abstract DataSourceFactory getDataSourceFactory(C configuration);

@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Used to store the results from a query made on a {@link QueryResourceCriteriaImpl}
+ */
 public class CriteriaStore implements Store {
     private CoprocessorSettingsMap coprocessorSettingsMap;
     private Map<CoprocessorSettingsMap.CoprocessorKey, Coprocessor> coprocessorMap;

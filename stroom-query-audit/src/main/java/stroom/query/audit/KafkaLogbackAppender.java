@@ -14,6 +14,11 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ * This is a logback implementation that writes all logs to a kafka queue.
+ * Kafka may prove a nice way to capture logs from disparate boxes and processes onto a single bus.
+ * @param <E> The log object
+ */
 public class KafkaLogbackAppender<E> extends ContextAwareBase implements Appender<E> {
 
     private String name;

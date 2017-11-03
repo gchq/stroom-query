@@ -11,6 +11,10 @@ import stroom.query.api.v2.SearchRequest;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 
+/**
+ * A standard implementation of {@link QueryResource} which logs all activity to the {@link EventLoggingService eventLoggingService}
+ * It passes all calls onto an inner implementation of QueryResource, which will be supplied by the specific application.
+ */
 public class AuditedQueryResourceImpl implements QueryResource {
 
     private final QueryResource queryResource;
