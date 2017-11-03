@@ -10,6 +10,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## [v2.0.0-alpha.6] - 2017-11-03
+
+### Changed
+
+* Added standard implementations of Query Resource, with auditing
+
+* Build a hibernate implementation of Query Resource
+
 ## [v2.0.0-alpha.5] - 2017-24-16
 
 ### Changed
