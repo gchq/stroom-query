@@ -15,7 +15,7 @@ ext.versions = [
 
     //------Stroom-repos---------------
     stroomExpression: 'v1.0.0',
-    eventLogging: 'v3.1.0',
+    eventLogging: 'v3.1.1_schema-v3.1.2',
 
     //------------3rd-party------------
     dropwizard: '1.2.0',
