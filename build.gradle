@@ -101,6 +101,15 @@ subprojects {
         archives sourcesJar
         archives javadocJar
     }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                artifact sourcesJar
+                artifact javadocJar
+            }
+        }
+    }
 }
 
 project(':stroom-query-api') {
