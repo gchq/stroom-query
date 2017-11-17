@@ -120,7 +120,7 @@ public final class DateTimeFormat implements Serializable {
         /**
          * @param value The format pattern string, conforming to {@link java.time.format.DateTimeFormatter}
          *
-         * @return The {@link CHILD_CLASS}, enabling method chaining
+         * @return This builder, enabling method chaining
          */
         public CHILD_CLASS pattern(final String value) {
             this.pattern = value;
@@ -129,7 +129,7 @@ public final class DateTimeFormat implements Serializable {
         /**
          * @param value Set the {@link TimeZone timeZone} to use when formatting the date
          *
-         * @return The {@link CHILD_CLASS}, enabling method chaining
+         * @return This builder, enabling method chaining
          */
         public CHILD_CLASS timeZone(final TimeZone value) {
             this.timeZone = value;

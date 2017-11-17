@@ -10,6 +10,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## [v2.0.0-alpha.7] - 2017-11-03
+
+### Added
+
+* Actually releasing audit and hibernate
+
+## [v2.0.0-alpha.6] - 2017-11-03
+
+### Changed
+
+* Added standard implementations of Query Resource, with auditing
+
+* Build a hibernate implementation of Query Resource
+
 ## [v2.0.0-alpha.5] - 2017-24-16
 
 ### Changed
@@ -70,6 +84,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * Initial release
 
 [Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.5...HEAD
+[v2.0.0-alpha.4]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.6...v2.0.0-alpha.7
+[v2.0.0-alpha.4]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.5...v2.0.0-alpha.6
 [v2.0.0-alpha.4]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.4...v2.0.0-alpha.5
 [v2.0.0-alpha.4]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.3...v2.0.0-alpha.4
 [v2.0.0-alpha.3]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.2...v2.0.0-alpha.3
