@@ -1,0 +1,21 @@
+{
+  "package": {
+    "name": "stroom-query",
+    "repo": "stroom",
+    "subject": "stroom-query"
+  },
+  "version": {
+    "name": "SET_BY_TRAVIS_BUILD",
+    "desc": "SET_BY_TRAVIS_BUILD",
+    "released": "SET_BY_TRAVIS_BUILD",
+    "vcs_tag": "SET_BY_TRAVIS_BUILD",
+    "gpgSign": false
+  },
+  "files": [
+    {
+      "includePattern": "(stroom-(api|audit|common|hibernate))/build/libs/(.*\\.jar)",
+      "uploadPattern": "$1/$3"
+    }
+  ],
+  "publish": true
+}

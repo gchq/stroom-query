@@ -184,3 +184,6 @@ task aggregatedJavadocs(
 		}
 	}
 }
+
+
+tasks.build.dependsOn aggregatedJavadocs
