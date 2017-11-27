@@ -25,12 +25,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemMapper extends MapperBase<Object, String[], Key, Item> {
+    private static final Generator[] PARENT_GENERATORS = new Generator[0];
+
     private final CompiledFields fields;
     private final int maxDepth;
     private final int maxGroupDepth;
 
-    public ItemMapper(final OutputCollector<Key, Item> outputCollector, final CompiledFields fields,
-                      final int maxDepth, final int maxGroupDepth) {
+    public ItemMapper(final OutputCollector<Key, Item> outputCollector,
+                      final CompiledFields fields,
+                      final int maxDepth,
+                      final int maxGroupDepth) {
         super(outputCollector);
         this.fields = fields;
         this.maxDepth = maxDepth;
@@ -40,7 +44,7 @@ public class ItemMapper extends MapperBase<Object, String[], Key, Item> {
     @Override
     public void map(final Object key, final String[] values, final OutputCollector<Key, Item> output) {
         // Add the item to the output recursively up to the max depth.
-        addItem(values, null, null, 0, maxDepth, maxGroupDepth, output);
+        addItem(values, null, PARENT_GENERATORS, 0, maxDepth, maxGroupDepth, output);
     }
 
     private void addItem(final String[] values, final Key parentKey, final Generator[] parentGenerators,
@@ -107,11 +111,9 @@ public class ItemMapper extends MapperBase<Object, String[], Key, Item> {
 
         // If the popToWhenComplete row has child group key sets then add this child group
         // key to them.
-        if (parentGenerators != null) {
-            for (final Generator parent : parentGenerators) {
-                if (parent != null) {
-                    parent.addChildKey(key);
-                }
+        for (final Generator parent : parentGenerators) {
+            if (parent != null) {
+                parent.addChildKey(key);
             }
         }
 

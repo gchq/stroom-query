@@ -110,6 +110,9 @@ subprojects {
             }
         }
     }
+
+    //ensure we download our libs before compiling java
+    tasks.compileJava.dependsOn ':downloadUrlDependencies'
 }
 
 project(':stroom-query-api') {

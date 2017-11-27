@@ -72,36 +72,32 @@ public class CompiledSorter implements Serializable, Comparator<Item> {
     public int compare(final Item o1, final Item o2) {
         for (final CompiledSort compiledSort : compiledSorts) {
             final int fieldPos = compiledSort.getFieldIndex();
+            final Comparable v1 = (Comparable) o1.values[fieldPos];
+            final Comparable v2 = (Comparable) o2.values[fieldPos];
 
-            Comparable v1;
-            Comparable v2;
-
-            if (SortDirection.ASCENDING.equals(compiledSort.getDirection())) {
-                v1 = (Comparable) o1.values[fieldPos];
-                v2 = (Comparable) o2.values[fieldPos];
-            } else {
-                v2 = (Comparable) o1.values[fieldPos];
-                v1 = (Comparable) o2.values[fieldPos];
+            int res = 0;
+            if (v1 != null && v2 != null) {
+                res = v1.compareTo(v2);
+            } else if (v1 != null) {
+                res = 1;
+            } else if (v2 != null) {
+                res = -1;
             }
 
-            if (v1 != null && v2 != null) {
-                final int res = v1.compareTo(v2);
-
-                // If there is a difference then return the
-                // difference straight away.
-                if (res != 0) {
-                    return res;
+            // If we already have a difference then return it rather than comparing all values.
+            if (res != 0) {
+                // Flip the compare direction if necessary.
+                if (SortDirection.DESCENDING.equals(compiledSort.getDirection())) {
+                    res = res * -1;
                 }
-            } else if (v1 != null) {
-                return 1;
-            } else if (v2 != null) {
-                return -1;
+
+                return res;
             }
         }
         return 0;
     }
 
-    public boolean hasSort() {
+    boolean hasSort() {
         return hasSort;
     }
 
