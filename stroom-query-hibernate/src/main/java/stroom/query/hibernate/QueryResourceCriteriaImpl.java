@@ -29,7 +29,8 @@ import java.util.stream.Collectors;
  * It will use the {@link IsDataSourceField} annotation to find fields to expose as it's data source.
  * @param <T> The annotated hibernate class.
  */
-public class QueryResourceCriteriaImpl<T> implements QueryResource {
+public class QueryResourceCriteriaImpl<T extends QueryableEntity> implements QueryResource {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(QueryResourceCriteriaImpl.class);
 
     private final SessionFactory database;
@@ -66,7 +67,7 @@ public class QueryResourceCriteriaImpl<T> implements QueryResource {
     }
 
     @Override
-    public Response search(final SearchRequest request) {
+    public Response search(final String dataSourceUuid, final SearchRequest request) {
         try (final Session session = database.openSession()) {
             final CriteriaBuilder cb = session.getCriteriaBuilder();
 
@@ -77,10 +78,12 @@ public class QueryResourceCriteriaImpl<T> implements QueryResource {
                     .map(f -> root.get(f.getName()))
                     .collect(Collectors.toList()));
 
-            cq.where(getPredicate(cb, root, request.getQuery().getExpression()));
+            final Predicate requestPredicate = getPredicate(cb, root, request.getQuery().getExpression());
+            final Predicate dataSourcePredicate = cb.equal(root.get(QueryableEntity.DATA_SOURCE_UUID), dataSourceUuid);
+
+            cq.where(cb.and(requestPredicate, dataSourcePredicate));
             final List<Tuple> tuples = session.createQuery(cq).getResultList();
             final SearchResponse searchResponse = projectResults(request, tuples);
-
 
             return Response
                     .ok(searchResponse)

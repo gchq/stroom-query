@@ -1,9 +1,10 @@
 package stroom.query.audit;
 
-import event.logging.Event;
-import event.logging.EventLoggingService;
-import event.logging.Outcome;
-import event.logging.Search;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import event.logging.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import stroom.query.api.v2.DocRef;
 import stroom.query.api.v2.QueryKey;
 import stroom.query.api.v2.SearchRequest;
@@ -17,9 +18,13 @@ import javax.ws.rs.core.Response;
  */
 public class AuditedQueryResourceImpl implements QueryResource {
 
+    private final Logger LOGGER = LoggerFactory.getLogger(AuditedQueryResourceImpl.class);
+
     private final QueryResource queryResource;
 
     private final EventLoggingService eventLoggingService;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Inject
     public AuditedQueryResourceImpl(final QueryResource queryResource,
@@ -59,12 +64,12 @@ public class AuditedQueryResourceImpl implements QueryResource {
     }
 
     @Override
-    public Response search(final SearchRequest request) {
+    public Response search(final String dataSourceUuid, final SearchRequest request) {
         Response response;
         Exception exception = null;
 
         try {
-            response = queryResource.search(request);
+            response = queryResource.search(dataSourceUuid, request);
 
             return response;
         } catch (Exception e) {
@@ -79,6 +84,15 @@ public class AuditedQueryResourceImpl implements QueryResource {
 
             final Search search = new Search();
             eventDetail.setSearch(search);
+
+            final Query query = new Query();
+            try {
+                final String requestJson = objectMapper.writeValueAsString(request);
+                query.setRaw(requestJson);
+            } catch (JsonProcessingException e) {
+                LOGGER.warn("Could not serialize request details for audit", e);
+            }
+            search.setQuery(query);
 
             final Outcome outcome = new Outcome();
             outcome.setSuccess(null != exception);

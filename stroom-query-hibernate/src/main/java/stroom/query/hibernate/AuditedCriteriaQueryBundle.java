@@ -8,6 +8,7 @@ import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.hibernate.SessionFactory;
 import stroom.query.audit.AuditedQueryResourceImpl;
 import stroom.query.audit.QueryEventLoggingService;
 import stroom.query.audit.QueryResource;
@@ -17,25 +18,18 @@ import stroom.query.audit.QueryResource;
  * an SQL database, storing one annotated data type. The annotated data type will need to also annotate it's fields with
  * {@link IsDataSourceField}
  * @param <C> The configuration class
- * @param <T> The hibernate annotated class.
+ * @param <Q> The hibernate annotated class.
  */
-public abstract class AuditedCriteriaQueryBundle<C extends Configuration, T> implements ConfiguredBundle<C> {
+public class AuditedCriteriaQueryBundle<C extends Configuration, Q extends QueryableEntity> implements ConfiguredBundle<C> {
 
-    protected abstract DataSourceFactory getDataSourceFactory(C configuration);
-
-    private final Class<T> dtoClass;
+    private final Class<Q> queryableEntityClass;
 
     private final HibernateBundle<C> hibernateBundle;
 
-    protected AuditedCriteriaQueryBundle(final Class<T> dtoClass) {
-        this.dtoClass = dtoClass;
+    public AuditedCriteriaQueryBundle(final Class<Q> queryableEntityClass, final HibernateBundle<C> hibernateBundle) {
+        this.queryableEntityClass = queryableEntityClass;
 
-        hibernateBundle = new HibernateBundle<C>(dtoClass) {
-            @Override
-            public DataSourceFactory getDataSourceFactory(C configuration) {
-                return AuditedCriteriaQueryBundle.this.getDataSourceFactory(configuration);
-            }
-        };
+        this.hibernateBundle = hibernateBundle;
     }
 
     @Override
@@ -48,9 +42,10 @@ public abstract class AuditedCriteriaQueryBundle<C extends Configuration, T> imp
                 bind(QueryEventLoggingService.class).to(EventLoggingService.class);
 
                 final QueryResource queryResource =
-                        new QueryResourceCriteriaImpl<>(AuditedCriteriaQueryBundle.this.dtoClass, hibernateBundle.getSessionFactory());
+                        new QueryResourceCriteriaImpl<>(AuditedCriteriaQueryBundle.this.queryableEntityClass, hibernateBundle.getSessionFactory());
 
                 bind(queryResource).to(QueryResource.class);
+                bind(hibernateBundle.getSessionFactory()).to(SessionFactory.class);
             }
         });
 
