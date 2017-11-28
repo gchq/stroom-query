@@ -2,7 +2,7 @@
   "package": {
     "name": "stroom-query",
     "repo": "stroom",
-    "subject": "stroom-query"
+    "subject": "stroom"
   },
   "version": {
     "name": "SET_BY_TRAVIS_BUILD",
