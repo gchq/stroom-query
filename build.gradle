@@ -66,6 +66,7 @@ buildscript {
         classpath 'gchq:urlDependencyPlugin:v0.2.0'
         classpath 'ca.cutterslade.gradle:gradle-dependency-analyze:1.1.0'
         classpath 'com.benjaminsproule:swagger-gradle-plugin:0.1.2'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
     }
 }
 
@@ -74,10 +75,45 @@ allprojects {
     apply plugin: 'maven'
     apply plugin: 'maven-publish'
     apply plugin: 'gchq.urldependencies'
-    apply plugin: 'maven-publish'
+    apply plugin: 'com.jfrog.bintray'
 
     group = 'stroom'
     version = versions.stroomQuery
+
+    bintray {
+        //Must never write these to log or system out
+        user = System.getenv('BINTRAY_USER') //set in Travis UI
+        key = System.getenv('BINTRAY_KEY') //set in Travis UI
+
+        publications = ['mavenJava']
+
+        pkg {
+            repo = 'stroom'
+            name = 'stroom-query'
+            userOrg = 'stroom'
+            licenses = ['Apache-2.0']
+            vcsUrl = 'https://github.com/gchq/stroom-query.git'
+            version {
+                name = "${versions.stroomQuery}"
+                desc = "stroom-query-${versions.stroomQuery}"
+                released  = new Date()
+                vcsTag = "${versions.stroomQuery}"
+            }
+        }
+    }
+}
+
+def pomConfig = {
+    licenses {
+        license {
+            name "The Apache Software License, Version 2.0"
+            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            distribution "repo"
+        }
+    }
+    scm {
+       url "https://github.com/stroom/stroom-query"
+    }
 }
 
 subprojects {
@@ -116,6 +152,11 @@ subprojects {
             mavenJava(MavenPublication) {
                 artifact sourcesJar
                 artifact javadocJar
+                pom.withXml {
+                    def root = asNode()
+                    root.appendNode('name', project.name)
+                    root.children().last() + pomConfig
+                }
             }
         }
     }
@@ -193,6 +234,7 @@ task aggregatedJavadocs(
 		}
 	}
 }
+
 
 //task createPom {
     //doLast {

@@ -36,14 +36,14 @@ deploy:
     # We want to overwrite the files we produce for the release
     # - this means we can keep pushing the SNAPSHOT tag and re-realising the jars.
     overwrite: true
-  - provider: bintray
-    file: "bintray.json"
-    user: $BINTRAY_USER #set in travis UI
-    key: $BINTRAY_KEY #set in travis UI
-    #passphrase: "Optional. In case a passphrase is configured on Bintray and GPG signing is used"
-    on: 
-      branch: gh-6-setup-bintray
-      tags: true
+  #- provider: bintray
+    #file: "bintray.json"
+    #user: $BINTRAY_USER #set in travis UI
+    #key: $BINTRAY_KEY #set in travis UI
+    ##passphrase: "Optional. In case a passphrase is configured on Bintray and GPG signing is used"
+    #on: 
+      #branch: gh-6-setup-bintray
+      #tags: true
 
 cache:
   directories:
