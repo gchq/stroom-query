@@ -13,19 +13,19 @@
   },
   "files": [
     {
-      "includePattern": "stroom-api/build/libs/(.*\\.jar)",
+      "includePattern": "stroom-query-api/build/libs/(.*\\.jar)",
       "uploadPattern": "$1"
     },
     {
-      "includePattern": "stroom-audit/build/libs/(.*\\.jar)",
+      "includePattern": "stroom-query-audit/build/libs/(.*\\.jar)",
       "uploadPattern": "$1"
     },
     {
-      "includePattern": "stroom-common/build/libs/(.*\\.jar)",
+      "includePattern": "stroom-query-common/build/libs/(.*\\.jar)",
       "uploadPattern": "$1"
     },
     {
-      "includePattern": "stroom-hibernate/build/libs/(.*\\.jar)",
+      "includePattern": "stroom-query-hibernate/build/libs/(.*\\.jar)",
       "uploadPattern": "$1"
     }
   ],
