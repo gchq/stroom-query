@@ -41,7 +41,7 @@ deploy:
     user: $BINTRAY_USER #set in travis UI
     key: $BINTRAY_KEY #set in travis UI
     #passphrase: "Optional. In case a passphrase is configured on Bintray and GPG signing is used"
-    dry-run: "true"
+    dry-run: "false"
     on: 
       branch: gh-6-setup-bintray
 
