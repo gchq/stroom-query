@@ -11,10 +11,7 @@ YELLOW='\033[1;33m'
 BLUE='\033[1;34m'
 NC='\033[0m' # No Colour 
 
-echo "Updating values in bintray.json"
+echo "Updating values in ${GREEN}bintray.json${NC}"
 
 #Use jq to change some of the values in the bintray.json file
-jq ".version.name = \"${STROOM_QUERY_VERSION}\"" \ 
-    "| .version.desc = \"stroom-query-${STROOM_QUERY_VERSION}\"" \
-    "| .version.released = \"$(date +%Y-%m-%d)\"" \
-    "| .version.vcs_tag = \"${STROOM_QUERY_VERSION}\"" bintray.json
+jq ".version.name = \"${STROOM_QUERY_VERSION}\" | .version.desc = \"stroom-query-${STROOM_QUERY_VERSION}\" | .version.released = \"$(date +%Y-%m-%d)\" | .version.vcs_tag = \"${STROOM_QUERY_VERSION}\"" bintray.json
