@@ -6,7 +6,7 @@ task wrapper(type: Wrapper) {
 //use that, else use a default value
 ext.getPropertyOrDefault = { propName, defaultValue -> 
     def val;
-    if (project.hasProperty(propName) && project.getProperty(propName) != "unspecified") {
+    if (project.hasProperty(propName) && project.getProperty(propName) != "unspecified" && project.getProperty(propName) != "") {
         val = project.getProperty(propName)
         println "Using propery $propName with value $val"
     } else {
