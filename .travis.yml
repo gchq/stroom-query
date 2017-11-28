@@ -43,6 +43,7 @@ deploy:
     #passphrase: "Optional. In case a passphrase is configured on Bintray and GPG signing is used"
     on: 
       branch: gh-6-setup-bintray
+      tags: true
 
 cache:
   directories:
