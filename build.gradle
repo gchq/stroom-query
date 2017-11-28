@@ -8,10 +8,10 @@ ext.getPropertyOrDefault = { propName, defaultValue ->
     def val;
     if (project.hasProperty(propName) && project.getProperty(propName) != "unspecified" && project.getProperty(propName) != "") {
         val = project.getProperty(propName)
-        println "Using propery $propName with value $val"
+        println "Using property [$propName] with value [$val]"
     } else {
         val = defaultValue
-        println "Propery $propName has no value, using default value $val"
+        println "Property [$propName] has no value, using default value [$val]"
     }
     return val;
 }
@@ -79,7 +79,6 @@ allprojects {
 
     group = 'stroom'
     version = versions.stroomQuery
-
 }
 
 def pomConfig = {
@@ -140,11 +139,15 @@ subprojects {
         }
     }
 
+    //configuration for the bintray plugin for uploading maven artefacts to bintray
+    //see https://github.com/bintray/gradle-bintray-plugin
+    //run task bintrayUpload to push the files, assuming BINTRAY_USER/KEY are set as env vars
     bintray {
         //Must never write these to log or system out
         user = System.getenv('BINTRAY_USER') //set in Travis UI
         key = System.getenv('BINTRAY_KEY') //set in Travis UI
 
+        //The maven plugin publications to push to bintray
         publications = ['mavenJava']
 
         pkg {
@@ -158,6 +161,10 @@ subprojects {
                 desc = "stroom-query-${versions.stroomQuery}"
                 released  = new Date()
                 vcsTag = "${versions.stroomQuery}"
+            }
+            gpg {
+                //Bintray will self-sign the files
+                sign = true //Determines whether to GPG sign the files. The default is false
             }
         }
     }
@@ -235,28 +242,6 @@ task aggregatedJavadocs(
 		}
 	}
 }
-
-
-//task createPom {
-    //doLast {
-        //pom {
-            //project {
-                ////groupId 'org.example'
-                ////artifactId 'test'
-                ////version '1.0.0'
-
-                //inceptionYear '2008'
-                //licenses {
-                    //license {
-                        //name 'The Apache Software License, Version 2.0'
-                        //url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                        //distribution 'repo'
-                    //}
-                //}
-            //}
-        //}.writeTo("pom.xml")
-    //}
-//}
 
 
 tasks.build.dependsOn aggregatedJavadocs
