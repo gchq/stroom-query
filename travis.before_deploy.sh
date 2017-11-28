@@ -25,6 +25,7 @@ jq ".version.name = \"${STROOM_QUERY_VERSION}\" | .version.desc = \"stroom-query
 
 echo "The following changes have been applied to bintray.json"
 
-diff bintray.json bintray.json.tmp
+#OR with true to prevent exit code stopping script
+diff bintray.json bintray.json.tmp || true
 
 mv bintray.json.tmp bintray.json
