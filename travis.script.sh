@@ -16,9 +16,12 @@ if [ -n "$TRAVIS_TAG" ]; then
     #Tagged commit so use that as our stroom version, e.g. v6.0.0
     STROOM_QUERY_VERSION="${TRAVIS_TAG}"
 else
-    #No tag so use the branch name as the version, e.g. dev
-    STROOM_QUERY_VERSION="${TRAVIS_BRANCH}"
+    #No tag so use the branch name as the version, e.g. dev-SNAPSHOT
+    STROOM_QUERY_VERSION="${TRAVIS_BRANCH}-SNAPSHOT"
 fi
+
+#Export this so other scripts can see it
+export STROOM_QUERY_VERSION
 
 #Dump all the travis env vars to the console for debugging
 echo -e "TRAVIS_BUILD_NUMBER:  [${GREEN}${TRAVIS_BUILD_NUMBER}${NC}]"
@@ -27,7 +30,7 @@ echo -e "TRAVIS_BRANCH:        [${GREEN}${TRAVIS_BRANCH}${NC}]"
 echo -e "TRAVIS_TAG:           [${GREEN}${TRAVIS_TAG}${NC}]"
 echo -e "TRAVIS_PULL_REQUEST:  [${GREEN}${TRAVIS_PULL_REQUEST}${NC}]"
 echo -e "TRAVIS_EVENT_TYPE:    [${GREEN}${TRAVIS_EVENT_TYPE}${NC}]"
-echo -e "STROOM_QUERY_VERSION: [${GREEN}${STROOM_VERSION}${NC}]"
+echo -e "STROOM_QUERY_VERSION: [${GREEN}${STROOM_QUERY_VERSION}${NC}]"
 
 #Run the build
 ./gradlew -Pversion=$TRAVIS_TAG clean build 
