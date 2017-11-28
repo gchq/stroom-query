@@ -15,11 +15,14 @@ NC='\033[0m' # No Colour
 #available to other scripts run by travis
 if [ -n "$TRAVIS_TAG" ]; then
     #Tagged commit so use that as our stroom version, e.g. v6.0.0
-    export STROOM_QUERY_VERSION="${TRAVIS_TAG}"
+    STROOM_QUERY_VERSION="${TRAVIS_TAG}"
 else
     #No tag so use the branch name as the version, e.g. dev-SNAPSHOT
-    export STROOM_QUERY_VERSION="${TRAVIS_BRANCH}-SNAPSHOT"
+    STROOM_QUERY_VERSION="${TRAVIS_BRANCH}-SNAPSHOT"
 fi
+
+#Exporting variables does not seem to work across scripts so do it via a file
+echo "export STROOM_QUERY_VERSION=${STROOM_QUERY_VERSION}" >> env.sh
 
 #Dump all the travis env vars to the console for debugging
 echo -e "TRAVIS_BUILD_NUMBER:  [${GREEN}${TRAVIS_BUILD_NUMBER}${NC}]"

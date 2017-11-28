@@ -11,6 +11,11 @@ YELLOW='\033[1;33m'
 BLUE='\033[1;34m'
 NC='\033[0m' # No Colour 
 
+#Read env vars set by other scripts
+if [ -f env.sh ]; then
+    source ./env.sh
+fi
+
 echo -e "STROOM_QUERY_VERSION: [${GREEN}${STROOM_QUERY_VERSION}${NC}]"
 
 echo -e "Updating values in ${GREEN}bintray.json${NC}"
