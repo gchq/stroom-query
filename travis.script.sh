@@ -31,4 +31,4 @@ echo -e "TRAVIS_EVENT_TYPE:    [${GREEN}${TRAVIS_EVENT_TYPE}${NC}]"
 echo -e "STROOM_QUERY_VERSION: [${GREEN}${STROOM_QUERY_VERSION}${NC}]"
 
 #Run the build
-./gradlew -Pversion=$TRAVIS_TAG clean build 
+./gradlew -Pversion=$STROOM_QUERY_VERSION clean build 
