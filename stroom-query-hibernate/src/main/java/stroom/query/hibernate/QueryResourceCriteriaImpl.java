@@ -67,7 +67,9 @@ public class QueryResourceCriteriaImpl<T extends QueryableEntity> implements Que
     }
 
     @Override
-    public Response search(final String dataSourceUuid, final SearchRequest request) {
+    public Response search(final SearchRequest request) {
+        final String dataSourceUuid = request.getQuery().getDataSource().getUuid();
+
         try (final Session session = database.openSession()) {
             final CriteriaBuilder cb = session.getCriteriaBuilder();
 

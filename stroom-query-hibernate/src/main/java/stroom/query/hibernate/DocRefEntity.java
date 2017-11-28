@@ -56,7 +56,7 @@ public class DocRefEntity {
         return sb.toString();
     }
 
-    public static abstract class ABuilder<T extends DocRefEntity, D extends DocRefEntityDTO, CHILD_CLASS extends ABuilder<T, D, ?>> {
+    public static abstract class ABuilder<T extends DocRefEntity, CHILD_CLASS extends ABuilder<T, ?>> {
 
         protected final T instance;
 
@@ -77,12 +77,6 @@ public class DocRefEntity {
         public CHILD_CLASS original(final T original) {
             this.instance.setUuid(original.getUuid());
             this.instance.setName(original.getName());
-            return self();
-        }
-
-        public CHILD_CLASS dto(final D value) {
-            this.instance.setUuid(value.getUuid());
-            this.instance.setName(value.getName());
             return self();
         }
 

@@ -64,12 +64,12 @@ public class AuditedQueryResourceImpl implements QueryResource {
     }
 
     @Override
-    public Response search(final String dataSourceUuid, final SearchRequest request) {
+    public Response search(final SearchRequest request) {
         Response response;
         Exception exception = null;
 
         try {
-            response = queryResource.search(dataSourceUuid, request);
+            response = queryResource.search(request);
 
             return response;
         } catch (Exception e) {
