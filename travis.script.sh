@@ -33,5 +33,5 @@ echo -e "TRAVIS_PULL_REQUEST:  [${GREEN}${TRAVIS_PULL_REQUEST}${NC}]"
 echo -e "TRAVIS_EVENT_TYPE:    [${GREEN}${TRAVIS_EVENT_TYPE}${NC}]"
 echo -e "STROOM_QUERY_VERSION: [${GREEN}${STROOM_QUERY_VERSION}${NC}]"
 
-#Run the build
-./gradlew -Pversion=$STROOM_QUERY_VERSION clean build 
+#Run the build (including running maven install task to generate poms
+./gradlew -Pversion=$STROOM_QUERY_VERSION clean build install
