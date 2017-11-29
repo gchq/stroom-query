@@ -20,9 +20,9 @@ ext.versions = [
     //----------Stroom-----------------
     stroomQuery: getPropertyOrDefault('version', 'SNAPSHOT'),
 
-    //------Stroom-repos---------------
-    stroomExpression: 'v1.0.0',
-    eventLogging: 'v3.1.1_schema-v3.1.2',
+    //------Stroom-libs---------------
+    stroomExpression: 'v1.0.1',
+    eventLogging: 'v3.1.2_schema-v3.1.2',
 
     //------------3rd-party------------
     dropwizard: '1.2.0',
@@ -33,16 +33,13 @@ ext.versions = [
     zzDUMMYzz: 'makes sorting this list easier'
 ]
 
-//lib names for urlDependenciesPlugin
-ext.urlLibs = [
-    stroomExpression: "stroom-expression-$versions.stroomExpression",
-    eventLogging: "event-logging-$versions.eventLogging",
-]
-
-println "Using project version: [${versions.stroomQuery}]"
-
 //dependency strings for use in sub projects
 ext.libs = [
+    //------Stroom-libs---------------
+    eventLogging: "event-logging:event-logging:$versions.eventLogging",
+    stroomExpression: "stroom:stroom-expression:$versions.stroomExpression",
+
+    //------------3rd-party------------
     dropwizard_core: "io.dropwizard:dropwizard-core:$versions.dropwizard",
     dropwizard_hibernate: "io.dropwizard:dropwizard-hibernate:$versions.dropwizard",
     jackson_annotations: "com.fasterxml.jackson.core:jackson-annotations:$versions.jackson",
@@ -102,7 +99,9 @@ subprojects {
 
     repositories {
         mavenLocal()
-        maven { url "http://repo.maven.apache.org/maven2" }
+        jcenter()
+        maven { url "https://dl.bintray.com/stroom/event-logging" }
+        maven { url "https://dl.bintray.com/stroom/stroom" }
     }
 
     dependencies {
@@ -150,6 +149,9 @@ subprojects {
         //The maven plugin publications to push to bintray
         publications = ['mavenJava']
 
+        //immediately make the artefacts public
+        publish = true
+
         pkg {
             repo = 'stroom'
             name = 'stroom-query'
@@ -161,10 +163,10 @@ subprojects {
                 desc = "stroom-query-${versions.stroomQuery}"
                 released  = new Date()
                 vcsTag = "${versions.stroomQuery}"
-            }
-            gpg {
-                //Bintray will self-sign the files
-                sign = true //Determines whether to GPG sign the files. The default is false
+                gpg {
+                    //Bintray will self-sign the files
+                    sign = true //Determines whether to GPG sign the files. The default is false
+                }
             }
         }
     }
@@ -213,15 +215,6 @@ project(':stroom-query-hibernate') {
     }
 }
 
-urlDependencies {
-    libs "${libs}"
-    compile(
-        urlLibs.stroomExpression,
-        "https://github.com/gchq/stroom-expression/releases/download/$versions.stroomExpression/${urlLibs.stroomExpression}.jar")
-    compile(urlLibs.eventLogging,
-            "https://github.com/gchq/event-logging/releases/download/$versions.eventLogging/${urlLibs.eventLogging}.jar")
-}
-
 task aggregatedJavadocs(
     type: Javadoc, 
     description: 'Generate javadocs from all child projects as if it was a single project', 
@@ -242,6 +235,5 @@ task aggregatedJavadocs(
 		}
 	}
 }
-
 
 tasks.build.dependsOn aggregatedJavadocs

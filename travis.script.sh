@@ -21,7 +21,7 @@ if [ -n "$TRAVIS_TAG" ]; then
 else
     #No tag so use the branch name as the version, e.g. dev-SNAPSHOT
     #None tagged builds are NOT pushed to bintray
-    PRODUCT_VERSION="${TRAVIS_BRANCH}-SNAPSHOT"
+    PRODUCT_VERSION="SNAPSHOT"
     EXTRA_BUILD_ARGS=""
 fi
 
@@ -36,3 +36,5 @@ echo -e "PRODUCT_VERSION:      [${GREEN}${PRODUCT_VERSION}${NC}]"
 
 #Run the build (including running maven install task to generate poms
 ./gradlew -Pversion=$PRODUCT_VERSION clean build ${EXTRA_BUILD_ARGS}
+
+exit 0
