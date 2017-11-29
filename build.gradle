@@ -60,7 +60,6 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'gchq:urlDependencyPlugin:v0.2.0'
         classpath 'ca.cutterslade.gradle:gradle-dependency-analyze:1.1.0'
         classpath 'com.benjaminsproule:swagger-gradle-plugin:0.1.2'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
@@ -71,7 +70,6 @@ buildscript {
 allprojects {
     apply plugin: 'maven'
     apply plugin: 'maven-publish'
-    apply plugin: 'gchq.urldependencies'
     apply plugin: 'com.jfrog.bintray'
 
     group = 'stroom'
@@ -170,9 +168,6 @@ subprojects {
             }
         }
     }
-
-    //ensure we download our libs before compiling java
-    tasks.compileJava.dependsOn ':downloadUrlDependencies'
 }
 
 project(':stroom-query-api') {
