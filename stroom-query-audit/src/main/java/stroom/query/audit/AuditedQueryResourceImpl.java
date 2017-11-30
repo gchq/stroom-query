@@ -2,12 +2,17 @@ package stroom.query.audit;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import event.logging.*;
+import event.logging.Event;
+import event.logging.EventLoggingService;
+import event.logging.Outcome;
+import event.logging.Query;
+import event.logging.Search;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.query.api.v2.DocRef;
 import stroom.query.api.v2.QueryKey;
 import stroom.query.api.v2.SearchRequest;
+import stroom.util.shared.QueryApiException;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
@@ -34,7 +39,7 @@ public class AuditedQueryResourceImpl implements QueryResource {
     }
 
     @Override
-    public Response getDataSource(final DocRef docRef) {
+    public Response getDataSource(final DocRef docRef) throws QueryApiException {
         Response response;
         Exception exception = null;
 
@@ -42,9 +47,6 @@ public class AuditedQueryResourceImpl implements QueryResource {
             response = queryResource.getDataSource(docRef);
 
             return response;
-        } catch (Exception e) {
-            exception = e;
-            throw e;
         } finally {
             final Event event = eventLoggingService.createEvent();
             final Event.EventDetail eventDetail = event.getEventDetail();
@@ -64,7 +66,7 @@ public class AuditedQueryResourceImpl implements QueryResource {
     }
 
     @Override
-    public Response search(final SearchRequest request) {
+    public Response search(final SearchRequest request) throws QueryApiException {
         Response response;
         Exception exception = null;
 
@@ -72,9 +74,6 @@ public class AuditedQueryResourceImpl implements QueryResource {
             response = queryResource.search(request);
 
             return response;
-        } catch (Exception e) {
-            exception = e;
-            throw e;
         } finally {
             final Event event = eventLoggingService.createEvent();
             final Event.EventDetail eventDetail = event.getEventDetail();
@@ -103,7 +102,7 @@ public class AuditedQueryResourceImpl implements QueryResource {
     }
 
     @Override
-    public Response destroy(final QueryKey queryKey) {
+    public Response destroy(final QueryKey queryKey) throws QueryApiException {
         Response response;
         Exception exception = null;
 
@@ -111,9 +110,6 @@ public class AuditedQueryResourceImpl implements QueryResource {
             response = queryResource.destroy(queryKey);
 
             return response;
-        } catch (Exception e) {
-            exception = e;
-            throw e;
         } finally {
             final Event event = eventLoggingService.createEvent();
             final Event.EventDetail eventDetail = event.getEventDetail();

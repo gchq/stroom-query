@@ -3,7 +3,6 @@ package stroom.query.hibernate;
 import event.logging.EventLoggingService;
 import io.dropwizard.Configuration;
 import io.dropwizard.ConfiguredBundle;
-import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -26,14 +25,16 @@ public class AuditedCriteriaQueryBundle<C extends Configuration, Q extends Query
 
     private final HibernateBundle<C> hibernateBundle;
 
-    public AuditedCriteriaQueryBundle(final Class<Q> queryableEntityClass, final HibernateBundle<C> hibernateBundle) {
+    public AuditedCriteriaQueryBundle(final Class<Q> queryableEntityClass,
+                                      final HibernateBundle<C> hibernateBundle) {
         this.queryableEntityClass = queryableEntityClass;
 
         this.hibernateBundle = hibernateBundle;
     }
 
     @Override
-    public void run(C configuration, Environment environment) throws Exception {
+    public void run(final C configuration,
+                    final Environment environment) throws Exception {
 
         environment.jersey().register(AuditedQueryResourceImpl.class);
         environment.jersey().register(new AbstractBinder() {

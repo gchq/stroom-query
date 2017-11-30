@@ -15,6 +15,7 @@ import org.glassfish.hk2.utilities.binding.AbstractBinder;
  * implementations of DocRef resource to allow stroom to manage the documents that live outside of it.
  *
  * @param <Q> Implementation class for the Query Resource
+ * @param <D> Implementation class for the DocRef Resource
  */
 public class AuditedQueryBundle<Q extends QueryResource, D extends DocRefResource> implements Bundle {
 

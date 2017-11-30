@@ -2,6 +2,7 @@ package stroom.query.audit;
 
 import event.logging.Event;
 import event.logging.EventLoggingService;
+import stroom.util.shared.QueryApiException;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
@@ -13,13 +14,13 @@ public class AuditedDocRefResourceImpl implements DocRefResource {
 
     @Inject
     public AuditedDocRefResourceImpl(final DocRefResource docRefResource,
-                                    final EventLoggingService eventLoggingService) {
+                                     final EventLoggingService eventLoggingService) {
         this.docRefResource = docRefResource;
         this.eventLoggingService = eventLoggingService;
     }
 
     @Override
-    public Response getAll() throws DocRefException {
+    public Response getAll() throws QueryApiException {
         Response response;
         Exception exception = null;
 
@@ -39,7 +40,7 @@ public class AuditedDocRefResourceImpl implements DocRefResource {
     }
 
     @Override
-    public Response get(final String uuid) throws DocRefException {
+    public Response get(final String uuid) throws QueryApiException {
         Response response;
         Exception exception = null;
 
@@ -60,7 +61,7 @@ public class AuditedDocRefResourceImpl implements DocRefResource {
 
     @Override
     public Response createDocument(final String uuid,
-                                   final String name) throws DocRefException {
+                                   final String name) throws QueryApiException {
         Response response;
         Exception exception = null;
 
@@ -81,7 +82,7 @@ public class AuditedDocRefResourceImpl implements DocRefResource {
 
     @Override
     public Response copyDocument(final String originalUuid,
-                                 final String copyUuid) throws DocRefException {
+                                 final String copyUuid) throws QueryApiException {
         Response response;
         Exception exception = null;
 
@@ -101,7 +102,7 @@ public class AuditedDocRefResourceImpl implements DocRefResource {
     }
 
     @Override
-    public Response documentMoved(final String uuid) throws DocRefException {
+    public Response documentMoved(final String uuid) throws QueryApiException {
 
         Response response;
         Exception exception = null;
@@ -123,7 +124,7 @@ public class AuditedDocRefResourceImpl implements DocRefResource {
 
     @Override
     public Response documentRenamed(final String uuid,
-                                    final String name) throws DocRefException {
+                                    final String name) throws QueryApiException {
         Response response;
         Exception exception = null;
 
@@ -143,7 +144,7 @@ public class AuditedDocRefResourceImpl implements DocRefResource {
     }
 
     @Override
-    public Response deleteDocument(final String uuid) throws DocRefException {
+    public Response deleteDocument(final String uuid) throws QueryApiException {
         Response response;
         Exception exception = null;
 

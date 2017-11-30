@@ -11,6 +11,7 @@ import stroom.query.api.v2.*;
 import stroom.query.audit.QueryResource;
 import stroom.query.common.v2.*;
 import stroom.util.shared.HasTerminate;
+import stroom.util.shared.QueryApiException;
 
 import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -60,14 +61,14 @@ public class QueryResourceCriteriaImpl<T extends QueryableEntity> implements Que
     }
 
     @Override
-    public Response getDataSource(final DocRef docRef) {
+    public Response getDataSource(final DocRef docRef) throws QueryApiException {
         return Response
                 .ok(new DataSource(this.fields))
                 .build();
     }
 
     @Override
-    public Response search(final SearchRequest request) {
+    public Response search(final SearchRequest request) throws QueryApiException {
         final String dataSourceUuid = request.getQuery().getDataSource().getUuid();
 
         try (final Session session = database.openSession()) {
@@ -94,7 +95,7 @@ public class QueryResourceCriteriaImpl<T extends QueryableEntity> implements Que
     }
 
     @Override
-    public Response destroy(final QueryKey queryKey) {
+    public Response destroy(final QueryKey queryKey) throws QueryApiException {
         return Response
                 .ok(Boolean.TRUE)
                 .build();
