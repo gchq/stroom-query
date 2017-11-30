@@ -15,12 +15,15 @@
  */
 
 dependencies {
-    compile urlDependencies.get(urlLibs.eventLogging)
-    compile urlDependencies.get(urlLibs.stroomExpression)
-
+    //--------Project----------
     compile project(':stroom-query-api')
     compile project(':stroom-query-common')
 
+    //--------Stroom libs------
+    compile libs.eventLogging
+    compile libs.stroomExpression
+
+    //--------3rd party--------
     compile libs.kafka
     compile libs.dropwizard_core
     compile libs.slf4j_api

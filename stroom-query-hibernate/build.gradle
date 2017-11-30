@@ -15,10 +15,12 @@
  */
 
 dependencies {
+    //--------Project----------
     compile project(':stroom-query-api')
     compile project(':stroom-query-common')
     compile project(':stroom-query-audit')
 
+    //--------3rd party--------
     compile libs.dropwizard_core
     compile libs.dropwizard_hibernate
     compile libs.slf4j_api

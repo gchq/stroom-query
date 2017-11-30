@@ -2,20 +2,27 @@ task wrapper(type: Wrapper) {
     gradleVersion = '4.1'
 }
 
-// If the project has a value for the passed property (i.e from the cmd line via -PpropName=xxx) use that, else use a default value.
-ext.getPropertyOrDefault = { propName, defaultValue ->
-    return project.hasProperty(propName) ?
-            project.getProperty(propName) :
-            defaultValue
+//if the project has a value for the passed property (i.e from the cmd line via -PpropName=xxx)
+//use that, else use a default value
+ext.getPropertyOrDefault = { propName, defaultValue -> 
+    def val;
+    if (project.hasProperty(propName) && project.getProperty(propName) != "unspecified" && project.getProperty(propName) != "") {
+        val = project.getProperty(propName)
+        println "Using property [$propName] with value [$val]"
+    } else {
+        val = defaultValue
+        println "Property [$propName] has no value, using default value [$val]"
+    }
+    return val;
 }
 
 ext.versions = [
     //----------Stroom-----------------
     stroomQuery: getPropertyOrDefault('version', 'SNAPSHOT'),
 
-    //------Stroom-repos---------------
-    stroomExpression: 'v1.0.0',
-    eventLogging: 'v3.1.1_schema-v3.1.2',
+    //------Stroom-libs---------------
+    stroomExpression: 'v1.0.1',
+    eventLogging: 'v3.1.2_schema-v3.1.2',
 
     //------------3rd-party------------
     dropwizard: '1.2.0',
@@ -26,14 +33,13 @@ ext.versions = [
     zzDUMMYzz: 'makes sorting this list easier'
 ]
 
-//lib names for urlDependenciesPlugin
-ext.urlLibs = [
-    stroomExpression: "stroom-expression-$versions.stroomExpression",
-    eventLogging: "event-logging-$versions.eventLogging",
-]
-
 //dependency strings for use in sub projects
 ext.libs = [
+    //------Stroom-libs---------------
+    eventLogging: "event-logging:event-logging:$versions.eventLogging",
+    stroomExpression: "stroom:stroom-expression:$versions.stroomExpression",
+
+    //------------3rd-party------------
     dropwizard_core: "io.dropwizard:dropwizard-core:$versions.dropwizard",
     dropwizard_hibernate: "io.dropwizard:dropwizard-hibernate:$versions.dropwizard",
     jackson_annotations: "com.fasterxml.jackson.core:jackson-annotations:$versions.jackson",
@@ -54,9 +60,9 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'gchq:urlDependencyPlugin:v0.2.0'
         classpath 'ca.cutterslade.gradle:gradle-dependency-analyze:1.1.0'
         classpath 'com.benjaminsproule:swagger-gradle-plugin:0.1.2'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
     }
 }
 
@@ -64,11 +70,23 @@ buildscript {
 allprojects {
     apply plugin: 'maven'
     apply plugin: 'maven-publish'
-    apply plugin: 'gchq.urldependencies'
-    apply plugin: 'maven-publish'
+    apply plugin: 'com.jfrog.bintray'
 
     group = 'stroom'
     version = versions.stroomQuery
+}
+
+def pomConfig = {
+    licenses {
+        license {
+            name "The Apache Software License, Version 2.0"
+            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            distribution "repo"
+        }
+    }
+    scm {
+       url "https://github.com/stroom/stroom-query"
+    }
 }
 
 subprojects {
@@ -79,7 +97,9 @@ subprojects {
 
     repositories {
         mavenLocal()
-        maven { url "http://repo.maven.apache.org/maven2" }
+        jcenter()
+        maven { url "https://dl.bintray.com/stroom/event-logging" }
+        maven { url "https://dl.bintray.com/stroom/stroom" }
     }
 
     dependencies {
@@ -107,12 +127,47 @@ subprojects {
             mavenJava(MavenPublication) {
                 artifact sourcesJar
                 artifact javadocJar
+                pom.withXml {
+                    def root = asNode()
+                    root.appendNode('name', project.name)
+                    root.children().last() + pomConfig
+                }
             }
         }
     }
 
-    //ensure we download our libs before compiling java
-    tasks.compileJava.dependsOn ':downloadUrlDependencies'
+    //configuration for the bintray plugin for uploading maven artefacts to bintray
+    //see https://github.com/bintray/gradle-bintray-plugin
+    //run task bintrayUpload to push the files, assuming BINTRAY_USER/KEY are set as env vars
+    bintray {
+        //Must never write these to log or system out
+        user = System.getenv('BINTRAY_USER') //set in Travis UI
+        key = System.getenv('BINTRAY_KEY') //set in Travis UI
+
+        //The maven plugin publications to push to bintray
+        publications = ['mavenJava']
+
+        //immediately make the artefacts public
+        publish = true
+
+        pkg {
+            repo = 'stroom'
+            name = 'stroom-query'
+            userOrg = 'stroom'
+            licenses = ['Apache-2.0']
+            vcsUrl = 'https://github.com/gchq/stroom-query.git'
+            version {
+                name = "${versions.stroomQuery}"
+                desc = "stroom-query-${versions.stroomQuery}"
+                released  = new Date()
+                vcsTag = "${versions.stroomQuery}"
+                gpg {
+                    //Bintray will self-sign the files
+                    sign = true //Determines whether to GPG sign the files. The default is false
+                }
+            }
+        }
+    }
 }
 
 project(':stroom-query-api') {
@@ -155,15 +210,6 @@ project(':stroom-query-hibernate') {
     }
 }
 
-urlDependencies {
-    libs "${libs}"
-    compile(
-        urlLibs.stroomExpression,
-        "https://github.com/gchq/stroom-expression/releases/download/$versions.stroomExpression/${urlLibs.stroomExpression}.jar")
-    compile(urlLibs.eventLogging,
-            "https://github.com/gchq/event-logging/releases/download/$versions.eventLogging/${urlLibs.eventLogging}.jar")
-}
-
 task aggregatedJavadocs(
     type: Javadoc, 
     description: 'Generate javadocs from all child projects as if it was a single project', 
@@ -184,3 +230,5 @@ task aggregatedJavadocs(
 		}
 	}
 }
+
+tasks.build.dependsOn aggregatedJavadocs

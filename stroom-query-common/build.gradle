@@ -15,9 +15,13 @@
  */
 
 dependencies {
+    //--------Project----------
     compile project(':stroom-query-api')
-    compile urlDependencies.get(urlLibs.stroomExpression)
 
+    //--------Stroom libs------
+    compile libs.stroomExpression
+
+    //--------3rd party--------
     compile libs.slf4j_api
 
     // Jackson

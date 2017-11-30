@@ -2,8 +2,7 @@
 language: java
 jdk: oraclejdk8
 
-script: 
-  - ./gradlew -Pversion=$TRAVIS_TAG downloadUrlDependencies clean build aggregatedJavaDocs
+script: ./travis.script.sh
 
 install:
   - git clone https://github.com/gchq/urlDependencies-plugin.git
@@ -32,9 +31,6 @@ deploy:
     skip_cleanup: true
     on:
       tags: true
-    # We want to overwrite the files we produce for the release
-    # - this means we can keep pushing the SNAPSHOT tag and re-realising the jars.
-    overwrite: true
 
 cache:
   directories:
