@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## [v2.0.0-alpha.11] - 2017-12-01
+
+### Changed
+
+* Added DocRef Resource, added client implementations for DocRef and Query Resource
+
 ## [v2.0.0-alpha.10] - 2017-11-29
 
 ### Changed
@@ -103,7 +109,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.10...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.11...HEAD
+[v2.0.0-alpha.10]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.10...v2.0.0-alpha.11
 [v2.0.0-alpha.10]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.9...v2.0.0-alpha.10
 [v2.0.0-alpha.9]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.8...v2.0.0-alpha.9
 [v2.0.0-alpha.8]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.7...v2.0.0-alpha.8
