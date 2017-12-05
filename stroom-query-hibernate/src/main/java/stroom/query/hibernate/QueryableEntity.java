@@ -51,7 +51,7 @@ public class QueryableEntity implements Serializable {
             this.instance = instance;
         }
 
-        public Builder dataSourceUuid(final String value) {
+        public CHILD_CLASS dataSourceUuid(final String value) {
             this.instance.setDataSourceUuid(value);
             return self();
         }
