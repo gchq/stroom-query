@@ -20,14 +20,14 @@ public class QueryBuilderTest {
                 .dataSource(dataSourceType, dataSourceUuid, dataSourceName)
                 .addParam("someKey0", "someValue0")
                 .addParam("someKey1", "someValue1")
-                .expression(ExpressionOperator.Op.AND)
-                    .addTerm("fieldX", ExpressionTerm.Condition.EQUALS, "abc")
-                    .addOperator(ExpressionOperator.Op.OR)
-                        .addTerm("fieldA", ExpressionTerm.Condition.EQUALS, "Fred")
-                        .addTerm("fieldA", ExpressionTerm.Condition.EQUALS, "Fred")
-                        .end()
-                    .addTerm("fieldY", ExpressionTerm.Condition.BETWEEN, "10,20")
-                    .end()
+                .expression(new ExpressionOperator.Builder(ExpressionOperator.Op.AND)
+                        .addTerm("fieldX", ExpressionTerm.Condition.EQUALS, "abc")
+                        .addOperator(new ExpressionOperator.Builder(ExpressionOperator.Op.OR)
+                                .addTerm("fieldA", ExpressionTerm.Condition.EQUALS, "Fred")
+                                .addTerm("fieldA", ExpressionTerm.Condition.EQUALS, "Fred")
+                                .build())
+                        .addTerm("fieldY", ExpressionTerm.Condition.BETWEEN, "10,20")
+                        .build())
                 .build();
 
         // Examine the params

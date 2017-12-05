@@ -186,18 +186,18 @@ public class TestVisComponentResultCreator {
 
     private TableSettings getParentTableSettings() {
         return new TableSettings.Builder()
-                .addField()
-                    .name("x")
-                    .expression("${x}")
-                    .end()
-                .addField()
-                    .name("y")
-                    .expression("${y}")
-                    .end()
-                .addField()
-                    .name("series")
-                    .expression("${series}")
-                    .end()
+                .addFields(new Field.Builder()
+                        .name("x")
+                        .expression("${x}")
+                        .build())
+                .addFields(new Field.Builder()
+                        .name("y")
+                        .expression("${y}")
+                        .build())
+                .addFields(new Field.Builder()
+                        .name("series")
+                        .expression("${series}")
+                        .build())
                 .build();
     }
 

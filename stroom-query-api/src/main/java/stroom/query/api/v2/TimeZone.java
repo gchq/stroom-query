@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import stroom.util.shared.HasDisplayValue;
-import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -175,11 +174,8 @@ public final class TimeZone implements Serializable {
 
     /**
      * Builder for constructing a {@link TimeZone timeZone}
-     *
-     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static abstract class ABuilder<OwningBuilder extends OwnedBuilder, CHILD_CLASS extends ABuilder<OwningBuilder, ?>>
-            extends OwnedBuilder<OwningBuilder, TimeZone, CHILD_CLASS> {
+    public static class Builder {
         private Use use;
 
         private String id;
@@ -193,9 +189,9 @@ public final class TimeZone implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS use(final Use value) {
+        public Builder use(final Use value) {
             this.use = value;
-            return self();
+            return this;
         }
 
         /**
@@ -203,9 +199,9 @@ public final class TimeZone implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS id(final String value) {
+        public Builder id(final String value) {
             this.id = value;
-            return self();
+            return this;
         }
 
         /**
@@ -213,9 +209,9 @@ public final class TimeZone implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS offsetHours(final Integer value) {
+        public Builder offsetHours(final Integer value) {
             this.offsetHours = value;
-            return self();
+            return this;
         }
 
         /**
@@ -223,38 +219,13 @@ public final class TimeZone implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS offsetMinutes(final Integer value) {
+        public Builder offsetMinutes(final Integer value) {
             this.offsetMinutes = value;
-            return self();
+            return this;
         }
 
-        protected TimeZone pojoBuild() {
+        public TimeZone build() {
             return new TimeZone(use, id, offsetHours, offsetMinutes);
-        }
-    }
-
-    /**
-     * A builder that is owned by another builder, used for popping back up a stack
-     *
-     * @param <OwningBuilder> The class of the parent builder
-     */
-    public static final class OBuilder<OwningBuilder extends OwnedBuilder>
-            extends ABuilder<OwningBuilder, OBuilder<OwningBuilder>> {
-
-        @Override
-        public OBuilder<OwningBuilder> self() {
-            return this;
-        }
-    }
-
-    /**
-     * A builder that is created independently of any parent builder
-     */
-    public static final class Builder extends ABuilder<Builder, Builder> {
-
-        @Override
-        public Builder self() {
-            return this;
         }
     }
 }

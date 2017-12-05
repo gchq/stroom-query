@@ -1,6 +1,7 @@
 package stroom.datasource.api.v2;
 
 import org.junit.Test;
+import stroom.query.api.v2.Field;
 
 import static org.junit.Assert.assertEquals;
 
@@ -13,16 +14,16 @@ public class DataSourceBuilderTest {
         final String field2 = "field2";
 
         // When
-        final DataSource dataSource = new DataSource.Builder<>()
-                .addField()
-                    .name(field0)
-                    .end()
-                .addField()
-                    .name(field1)
-                    .end()
-                .addField()
-                    .name(field2)
-                    .end()
+        final DataSource dataSource = new DataSource.Builder()
+                .addFields(new DataSourceField.Builder()
+                        .name(field0)
+                        .build())
+                .addFields(new DataSourceField.Builder()
+                        .name(field1)
+                        .build())
+                .addFields(new DataSourceField.Builder()
+                        .name(field2)
+                        .build())
                 .build();
 
         // Then

@@ -19,7 +19,6 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -160,11 +159,8 @@ public final class Field implements Serializable {
 
     /**
      * Builder for constructing a {@link Field}
-     *
-     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static abstract class ABuilder<OwningBuilder extends OwnedBuilder, CHILD_CLASS extends ABuilder<OwningBuilder, ?>>
-            extends OwnedBuilder<OwningBuilder, Field, CHILD_CLASS> {
+    public static class Builder {
 
         private String name;
         private String expression;
@@ -177,7 +173,7 @@ public final class Field implements Serializable {
          * @param name The name of the field for display purposes
          * @param expression The expression to use to generate the value for this field
          */
-        public ABuilder(final String name,
+        public Builder(final String name,
                        final String expression) {
             this.name = name;
             this.expression = expression;
@@ -186,7 +182,7 @@ public final class Field implements Serializable {
         /**
          * No args constructor, allow all building using chained methods
          */
-        public ABuilder() {
+        public Builder() {
 
         }
 
@@ -195,9 +191,9 @@ public final class Field implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS name(final String value) {
+        public Builder name(final String value) {
             this.name = value;
-            return self();
+            return this;
         }
 
         /**
@@ -205,9 +201,9 @@ public final class Field implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS expression(final String value) {
+        public Builder expression(final String value) {
             this.expression = value;
-            return self();
+            return this;
         }
 
         /**
@@ -215,14 +211,9 @@ public final class Field implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS sort(final Sort value) {
+        public Builder sort(final Sort value) {
             this.sort = value;
-            return self();
-        }
-
-        public Sort.OBuilder<CHILD_CLASS> sort() {
-            return new Sort.OBuilder<CHILD_CLASS>()
-                    .popToWhenComplete(self(), this::sort);
+            return this;
         }
 
         /**
@@ -230,14 +221,9 @@ public final class Field implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS filter(final Filter value) {
+        public Builder filter(final Filter value) {
             this.filter = value;
-            return self();
-        }
-
-        public Filter.OBuilder<CHILD_CLASS> filter() {
-            return new Filter.OBuilder<CHILD_CLASS>()
-                    .popToWhenComplete(self(), this::filter);
+            return this;
         }
 
         /**
@@ -245,9 +231,9 @@ public final class Field implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS format(final Format value) {
+        public Builder format(final Format value) {
             this.format = value;
-            return self();
+            return this;
         }
 
         /**
@@ -255,18 +241,9 @@ public final class Field implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS format(final Format.Type value) {
+        public Builder format(final Format.Type value) {
             this.format = new Format(value);
-            return self();
-        }
-
-        /**
-         * Start building a format to apply to the value
-         * @return The format builder, configured to popback to this builder when complete
-         */
-        public Format.OBuilder<CHILD_CLASS> format() {
-            return new Format.OBuilder<CHILD_CLASS>()
-                    .popToWhenComplete(self(), this::format);
+            return this;
         }
 
         /**
@@ -274,56 +251,13 @@ public final class Field implements Serializable {
          * @param group The group level to apply to this field
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS group(final Integer group) {
+        public Builder group(final Integer group) {
             this.group = group;
-            return self();
+            return this;
         }
 
-        @Override
-        protected Field pojoBuild() {
+        public Field build() {
             return new Field(name, expression, sort, filter, format, group);
         }
     }
-
-    /**
-     * A builder that is owned by another builder, used for popping back up a stack
-     *
-     * @param <OwningBuilder> The class of the parent builder
-     */
-    public static final class OBuilder<OwningBuilder extends OwnedBuilder>
-            extends ABuilder<OwningBuilder, OBuilder<OwningBuilder>> {
-        public OBuilder(final String name,
-                        final String expression) {
-            super(name, expression);
-        }
-
-        public OBuilder() {
-            super();
-        }
-
-        @Override
-        public OBuilder<OwningBuilder> self() {
-            return this;
-        }
-    }
-
-    /**
-     * A builder that is created independently of any parent builder
-     */
-    public static final class Builder extends ABuilder<Builder, Builder> {
-        public Builder(final String name,
-                        final String expression) {
-            super(name, expression);
-        }
-
-        public Builder() {
-            super();
-        }
-
-        @Override
-        public Builder self() {
-            return this;
-        }
-    }
-
 }

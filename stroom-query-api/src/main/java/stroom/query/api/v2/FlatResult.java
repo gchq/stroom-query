@@ -19,7 +19,6 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -115,11 +114,9 @@ public final class FlatResult extends Result {
 
     /**
      * Builder for constructing a {@link FlatResult}
-     *
-     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static abstract class ABuilder<OwningBuilder extends OwnedBuilder, CHILD_CLASS extends ABuilder<OwningBuilder, ?>>
-            extends Result.Builder<OwningBuilder, FlatResult, CHILD_CLASS> {
+    public static class Builder
+            extends Result.Builder<FlatResult, Builder> {
         private final List<Field> structure = new ArrayList<>();
 
         private final List<List<Object>> values = new ArrayList<>();
@@ -133,39 +130,32 @@ public final class FlatResult extends Result {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS addFields(final Field...fields) {
+        public Builder addFields(final Field...fields) {
             structure.addAll(Arrays.asList(fields));
-            return self();
+            return this;
         }
 
         /**
-         * Start building a field within this result
-         * @return The field builder, configured to pop back to this when complete
-         */
-        public Field.OBuilder<CHILD_CLASS> addField() {
-            return new Field.OBuilder<CHILD_CLASS>()
-                    .popToWhenComplete(self(), this::addFields);
-        }
-
-        /**
-         * Start building a field within this result, allow specification of name and expression in line
-         * as they are essential parts of the field
-         * @param name  The field name
-         * @param expression The expression to use to generate the field value
-         * @return The field builder, configured to pop back to this when complete
-         */
-        public Field.OBuilder<CHILD_CLASS> addField(final String name, final String expression) {
-            return new Field.OBuilder<CHILD_CLASS>(name, expression)
-                    .popToWhenComplete(self(), this::addFields);
-        }
-
-        /**
-         * @param values 'rows' to add to our values
+         * Singular Add headings to our data
+         *
+         * @param field the field which act as headings for our data
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS addValues(final List<Object>... values) {
-            return addValues(Arrays.asList(values));
+        public Builder addField(final Field field) {
+            return addFields(field);
+        }
+
+        /**
+         * Singular Add headings to our data
+         *
+         * @param name Name of the field
+         * @param expression Expression to use for the field
+         *
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public Builder addField(final String name, final String expression) {
+            return addFields(new Field.Builder().name(name).expression(expression).build());
         }
 
         /**
@@ -173,17 +163,9 @@ public final class FlatResult extends Result {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS addValues(final Collection<List<Object>> values) {
-            this.values.addAll(values);
-            return self();
-        }
-
-        /**
-         * Start constructing a row of values for our data.
-         * @return The value list builder, configured to pop back to the flat result when complete
-         */
-        public ListBuilder<CHILD_CLASS, Object> addValues() {
-            return new ListBuilder<CHILD_CLASS, Object>().popToWhenComplete(self(), this::addValues);
+        public Builder addValues(final List<Object> values) {
+            this.values.add(values);
+            return this;
         }
 
         /**
@@ -191,41 +173,22 @@ public final class FlatResult extends Result {
          * @param value The size to use
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS size(final Long value) {
+        public Builder size(final Long value) {
             this.overriddenSize = value;
-            return self();
+            return this;
         }
 
-        protected FlatResult pojoBuild() {
+        @Override
+        protected Builder self() {
+            return this;
+        }
+
+        public FlatResult build() {
             if (null != overriddenSize) {
                 return new FlatResult(getComponentId(), structure, values, overriddenSize, getError());
             } else {
                 return new FlatResult(getComponentId(), structure, values, getError());
             }
-        }
-    }
-
-    /**
-     * A builder that is owned by another builder, used for popping back up a stack
-     *
-     * @param <OwningBuilder> The class of the parent builder
-     */
-    public static final class OBuilder<OwningBuilder extends OwnedBuilder>
-            extends ABuilder<OwningBuilder, OBuilder<OwningBuilder>> {
-        @Override
-        public OBuilder<OwningBuilder> self() {
-            return this;
-        }
-    }
-
-    /**
-     * A builder that is created independently of any parent builder
-     */
-    public static final class Builder extends ABuilder<Builder, Builder> {
-
-        @Override
-        public Builder self() {
-            return this;
         }
     }
 }

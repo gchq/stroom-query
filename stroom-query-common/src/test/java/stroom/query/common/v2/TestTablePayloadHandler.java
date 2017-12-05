@@ -53,11 +53,11 @@ public class TestTablePayloadHandler {
 //        dataSourceFieldsMap.put(indexField);
 
         final TableSettings tableSettings = new TableSettings.Builder()
-                .addField()
+                .addFields(new Field.Builder()
                     .name("Text")
                     .expression(ParamUtil.makeParam("Text"))
                     .format(Format.Type.TEXT)
-                    .end()
+                    .build())
                 .build();
 
         final CompiledDepths compiledDepths = new CompiledDepths(tableSettings.getFields(), tableSettings.showDetail());
@@ -108,11 +108,11 @@ public class TestTablePayloadHandler {
 //        dataSourceFieldsMap.put(indexField);
 
         final TableSettings tableSettings = new TableSettings.Builder()
-                .addField()
+                .addFields(new Field.Builder()
                     .name("Text")
                     .expression(ParamUtil.makeParam("Text"))
                     .sort(sort)
-                    .end()
+                    .build())
                 .build();
 
         final CompiledDepths compiledDepths = new CompiledDepths(tableSettings.getFields(), tableSettings.showDetail());
@@ -152,11 +152,11 @@ public class TestTablePayloadHandler {
 
 
         final TableSettings tableSettings = new TableSettings.Builder()
-            .addField()
+            .addFields(new Field.Builder()
                 .name("Number")
                 .expression(ParamUtil.makeParam("Number"))
                 .sort(sort)
-                .end()
+                .build())
             .build();
 
         final CompiledDepths compiledDepths = new CompiledDepths(tableSettings.getFields(), tableSettings.showDetail());
@@ -201,11 +201,11 @@ public class TestTablePayloadHandler {
 //        dataSourceFieldsMap.put(indexField);
 
         final TableSettings tableSettings = new TableSettings.Builder()
-                .addField()
+                .addFields(new Field.Builder()
                     .name("Text")
                     .expression(ParamUtil.makeParam("Text"))
                     .group(0)
-                    .end()
+                    .build())
                 .build();
 
         final CompiledDepths compiledDepths = new CompiledDepths(tableSettings.getFields(), tableSettings.showDetail());
@@ -245,16 +245,16 @@ public class TestTablePayloadHandler {
 //        dataSourceFieldsMap.put(indexField);
 
         final TableSettings tableSettings = new TableSettings.Builder()
-                .addField()
+                .addFields(new Field.Builder()
                     .name("Count")
                     .expression("count()")
-                    .end()
-                .addField()
+                    .build())
+                .addFields(new Field.Builder()
                     .name("Text")
                     .expression(ParamUtil.makeParam("Text"))
                     .sort(sort)
                     .group(0)
-                    .end()
+                    .build())
                 .build();
 
         final CompiledDepths compiledDepths = new CompiledDepths(tableSettings.getFields(), tableSettings.showDetail());
@@ -293,16 +293,16 @@ public class TestTablePayloadHandler {
 //        dataSourceFieldsMap.put(indexField);
 
         final TableSettings tableSettings = new TableSettings.Builder()
-                .addField()
+                .addFields(new Field.Builder()
                     .name("Count")
                     .expression("count()")
-                    .end()
-                .addField()
+                    .build())
+                .addFields(new Field.Builder()
                     .name("Text")
                     .expression(ParamUtil.makeParam("Text"))
                     .sort(sort)
                     .group(1)
-                    .end()
+                    .build())
                 .build();
 
         final CompiledDepths compiledDepths = new CompiledDepths(tableSettings.getFields(), tableSettings.showDetail());

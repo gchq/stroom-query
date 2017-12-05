@@ -19,7 +19,6 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -112,11 +111,8 @@ public final class Row implements Serializable {
 
     /**
      * Builder for constructing a {@link Row}
-     *
-     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static abstract class ABuilder<OwningBuilder extends OwnedBuilder, CHILD_CLASS extends ABuilder<OwningBuilder, ?>>
-            extends OwnedBuilder<OwningBuilder, Row, CHILD_CLASS> {
+    public static class Builder {
         private String groupKey;
 
         private final List<String> values = new ArrayList<>();
@@ -128,9 +124,9 @@ public final class Row implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS groupKey(final String value) {
+        public Builder groupKey(final String value) {
             this.groupKey = value;
-            return self();
+            return this;
         }
 
         /**
@@ -139,9 +135,9 @@ public final class Row implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS addValues(final String...values) {
+        public Builder addValues(final String...values) {
             this.values.addAll(Arrays.asList(values));
-            return self();
+            return this;
         }
 
         /**
@@ -149,37 +145,13 @@ public final class Row implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS depth(final Integer value) {
+        public Builder depth(final Integer value) {
             this.depth = value;
-            return self();
+            return this;
         }
 
-        protected Row pojoBuild() {
+        public Row build() {
             return new Row(groupKey, values, depth);
-        }
-    }
-
-    /**
-     * A builder that is owned by another builder, used for popping back up a stack
-     *
-     * @param <OwningBuilder> The class of the parent builder
-     */
-    public static final class OBuilder<OwningBuilder extends OwnedBuilder>
-            extends ABuilder<OwningBuilder, OBuilder<OwningBuilder>> {
-        @Override
-        public OBuilder<OwningBuilder> self() {
-            return this;
-        }
-    }
-
-    /**
-     * A builder that is created independently of any parent builder
-     */
-    public static final class Builder extends ABuilder<Builder, Builder> {
-
-        @Override
-        public Builder self() {
-            return this;
         }
     }
 

@@ -2,6 +2,8 @@ package stroom.query.api.v2;
 
 import org.junit.Test;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.junit.Assert.assertEquals;
@@ -26,10 +28,9 @@ public class FlatResultBuilderTest {
                         .addField(String.format("field%d", x), "expression")
         );
         IntStream.range(0, numberResultSets).forEach(x -> {
-            final ListBuilder<?, Object> valuesBuilder = flatResultBuilder.addValues();
-            IntStream.range(0, numberFields).forEach(y ->
-                    valuesBuilder
-                            .value(String.format("field%d_value%d", y, x)));
+            final List<Object> values = IntStream.range(0, numberFields).mapToObj(y ->
+                    String.format("field%d_value%d", y, x)).collect(Collectors.toList());
+            flatResultBuilder.addValues(values);
         });
         final FlatResult flatResult = flatResultBuilder.build();
 

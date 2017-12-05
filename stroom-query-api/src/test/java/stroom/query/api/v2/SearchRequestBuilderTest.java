@@ -20,21 +20,20 @@ public class SearchRequestBuilderTest {
 
         // When
         final SearchRequest searchRequest = new SearchRequest.Builder()
-                .query()
-                    .dataSource()
+                .query(new Query.Builder()
+                    .dataSource(new DocRef.Builder()
                         .uuid(dataSourceUuid)
-                        .end()
-                    .end()
+                        .build())
+                    .build())
                 .dateTimeLocale(dateTimeLocale)
                 .incremental(incremental)
                 .key(queryKeyUUID)
-                .addResultRequest()
+                .addResultRequests(new ResultRequest.Builder()
                     .componentId(resultRequestComponentId0)
-                    .end()
-                .addResultRequest()
+                    .build())
+                .addResultRequests(new ResultRequest.Builder()
                     .componentId(resultRequestComponentId1)
-                    .end()
-
+                    .build())
                 .build();
 
         // Then

@@ -8,10 +8,10 @@ public class ExpressionBuilderTest {
     public void doesBuild() throws Exception {
         ExpressionOperator root = new ExpressionOperator.Builder(ExpressionOperator.Op.AND)
                     .addTerm("fieldX", ExpressionTerm.Condition.EQUALS, "abc")
-                    .addOperator(ExpressionOperator.Op.OR)
+                    .addOperator(new ExpressionOperator.Builder(ExpressionOperator.Op.OR)
                         .addTerm("fieldA", ExpressionTerm.Condition.EQUALS, "Fred")
                         .addTerm("fieldA", ExpressionTerm.Condition.EQUALS, "Fred")
-                        .end()
+                        .build())
                     .addTerm("fieldY", ExpressionTerm.Condition.BETWEEN, "10,20")
                 .build();
 

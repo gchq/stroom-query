@@ -16,12 +16,12 @@ public class DateTimeFormatBuilderTest {
 
         final DateTimeFormat dateTimeFormat = new DateTimeFormat.Builder()
                 .pattern(pattern)
-                .timeZone()
+                .timeZone(new TimeZone.Builder()
                     .id(timeZoneId)
                     .use(use)
                     .offsetHours(offsetHours)
                     .offsetMinutes(offsetMinutes)
-                    .end()
+                    .build())
                 .build();
 
         assertEquals(pattern, dateTimeFormat.getPattern());

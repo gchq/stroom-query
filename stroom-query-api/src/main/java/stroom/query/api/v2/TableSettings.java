@@ -19,7 +19,6 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -179,11 +178,8 @@ public final class TableSettings implements Serializable {
 
     /**
      * Builder for constructing a {@link TableSettings tableSettings}
-     *
-     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static abstract class ABuilder<OwningBuilder extends OwnedBuilder, CHILD_CLASS extends ABuilder<OwningBuilder, ?>>
-            extends OwnedBuilder<OwningBuilder, TableSettings, CHILD_CLASS> {
+    public static class Builder {
         private String queryId;
         private final List<Field> fields = new ArrayList<>();
         private Boolean extractValues;
@@ -197,9 +193,9 @@ public final class TableSettings implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS queryId(final String value) {
+        public Builder queryId(final String value) {
             this.queryId = value;
-            return self();
+            return this;
         }
 
         /**
@@ -207,38 +203,18 @@ public final class TableSettings implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS addFields(final Field...values) {
+        public Builder addFields(final Field...values) {
             return addFields(Arrays.asList(values));
         }
 
         /**
          * Convenience function for adding multiple fields that are already in a collection.
          * @param values The fields to add
-         * @return This builder, with the fields added.
+         * @return this builder, with the fields added.
          */
-        public CHILD_CLASS addFields(final Collection<Field> values) {
+        public Builder addFields(final Collection<Field> values) {
             this.fields.addAll(values);
-            return self();
-        }
-
-        /**
-         * Start building a field to add to the expected list
-         * @return The Field.Builder, configured to pop back to this one when complete
-         */
-        public Field.OBuilder<CHILD_CLASS> addField() {
-            return new Field.OBuilder<CHILD_CLASS>()
-                    .popToWhenComplete(self(), this::addFields);
-        }
-
-        /**
-         * Start building a field to add to the expected list
-         * @param name  The field name
-         * @param expression The expression to use to generate the field value
-         * @return The Field.Builder, configured to pop back to this one when complete
-         */
-        public Field.OBuilder<CHILD_CLASS> addField(final String name, final String expression) {
-            return new Field.OBuilder<CHILD_CLASS>(name, expression)
-                    .popToWhenComplete(self(), this::addFields);
+            return this;
         }
 
         /**
@@ -246,18 +222,18 @@ public final class TableSettings implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS addMaxResults(final Integer...values) {
+        public Builder addMaxResults(final Integer...values) {
             return addMaxResults(Arrays.asList(values));
         }
 
         /**
          * Add a collection of max result values
          * @param values The list of max result values
-         * @return This builder
+         * @return this builder
          */
-        public CHILD_CLASS addMaxResults(final Collection<Integer> values) {
+        public Builder addMaxResults(final Collection<Integer> values) {
             this.maxResults.addAll(values);
-            return self();
+            return this;
         }
 
         /**
@@ -265,9 +241,9 @@ public final class TableSettings implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS extractValues(final Boolean value) {
+        public Builder extractValues(final Boolean value) {
             this.extractValues = value;
-            return self();
+            return this;
         }
 
         /**
@@ -275,18 +251,9 @@ public final class TableSettings implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS extractionPipeline(final DocRef value) {
+        public Builder extractionPipeline(final DocRef value) {
             this.extractionPipeline = value;
-            return self();
-        }
-
-        /**
-         * Start building the DocRef which points to the extraction pipeline
-         * @return The DocRef.Builder, configured to pop back to this one when complete
-         */
-        public DocRef.OBuilder<CHILD_CLASS> extractionPipeline() {
-            return new DocRef.OBuilder<CHILD_CLASS>()
-                    .popToWhenComplete(self(), this::extractionPipeline);
+            return this;
         }
 
         /**
@@ -294,12 +261,12 @@ public final class TableSettings implements Serializable {
          * @param type The type of the extractionPipeline
          * @param uuid The UUID of the extractionPipeline
          * @param name The name of the extractionPipeline
-         * @return This builder, with the completed extractionPipeline added.
+         * @return this builder, with the completed extractionPipeline added.
          */
-        public CHILD_CLASS extractionPipeline(final String type,
+        public Builder extractionPipeline(final String type,
                                                          final String uuid,
                                                          final String name) {
-            return this.extractionPipeline().type(type).uuid(uuid).name(name).end();
+            return this.extractionPipeline(new DocRef.Builder().type(type).uuid(uuid).name(name).build());
         }
 
         /**
@@ -309,39 +276,14 @@ public final class TableSettings implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS showDetail(final Boolean value) {
+        public Builder showDetail(final Boolean value) {
             this.showDetail = value;
-            return self();
+            return this;
         }
 
-        protected TableSettings pojoBuild() {
+        public TableSettings build() {
             return new TableSettings(queryId, fields, extractValues, extractionPipeline, maxResults, showDetail);
         }
 
-    }
-
-    /**
-     * A builder that is owned by another builder, used for popping back up a stack
-     *
-     * @param <OwningBuilder> The class of the parent builder
-     */
-    public static final class OBuilder<OwningBuilder extends OwnedBuilder>
-            extends ABuilder<OwningBuilder, OBuilder<OwningBuilder>> {
-
-        @Override
-        public OBuilder<OwningBuilder> self() {
-            return this;
-        }
-    }
-
-    /**
-     * A builder that is created independently of any parent builder
-     */
-    public static final class Builder extends ABuilder<Builder, Builder> {
-
-        @Override
-        public Builder self() {
-            return this;
-        }
     }
 }
