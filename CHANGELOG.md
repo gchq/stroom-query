@@ -10,6 +10,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## [v2.0.0-alpha.13] - 2017-12-06
+
+### Changed
+
+* Fixed minor bug in QueryableEntityBuilder that returned the specific builder class instead of the CHILD_CLASS
+
+## [v2.0.0-alpha.12] - 2017-12-06
+
+### Changed
+
+* Now using openjdk instead of oraclejdk
+* Changed the builders to remove the parenting/templating. Now using a simpler pattern where developers will create the child builders themselves.
+
 ## [v2.0.0-alpha.11] - 2017-12-01
 
 ### Changed
@@ -109,8 +122,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.11...HEAD
-[v2.0.0-alpha.10]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.10...v2.0.0-alpha.11
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.13...HEAD
+[v2.0.0-alpha.13]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.12...v2.0.0-alpha.13
+[v2.0.0-alpha.12]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.11...v2.0.0-alpha.12
+[v2.0.0-alpha.11]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.10...v2.0.0-alpha.11
 [v2.0.0-alpha.10]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.9...v2.0.0-alpha.10
 [v2.0.0-alpha.9]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.8...v2.0.0-alpha.9
 [v2.0.0-alpha.8]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.7...v2.0.0-alpha.8
