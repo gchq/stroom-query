@@ -3,10 +3,16 @@ package stroom.query.audit;
 import stroom.util.shared.QueryApiException;
 
 import javax.ws.rs.core.Response;
+import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class DocRefResourceHttpClient implements DocRefResource {
+
+    @FunctionalInterface
+    private interface ImportUrlFunction {
+        String getUrl(final String uuid, final String name, final Boolean confirmed);
+    }
 
     private final SimpleJsonHttpClient<QueryApiException> httpClient;
     private final String getAllUrl;
@@ -16,6 +22,8 @@ public class DocRefResourceHttpClient implements DocRefResource {
     private final Function<String, String> moveUrl;
     private final BiFunction<String, String, String> renameUrl;
     private final Function<String, String> deleteUrl;
+    private final ImportUrlFunction importUrl;
+    private final Function<String, String> exportUrl;
 
     public DocRefResourceHttpClient(final String baseUrl) {
         this.getAllUrl = String.format("%s/docRefApi/v1/",
@@ -39,6 +47,14 @@ public class DocRefResourceHttpClient implements DocRefResource {
                 uuid,
                 name);
         this.deleteUrl = (uuid) -> String.format("%s/docRefApi/v1/delete/%s",
+                baseUrl,
+                uuid);
+        this.importUrl = (uuid, name, confirmed) -> String.format("%s/docRefApi/v1/import/%s/%s/%s",
+                baseUrl,
+                uuid,
+                name,
+                confirmed);
+        this.exportUrl = (uuid) -> String.format("%s/docRefApi/v1/export/%s",
                 baseUrl,
                 uuid);
         this.httpClient = new SimpleJsonHttpClient<>(QueryApiException::new);
@@ -92,6 +108,24 @@ public class DocRefResourceHttpClient implements DocRefResource {
     public Response deleteDocument(final String uuid) throws QueryApiException {
         return httpClient
                 .delete(deleteUrl.apply(uuid))
+                .send();
+    }
+
+    @Override
+    public Response importDocument(final String uuid,
+                                   final String name,
+                                   final Boolean confirmed,
+                                   final Map<String, String> dataMap) throws QueryApiException {
+        return httpClient
+                .post(importUrl.getUrl(uuid, name, confirmed))
+                .body(dataMap)
+                .send();
+    }
+
+    @Override
+    public Response exportDocument(final String uuid) throws QueryApiException {
+        return httpClient
+                .get(exportUrl.apply(uuid))
                 .send();
     }
 }

@@ -1,6 +1,7 @@
 package stroom.query.audit;
 
 import com.codahale.metrics.annotation.Timed;
+import stroom.query.api.v2.DocRef;
 import stroom.util.shared.QueryApiException;
 
 import javax.ws.rs.DELETE;
@@ -12,6 +13,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This is the interface that Stroom uses for externally managed DocRefs.
@@ -101,4 +104,28 @@ public interface DocRefResource {
     @DELETE
     @Path("/delete/{uuid}")
     Response deleteDocument(@PathParam("uuid") String uuid) throws QueryApiException;
+
+    /**
+     * Import the data as a new document.
+     * @param uuid The UUID of the document to import
+     * @param name The name of the document to import
+     * @param confirmed Is the import a confirmed one? If it isn't then this is just a dry run.
+     * @param dataMap The data to import
+     * @return The created document
+     */
+    @POST
+    @Path("/import/{uuid}/{name}/{confirmed}")
+    Response importDocument(@PathParam("uuid") String uuid,
+                            @PathParam("name") String name,
+                            @PathParam("confirmed") Boolean confirmed,
+                            Map<String, String> dataMap) throws QueryApiException;
+
+    /**
+     * Export the given document
+     * @param uuid The UUID of the document to export
+     * @return A Map of Strings by Strings containing the exported data.
+     */
+    @GET
+    @Path("/export/{uuid}")
+    Response exportDocument(@PathParam("uuid") String uuid) throws QueryApiException;
 }
