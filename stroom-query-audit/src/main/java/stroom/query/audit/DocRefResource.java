@@ -112,6 +112,7 @@ public interface DocRefResource {
      * @param confirmed Is the import a confirmed one? If it isn't then this is just a dry run.
      * @param dataMap The data to import
      * @return The created document
+     * @throws QueryApiException  If something goes wrong
      */
     @POST
     @Path("/import/{uuid}/{name}/{confirmed}")
@@ -124,6 +125,7 @@ public interface DocRefResource {
      * Export the given document
      * @param uuid The UUID of the document to export
      * @return A Map of Strings by Strings containing the exported data.
+     * @throws QueryApiException  If something goes wrong
      */
     @GET
     @Path("/export/{uuid}")

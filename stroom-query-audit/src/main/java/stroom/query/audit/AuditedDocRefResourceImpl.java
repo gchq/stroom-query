@@ -91,8 +91,9 @@ public class AuditedDocRefResourceImpl implements DocRefResource {
     @Override
     public Response importDocument(final String uuid,
                                    final String name,
+                                   final Boolean confirmed,
                                    final Map<String, String> dataMap) throws QueryApiException {
-        return auditWrapper.auditFunction(() -> docRefResource.importDocument(uuid, name, dataMap),
+        return auditWrapper.auditFunction(() -> docRefResource.importDocument(uuid, name, confirmed, dataMap),
                 (eventDetail, response, exception) -> {
                     eventDetail.setTypeId("IMPORT_DOC_REF");
                     eventDetail.setDescription("Import a Doc Ref");
