@@ -34,8 +34,8 @@ import java.io.Serializable;
 /**
  * {@value #CLASS_DESC}
  */
-@JsonPropertyOrder({"type", "id", "uuid", "name"})
-@XmlType(name = "DocRef", propOrder = {"type", "id", "uuid", "name"})
+@JsonPropertyOrder({"type", "uuid", "name"})
+@XmlType(name = "DocRef", propOrder = {"type", "uuid", "name"})
 @XmlRootElement(name = "doc")
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = Query.CLASS_DESC)
@@ -66,17 +66,6 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
             example = "MyStatistic",
             required = true)
     private String name;
-
-    @Deprecated
-    @XmlElement
-    @ApiModelProperty(
-            value = "DEPRECATED",
-            required = false)
-    private Long id;
-
-    //TODO should we have a no-args ctor?
-    public DocRef() {
-    }
 
     /**
      * @param type The type of the 'document' that this docRef points to an instance of. Supported types are defined
@@ -120,21 +109,6 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
      */
     public String getName() {
         return name;
-    }
-
-    @Deprecated
-    public Long getId() {
-        return id;
-    }
-
-    @Deprecated
-    public void setId(final Long value) {
-        this.id = value;
-
-        // All equality is done on uuid so ensure uuid is set to id even if the entity doesn't have a uuid field.
-        if (uuid == null && value != null) {
-            uuid = String.valueOf(value);
-        }
     }
 
     @XmlTransient
