@@ -19,7 +19,6 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.OwnedBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -114,11 +113,9 @@ public final class TableResult extends Result {
 
     /**
      * Builder for constructing a {@link TableResult tableResult}
-     *
-     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static abstract class ABuilder<OwningBuilder extends OwnedBuilder, CHILD_CLASS extends ABuilder<OwningBuilder, ?>>
-            extends Result.Builder<OwningBuilder, TableResult, CHILD_CLASS> {
+    public static class Builder
+            extends Result.Builder<TableResult, Builder> {
         private final List<Row> rows = new ArrayList<>();
         private OffsetRange resultRange;
 
@@ -127,17 +124,9 @@ public final class TableResult extends Result {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS addRows(final Row...values) {
+        public Builder addRows(final Row...values) {
             this.rows.addAll(Arrays.asList(values));
-            return self();
-        }
-
-        /**
-         * Start construction on a row.
-         * @return The Row.Builder configured to pop back to this one when complete
-         */
-        public Row.OBuilder<CHILD_CLASS> addRow() {
-            return new Row.OBuilder<CHILD_CLASS>().popToWhenComplete(self(), this::addRows);
+            return this;
         }
 
         /**
@@ -145,42 +134,19 @@ public final class TableResult extends Result {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS resultRange(final OffsetRange value) {
+        public Builder resultRange(final OffsetRange value) {
             this.resultRange = value;
-            return self();
+            return this;
         }
 
-        public OffsetRange.OBuilder<CHILD_CLASS> resultRange() {
-            return new OffsetRange.OBuilder<CHILD_CLASS>().popToWhenComplete(self(), this::resultRange);
+        @Override
+        protected Builder self() {
+            return this;
         }
 
-        protected TableResult pojoBuild() {
+        @Override
+        public TableResult build() {
             return new TableResult(getComponentId(), rows, resultRange, getError());
-        }
-    }
-
-    /**
-     * A builder that is owned by another builder, used for popping back up a stack
-     *
-     * @param <OwningBuilder> The class of the parent builder
-     */
-    public static final class OBuilder<OwningBuilder extends OwnedBuilder>
-            extends ABuilder<OwningBuilder, OBuilder<OwningBuilder>> {
-
-        @Override
-        public OBuilder<OwningBuilder> self() {
-            return this;
-        }
-    }
-
-    /**
-     * A builder that is created independently of any parent builder
-     */
-    public static final class Builder extends ABuilder<Builder, Builder> {
-
-        @Override
-        public Builder self() {
-            return this;
         }
     }
 }

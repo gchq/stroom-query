@@ -46,8 +46,8 @@ public class ModelChangeDetector {
         System.out.println("If the change is a breaking change you will need to uplift the major version number (see uplift*.sh) on release");
         System.out.println("If the change is a non-breaking change you will just need to uplift the minor or patch version on release");
 
-        System.out.println("FUCK" + currentPortrait);
-        System.out.println("THAT" + newPortrait);
+        System.out.println("CURRENT\n" + currentPortrait);
+        System.out.println("NEW\n" + newPortrait);
 
         assertThat(currentPortrait, equalTo(newPortrait));
     }

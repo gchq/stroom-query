@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import stroom.util.shared.HasDisplayValue;
-import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -183,11 +182,8 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
 
     /**
      * Builder for constructing a {@link DocRef docRef}
-     *
-     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static abstract class ABuilder<OwningBuilder extends OwnedBuilder, CHILD_CLASS extends ABuilder<OwningBuilder, ?>>
-            extends OwnedBuilder<OwningBuilder, DocRef, CHILD_CLASS> {
+    public static class Builder {
         private String type;
 
         private String uuid;
@@ -200,9 +196,9 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS type(final String value) {
+        public Builder type(final String value) {
             this.type = value;
-            return self();
+            return this;
         }
 
         /**
@@ -210,9 +206,9 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS uuid(final String value) {
+        public Builder uuid(final String value) {
             this.uuid = value;
-            return self();
+            return this;
         }
 
         /**
@@ -220,37 +216,13 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS name(final String value) {
+        public Builder name(final String value) {
             this.name = value;
-            return self();
+            return this;
         }
 
-        protected DocRef pojoBuild() {
+        public DocRef build() {
             return new DocRef(type, uuid, name);
-        }
-    }
-
-    /**
-     * A builder that is owned by another builder, used for popping back up a stack
-     *
-     * @param <OwningBuilder> The class of the parent builder
-     */
-    public static final class OBuilder<OwningBuilder extends OwnedBuilder>
-            extends ABuilder<OwningBuilder, OBuilder<OwningBuilder>> {
-        @Override
-        public OBuilder<OwningBuilder> self() {
-            return this;
-        }
-    }
-
-    /**
-     * A builder that is created independently of any parent builder
-     */
-    public static final class Builder extends ABuilder<Builder, Builder> {
-
-        @Override
-        public Builder self() {
-            return this;
         }
     }
 }

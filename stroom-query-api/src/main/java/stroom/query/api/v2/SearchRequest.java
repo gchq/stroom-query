@@ -19,7 +19,6 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -31,7 +30,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.time.format.DateTimeFormatter;
 
 /**
  * A class for describing a search request including the query to run and definition(s) of how the results
@@ -190,8 +188,7 @@ public final class SearchRequest implements Serializable {
      * Builder for constructing a {@link SearchRequest}
      *
      */
-    public static class Builder
-            extends OwnedBuilder<Builder, SearchRequest, Builder> {
+    public static class Builder {
 
         private QueryKey key;
 
@@ -211,16 +208,16 @@ public final class SearchRequest implements Serializable {
          */
         public Builder key(final QueryKey value) {
             this.key = value;
-            return self();
+            return this;
         }
 
         /**
          * Shortcut function to add a key value in one go
          * @param uuid The UUID of the query key
-         * @return This builder
+         * @return this builder
          */
         public Builder key(final String uuid) {
-            return key(new QueryKey.OBuilder<Builder>().uuid(uuid).build());
+            return key(new QueryKey(uuid));
         }
 
         /**
@@ -230,15 +227,7 @@ public final class SearchRequest implements Serializable {
          */
         public Builder query(final Query value) {
             this.query = value;
-            return self();
-        }
-
-        /**
-         * Start building the query, which specifies all the terms to apply to our search.
-         * @return The Query.Builder, configured to pop back to this builder when complete
-         */
-        public Query.OBuilder<Builder> query() {
-            return new Query.OBuilder<Builder>().popToWhenComplete(this, this::query);
+            return this;
         }
 
         /**
@@ -248,16 +237,7 @@ public final class SearchRequest implements Serializable {
          */
         public Builder addResultRequests(final ResultRequest...values) {
             this.resultRequests.addAll(Arrays.asList(values));
-            return self();
-        }
-
-        /**
-         * Begin construction on a resultRequest
-         * @return The ResultRequest.Builder, configured to pop back to this builder when complete
-         */
-        public ResultRequest.OBuilder<Builder> addResultRequest() {
-            return new ResultRequest.OBuilder<Builder>()
-                    .popToWhenComplete(this, this::addResultRequests);
+            return this;
         }
 
         /**
@@ -267,7 +247,7 @@ public final class SearchRequest implements Serializable {
          */
         public Builder dateTimeLocale(final String value) {
             this.dateTimeLocale = value;
-            return self();
+            return this;
         }
 
         /**
@@ -280,16 +260,11 @@ public final class SearchRequest implements Serializable {
          */
         public Builder incremental(final Boolean value) {
             this.incremental = value;
-            return self();
-        }
-
-        protected SearchRequest pojoBuild() {
-            return new SearchRequest(key, query, resultRequests, dateTimeLocale, incremental);
-        }
-
-        @Override
-        public Builder self() {
             return this;
+        }
+
+        public SearchRequest build() {
+            return new SearchRequest(key, query, resultRequests, dateTimeLocale, incremental);
         }
     }
 

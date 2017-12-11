@@ -31,100 +31,70 @@ public class AuditedQueryResourceImpl implements QueryResource {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    private final AuditWrapper<QueryApiException> auditWrapper;
+
     @Inject
     public AuditedQueryResourceImpl(final QueryResource queryResource,
                                     final EventLoggingService eventLoggingService) {
         this.queryResource = queryResource;
         this.eventLoggingService = eventLoggingService;
+        this.auditWrapper = new AuditWrapper<>(eventLoggingService, QueryApiException.class, QueryApiException::new);
     }
 
     @Override
     public Response getDataSource(final DocRef docRef) throws QueryApiException {
-        Response response;
-        Exception exception = null;
+        return auditWrapper.auditFunction(() -> queryResource.getDataSource(docRef),
+                (eventDetail, response, exception) -> {
+                    eventDetail.setTypeId("GET_DATA_SOURCE");
+                    eventDetail.setDescription("Get Datasource For Document");
 
-        try {
-            response = queryResource.getDataSource(docRef);
+                    final Search search = new Search();
+                    eventDetail.setSearch(search);
 
-            return response;
-        } finally {
-            final Event event = eventLoggingService.createEvent();
-            final Event.EventDetail eventDetail = event.getEventDetail();
-
-            eventDetail.setTypeId("GET_DATA_SOURCE");
-            eventDetail.setDescription("Get Datasource For Document");
-
-            final Search search = new Search();
-            eventDetail.setSearch(search);
-
-            final Outcome outcome = new Outcome();
-            outcome.setSuccess(null != exception);
-            search.setOutcome(outcome);
-
-            eventLoggingService.log(event);
-        }
+                    final Outcome outcome = new Outcome();
+                    outcome.setSuccess(null != exception);
+                    search.setOutcome(outcome);
+                });
     }
 
     @Override
     public Response search(final SearchRequest request) throws QueryApiException {
-        Response response;
-        Exception exception = null;
+        return auditWrapper.auditFunction(() -> queryResource.search(request),
+                (eventDetail, response, exception) -> {
+                    eventDetail.setTypeId("QUERY_SEARCH");
+                    eventDetail.setDescription("Run a Query over the data");
 
-        try {
-            response = queryResource.search(request);
+                    final Search search = new Search();
+                    eventDetail.setSearch(search);
 
-            return response;
-        } finally {
-            final Event event = eventLoggingService.createEvent();
-            final Event.EventDetail eventDetail = event.getEventDetail();
+                    final Query query = new Query();
+                    try {
+                        final String requestJson = objectMapper.writeValueAsString(request);
+                        query.setRaw(requestJson);
+                    } catch (JsonProcessingException e) {
+                        LOGGER.warn("Could not serialize request details for audit", e);
+                    }
+                    search.setQuery(query);
 
-            eventDetail.setTypeId("QUERY_SEARCH");
-            eventDetail.setDescription("Run a Query over the data");
-
-            final Search search = new Search();
-            eventDetail.setSearch(search);
-
-            final Query query = new Query();
-            try {
-                final String requestJson = objectMapper.writeValueAsString(request);
-                query.setRaw(requestJson);
-            } catch (JsonProcessingException e) {
-                LOGGER.warn("Could not serialize request details for audit", e);
-            }
-            search.setQuery(query);
-
-            final Outcome outcome = new Outcome();
-            outcome.setSuccess(null != exception);
-            search.setOutcome(outcome);
-
-            eventLoggingService.log(event);
-        }
+                    final Outcome outcome = new Outcome();
+                    outcome.setSuccess(null != exception);
+                    search.setOutcome(outcome);
+                });
     }
 
     @Override
     public Response destroy(final QueryKey queryKey) throws QueryApiException {
-        Response response;
-        Exception exception = null;
+        return auditWrapper.auditFunction(() -> queryResource.destroy(queryKey),
+                (eventDetail, response, exception) -> {
+                    eventDetail.setTypeId("QUERY_DESTROY");
+                    eventDetail.setDescription("Destroy a running query");
 
-        try {
-            response = queryResource.destroy(queryKey);
+                    final Search search = new Search();
+                    eventDetail.setSearch(search);
 
-            return response;
-        } finally {
-            final Event event = eventLoggingService.createEvent();
-            final Event.EventDetail eventDetail = event.getEventDetail();
-
-            eventDetail.setTypeId("QUERY_DESTROY");
-            eventDetail.setDescription("Destroy a running query");
-
-            final Search search = new Search();
-            eventDetail.setSearch(search);
-
-            final Outcome outcome = new Outcome();
-            outcome.setSuccess(null != exception);
-            search.setOutcome(outcome);
-
-            eventLoggingService.log(event);
-        }
+                    final Outcome outcome = new Outcome();
+                    outcome.setSuccess(null != exception);
+                    search.setOutcome(outcome);
+                });
     }
 }

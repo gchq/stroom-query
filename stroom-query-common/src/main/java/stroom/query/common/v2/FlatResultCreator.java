@@ -175,21 +175,23 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
                             0, maxResults);
                 }
 
-                return new FlatResult.Builder()
+                final FlatResult.Builder resultBuilder = new FlatResult.Builder()
                         .componentId(resultRequest.getComponentId())
                         .size(totalResults)
                         .error(error)
-                        .addValues(results)
-                        .addField()
-                            .name(":ParentKey")
-                            .end()
-                        .addField()
-                            .name(":Key")
-                            .end()
-                        .addField()
-                            .name(":Depth")
-                            .end()
-                        .build();
+                        .addField(new Field.Builder()
+                                .name(":ParentKey")
+                                .build())
+                        .addField(new Field.Builder()
+                                .name(":Key")
+                                .build())
+                        .addField(new Field.Builder()
+                                .name(":Depth")
+                                .build());
+
+                results.forEach(resultBuilder::addValues);
+
+                return resultBuilder.build();
 
             } catch (final Exception e) {
                 error = e.getMessage();

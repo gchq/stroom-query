@@ -14,7 +14,7 @@ public class DataSourceFieldBuilderTest {
         final DataSourceField.DataSourceFieldType type = DataSourceField.DataSourceFieldType.NUMERIC_FIELD;
 
         // When
-        final DataSourceField field = new DataSourceField.Builder<>()
+        final DataSourceField field = new DataSourceField.Builder()
                     .addConditions(condition)
                     .name(name)
                     .queryable(true)

@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import stroom.util.shared.HasDisplayValue;
-import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -137,11 +136,8 @@ public final class Format implements Serializable {
 
     /**
      * Builder for constructing a {@link Format}
-     *
-     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      */
-    public static abstract class ABuilder<OwningBuilder extends OwnedBuilder, CHILD_CLASS extends ABuilder<OwningBuilder, ?>>
-            extends OwnedBuilder<OwningBuilder, Format, CHILD_CLASS> {
+    public static class Builder {
         private Type type;
 
         private NumberFormat numberFormat;
@@ -153,54 +149,35 @@ public final class Format implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS type(final Type value) {
+        public Builder type(final Type value) {
             this.type = value;
-            return self();
+            return this;
         }
 
-        public NumberFormat.OBuilder<CHILD_CLASS> number() {
-            return new NumberFormat.OBuilder<CHILD_CLASS>()
-                    .popToWhenComplete(self(), f -> {
-                        this.type = Type.NUMBER;
-                        this.numberFormat = f;
-                    });
+        public NumberFormat.Builder number() {
+            this.type = Type.NUMBER;
+            return new NumberFormat.Builder();
         }
 
-        public DateTimeFormat.OBuilder<CHILD_CLASS> dateTime() {
-            return new DateTimeFormat.OBuilder<CHILD_CLASS>()
-                    .popToWhenComplete(self(), f -> {
-                        this.type = Type.DATE_TIME;
-                        this.dateTimeFormat = f;
-                    });
+        public Builder number(final NumberFormat value) {
+            this.numberFormat = value;
+            this.type = Type.NUMBER;
+            return this;
         }
 
-        @Override
-        protected Format pojoBuild() {
+        public DateTimeFormat.Builder dateTime() {
+            this.type = Type.DATE_TIME;
+            return new DateTimeFormat.Builder();
+        }
+
+        public Builder dateTime(final DateTimeFormat value) {
+            this.dateTimeFormat = value;
+            this.type = Type.DATE_TIME;
+            return this;
+        }
+
+        public Format build() {
             return new Format(type, numberFormat, dateTimeFormat);
-        }
-    }
-
-    /**
-     * A builder that is owned by another builder, used for popping back up a stack
-     *
-     * @param <OwningBuilder> The class of the parent builder
-     */
-    public static final class OBuilder<OwningBuilder extends OwnedBuilder>
-            extends ABuilder<OwningBuilder, OBuilder<OwningBuilder>> {
-        @Override
-        public OBuilder<OwningBuilder> self() {
-            return this;
-        }
-    }
-
-    /**
-     * A builder that is created independently of any parent builder
-     */
-    public static final class Builder extends ABuilder<Builder, Builder> {
-
-        @Override
-        public Builder self() {
-            return this;
         }
     }
 }

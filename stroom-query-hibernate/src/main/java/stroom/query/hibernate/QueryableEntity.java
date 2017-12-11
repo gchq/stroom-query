@@ -43,11 +43,11 @@ public class QueryableEntity implements Serializable {
         return sb.toString();
     }
 
-    public static abstract class ABuilder<T extends QueryableEntity, CHILD_CLASS extends ABuilder<T, ?>> {
+    public static abstract class Builder<T extends QueryableEntity, CHILD_CLASS extends Builder<T, ?>> {
 
         protected final T instance;
 
-        protected ABuilder(final T instance) {
+        protected Builder(final T instance) {
             this.instance = instance;
         }
 

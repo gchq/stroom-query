@@ -13,10 +13,10 @@ public class FormatBuilderTest {
         final Boolean useSeperator = true;
 
         final Format format = new Format.Builder()
-                .number()
+                .number(new NumberFormat.Builder()
                     .decimalPlaces(decimalPlaces)
                     .useSeparator(useSeperator)
-                    .end()
+                    .build())
                 .build();
 
         assertEquals(Format.Type.NUMBER, format.getType());
@@ -36,15 +36,15 @@ public class FormatBuilderTest {
         final Integer offsetMinutes = 5;
 
         final Format format = new Format.Builder()
-                    .dateTime()
+                    .dateTime(new DateTimeFormat.Builder()
                         .pattern(pattern)
-                        .timeZone()
-                        .id(timeZoneId)
-                        .use(use)
-                        .offsetHours(offsetHours)
-                        .offsetMinutes(offsetMinutes)
-                        .end()
-                    .end()
+                        .timeZone(new TimeZone.Builder()
+                                .id(timeZoneId)
+                                .use(use)
+                                .offsetHours(offsetHours)
+                                .offsetMinutes(offsetMinutes)
+                                .build())
+                            .build())
                 .build();
 
         assertEquals(Format.Type.DATE_TIME, format.getType());

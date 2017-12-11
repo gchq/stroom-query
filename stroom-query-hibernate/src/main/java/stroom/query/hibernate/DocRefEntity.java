@@ -56,11 +56,11 @@ public class DocRefEntity {
         return sb.toString();
     }
 
-    public static abstract class ABuilder<T extends DocRefEntity, CHILD_CLASS extends ABuilder<T, ?>> {
+    public static abstract class Builder<T extends DocRefEntity, CHILD_CLASS extends Builder<T, ?>> {
 
         protected final T instance;
 
-        protected ABuilder(final T instance) {
+        protected Builder(final T instance) {
             this.instance = instance;
         }
 

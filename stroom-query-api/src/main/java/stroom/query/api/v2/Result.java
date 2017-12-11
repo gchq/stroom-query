@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -104,16 +103,10 @@ public abstract class Result implements Serializable {
     /**
      * Builder for constructing a {@link Result}. This class is abstract and must be overridden for
      * each known Result implementation class.
-     *
-     * @param <OwningBuilder> The class of the popToWhenComplete builder, allows nested building
      * @param <T> The result class type, either Flat or Table
      * @param <CHILD_CLASS> The subclass, allowing us to template OwnedBuilder correctly
      */
-    public static abstract class Builder<
-                OwningBuilder extends OwnedBuilder,
-                T extends Result,
-                CHILD_CLASS extends Builder<OwningBuilder, T, ?>>
-            extends OwnedBuilder<OwningBuilder, T, CHILD_CLASS> {
+    public static abstract class Builder<T extends Result, CHILD_CLASS extends Builder<T, ?>> {
 
         private String componentId;
         private String error;
@@ -145,6 +138,10 @@ public abstract class Result implements Serializable {
         protected String getError() {
             return error;
         }
+
+        protected abstract CHILD_CLASS self();
+
+        public abstract T build();
     }
 
 }

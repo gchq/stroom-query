@@ -19,7 +19,6 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.OwnedBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -162,25 +161,14 @@ public final class SearchResponse implements Serializable {
                 '}';
     }
 
-    public static class TableResultBuilder extends Builder<TableResult, TableResult.OBuilder, TableResultBuilder> {
-
-        @Override
-        public TableResult.OBuilder<TableResultBuilder> addResult() {
-            return new TableResult.OBuilder<TableResultBuilder>().popToWhenComplete(this, this::addResults);
-        }
-
+    public static class TableResultBuilder extends Builder<TableResult, TableResultBuilder> {
         @Override
         public TableResultBuilder self() {
             return this;
         }
     }
 
-    public static class FlatResultBuilder extends Builder<FlatResult, FlatResult.OBuilder, FlatResultBuilder> {
-
-        @Override
-        public FlatResult.OBuilder<FlatResultBuilder> addResult() {
-            return new FlatResult.OBuilder<FlatResultBuilder>().popToWhenComplete(this, this::addResults);
-        }
+    public static class FlatResultBuilder extends Builder<FlatResult, FlatResultBuilder> {
 
         @Override
         public FlatResultBuilder self() {
@@ -193,10 +181,9 @@ public final class SearchResponse implements Serializable {
      *
      * @param <ResultClass> The class of the popToWhenComplete builder, allows nested building
      */
-    private abstract static class Builder<ResultClass extends Result,
-                                            ResultBuilderClass extends Result.Builder,
-                                            CHILD_CLASS extends Builder<ResultClass, ResultBuilderClass, ?>>
-            extends OwnedBuilder<Builder, SearchResponse, CHILD_CLASS> {
+    private abstract static class Builder<
+            ResultClass extends Result,
+            CHILD_CLASS extends Builder<ResultClass, ?>> {
         // Mandatory parameters
         private Boolean complete;
 
@@ -254,8 +241,6 @@ public final class SearchResponse implements Serializable {
             return self();
         }
 
-        public abstract ResultBuilderClass addResult();
-
         /**
          * Adds zero-many
          *
@@ -272,10 +257,11 @@ public final class SearchResponse implements Serializable {
          *
          * @return A populated {@link SearchResponse searchResponse} object
          */
-        @Override
-        protected SearchResponse pojoBuild() {
+        public SearchResponse build() {
             return new SearchResponse(highlights, results, errors, complete);
         }
+
+        protected abstract CHILD_CLASS self();
     }
 
 }

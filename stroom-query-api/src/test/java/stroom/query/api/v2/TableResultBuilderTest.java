@@ -23,13 +23,13 @@ public class TableResultBuilderTest {
         final TableResult.Builder builder = new TableResult.Builder()
                 .componentId(componentId)
                 .error(error)
-                .resultRange()
+                .resultRange(new OffsetRange.Builder()
                     .offset(offset)
                     .length(length)
-                    .end();
+                    .build());
 
         IntStream.range(0, numberResults).forEach(x ->
-            builder.addRow().groupKey(String.format("rowGroup%d", x)).end()
+            builder.addRows(new Row.Builder().groupKey(String.format("rowGroup%d", x)).build())
         );
 
         final TableResult tableResult = builder.build();
