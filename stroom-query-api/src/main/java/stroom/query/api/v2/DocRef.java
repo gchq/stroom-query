@@ -37,7 +37,7 @@ import java.io.Serializable;
 @XmlType(name = "DocRef", propOrder = {"type", "uuid", "name"})
 @XmlRootElement(name = "doc")
 @XmlAccessorType(XmlAccessType.FIELD)
-@ApiModel(description = Query.CLASS_DESC)
+@ApiModel(description = DocRef.CLASS_DESC)
 public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable {
 
     public static final String CLASS_DESC = "A class for describing a unique reference to a 'document' in stroom.  " +
