@@ -188,6 +188,7 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
                         .addField(new Field.Builder()
                                 .name(":Depth")
                                 .build());
+                this.fields.forEach(resultBuilder::addField);
 
                 results.forEach(resultBuilder::addValues);
 
