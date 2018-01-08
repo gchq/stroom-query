@@ -17,6 +17,7 @@ public class DocRefResourceHttpClient implements DocRefResource {
     private final SimpleJsonHttpClient<QueryApiException> httpClient;
     private final String getAllUrl;
     private final Function<String, String> getUrl;
+    private final Function<String, String> getInfoUrl;
     private final BiFunction<String, String, String> createUrl;
     private final BiFunction<String, String, String> copyUrl;
     private final Function<String, String> moveUrl;
@@ -29,6 +30,9 @@ public class DocRefResourceHttpClient implements DocRefResource {
         this.getAllUrl = String.format("%s/docRefApi/v1/",
                 baseUrl);
         this.getUrl = (uuid) -> String.format("%s/docRefApi/v1/%s",
+                baseUrl,
+                uuid);
+        this.getInfoUrl = (uuid) -> String.format("%s/docRefApi/v1/%s/info",
                 baseUrl,
                 uuid);
         this.createUrl = (uuid, name) -> String.format("%s/docRefApi/v1/create/%s/%s",
@@ -68,9 +72,16 @@ public class DocRefResourceHttpClient implements DocRefResource {
     }
 
     @Override
-    public Response get(String uuid) throws QueryApiException {
+    public Response get(final String uuid) throws QueryApiException {
         return httpClient
                 .get(getUrl.apply(uuid))
+                .send();
+    }
+
+    @Override
+    public Response getInfo(final String uuid) throws QueryApiException {
+        return httpClient
+                .get(getInfoUrl.apply(uuid))
                 .send();
     }
 

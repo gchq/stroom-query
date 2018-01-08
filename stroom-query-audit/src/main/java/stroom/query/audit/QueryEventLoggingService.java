@@ -34,7 +34,7 @@ public class QueryEventLoggingService extends DefaultEventLoggingService impleme
 
     private static final String SYSTEM = "Stroom";
     private static final String ENVIRONMENT = "";
-    private static final String GENERATOR = "ElasticEventLoggingService";
+    private static final String GENERATOR = "StroomDocRefEventLoggingService";
 
     private volatile boolean obtainedDevice;
     private volatile Device storedDevice;

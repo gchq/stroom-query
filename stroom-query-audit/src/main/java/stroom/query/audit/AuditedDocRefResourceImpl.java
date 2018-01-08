@@ -41,6 +41,15 @@ public class AuditedDocRefResourceImpl implements DocRefResource {
     }
 
     @Override
+    public Response getInfo(final String uuid) throws QueryApiException {
+        return auditWrapper.auditFunction(() -> docRefResource.getInfo(uuid),
+                (eventDetail, response, exception) -> {
+                    eventDetail.setTypeId("GET_DOC_REF_INFO");
+                    eventDetail.setDescription("Get info for a single doc ref");
+                });
+    }
+
+    @Override
     public Response createDocument(final String uuid,
                                    final String name) throws QueryApiException {
         return auditWrapper.auditFunction(() -> docRefResource.createDocument(uuid, name),

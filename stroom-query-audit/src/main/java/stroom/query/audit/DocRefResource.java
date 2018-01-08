@@ -41,6 +41,17 @@ public interface DocRefResource {
     Response get(@PathParam("uuid") String uuid) throws QueryApiException;
 
     /**
+     * Retrieve the full config for the given DocRef
+     * @param uuid              The UUID of the docRef to return
+     * @return                  The DocRefInfo for the given DocRef
+     * @throws QueryApiException  If something goes wrong
+     */
+    @GET
+    @Path("/{uuid}/info")
+    @Timed
+    Response getInfo(@PathParam("uuid") String uuid) throws QueryApiException;
+
+    /**
      * A new document has been created in Stroom
      *
      * @param uuid              The UUID of the document as created by stroom
