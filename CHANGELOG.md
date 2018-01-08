@@ -10,6 +10,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## [v2.0.0-alpha.20] - 2018-01-08
+
+### Changed
+
+* Added resource definitions for external doc ref management
+
+## [v2.0.0-alpha.19] - 2017-12-12
+
+### Changed
+
+* Added missing fields to result builder
+
 ## [v2.0.0-alpha.14] - 2017-12-11
 
 ### Changed
@@ -128,7 +140,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.14...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.20...HEAD
+[v2.0.0-alpha.13]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.19...v2.0.0-alpha.20
+[v2.0.0-alpha.13]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.14...v2.0.0-alpha.19
 [v2.0.0-alpha.13]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.13...v2.0.0-alpha.14
 [v2.0.0-alpha.13]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.12...v2.0.0-alpha.13
 [v2.0.0-alpha.12]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.11...v2.0.0-alpha.12
