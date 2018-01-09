@@ -6,6 +6,7 @@ public class DocRefInfo {
     private Long updateTime;
     private String createUser;
     private String updateUser;
+    private String otherInfo;
 
     public DocRefInfo() {
 
@@ -51,6 +52,14 @@ public class DocRefInfo {
         this.updateUser = updateUser;
     }
 
+    public String getOtherInfo() {
+        return otherInfo;
+    }
+
+    public void setOtherInfo(String otherInfo) {
+        this.otherInfo = otherInfo;
+    }
+
     public static class Builder {
         private final DocRefInfo instance;
 
@@ -80,6 +89,11 @@ public class DocRefInfo {
 
         public Builder updateUser(final String value) {
             this.instance.setUpdateUser(value);
+            return this;
+        }
+
+        public Builder otherInfo(final String value) {
+            this.instance.setOtherInfo(value);
             return this;
         }
 
