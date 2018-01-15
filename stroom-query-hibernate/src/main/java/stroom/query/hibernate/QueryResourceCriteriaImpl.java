@@ -8,7 +8,8 @@ import stroom.dashboard.expression.v1.FieldIndexMap;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
 import stroom.query.api.v2.*;
-import stroom.query.audit.QueryResource;
+import stroom.query.audit.rest.QueryResource;
+import stroom.query.audit.security.ServiceUser;
 import stroom.query.common.v2.*;
 import stroom.util.shared.HasTerminate;
 import stroom.util.shared.QueryApiException;
@@ -61,14 +62,16 @@ public class QueryResourceCriteriaImpl<T extends QueryableEntity> implements Que
     }
 
     @Override
-    public Response getDataSource(final DocRef docRef) throws QueryApiException {
+    public Response getDataSource(final ServiceUser authenticatedServiceUser,
+                                  final DocRef docRef) throws QueryApiException {
         return Response
                 .ok(new DataSource(this.fields))
                 .build();
     }
 
     @Override
-    public Response search(final SearchRequest request) throws QueryApiException {
+    public Response search(final ServiceUser authenticatedServiceUser,
+                           final SearchRequest request) throws QueryApiException {
         final String dataSourceUuid = request.getQuery().getDataSource().getUuid();
 
         try (final Session session = database.openSession()) {
@@ -95,7 +98,8 @@ public class QueryResourceCriteriaImpl<T extends QueryableEntity> implements Que
     }
 
     @Override
-    public Response destroy(final QueryKey queryKey) throws QueryApiException {
+    public Response destroy(final ServiceUser authenticatedServiceUser,
+                            final QueryKey queryKey) throws QueryApiException {
         return Response
                 .ok(Boolean.TRUE)
                 .build();

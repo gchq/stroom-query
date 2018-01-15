@@ -74,13 +74,12 @@ public class QueryEventLoggingService extends DefaultEventLoggingService impleme
         final Device client = getClient(request);
 
         // Get user.
-        final User user = getUser();
+        final User user = new User();
 
         // Create system.
         final System system = new System();
         system.setName(SYSTEM);
         system.setEnvironment(ENVIRONMENT);
-        //system.setVersion(BuildInfoUtil.getBuildVersion());
 
         // Create event source.
         final Event.EventSource eventSource = new Event.EventSource();
@@ -152,21 +151,6 @@ public class QueryEventLoggingService extends DefaultEventLoggingService impleme
             } catch (final Exception e) {
                 LOGGER.warn("Problem getting client IP address and host name", e);
             }
-        }
-
-        return null;
-    }
-
-    private User getUser() {
-        try {
-            final String userId = "StroomUser"; //security.getUserPrincipal().getName();
-            if (userId != null) {
-                final User user = new User();
-                user.setId(userId);
-                return user;
-            }
-        } catch (final Exception e) {
-            LOGGER.warn("Problem getting current user", e);
         }
 
         return null;

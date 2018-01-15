@@ -5,6 +5,11 @@ import io.dropwizard.Bundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.glassfish.hk2.utilities.reflection.ParameterizedTypeImpl;
+import stroom.query.audit.rest.AuditedDocRefResourceImpl;
+import stroom.query.audit.rest.AuditedQueryResourceImpl;
+import stroom.query.audit.service.DocRefService;
+import stroom.query.audit.service.QueryService;
 
 /**
  * This Dropwizard bundle can be used to register an implementation of Query Resource implementation
@@ -14,18 +19,29 @@ import org.glassfish.hk2.utilities.binding.AbstractBinder;
  * It will also register an audited version of the external DocRef resource. External DataSources will need to provide
  * implementations of DocRef resource to allow stroom to manage the documents that live outside of it.
  *
- * @param <Q> Implementation class for the Query Resource
- * @param <D> Implementation class for the DocRef Resource
+ * @param <QUERY_SERVICE> Implementation class for the Query Service
+ * @param <DOC_REF_POJO> POJO class for the Document
+ * @param <AUDITED_DOC_REF_RESOURCE> Implementation class for the Audited DocRef Resource
+ * @param <DOC_REF_SERVICE> Implementation class for the DocRef Service
  */
-public class AuditedQueryBundle<Q extends QueryResource, D extends DocRefResource> implements Bundle {
+public final class AuditedQueryBundle<QUERY_SERVICE extends QueryService,
+        DOC_REF_POJO,
+        AUDITED_DOC_REF_RESOURCE extends AuditedDocRefResourceImpl<DOC_REF_POJO>,
+        DOC_REF_SERVICE extends DocRefService<DOC_REF_POJO>> implements Bundle {
 
-    private final Class<Q> queryResourceClass;
-    private final Class<D> docRefResourceClass;
+    private final Class<QUERY_SERVICE> queryServiceClass;
+    private final Class<DOC_REF_POJO> docRefClass;
+    private final Class<AUDITED_DOC_REF_RESOURCE> auditedDocRefResourceClass;
+    private final Class<DOC_REF_SERVICE> docRefServiceClass;
 
-    public AuditedQueryBundle(final Class<Q> queryResourceClass,
-                              final Class<D> docRefResourceClass) {
-        this.queryResourceClass = queryResourceClass;
-        this.docRefResourceClass = docRefResourceClass;
+    public AuditedQueryBundle(final Class<QUERY_SERVICE> queryServiceClass,
+                              final Class<DOC_REF_POJO> docRefClass,
+                              final Class<AUDITED_DOC_REF_RESOURCE> auditedDocRefResourceClass,
+                              final Class<DOC_REF_SERVICE> docRefServiceClass) {
+        this.queryServiceClass = queryServiceClass;
+        this.docRefClass = docRefClass;
+        this.auditedDocRefResourceClass = auditedDocRefResourceClass;
+        this.docRefServiceClass = docRefServiceClass;
     }
 
     @Override
@@ -36,13 +52,13 @@ public class AuditedQueryBundle<Q extends QueryResource, D extends DocRefResourc
     @Override
     public void run(final Environment environment) {
         environment.jersey().register(AuditedQueryResourceImpl.class);
-        environment.jersey().register(AuditedDocRefResourceImpl.class);
+        environment.jersey().register(auditedDocRefResourceClass);
         environment.jersey().register(new AbstractBinder() {
             @Override
             protected void configure() {
                 bind(QueryEventLoggingService.class).to(EventLoggingService.class);
-                bind(queryResourceClass).to(QueryResource.class);
-                bind(docRefResourceClass).to(DocRefResource.class);
+                bind(queryServiceClass).to(QueryService.class);
+                bind(docRefServiceClass).to(new ParameterizedTypeImpl(DocRefService.class, docRefClass));
             }
         });
     }

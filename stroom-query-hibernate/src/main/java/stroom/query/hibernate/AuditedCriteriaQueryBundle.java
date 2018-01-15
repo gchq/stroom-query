@@ -8,9 +8,9 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.hibernate.SessionFactory;
-import stroom.query.audit.AuditedQueryResourceImpl;
+import stroom.query.audit.rest.AuditedQueryResourceImpl;
 import stroom.query.audit.QueryEventLoggingService;
-import stroom.query.audit.QueryResource;
+import stroom.query.audit.rest.QueryResource;
 
 /**
  * This Dropwizard bundle can be used to build the entire Query Resource implementation stack when the data source is

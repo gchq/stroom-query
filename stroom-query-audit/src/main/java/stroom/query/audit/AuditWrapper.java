@@ -2,6 +2,7 @@ package stroom.query.audit;
 
 import event.logging.Event;
 import event.logging.EventLoggingService;
+import stroom.query.audit.security.ServiceUser;
 
 import javax.ws.rs.core.Response;
 import java.util.function.Function;
@@ -32,13 +33,14 @@ public class AuditWrapper<E extends Throwable> {
                       final E exception);
     }
 
-    public Response auditFunction(final GetResponse<E> getRespose,
+    public Response auditFunction(final ServiceUser serviceUser,
+                                  final GetResponse<E> getResponse,
                                   final PopulateEventDetail<E> populateEventDetail) throws E {
         Response response = null;
         E exception = null;
 
         try {
-            response = getRespose.getResponse();
+            response = getResponse.getResponse();
 
             return response;
         } catch(final Throwable e) {
@@ -51,6 +53,10 @@ public class AuditWrapper<E extends Throwable> {
         } finally {
             final Event event = eventLoggingService.createEvent();
             final Event.EventDetail eventDetail = event.getEventDetail();
+
+            if (null != serviceUser) {
+                event.getEventSource().getUser().setId(serviceUser.getName());
+            }
 
             populateEventDetail.populate(eventDetail, response, exception);
 

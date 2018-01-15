@@ -1,4 +1,4 @@
-package stroom.query.audit;
+package stroom.query.audit.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eclipse.jetty.http.HttpStatus;
@@ -31,6 +31,7 @@ public class SimpleJsonHttpClient<E extends Throwable> {
     private Response send(final String method,
                           final String url,
                           final Object body,
+                          final String jwt,
                           final Map<String, Object> queryParams) throws E {
         try {
             final StringBuilder urlToUse = new StringBuilder(url);
@@ -55,6 +56,9 @@ public class SimpleJsonHttpClient<E extends Throwable> {
             con.setRequestMethod(method);
             con.setRequestProperty("accept", MediaType.APPLICATION_JSON);
             con.setRequestProperty("Content-Type", MediaType.APPLICATION_JSON);
+            if (null != jwt) {
+                con.setRequestProperty("Authorization", String.format("Bearer %s", jwt));
+            }
 
             // Send the body, or just connect
             if (null != body) {
@@ -113,6 +117,7 @@ public class SimpleJsonHttpClient<E extends Throwable> {
         private String method;
         private String url;
         private Object body;
+        private String jwt;
         private Map<String, Object> queryParams = new HashMap<>();
 
         public RequestBuilder method(final String value) {
@@ -130,13 +135,18 @@ public class SimpleJsonHttpClient<E extends Throwable> {
             return this;
         }
 
+        public RequestBuilder jwt(final String value) {
+            this.jwt = value;
+            return this;
+        }
+
         public RequestBuilder queryParam(final String key, final Object value) {
             this.queryParams.put(key, value);
             return this;
         }
 
         public Response send() throws E {
-            return SimpleJsonHttpClient.this.send(this.method, this.url, this.body, this.queryParams);
+            return SimpleJsonHttpClient.this.send(this.method, this.url, this.body, this.jwt, this.queryParams);
         }
     }
 }

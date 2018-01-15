@@ -1,4 +1,4 @@
-package stroom.query.audit;
+package stroom.query.audit.logback;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.Appender;
