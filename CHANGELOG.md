@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## [v2.0.0-alpha.22] - 2018-01-15
+
+### Changed
+
+* Added Authentication to DocRef and Query resources.
+* Implementations now need to create Service implementations, REST layers are now entirely common.
+
 ## [v2.0.0-alpha.21] - 2018-01-09
 
 ### Changed
@@ -146,7 +153,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.21...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.22...HEAD
+[v2.0.0-alpha.21]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.21...v2.0.0-alpha.22
 [v2.0.0-alpha.21]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.20...v2.0.0-alpha.21
 [v2.0.0-alpha.20]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.19...v2.0.0-alpha.20
 [v2.0.0-alpha.19]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.14...v2.0.0-alpha.19
