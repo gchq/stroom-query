@@ -8,8 +8,8 @@ import stroom.dashboard.expression.v1.FieldIndexMap;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
 import stroom.query.api.v2.*;
-import stroom.query.audit.rest.QueryResource;
 import stroom.query.audit.security.ServiceUser;
+import stroom.query.audit.service.QueryService;
 import stroom.query.common.v2.*;
 import stroom.util.shared.HasTerminate;
 import stroom.util.shared.QueryApiException;
@@ -19,7 +19,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.ws.rs.core.Response;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -31,9 +30,9 @@ import java.util.stream.Collectors;
  * It will use the {@link IsDataSourceField} annotation to find fields to expose as it's data source.
  * @param <T> The annotated hibernate class.
  */
-public class QueryResourceCriteriaImpl<T extends QueryableEntity> implements QueryResource {
+public class QueryServiceCriteriaImpl<T extends QueryableEntity> implements QueryService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(QueryResourceCriteriaImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(QueryServiceCriteriaImpl.class);
 
     private final SessionFactory database;
 
@@ -41,7 +40,7 @@ public class QueryResourceCriteriaImpl<T extends QueryableEntity> implements Que
 
     private final List<DataSourceField> fields;
 
-    public QueryResourceCriteriaImpl(final Class<T> dtoClass, final SessionFactory database) {
+    public QueryServiceCriteriaImpl(final Class<T> dtoClass, final SessionFactory database) {
         this.database = database;
         this.dtoClass = dtoClass;
 
@@ -62,16 +61,14 @@ public class QueryResourceCriteriaImpl<T extends QueryableEntity> implements Que
     }
 
     @Override
-    public Response getDataSource(final ServiceUser authenticatedServiceUser,
-                                  final DocRef docRef) throws QueryApiException {
-        return Response
-                .ok(new DataSource(this.fields))
-                .build();
+    public Optional<DataSource> getDataSource(final ServiceUser authenticatedServiceUser,
+                                              final DocRef docRef) throws QueryApiException {
+        return Optional.of(new DataSource(this.fields));
     }
 
     @Override
-    public Response search(final ServiceUser authenticatedServiceUser,
-                           final SearchRequest request) throws QueryApiException {
+    public Optional<SearchResponse> search(final ServiceUser authenticatedServiceUser,
+                                           final SearchRequest request) throws QueryApiException {
         final String dataSourceUuid = request.getQuery().getDataSource().getUuid();
 
         try (final Session session = database.openSession()) {
@@ -91,18 +88,14 @@ public class QueryResourceCriteriaImpl<T extends QueryableEntity> implements Que
             final List<Tuple> tuples = session.createQuery(cq).getResultList();
             final SearchResponse searchResponse = projectResults(request, tuples);
 
-            return Response
-                    .ok(searchResponse)
-                    .build();
+            return Optional.of(searchResponse);
         }
     }
 
     @Override
-    public Response destroy(final ServiceUser authenticatedServiceUser,
+    public Boolean destroy(final ServiceUser authenticatedServiceUser,
                             final QueryKey queryKey) throws QueryApiException {
-        return Response
-                .ok(Boolean.TRUE)
-                .build();
+        return Boolean.TRUE;
     }
 
     private Predicate getPredicate(final CriteriaBuilder cb,

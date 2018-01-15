@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Used to store the results from a query made on a {@link QueryResourceCriteriaImpl}
+ * Used to store the results from a query made on a {@link QueryServiceCriteriaImpl}
  */
 public class CriteriaStore implements Store {
     private CoprocessorSettingsMap coprocessorSettingsMap;

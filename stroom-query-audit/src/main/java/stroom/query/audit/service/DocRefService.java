@@ -94,8 +94,9 @@ public interface DocRefService <T> {
      *
      * @param uuid The uuid of the document you want to delete.
      * @throws QueryApiException  If something goes wrong
+     * @return Optional boolean, if missing, the document could not be found, if false, it could not be deleted
      */
-    void deleteDocument(String uuid) throws QueryApiException;
+    Optional<Boolean> deleteDocument(String uuid) throws QueryApiException;
 
     /**
      * Used to export the full details of a document for transfer.

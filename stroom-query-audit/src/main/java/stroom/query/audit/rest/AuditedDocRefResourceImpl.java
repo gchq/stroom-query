@@ -142,11 +142,9 @@ public class AuditedDocRefResourceImpl<T> implements DocRefResource<T> {
     public Response deleteDocument(final ServiceUser authenticatedServiceUser,
                                    final String uuid) throws QueryApiException {
         return auditWrapper.auditFunction(authenticatedServiceUser,
-                () -> {
-                    service.deleteDocument(uuid);
-
-                    return Response.noContent().build();
-                },
+                () -> service.deleteDocument(uuid).map(d -> Response.ok(d).build())
+                        .orElse(Response.status(HttpStatus.NOT_FOUND_404)
+                                .build()),
                 (eventDetail, response, exception) -> {
                     eventDetail.setTypeId("DELETE_DOC_REF");
                     eventDetail.setDescription("Delete a Doc Ref");
