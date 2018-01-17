@@ -1,16 +1,27 @@
 package stroom.query.hibernate;
 
+import stroom.datasource.api.v2.DataSourceField;
+import stroom.query.api.v2.ExpressionTerm;
+import stroom.query.audit.service.DocRefEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 @MappedSuperclass
 public class QueryableEntity implements Serializable {
     public static final String DATA_SOURCE_UUID = "dataSourceUuid";
 
     private String dataSourceUuid;
+
+    private Long createTime;
+    private Long updateTime;
+    private String createUser;
+    private String updateUser;
 
     @Id
     @Column(name= DATA_SOURCE_UUID)
@@ -20,6 +31,122 @@ public class QueryableEntity implements Serializable {
 
     public void setDataSourceUuid(String dataSourceUuid) {
         this.dataSourceUuid = dataSourceUuid;
+    }
+
+    public static class CreateTimeField implements Supplier<DataSourceField> {
+
+        @Override
+        public DataSourceField get() {
+            return new DataSourceField(
+                    DataSourceField.DataSourceFieldType.DATE_FIELD,
+                    DocRefEntity.CREATE_TIME,
+                    true,
+                    Arrays.asList(
+                            ExpressionTerm.Condition.BETWEEN,
+                            ExpressionTerm.Condition.EQUALS,
+                            ExpressionTerm.Condition.GREATER_THAN,
+                            ExpressionTerm.Condition.GREATER_THAN_OR_EQUAL_TO,
+                            ExpressionTerm.Condition.LESS_THAN,
+                            ExpressionTerm.Condition.LESS_THAN_OR_EQUAL_TO
+                    )
+            );
+        }
+    }
+
+    @Column(name=DocRefEntity.CREATE_TIME)
+    @IsDataSourceField(fieldSupplier = CreateTimeField.class)
+    public Long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Long createTime) {
+        this.createTime = createTime;
+    }
+
+    public static class UpdateTimeField implements Supplier<DataSourceField> {
+
+        @Override
+        public DataSourceField get() {
+            return new DataSourceField(
+                    DataSourceField.DataSourceFieldType.DATE_FIELD,
+                    DocRefEntity.UPDATE_TIME,
+                    true,
+                    Arrays.asList(
+                            ExpressionTerm.Condition.BETWEEN,
+                            ExpressionTerm.Condition.EQUALS,
+                            ExpressionTerm.Condition.GREATER_THAN,
+                            ExpressionTerm.Condition.GREATER_THAN_OR_EQUAL_TO,
+                            ExpressionTerm.Condition.LESS_THAN,
+                            ExpressionTerm.Condition.LESS_THAN_OR_EQUAL_TO
+                    )
+            );
+        }
+    }
+
+    @Column(name=DocRefEntity.UPDATE_TIME)
+    @IsDataSourceField(fieldSupplier = UpdateTimeField.class)
+    public Long getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Long updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public static class CreateUserField implements Supplier<DataSourceField> {
+
+        @Override
+        public DataSourceField get() {
+            return new DataSourceField(
+                    DataSourceField.DataSourceFieldType.FIELD,
+                    DocRefEntity.CREATE_USER,
+                    true,
+                    Arrays.asList(
+                            ExpressionTerm.Condition.EQUALS,
+                            ExpressionTerm.Condition.CONTAINS,
+                            ExpressionTerm.Condition.IN,
+                            ExpressionTerm.Condition.IN_DICTIONARY
+                    )
+            );
+        }
+    }
+
+    @Column(name=DocRefEntity.CREATE_USER)
+    @IsDataSourceField(fieldSupplier = CreateUserField.class)
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
+    }
+
+    public static class UpdateUserField implements Supplier<DataSourceField> {
+
+        @Override
+        public DataSourceField get() {
+            return new DataSourceField(
+                    DataSourceField.DataSourceFieldType.FIELD,
+                    DocRefEntity.UPDATE_USER,
+                    true,
+                    Arrays.asList(
+                            ExpressionTerm.Condition.EQUALS,
+                            ExpressionTerm.Condition.CONTAINS,
+                            ExpressionTerm.Condition.IN,
+                            ExpressionTerm.Condition.IN_DICTIONARY
+                    )
+            );
+        }
+    }
+
+    @Column(name=DocRefEntity.UPDATE_USER)
+    @IsDataSourceField(fieldSupplier = UpdateUserField.class)
+    public String getUpdateUser() {
+        return updateUser;
+    }
+
+    public void setUpdateUser(String updateUser) {
+        this.updateUser = updateUser;
     }
 
     @Override
@@ -53,6 +180,25 @@ public class QueryableEntity implements Serializable {
 
         public CHILD_CLASS dataSourceUuid(final String value) {
             this.instance.setDataSourceUuid(value);
+            return self();
+        }
+        public CHILD_CLASS createUser(final String value) {
+            this.instance.setCreateUser(value);
+            return self();
+        }
+
+        public CHILD_CLASS createTime(final Long value) {
+            this.instance.setCreateTime(value);
+            return self();
+        }
+
+        public CHILD_CLASS updateUser(final String value) {
+            this.instance.setUpdateUser(value);
+            return self();
+        }
+
+        public CHILD_CLASS updateTime(final Long value) {
+            this.instance.setUpdateTime(value);
             return self();
         }
 

@@ -7,7 +7,6 @@ import stroom.query.api.v2.QueryKey;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.audit.rest.QueryResource;
 import stroom.query.audit.security.ServiceUser;
-import stroom.util.shared.QueryApiException;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -33,32 +32,32 @@ public class QueryResourceHttpClient implements QueryResource {
     }
 
     @Override
-    public Response getDataSource(final ServiceUser authenticatedServiceUser,
-                                  final DocRef docRef) throws QueryApiException {
+    public Response getDataSource(final ServiceUser user,
+                                  final DocRef docRef) {
         return httpClient
                 .target(this.dataSourceUrl)
                 .request()
-                .header("Authorization", "Bearer " + authenticatedServiceUser.getJwt())
+                .header("Authorization", "Bearer " + user.getJwt())
                 .post(Entity.json(docRef));
     }
 
     @Override
-    public Response search(final ServiceUser authenticatedServiceUser,
-                           final SearchRequest request) throws QueryApiException {
+    public Response search(final ServiceUser user,
+                           final SearchRequest request) {
         return httpClient
                 .target(this.searchUrl)
                 .request()
-                .header("Authorization", "Bearer " + authenticatedServiceUser.getJwt())
+                .header("Authorization", "Bearer " + user.getJwt())
                 .post(Entity.json(request));
     }
 
     @Override
-    public Response destroy(final ServiceUser authenticatedServiceUser,
-                            final QueryKey queryKey) throws QueryApiException {
+    public Response destroy(final ServiceUser user,
+                            final QueryKey queryKey) {
         return httpClient
                 .target(this.destroyUrl)
                 .request()
-                .header("Authorization", "Bearer " + authenticatedServiceUser.getJwt())
+                .header("Authorization", "Bearer " + user.getJwt())
                 .post(Entity.json(queryKey));
     }
 }

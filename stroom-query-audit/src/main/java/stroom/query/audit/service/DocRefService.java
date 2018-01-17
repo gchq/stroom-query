@@ -2,7 +2,7 @@ package stroom.query.audit.service;
 
 import stroom.query.api.v2.DocRefInfo;
 import stroom.query.audit.ExportDTO;
-import stroom.util.shared.QueryApiException;
+import stroom.query.audit.security.ServiceUser;
 
 import java.util.List;
 import java.util.Map;
@@ -12,7 +12,7 @@ import java.util.Optional;
  * Generic form of DocRef service, templated to the class the encapsulates the DocRef
  * @param <T> The class that represents the full document
  */
-public interface DocRefService <T> {
+public interface DocRefService <T extends DocRefEntity> {
     /**
      * Get the doc ref type that this service wraps.
      * @return The doc ref type name
@@ -21,108 +21,120 @@ public interface DocRefService <T> {
 
     /**
      * Retrieve all of the index entities currently registered
+     * @param user The logged in user
+     * @throws Exception if anything goes wrong
      * @return The list of all known index entities
-     * @throws QueryApiException  If something goes wrong
      */
-    List<T> getAll() throws QueryApiException;
+    List<T> getAll(ServiceUser user) throws Exception;
 
     /**
      * Retrieve the full config for the given DocRef
+     * @param user The logged in user
      * @param uuid              The UUID of the docRef to return
+     * @throws Exception if anything goes wrong
      * @return                  The full implementation specific config for this docRef.
-     * @throws QueryApiException  If something goes wrong
      */
-    Optional<T> get(String uuid) throws QueryApiException;
+    Optional<T> get(ServiceUser user, String uuid) throws Exception;
 
     /**
      * Retrieve the info about a doc ref
+     * @param user The logged in user
      * @param uuid The UUID of the doc ref to find
+     * @throws Exception if anything goes wrong
      * @return The DocRefInfo for the UUID
-     * @throws QueryApiException If something goes wrong
      */
-    Optional<DocRefInfo> getInfo(String uuid) throws QueryApiException;
+    Optional<DocRefInfo> getInfo(ServiceUser user, String uuid) throws Exception;
 
     /**
      * A new document has been created in Stroom
      *
+     * @param user The logged in user
      * @param uuid              The UUID of the document as created by stroom
      * @param name              The name of the document to be created.
+     * @throws Exception if anything goes wrong
      * @return The new index entity
-     * @throws QueryApiException  If something goes wrong
      */
-    Optional<T> createDocument(String uuid, String name) throws QueryApiException;
+    Optional<T> createDocument(ServiceUser user, String uuid, String name) throws Exception;
 
     /**
      * Used to update a specific document.
      * This will be used by our user interface to configure the underlying index and the stroom references to it
+     * @param user The logged in user
      * @param uuid The UUID of DocRef used to store the index configuration
      * @param updatedConfig The updated configuration
+     * @throws Exception if anything goes wrong
      * @return The updated config
-     * @throws QueryApiException  If something goes wrong
      */
-    Optional<T> update(String uuid, T updatedConfig) throws QueryApiException;
+    Optional<T> update(ServiceUser user, String uuid, T updatedConfig) throws Exception;
 
     /**
      * A notification from Stroom that a document is being copied. The external system should
      * copy it's configuration for the original into a new entity.
      *
+     * @param user The logged in user
      * @param originalUuid      The uuid of the document being copied
      * @param copyUuid          The uuid of the copy
+     * @throws Exception if anything goes wrong
      * @return The new index entity
-     * @throws QueryApiException  If something goes wrong
      */
-    Optional<T> copyDocument(String originalUuid, String copyUuid) throws QueryApiException;
+    Optional<T> copyDocument(ServiceUser user, String originalUuid, String copyUuid) throws Exception;
 
     /**
      * A Notification from Stroom that the document has been 'moved'. In most cases the external system
      * will not care about this.
      *
+     * @param user The logged in user
      * @param uuid             The uuid of the document that was moved
+     * @throws Exception if anything goes wrong
      * @return The updated index entity
-     * @throws QueryApiException  If something goes wrong
      */
-    Optional<T> documentMoved(String uuid) throws QueryApiException;
+    Optional<T> moveDocument(ServiceUser user, String uuid) throws Exception;
 
     /**
      * A notifiation from Stroom that the name of a document has been changed. Whilst the name belongs to stroom
      * it may be helpful for the external system to know what the name is, but the name should not be used for referencing
      * the DocRef between systems as it could easily be out of sync.
      *
+     * @param user The logged in user
      * @param uuid The uuid of the document you want to rename.
      * @param name The new name of the document.
+     * @throws Exception if anything goes wrong
      * @return The updated index entity
-     * @throws QueryApiException  If something goes wrong
      */
-    Optional<T> documentRenamed(String uuid, String name) throws QueryApiException;
+    Optional<T> renameDocument(ServiceUser user, String uuid, String name) throws Exception;
 
     /**
      * The document with this UUID is being deleted in Stroom.
      *
+     * @param user The logged in user
      * @param uuid The uuid of the document you want to delete.
-     * @throws QueryApiException  If something goes wrong
+     * @throws Exception if anything goes wrong
      * @return Optional boolean, if missing, the document could not be found, if false, it could not be deleted
      */
-    Optional<Boolean> deleteDocument(String uuid) throws QueryApiException;
+    Optional<Boolean> deleteDocument(ServiceUser user, String uuid) throws Exception;
 
     /**
      * Used to export the full details of a document for transfer.
+     * @param user The logged in user
      * @param uuid The UUID of the document to export
+     * @throws Exception if anything goes wrong
      * @return The exported data
-     * @throws QueryApiException If something goes wrong
      */
-    ExportDTO exportDocument(String uuid) throws QueryApiException;
+    ExportDTO exportDocument(ServiceUser user, String uuid) throws Exception;
 
     /**
      * Used to import a document into the system
+     * @param user The logged in user
      * @param uuid The UUID of the document to import
      * @param name The Name of the document to import
      * @param confirmed Used to indicate if this is a dry run
      * @param dataMap The data that gives all the implementation specific details
+     * @throws Exception if anything goes wrong
      * @return The imported document
-     * @throws QueryApiException If something goes wrong
      */
-    Optional<T> importDocument(String uuid,
+    Optional<T> importDocument(ServiceUser user,
+                               String uuid,
                                String name,
                                Boolean confirmed,
-                               Map<String, String> dataMap) throws QueryApiException;
+                               Map<String, String> dataMap) throws Exception;
 }

@@ -8,19 +8,19 @@ import stroom.query.audit.ExportDTO;
 import stroom.query.audit.authorisation.AuthorisationService;
 import stroom.query.audit.authorisation.DocumentPermission;
 import stroom.query.audit.security.ServiceUser;
+import stroom.query.audit.service.DocRefEntity;
 import stroom.query.audit.service.DocRefService;
-import stroom.util.shared.QueryApiException;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import java.util.Map;
 
-public class AuditedDocRefResourceImpl<T> implements DocRefResource<T> {
+public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRefResource<T> {
     private final DocRefService<T> service;
 
     private final EventLoggingService eventLoggingService;
 
-    private final AuditWrapper<QueryApiException> auditWrapper;
+    private final AuditWrapper auditWrapper;
 
     private final AuthorisationService authorisationService;
 
@@ -31,14 +31,14 @@ public class AuditedDocRefResourceImpl<T> implements DocRefResource<T> {
         this.service = service;
         this.eventLoggingService = eventLoggingService;
         this.authorisationService = authorisationService;
-        this.auditWrapper = new AuditWrapper<>(eventLoggingService, QueryApiException.class, QueryApiException::new);
+        this.auditWrapper = new AuditWrapper(eventLoggingService);
     }
 
     @Override
-    public Response getAll(final ServiceUser authenticatedServiceUser) throws QueryApiException {
-        return auditWrapper.auditFunction(authenticatedServiceUser,
+    public Response getAll(final ServiceUser user){
+        return auditWrapper.auditFunction(user,
                 () -> Boolean.TRUE,
-                () -> Response.ok(service.getAll()).build(),
+                () -> Response.ok(service.getAll(user)).build(),
                 (eventDetail, response, exception) -> {
                     eventDetail.setTypeId("GET_DOC_REFS");
                     eventDetail.setDescription("Get the list of doc refs hosted by this service");
@@ -46,16 +46,16 @@ public class AuditedDocRefResourceImpl<T> implements DocRefResource<T> {
     }
 
     @Override
-    public Response get(final ServiceUser authenticatedServiceUser,
-                        final String uuid) throws QueryApiException {
-        return auditWrapper.auditFunction(authenticatedServiceUser,
-                () -> authorisationService.isAuthorised(authenticatedServiceUser,
+    public Response get(final ServiceUser user,
+                        final String uuid){
+        return auditWrapper.auditFunction(user,
+                () -> authorisationService.isAuthorised(user,
                         new DocRef.Builder()
                                 .type(this.service.getType())
                                 .uuid(uuid)
                                 .build(),
                         DocumentPermission.READ),
-                () -> service.get(uuid)
+                () -> service.get(user, uuid)
                         .map(d -> Response.ok(d).build())
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
                                 .build()),
@@ -66,16 +66,16 @@ public class AuditedDocRefResourceImpl<T> implements DocRefResource<T> {
     }
 
     @Override
-    public Response getInfo(final ServiceUser authenticatedServiceUser,
-                            final String uuid) throws QueryApiException {
-        return auditWrapper.auditFunction(authenticatedServiceUser,
-                () -> authorisationService.isAuthorised(authenticatedServiceUser,
+    public Response getInfo(final ServiceUser user,
+                            final String uuid){
+        return auditWrapper.auditFunction(user,
+                () -> authorisationService.isAuthorised(user,
                         new DocRef.Builder()
                                 .type(this.service.getType())
                                 .uuid(uuid)
                                 .build(),
                         DocumentPermission.READ),
-                () -> service.getInfo(uuid)
+                () -> service.getInfo(user, uuid)
                         .map(d -> Response.ok(d).build())
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
                                 .build()),
@@ -86,18 +86,18 @@ public class AuditedDocRefResourceImpl<T> implements DocRefResource<T> {
     }
 
     @Override
-    public Response createDocument(final ServiceUser authenticatedServiceUser,
+    public Response createDocument(final ServiceUser user,
                                    final String uuid,
                                    final String name,
-                                   final String parentFolderUUID) throws QueryApiException {
-        return auditWrapper.auditFunction(authenticatedServiceUser,
-                () -> authorisationService.isAuthorised(authenticatedServiceUser,
+                                   final String parentFolderUUID){
+        return auditWrapper.auditFunction(user,
+                () -> authorisationService.isAuthorised(user,
                         new DocRef.Builder()
                                 .type(DocumentPermission.FOLDER)
                                 .uuid(parentFolderUUID)
                                 .build(),
                         DocumentPermission.CREATE.getTypedPermission(service.getType())),
-                () -> service.createDocument(uuid, name)
+                () -> service.createDocument(user, uuid, name)
                         .map(d -> Response.ok(d).build())
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
                                 .build()),
@@ -108,17 +108,17 @@ public class AuditedDocRefResourceImpl<T> implements DocRefResource<T> {
     }
 
     @Override
-    public Response update(final ServiceUser authenticatedServiceUser,
+    public Response update(final ServiceUser user,
                            final String uuid,
-                           final T updatedConfig) throws QueryApiException {
-        return auditWrapper.auditFunction(authenticatedServiceUser,
-                () -> authorisationService.isAuthorised(authenticatedServiceUser,
+                           final T updatedConfig){
+        return auditWrapper.auditFunction(user,
+                () -> authorisationService.isAuthorised(user,
                         new DocRef.Builder()
                                 .type(this.service.getType())
                                 .uuid(uuid)
                                 .build(),
                         DocumentPermission.UPDATE),
-                () -> service.update(uuid, updatedConfig)
+                () -> service.update(user, uuid, updatedConfig)
                         .map(d -> Response.ok(d).build())
                         .orElse(Response.noContent().build()),
                 (eventDetail, response, exception) -> {
@@ -128,24 +128,24 @@ public class AuditedDocRefResourceImpl<T> implements DocRefResource<T> {
     }
 
     @Override
-    public Response copyDocument(final ServiceUser authenticatedServiceUser,
+    public Response copyDocument(final ServiceUser user,
                                  final String originalUuid,
                                  final String copyUuid,
-                                 final String parentFolderUUID) throws QueryApiException {
-        return auditWrapper.auditFunction(authenticatedServiceUser,
-                () ->   authorisationService.isAuthorised(authenticatedServiceUser,
+                                 final String parentFolderUUID){
+        return auditWrapper.auditFunction(user,
+                () ->   authorisationService.isAuthorised(user,
                             new DocRef.Builder()
                                     .type(this.service.getType())
                                     .uuid(originalUuid)
                                     .build(),
                             DocumentPermission.READ) &&
-                        authorisationService.isAuthorised(authenticatedServiceUser,
+                        authorisationService.isAuthorised(user,
                                 new DocRef.Builder()
                                     .type(DocumentPermission.FOLDER)
                                     .uuid(parentFolderUUID)
                                     .build(),
                             DocumentPermission.CREATE.getTypedPermission(service.getType())),
-                () -> service.copyDocument(originalUuid, copyUuid)
+                () -> service.copyDocument(user, originalUuid, copyUuid)
                         .map(d -> Response.ok(d).build())
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
                                 .build()),
@@ -156,23 +156,23 @@ public class AuditedDocRefResourceImpl<T> implements DocRefResource<T> {
     }
 
     @Override
-    public Response moveDocument(final ServiceUser authenticatedServiceUser,
+    public Response moveDocument(final ServiceUser user,
                                  final String uuid,
-                                 final String parentFolderUUID) throws QueryApiException {
-        return auditWrapper.auditFunction(authenticatedServiceUser,
-                () ->   authorisationService.isAuthorised(authenticatedServiceUser,
+                                 final String parentFolderUUID){
+        return auditWrapper.auditFunction(user,
+                () ->   authorisationService.isAuthorised(user,
                             new DocRef.Builder()
                                     .type(this.service.getType())
                                     .uuid(uuid)
                                     .build(),
                             DocumentPermission.READ) &&
-                        authorisationService.isAuthorised(authenticatedServiceUser,
+                        authorisationService.isAuthorised(user,
                                 new DocRef.Builder()
                                         .type(DocumentPermission.FOLDER)
                                         .uuid(parentFolderUUID)
                                         .build(),
                                 DocumentPermission.CREATE.getTypedPermission(service.getType())),
-                () -> service.documentMoved(uuid)
+                () -> service.moveDocument(user, uuid)
                         .map(d -> Response.ok(d).build())
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
                                 .build()),
@@ -183,12 +183,12 @@ public class AuditedDocRefResourceImpl<T> implements DocRefResource<T> {
     }
 
     @Override
-    public Response renameDocument(final ServiceUser authenticatedServiceUser,
+    public Response renameDocument(final ServiceUser user,
                                    final String uuid,
-                                   final String name) throws QueryApiException {
-        return auditWrapper.auditFunction(authenticatedServiceUser,
+                                   final String name){
+        return auditWrapper.auditFunction(user,
                 () -> Boolean.TRUE,
-                () -> service.documentRenamed(uuid, name)
+                () -> service.renameDocument(user, uuid, name)
                         .map(d -> Response.ok(d).build())
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
                                 .build()),
@@ -199,16 +199,16 @@ public class AuditedDocRefResourceImpl<T> implements DocRefResource<T> {
     }
 
     @Override
-    public Response deleteDocument(final ServiceUser authenticatedServiceUser,
-                                   final String uuid) throws QueryApiException {
-        return auditWrapper.auditFunction(authenticatedServiceUser,
-                () -> authorisationService.isAuthorised(authenticatedServiceUser,
+    public Response deleteDocument(final ServiceUser user,
+                                   final String uuid){
+        return auditWrapper.auditFunction(user,
+                () -> authorisationService.isAuthorised(user,
                         new DocRef.Builder()
                                 .type(this.service.getType())
                                 .uuid(uuid)
                                 .build(),
                         DocumentPermission.DELETE),
-                () -> service.deleteDocument(uuid).map(d -> Response.ok(d).build())
+                () -> service.deleteDocument(user, uuid).map(d -> Response.ok(d).build())
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
                                 .build()),
                 (eventDetail, response, exception) -> {
@@ -218,14 +218,14 @@ public class AuditedDocRefResourceImpl<T> implements DocRefResource<T> {
     }
 
     @Override
-    public Response importDocument(final ServiceUser authenticatedServiceUser,
+    public Response importDocument(final ServiceUser user,
                                    final String uuid,
                                    final String name,
                                    final Boolean confirmed,
-                                   final Map<String, String> dataMap) throws QueryApiException {
-        return auditWrapper.auditFunction(authenticatedServiceUser,
+                                   final Map<String, String> dataMap){
+        return auditWrapper.auditFunction(user,
                 () -> Boolean.TRUE,
-                () -> service.importDocument(uuid, name, confirmed, dataMap)
+                () -> service.importDocument(user, uuid, name, confirmed, dataMap)
                         .map(d -> Response.ok(d).build())
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
                                 .build()),
@@ -236,18 +236,18 @@ public class AuditedDocRefResourceImpl<T> implements DocRefResource<T> {
     }
 
     @Override
-    public Response exportDocument(final ServiceUser authenticatedServiceUser,
-                                   final String uuid) throws QueryApiException {
+    public Response exportDocument(final ServiceUser user,
+                                   final String uuid){
 
-        return auditWrapper.auditFunction(authenticatedServiceUser,
-                () -> authorisationService.isAuthorised(authenticatedServiceUser,
+        return auditWrapper.auditFunction(user,
+                () -> authorisationService.isAuthorised(user,
                         new DocRef.Builder()
                                 .type(this.service.getType())
                                 .uuid(uuid)
                                 .build(),
                         DocumentPermission.EXPORT),
                 () -> {
-                    final ExportDTO result = service.exportDocument(uuid);
+                    final ExportDTO result = service.exportDocument(user, uuid);
                     if (result.getValues().size() > 0) {
                         return Response.ok(result).build();
                     } else {

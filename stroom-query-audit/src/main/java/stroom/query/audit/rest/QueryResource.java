@@ -5,7 +5,6 @@ import stroom.query.api.v2.DocRef;
 import stroom.query.api.v2.QueryKey;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.audit.security.ServiceUser;
-import stroom.util.shared.QueryApiException;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
@@ -28,19 +27,19 @@ public interface QueryResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/dataSource")
     Response getDataSource(@Auth @NotNull ServiceUser authenticatedServiceUser,
-                           DocRef docRef) throws QueryApiException;
+                           DocRef docRef);
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/search")
     Response search(@Auth @NotNull ServiceUser authenticatedServiceUser,
-                    SearchRequest request) throws QueryApiException;
+                    SearchRequest request);
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/destroy")
     Response destroy(@Auth @NotNull ServiceUser authenticatedServiceUser,
-                     QueryKey queryKey) throws QueryApiException;
+                     QueryKey queryKey);
 }

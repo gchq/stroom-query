@@ -10,12 +10,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-## [v2.0.0-alpha.23] - 2018-01-17
+## [v2.0.0-alpha.24] - 2018-01-17
 
 ### Changed
 
 * Removed custom test implementations of auth service and http client, use Wiremock and javax.ws.rs.Client
-
+* Setup the doc ref info fields (created/updated user/time)
 
 ## [v2.0.0-alpha.22] - 2018-01-15
 
@@ -160,8 +160,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.23...HEAD
-[v2.0.0-alpha.21]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.22...v2.0.0-alpha.23
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.24...HEAD
+[v2.0.0-alpha.21]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.22...v2.0.0-alpha.24
 [v2.0.0-alpha.21]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.21...v2.0.0-alpha.22
 [v2.0.0-alpha.21]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.20...v2.0.0-alpha.21
 [v2.0.0-alpha.20]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.19...v2.0.0-alpha.20

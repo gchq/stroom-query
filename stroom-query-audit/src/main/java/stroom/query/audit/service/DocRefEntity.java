@@ -1,14 +1,14 @@
-package stroom.query.hibernate;
+package stroom.query.audit.service;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
 import java.util.Objects;
 
-@MappedSuperclass
 public class DocRefEntity {
     public static final String UUID = "uuid";
     public static final String NAME = "name";
+    public static final String CREATE_TIME = "createTime";
+    public static final String UPDATE_TIME = "updateTime";
+    public static final String CREATE_USER = "createUser";
+    public static final String UPDATE_USER = "updateUser";
 
     // This is the UUID of the DocRef within Stroom
     private String uuid;
@@ -16,8 +16,11 @@ public class DocRefEntity {
     // This is the name of the DocRef within Stroom
     private String name;
 
-    @Id
-    @Column(name=UUID)
+    private Long createTime;
+    private Long updateTime;
+    private String createUser;
+    private String updateUser;
+
     public String getUuid() {
         return uuid;
     }
@@ -26,13 +29,44 @@ public class DocRefEntity {
         this.uuid = uuid;
     }
 
-    @Column(name=NAME)
     public String getName() {
         return name;
     }
 
     public void setName(final String name) {
         this.name = name;
+    }
+
+    public Long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Long createTime) {
+        this.createTime = createTime;
+    }
+
+    public Long getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Long updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
+    }
+
+    public String getUpdateUser() {
+        return updateUser;
+    }
+
+    public void setUpdateUser(String updateUser) {
+        this.updateUser = updateUser;
     }
 
     @Override
@@ -74,9 +108,33 @@ public class DocRefEntity {
             return self();
         }
 
+        public CHILD_CLASS createUser(final String value) {
+            this.instance.setCreateUser(value);
+            return self();
+        }
+
+        public CHILD_CLASS createTime(final Long value) {
+            this.instance.setCreateTime(value);
+            return self();
+        }
+
+        public CHILD_CLASS updateUser(final String value) {
+            this.instance.setUpdateUser(value);
+            return self();
+        }
+
+        public CHILD_CLASS updateTime(final Long value) {
+            this.instance.setUpdateTime(value);
+            return self();
+        }
+
         public CHILD_CLASS original(final T original) {
             this.instance.setUuid(original.getUuid());
             this.instance.setName(original.getName());
+            this.instance.setCreateUser(original.getCreateUser());
+            this.instance.setCreateTime(original.getCreateTime());
+            this.instance.setUpdateUser(original.getUpdateUser());
+            this.instance.setUpdateTime(original.getUpdateTime());
             return self();
         }
 

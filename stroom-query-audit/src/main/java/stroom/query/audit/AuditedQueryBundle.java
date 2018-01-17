@@ -15,6 +15,7 @@ import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.audit.rest.AuditedQueryResourceImpl;
 import stroom.query.audit.security.HasTokenConfig;
 import stroom.query.audit.security.TokenConfig;
+import stroom.query.audit.service.DocRefEntity;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryService;
 
@@ -34,7 +35,7 @@ import stroom.query.audit.service.QueryService;
  */
 public final class AuditedQueryBundle<CONFIG extends Configuration & HasTokenConfig & HasAuthorisationConfig,
         QUERY_SERVICE extends QueryService,
-        DOC_REF_POJO,
+        DOC_REF_POJO extends DocRefEntity,
         AUDITED_DOC_REF_RESOURCE extends AuditedDocRefResourceImpl<DOC_REF_POJO>,
         DOC_REF_SERVICE extends DocRefService<DOC_REF_POJO>> implements ConfiguredBundle<CONFIG> {
 

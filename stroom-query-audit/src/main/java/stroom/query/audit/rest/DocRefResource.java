@@ -3,7 +3,7 @@ package stroom.query.audit.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.auth.Auth;
 import stroom.query.audit.security.ServiceUser;
-import stroom.util.shared.QueryApiException;
+import stroom.query.audit.service.DocRefEntity;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
@@ -24,44 +24,41 @@ import java.util.Map;
  */
 @Path("/docRefApi/v1")
 @Produces(MediaType.APPLICATION_JSON)
-public interface DocRefResource<T> {
+public interface DocRefResource<T extends DocRefEntity> {
 
     /**
      * Retrieve the full config for the given DocRef
      * @param authenticatedServiceUser Authenticated user passed in from web framework
      * @return                  The full list of doc refs
-     * @throws QueryApiException  If something goes wrong
      */
     @GET
     @Path("/")
     @Timed
-    Response getAll(@Auth @NotNull ServiceUser authenticatedServiceUser) throws QueryApiException;
+    Response getAll(@Auth @NotNull ServiceUser authenticatedServiceUser);
 
     /**
      * Retrieve the full config for the given DocRef
      * @param authenticatedServiceUser Authenticated user passed in from web framework
      * @param uuid              The UUID of the docRef to return
      * @return                  The full implementation specific config for this docRef.
-     * @throws QueryApiException  If something goes wrong
      */
     @GET
     @Path("/{uuid}")
     @Timed
     Response get(@Auth @NotNull ServiceUser authenticatedServiceUser,
-                 @PathParam("uuid") String uuid) throws QueryApiException;
+                 @PathParam("uuid") String uuid);
 
     /**
      * Retrieve the full config for the given DocRef
      * @param authenticatedServiceUser Authenticated user passed in from web framework
      * @param uuid              The UUID of the docRef to return
      * @return                  The DocRefInfo for the given DocRef
-     * @throws QueryApiException  If something goes wrong
      */
     @GET
     @Path("/{uuid}/info")
     @Timed
     Response getInfo(@Auth @NotNull ServiceUser authenticatedServiceUser,
-                     @PathParam("uuid") String uuid) throws QueryApiException;
+                     @PathParam("uuid") String uuid);
 
     /**
      * A new document has been created in Stroom
@@ -71,14 +68,13 @@ public interface DocRefResource<T> {
      * @param name              The name of the document to be created.
      * @param parentFolderUUID  The destination parent folder
      * @return A doc ref for the newly created document.
-     * @throws QueryApiException  If something goes wrong
      */
     @POST
     @Path("/create/{uuid}/{name}/{parentFolderUUID}")
     Response createDocument(@Auth @NotNull ServiceUser authenticatedServiceUser,
                             @PathParam("uuid") String uuid,
                             @PathParam("name") String name,
-                            @PathParam("parentFolderUUID") final String parentFolderUUID) throws QueryApiException;
+                            @PathParam("parentFolderUUID") final String parentFolderUUID);
 
     /**
      * Update the document
@@ -86,14 +82,13 @@ public interface DocRefResource<T> {
      * @param uuid              The UUID of the document as created by stroom
      * @param updatedConfig The updated configuration
      * @return The updated config
-     * @throws QueryApiException  If something goes wrong
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/update/{uuid}")
     Response update(@Auth ServiceUser authenticatedServiceUser,
                     @PathParam("uuid") String uuid,
-                    T updatedConfig) throws QueryApiException;
+                    T updatedConfig);
 
     /**
      * A notification from Stroom that a document is being copied. The external system should
@@ -104,14 +99,13 @@ public interface DocRefResource<T> {
      * @param copyUuid          The uuid of the copy
      * @param parentFolderUUID  The destination parent folder
      * @return A doc ref for the new document copy.
-     * @throws QueryApiException  If something goes wrong
      */
     @POST
     @Path("/copy/{originalUuid}/{copyUuid}/{parentFolderUUID}")
     Response copyDocument(@Auth @NotNull ServiceUser authenticatedServiceUser,
                           @PathParam("originalUuid") String originalUuid,
                           @PathParam("copyUuid") String copyUuid,
-                          @PathParam("parentFolderUUID") final String parentFolderUUID) throws QueryApiException;
+                          @PathParam("parentFolderUUID") final String parentFolderUUID);
 
     /**
      * A Notification from Stroom that the document has been 'moved'. In most cases the external system
@@ -121,13 +115,12 @@ public interface DocRefResource<T> {
      * @param uuid             The uuid of the document that was moved
      * @param parentFolderUUID The destination parent folder
      * @return A doc ref for the moved document.
-     * @throws QueryApiException  If something goes wrong
      */
     @PUT
     @Path("/move/{uuid}/{parentFolderUUID}")
     Response moveDocument(@Auth @NotNull ServiceUser authenticatedServiceUser,
                           @PathParam("uuid") String uuid,
-                          @PathParam("parentFolderUUID") final String parentFolderUUID) throws QueryApiException;
+                          @PathParam("parentFolderUUID") final String parentFolderUUID);
 
     /**
      * A notifiation from Stroom that the name of a document has been changed. Whilst the name belongs to stroom
@@ -138,26 +131,24 @@ public interface DocRefResource<T> {
      * @param uuid The uuid of the document you want to rename.
      * @param name The new name of the document.
      * @return A doc ref for the renamed document.
-     * @throws QueryApiException  If something goes wrong
      */
     @PUT
     @Path("/rename/{uuid}/{name}")
     Response renameDocument(@Auth @NotNull ServiceUser authenticatedServiceUser,
                             @PathParam("uuid") String uuid,
-                            @PathParam("name") String name) throws QueryApiException;
+                            @PathParam("name") String name);
 
     /**
      * The document with this UUID is being deleted in Stroom.
      *
      * @param authenticatedServiceUser Authenticated user passed in from web framework
      * @param uuid The uuid of the document you want to delete.
-     * @throws QueryApiException  If something goes wrong
      * @return No content if OK
      */
     @DELETE
     @Path("/delete/{uuid}")
     Response deleteDocument(@Auth @NotNull ServiceUser authenticatedServiceUser,
-                            @PathParam("uuid") String uuid) throws QueryApiException;
+                            @PathParam("uuid") String uuid);
 
     /**
      * Import the data as a new document.
@@ -167,7 +158,6 @@ public interface DocRefResource<T> {
      * @param confirmed Is the import a confirmed one? If it isn't then this is just a dry run.
      * @param dataMap The data to import
      * @return The created document
-     * @throws QueryApiException  If something goes wrong
      */
     @POST
     @Path("/import/{uuid}/{name}/{confirmed}")
@@ -175,17 +165,16 @@ public interface DocRefResource<T> {
                             @PathParam("uuid") String uuid,
                             @PathParam("name") String name,
                             @PathParam("confirmed") Boolean confirmed,
-                            Map<String, String> dataMap) throws QueryApiException;
+                            Map<String, String> dataMap);
 
     /**
      * Export the given document
      * @param authenticatedServiceUser Authenticated user passed in from web framework
      * @param uuid The UUID of the document to export
      * @return A Map of Strings by Strings containing the exported data.
-     * @throws QueryApiException  If something goes wrong
      */
     @GET
     @Path("/export/{uuid}")
     Response exportDocument(@Auth @NotNull ServiceUser authenticatedServiceUser,
-                            @PathParam("uuid") String uuid) throws QueryApiException;
+                            @PathParam("uuid") String uuid);
 }

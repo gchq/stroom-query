@@ -4,7 +4,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientResponse;
 import stroom.query.audit.rest.DocRefResource;
 import stroom.query.audit.security.ServiceUser;
-import stroom.util.shared.QueryApiException;
+import stroom.query.audit.service.DocRefEntity;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class DocRefResourceHttpClient<T> implements DocRefResource<T> {
+public class DocRefResourceHttpClient<T extends DocRefEntity> implements DocRefResource<T> {
 
     @FunctionalInterface
     private interface ImportUrlFunction {
@@ -84,122 +84,122 @@ public class DocRefResourceHttpClient<T> implements DocRefResource<T> {
     }
 
     @Override
-    public Response getAll(final ServiceUser authenticatedServiceUser) throws QueryApiException {
+    public Response getAll(final ServiceUser user){
         return httpClient
                 .target(getAllUrl)
                 .request()
-                .header("Authorization", "Bearer " + authenticatedServiceUser.getJwt())
+                .header("Authorization", "Bearer " + user.getJwt())
                 .get();
     }
 
     @Override
-    public Response get(final ServiceUser authenticatedServiceUser,
-                        final String uuid) throws QueryApiException {
+    public Response get(final ServiceUser user,
+                        final String uuid){
         return httpClient
                 .target(getUrl.apply(uuid))
                 .request()
-                .header("Authorization", "Bearer " + authenticatedServiceUser.getJwt())
+                .header("Authorization", "Bearer " + user.getJwt())
                 .get();
     }
 
     @Override
-    public Response getInfo(final ServiceUser authenticatedServiceUser,
-                            final String uuid) throws QueryApiException {
+    public Response getInfo(final ServiceUser user,
+                            final String uuid){
         return httpClient
                 .target(getInfoUrl.apply(uuid))
                 .request()
-                .header("Authorization", "Bearer " + authenticatedServiceUser.getJwt())
+                .header("Authorization", "Bearer " + user.getJwt())
                 .get();
     }
 
     @Override
-    public Response createDocument(final ServiceUser authenticatedServiceUser,
+    public Response createDocument(final ServiceUser user,
                                    final String uuid,
                                    final String name,
-                                   final String parentFolderUUID) throws QueryApiException {
+                                   final String parentFolderUUID){
         return httpClient
                 .target(createUrl.getUrl(uuid, name, parentFolderUUID))
                 .request()
-                .header("Authorization", "Bearer " + authenticatedServiceUser.getJwt())
+                .header("Authorization", "Bearer " + user.getJwt())
                 .post(Entity.json(""));
     }
 
     @Override
-    public Response update(final ServiceUser authenticatedServiceUser,
+    public Response update(final ServiceUser user,
                            final String uuid,
-                           final T updatedConfig) throws QueryApiException {
+                           final T updatedConfig){
         return httpClient
                 .target(this.updateUrl.apply(uuid))
                 .request()
-                .header("Authorization", "Bearer " + authenticatedServiceUser.getJwt())
+                .header("Authorization", "Bearer " + user.getJwt())
                 .put(Entity.json(updatedConfig));
     }
 
     @Override
-    public Response copyDocument(final ServiceUser authenticatedServiceUser,
+    public Response copyDocument(final ServiceUser user,
                                  final String originalUuid,
                                  final String copyUuid,
-                                 final String parentFolderUUID) throws QueryApiException {
+                                 final String parentFolderUUID){
         return httpClient
                 .target(copyUrl.getUrl(originalUuid, copyUuid, parentFolderUUID))
                 .request()
-                .header("Authorization", "Bearer " + authenticatedServiceUser.getJwt())
+                .header("Authorization", "Bearer " + user.getJwt())
                 .post(Entity.json(""));
     }
 
     @Override
-    public Response moveDocument(final ServiceUser authenticatedServiceUser,
+    public Response moveDocument(final ServiceUser user,
                                  final String uuid,
-                                 final String parentFolderUUID) throws QueryApiException {
+                                 final String parentFolderUUID){
         return httpClient
                 .target(moveUrl.apply(uuid, parentFolderUUID))
                 .request()
-                .header("Authorization", "Bearer " + authenticatedServiceUser.getJwt())
+                .header("Authorization", "Bearer " + user.getJwt())
                 .put(Entity.json(""));
     }
 
     @Override
-    public Response renameDocument(final ServiceUser authenticatedServiceUser,
+    public Response renameDocument(final ServiceUser user,
                                   final String uuid,
-                                  final String name) throws QueryApiException {
+                                  final String name){
         return httpClient
                 .target(renameUrl.apply(uuid, name))
                 .request()
-                .header("Authorization", "Bearer " + authenticatedServiceUser.getJwt())
+                .header("Authorization", "Bearer " + user.getJwt())
                 .put(Entity.json(""));
     }
 
     @Override
-    public Response deleteDocument(final ServiceUser authenticatedServiceUser,
-                                   final String uuid) throws QueryApiException {
+    public Response deleteDocument(final ServiceUser user,
+                                   final String uuid){
         return httpClient
                 .target(deleteUrl.apply(uuid))
                 .request()
-                .header("Authorization", "Bearer " + authenticatedServiceUser.getJwt())
+                .header("Authorization", "Bearer " + user.getJwt())
                 .delete();
     }
 
     @Override
-    public Response importDocument(final ServiceUser authenticatedServiceUser,
+    public Response importDocument(final ServiceUser user,
                                    final String uuid,
                                    final String name,
                                    final Boolean confirmed,
-                                   final Map<String, String> dataMap) throws QueryApiException {
+                                   final Map<String, String> dataMap){
         return httpClient
                 .target(importUrl.getUrl(uuid, name, confirmed))
                 .request()
-                .header("Authorization", "Bearer " + authenticatedServiceUser.getJwt())
+                .header("Authorization", "Bearer " + user.getJwt())
                 .post(Entity.json(dataMap));
     }
 
 
     @Override
-    public Response exportDocument(final ServiceUser authenticatedServiceUser,
-                                   final String uuid) throws QueryApiException {
+    public Response exportDocument(final ServiceUser user,
+                                   final String uuid){
         return httpClient
                 .target(exportUrl.apply(uuid))
                 .request()
-                .header("Authorization", "Bearer " + authenticatedServiceUser.getJwt())
+                .header("Authorization", "Bearer " + user.getJwt())
                 .get();
     }
 }

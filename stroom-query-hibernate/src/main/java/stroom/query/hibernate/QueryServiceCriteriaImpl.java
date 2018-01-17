@@ -12,7 +12,6 @@ import stroom.query.audit.security.ServiceUser;
 import stroom.query.audit.service.QueryService;
 import stroom.query.common.v2.*;
 import stroom.util.shared.HasTerminate;
-import stroom.util.shared.QueryApiException;
 
 import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -62,13 +61,13 @@ public class QueryServiceCriteriaImpl<T extends QueryableEntity> implements Quer
 
     @Override
     public Optional<DataSource> getDataSource(final ServiceUser authenticatedServiceUser,
-                                              final DocRef docRef) throws QueryApiException {
+                                              final DocRef docRef){
         return Optional.of(new DataSource(this.fields));
     }
 
     @Override
     public Optional<SearchResponse> search(final ServiceUser authenticatedServiceUser,
-                                           final SearchRequest request) throws QueryApiException {
+                                           final SearchRequest request){
         final String dataSourceUuid = request.getQuery().getDataSource().getUuid();
 
         try (final Session session = database.openSession()) {
@@ -94,7 +93,7 @@ public class QueryServiceCriteriaImpl<T extends QueryableEntity> implements Quer
 
     @Override
     public Boolean destroy(final ServiceUser authenticatedServiceUser,
-                            final QueryKey queryKey) throws QueryApiException {
+                            final QueryKey queryKey){
         return Boolean.TRUE;
     }
 
