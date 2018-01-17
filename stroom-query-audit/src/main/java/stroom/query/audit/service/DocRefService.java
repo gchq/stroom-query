@@ -14,6 +14,12 @@ import java.util.Optional;
  */
 public interface DocRefService <T> {
     /**
+     * Get the doc ref type that this service wraps.
+     * @return The doc ref type name
+     */
+    String getType();
+
+    /**
      * Retrieve all of the index entities currently registered
      * @return The list of all known index entities
      * @throws QueryApiException  If something goes wrong

@@ -1,17 +1,20 @@
 package stroom.query.audit.security;
 
 import com.github.toastshaman.dropwizard.auth.jwt.JwtAuthFilter;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientResponse;
 import org.jose4j.jwa.AlgorithmConstraints;
 import org.jose4j.jwk.PublicJsonWebKey;
 import org.jose4j.jwk.RsaJsonWebKey;
-import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.lang.JoseException;
-import stroom.query.audit.client.SimpleJsonHttpClient;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 
@@ -21,23 +24,15 @@ import java.io.IOException;
  */
 public class RobustJwtAuthFilter implements ContainerRequestFilter {
 
-    private final String jwsIssuer;
-
-    private final String algorithm;
-
-    private final String publicKeyUrl;
+    private final TokenConfig tokenConfig;
 
     private JwtAuthFilter<ServiceUser> jwtAuthFilter;
 
-    private SimpleJsonHttpClient<IOException> httpClient;
+    private final Client httpClient;
 
-    public RobustJwtAuthFilter(final String jwsIssuer,
-                               final String algorithm,
-                               final String publicKeyUrl) {
-        this.jwsIssuer = jwsIssuer;
-        this.algorithm = algorithm;
-        this.publicKeyUrl = publicKeyUrl;
-        this.httpClient = new SimpleJsonHttpClient<>(IOException::new);
+    public RobustJwtAuthFilter(final TokenConfig tokenConfig) {
+        this.tokenConfig = tokenConfig;
+        this.httpClient = ClientBuilder.newClient(new ClientConfig().register(ClientResponse.class));
     }
 
     @Override
@@ -49,10 +44,15 @@ public class RobustJwtAuthFilter implements ContainerRequestFilter {
         jwtAuthFilter.filter(requestContext);
     }
 
-    private void init() throws IOException {
-        final Response response = this.httpClient.get(this.publicKeyUrl).send();
+    private void init() {
+        final Response response = httpClient
+                .target(this.tokenConfig.getPublicKeyUrl())
+                .request()
+                .header("accept", MediaType.APPLICATION_JSON)
+                .header("Content-Type", MediaType.APPLICATION_JSON)
+                .get();
 
-        final String pkJson = response.getEntity().toString();
+        final String pkJson = response.readEntity(String.class);
 
         PublicJsonWebKey jwk;
         try {
@@ -67,9 +67,9 @@ public class RobustJwtAuthFilter implements ContainerRequestFilter {
                 .setVerificationKey(jwk.getPublicKey()) // verify the signature with the public key
                 .setJwsAlgorithmConstraints( // only allow the expected signature algorithm(s) in the given context
                         new AlgorithmConstraints(AlgorithmConstraints.ConstraintType.WHITELIST, // which is only RS256 here
-                                AlgorithmIdentifiers.RSA_USING_SHA256))
+                                tokenConfig.getAlgorithm()))
                 .setRelaxVerificationKeyValidation() // relaxes key length requirement
-                .setExpectedIssuer(this.jwsIssuer);
+                .setExpectedIssuer(this.tokenConfig.getJwsIssuer());
 
         final JwtConsumer jwtConsumer = builder.build();
 

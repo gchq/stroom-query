@@ -9,10 +9,16 @@ import io.dropwizard.setup.Environment;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.hk2.utilities.reflection.ParameterizedTypeImpl;
 import org.hibernate.SessionFactory;
+import stroom.query.audit.authorisation.AuthorisationService;
+import stroom.query.audit.authorisation.AuthorisationServiceConfig;
+import stroom.query.audit.authorisation.AuthorisationServiceImpl;
+import stroom.query.audit.authorisation.HasAuthorisationConfig;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.audit.rest.AuditedQueryResourceImpl;
 import stroom.query.audit.QueryEventLoggingService;
 import stroom.query.audit.rest.QueryResource;
+import stroom.query.audit.security.HasTokenConfig;
+import stroom.query.audit.security.TokenConfig;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryService;
 
@@ -26,7 +32,7 @@ import stroom.query.audit.service.QueryService;
  * @param <AUDITED_DOC_REF_RESOURCE> Implementation class for the Audited DocRef Resource
  * @param <DOC_REF_SERVICE> Implementation class for the DocRef Service
  */
-public class AuditedCriteriaQueryBundle<CONFIG extends Configuration,
+public class AuditedCriteriaQueryBundle<CONFIG extends Configuration & HasTokenConfig & HasAuthorisationConfig,
         QUERY_POJO extends QueryableEntity,
         DOC_REF_POJO extends DocRefEntity,
         AUDITED_DOC_REF_RESOURCE extends AuditedDocRefResourceImpl<DOC_REF_POJO>,
@@ -71,6 +77,9 @@ public class AuditedCriteriaQueryBundle<CONFIG extends Configuration,
                 bind(queryService).to(QueryService.class);
                 bind(hibernateBundle.getSessionFactory()).to(SessionFactory.class);
                 bind(docRefServiceClass).to(new ParameterizedTypeImpl(DocRefService.class, docRefClass));
+                bind(AuthorisationServiceImpl.class).to(AuthorisationService.class);
+                bind(configuration.getAuthorisationServiceConfig()).to(AuthorisationServiceConfig.class);
+                bind(configuration.getTokenConfig()).to(TokenConfig.class);
             }
         });
 

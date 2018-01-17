@@ -2,10 +2,12 @@ package stroom.query.audit;
 
 import event.logging.Event;
 import event.logging.EventLoggingService;
+import org.eclipse.jetty.http.HttpStatus;
 import stroom.query.audit.security.ServiceUser;
 
 import javax.ws.rs.core.Response;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class AuditWrapper<E extends Throwable> {
 
@@ -34,13 +36,20 @@ public class AuditWrapper<E extends Throwable> {
     }
 
     public Response auditFunction(final ServiceUser serviceUser,
+                                  final Supplier<Boolean> checkAuthorisation,
                                   final GetResponse<E> getResponse,
                                   final PopulateEventDetail<E> populateEventDetail) throws E {
         Response response = null;
         E exception = null;
 
         try {
-            response = getResponse.getResponse();
+            final Boolean isAuthorised = checkAuthorisation.get();
+
+            if (isAuthorised) {
+                response = getResponse.getResponse();
+            } else {
+                response = Response.status(HttpStatus.UNAUTHORIZED_401).build();
+            }
 
             return response;
         } catch(final Throwable e) {

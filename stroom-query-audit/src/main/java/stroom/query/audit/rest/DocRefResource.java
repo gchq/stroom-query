@@ -2,7 +2,6 @@ package stroom.query.audit.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.auth.Auth;
-import stroom.query.api.v2.DocRef;
 import stroom.query.audit.security.ServiceUser;
 import stroom.util.shared.QueryApiException;
 
@@ -17,7 +16,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -71,14 +69,16 @@ public interface DocRefResource<T> {
      * @param authenticatedServiceUser Authenticated user passed in from web framework
      * @param uuid              The UUID of the document as created by stroom
      * @param name              The name of the document to be created.
+     * @param parentFolderUUID  The destination parent folder
      * @return A doc ref for the newly created document.
      * @throws QueryApiException  If something goes wrong
      */
     @POST
-    @Path("/create/{uuid}/{name}")
+    @Path("/create/{uuid}/{name}/{parentFolderUUID}")
     Response createDocument(@Auth @NotNull ServiceUser authenticatedServiceUser,
                             @PathParam("uuid") String uuid,
-                            @PathParam("name") String name) throws QueryApiException;
+                            @PathParam("name") String name,
+                            @PathParam("parentFolderUUID") final String parentFolderUUID) throws QueryApiException;
 
     /**
      * Update the document
@@ -102,14 +102,16 @@ public interface DocRefResource<T> {
      * @param authenticatedServiceUser Authenticated user passed in from web framework
      * @param originalUuid      The uuid of the document being copied
      * @param copyUuid          The uuid of the copy
+     * @param parentFolderUUID  The destination parent folder
      * @return A doc ref for the new document copy.
      * @throws QueryApiException  If something goes wrong
      */
     @POST
-    @Path("/copy/{originalUuid}/{copyUuid}")
+    @Path("/copy/{originalUuid}/{copyUuid}/{parentFolderUUID}")
     Response copyDocument(@Auth @NotNull ServiceUser authenticatedServiceUser,
                           @PathParam("originalUuid") String originalUuid,
-                          @PathParam("copyUuid") String copyUuid) throws QueryApiException;
+                          @PathParam("copyUuid") String copyUuid,
+                          @PathParam("parentFolderUUID") final String parentFolderUUID) throws QueryApiException;
 
     /**
      * A Notification from Stroom that the document has been 'moved'. In most cases the external system
@@ -117,13 +119,15 @@ public interface DocRefResource<T> {
      *
      * @param authenticatedServiceUser Authenticated user passed in from web framework
      * @param uuid             The uuid of the document that was moved
+     * @param parentFolderUUID The destination parent folder
      * @return A doc ref for the moved document.
      * @throws QueryApiException  If something goes wrong
      */
     @PUT
-    @Path("/move/{uuid}")
-    Response documentMoved(@Auth @NotNull ServiceUser authenticatedServiceUser,
-                           @PathParam("uuid") String uuid) throws QueryApiException;
+    @Path("/move/{uuid}/{parentFolderUUID}")
+    Response moveDocument(@Auth @NotNull ServiceUser authenticatedServiceUser,
+                          @PathParam("uuid") String uuid,
+                          @PathParam("parentFolderUUID") final String parentFolderUUID) throws QueryApiException;
 
     /**
      * A notifiation from Stroom that the name of a document has been changed. Whilst the name belongs to stroom
@@ -138,9 +142,9 @@ public interface DocRefResource<T> {
      */
     @PUT
     @Path("/rename/{uuid}/{name}")
-    Response documentRenamed(@Auth @NotNull ServiceUser authenticatedServiceUser,
-                             @PathParam("uuid") String uuid,
-                             @PathParam("name") String name) throws QueryApiException;
+    Response renameDocument(@Auth @NotNull ServiceUser authenticatedServiceUser,
+                            @PathParam("uuid") String uuid,
+                            @PathParam("name") String name) throws QueryApiException;
 
     /**
      * The document with this UUID is being deleted in Stroom.

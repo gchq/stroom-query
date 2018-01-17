@@ -13,6 +13,8 @@ import stroom.query.api.v2.DocRef;
 import stroom.query.api.v2.QueryKey;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.audit.AuditWrapper;
+import stroom.query.audit.authorisation.AuthorisationService;
+import stroom.query.audit.authorisation.DocumentPermission;
 import stroom.query.audit.security.ServiceUser;
 import stroom.query.audit.service.QueryService;
 import stroom.util.shared.QueryApiException;
@@ -36,11 +38,15 @@ public class AuditedQueryResourceImpl implements QueryResource {
 
     private final QueryService service;
 
+    private final AuthorisationService authorisationService;
+
     @Inject
     public AuditedQueryResourceImpl(final EventLoggingService eventLoggingService,
-                                    final QueryService service) {
+                                    final QueryService service,
+                                    final AuthorisationService authorisationService) {
         this.eventLoggingService = eventLoggingService;
         this.service = service;
+        this.authorisationService = authorisationService;
         this.auditWrapper = new AuditWrapper<>(eventLoggingService, QueryApiException.class, QueryApiException::new);
     }
 
@@ -48,6 +54,9 @@ public class AuditedQueryResourceImpl implements QueryResource {
     public Response getDataSource(final ServiceUser authenticatedServiceUser,
                                   final DocRef docRef) throws QueryApiException {
         return auditWrapper.auditFunction(authenticatedServiceUser,
+                () -> authorisationService.isAuthorised(authenticatedServiceUser,
+                        docRef,
+                        DocumentPermission.READ),
                 () -> service.getDataSource(authenticatedServiceUser, docRef)
                         .map(d -> Response.ok(d).build())
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
@@ -69,6 +78,9 @@ public class AuditedQueryResourceImpl implements QueryResource {
     public Response search(final ServiceUser authenticatedServiceUser,
                            final SearchRequest request) throws QueryApiException {
         return auditWrapper.auditFunction(authenticatedServiceUser,
+                () -> authorisationService.isAuthorised(authenticatedServiceUser,
+                        request.getQuery().getDataSource(),
+                        DocumentPermission.READ),
                 () -> service.search(authenticatedServiceUser, request)
                         .map(d -> Response.ok(d).build())
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
@@ -99,6 +111,7 @@ public class AuditedQueryResourceImpl implements QueryResource {
     public Response destroy(final ServiceUser authenticatedServiceUser,
                             final QueryKey queryKey) throws QueryApiException {
         return auditWrapper.auditFunction(authenticatedServiceUser,
+                () -> Boolean.TRUE,
                 () -> {
                     final Boolean result = service.destroy(authenticatedServiceUser, queryKey);
                     return Response
