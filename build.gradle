@@ -40,10 +40,12 @@ ext.libs = [
     stroomExpression: "stroom:stroom-expression:$versions.stroomExpression",
 
     //------------3rd-party------------
+    assertj: 'org.assertj:assertj-core:3.8.0',
     dropwizard_core: "io.dropwizard:dropwizard-core:$versions.dropwizard",
     dropwizard_hibernate: "io.dropwizard:dropwizard-hibernate:$versions.dropwizard",
     dropwizard_auth: "io.dropwizard:dropwizard-auth:$versions.dropwizard",
     dropwizard_auth_jwt: "com.github.toastshaman:dropwizard-auth-jwt:1.0.2-0",
+    dropwizard_testing: "io.dropwizard:dropwizard-testing:$versions.dropwizard",
     jackson_annotations: "com.fasterxml.jackson.core:jackson-annotations:$versions.jackson",
     jackson_core: "com.fasterxml.jackson.core:jackson-core:$versions.jackson",
     jackson_databind: "com.fasterxml.jackson.core:jackson-databind:$versions.jackson", 
@@ -53,6 +55,7 @@ ext.libs = [
     slf4j_api: "org.slf4j:slf4j-api:$versions.slf4j",
     swagger_annotations: "io.swagger:swagger-annotations:$versions.swagger",
     ws_rs_api: "javax.ws.rs:javax.ws.rs-api:2.0.1",
+    wiremock: 'com.github.tomakehurst:wiremock:2.12.0',
     zzDUMMYzz: "makes sorting easier"
 ]
 
@@ -203,6 +206,16 @@ project(':stroom-query-audit') {
 }
 
 project(':stroom-query-hibernate') {
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
+    }
+}
+
+project(':stroom-query-testing') {
     publishing {
         publications {
             mavenJava(MavenPublication) {

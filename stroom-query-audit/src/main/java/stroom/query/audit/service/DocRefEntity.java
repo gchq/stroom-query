@@ -90,11 +90,11 @@ public class DocRefEntity {
         return sb.toString();
     }
 
-    public static abstract class Builder<T extends DocRefEntity, CHILD_CLASS extends Builder<T, ?>> {
+    public static abstract class BaseBuilder<T extends DocRefEntity, CHILD_CLASS extends BaseBuilder<T, ?>> {
 
         protected final T instance;
 
-        protected Builder(final T instance) {
+        protected BaseBuilder(final T instance) {
             this.instance = instance;
         }
 
@@ -143,5 +143,17 @@ public class DocRefEntity {
         }
 
         protected abstract CHILD_CLASS self();
+    }
+
+    public static class Builder<T extends DocRefEntity> extends BaseBuilder<T, Builder<T>> {
+
+        public Builder(final T instance) {
+            super(instance);
+        }
+
+        @Override
+        protected Builder self() {
+            return this;
+        }
     }
 }

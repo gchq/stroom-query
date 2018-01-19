@@ -3,6 +3,8 @@ package stroom.query.audit;
 import event.logging.Event;
 import event.logging.EventLoggingService;
 import org.eclipse.jetty.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import stroom.query.audit.security.ServiceUser;
 
 import javax.ws.rs.core.Response;
@@ -10,6 +12,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class AuditWrapper {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuditWrapper.class);
 
     private final EventLoggingService eventLoggingService;
 
@@ -42,10 +45,11 @@ public class AuditWrapper {
             if (isAuthorised) {
                 response = getResponse.getResponse();
             } else {
-                response = Response.status(HttpStatus.UNAUTHORIZED_401).build();
+                response = Response.status(HttpStatus.FORBIDDEN_403).build();
             }
 
         } catch (Exception e) {
+            LOGGER.error("Failed to execute operation: " + e.getLocalizedMessage(), e);
             exception = e;
             response = Response.serverError().build();
         } finally {

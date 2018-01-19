@@ -4,4 +4,5 @@ include 'stroom-query-common'
 include 'stroom-query-sample'
 include 'stroom-query-audit'
 include 'stroom-query-hibernate'
+include 'stroom-query-testing'
 

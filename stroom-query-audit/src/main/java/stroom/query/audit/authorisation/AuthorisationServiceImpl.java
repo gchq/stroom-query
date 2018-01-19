@@ -53,7 +53,10 @@ public class AuthorisationServiceImpl implements AuthorisationService {
         Response response;
         try {
             final Map<String, Object> request = new HashMap<>();
-            request.put("docRef", docRef);
+            request.put("docRef", new DocRef.Builder()
+                    .uuid(docRef.getUuid())
+                    .type(docRef.getType())
+                    .build()); // stripping out the name
             request.put("permission", permissionName);
 
             response = httpClient
