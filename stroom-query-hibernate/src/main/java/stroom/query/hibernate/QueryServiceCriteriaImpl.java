@@ -60,13 +60,13 @@ public class QueryServiceCriteriaImpl<T extends QueryableEntity> implements Quer
     }
 
     @Override
-    public Optional<DataSource> getDataSource(final ServiceUser authenticatedServiceUser,
+    public Optional<DataSource> getDataSource(final ServiceUser user,
                                               final DocRef docRef){
         return Optional.of(new DataSource(this.fields));
     }
 
     @Override
-    public Optional<SearchResponse> search(final ServiceUser authenticatedServiceUser,
+    public Optional<SearchResponse> search(final ServiceUser user,
                                            final SearchRequest request){
         final String dataSourceUuid = request.getQuery().getDataSource().getUuid();
 
@@ -92,9 +92,15 @@ public class QueryServiceCriteriaImpl<T extends QueryableEntity> implements Quer
     }
 
     @Override
-    public Boolean destroy(final ServiceUser authenticatedServiceUser,
-                            final QueryKey queryKey){
+    public Boolean destroy(final ServiceUser user,
+                           final QueryKey queryKey){
         return Boolean.TRUE;
+    }
+
+    @Override
+    public Optional<DocRef> getDocRefForQueryKey(final ServiceUser user,
+                                                 final QueryKey queryKey) throws Exception {
+        return Optional.empty();
     }
 
     private Predicate getPredicate(final CriteriaBuilder cb,

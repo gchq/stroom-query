@@ -22,26 +22,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.query.api.v2.DocRef;
 import stroom.query.audit.authorisation.DocumentPermission;
-import stroom.query.audit.client.DocRefResourceHttpClient;
 import stroom.query.audit.logback.FifoLogbackAppender;
 import stroom.query.audit.security.ServiceUser;
 import stroom.query.audit.service.DocRefEntity;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.containing;
-import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.ok;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -286,6 +280,20 @@ public abstract class AbstractIT<DOC_REF_ENTITY extends DocRefEntity,
      */
     protected String getAppHost() {
         return appHost;
+    }
+
+    protected <T> T getFromBody(final Response response, Class<T> theClass) {
+        try {
+            return jacksonObjectMapper.readValue(response.readEntity(String.class), theClass);
+        } catch (IOException e) {
+            fail(e.getLocalizedMessage());
+            return null;
+        }
+
+    }
+
+    protected DOC_REF_ENTITY getEntityFromBody(final Response response) {
+        return getFromBody(response, getDocRefEntityClass());
     }
 
     @Before

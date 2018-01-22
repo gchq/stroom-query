@@ -28,28 +28,33 @@ import stroom.query.audit.service.QueryService;
  * implementations of DocRef resource to allow stroom to manage the documents that live outside of it.
  *
  * @param <CONFIG> The configuration class
- * @param <QUERY_SERVICE> Implementation class for the Query Service
  * @param <DOC_REF_POJO> POJO class for the Document
+ * @param <QUERY_SERVICE> Implementation class for the Query Service
+ * @param <AUDITED_QUERY_RESOURCE> Implementation class for the Audited Query Resource
  * @param <AUDITED_DOC_REF_RESOURCE> Implementation class for the Audited DocRef Resource
  * @param <DOC_REF_SERVICE> Implementation class for the DocRef Service
  */
 public final class AuditedQueryBundle<CONFIG extends Configuration & HasTokenConfig & HasAuthorisationConfig,
-        QUERY_SERVICE extends QueryService,
         DOC_REF_POJO extends DocRefEntity,
-        AUDITED_DOC_REF_RESOURCE extends AuditedDocRefResourceImpl<DOC_REF_POJO>,
-        DOC_REF_SERVICE extends DocRefService<DOC_REF_POJO>> implements ConfiguredBundle<CONFIG> {
+        QUERY_SERVICE extends QueryService,
+        AUDITED_QUERY_RESOURCE extends AuditedQueryResourceImpl<DOC_REF_POJO>,
+        DOC_REF_SERVICE extends DocRefService<DOC_REF_POJO>,
+        AUDITED_DOC_REF_RESOURCE extends AuditedDocRefResourceImpl<DOC_REF_POJO>> implements ConfiguredBundle<CONFIG> {
 
     private final Class<QUERY_SERVICE> queryServiceClass;
-    private final Class<DOC_REF_POJO> docRefClass;
+    private final Class<AUDITED_QUERY_RESOURCE> auditedQueryResourceClass;
+    private final Class<DOC_REF_POJO> docRefEntityClass;
     private final Class<AUDITED_DOC_REF_RESOURCE> auditedDocRefResourceClass;
     private final Class<DOC_REF_SERVICE> docRefServiceClass;
 
-    public AuditedQueryBundle(final Class<QUERY_SERVICE> queryServiceClass,
-                              final Class<DOC_REF_POJO> docRefClass,
-                              final Class<AUDITED_DOC_REF_RESOURCE> auditedDocRefResourceClass,
-                              final Class<DOC_REF_SERVICE> docRefServiceClass) {
+    public AuditedQueryBundle(final Class<DOC_REF_POJO> docRefEntityClass,
+                              final Class<QUERY_SERVICE> queryServiceClass,
+                              final Class<AUDITED_QUERY_RESOURCE> auditedQueryResourceClass,
+                              final Class<DOC_REF_SERVICE> docRefServiceClass,
+                              final Class<AUDITED_DOC_REF_RESOURCE> auditedDocRefResourceClass) {
         this.queryServiceClass = queryServiceClass;
-        this.docRefClass = docRefClass;
+        this.auditedQueryResourceClass = auditedQueryResourceClass;
+        this.docRefEntityClass = docRefEntityClass;
         this.auditedDocRefResourceClass = auditedDocRefResourceClass;
         this.docRefServiceClass = docRefServiceClass;
     }
@@ -62,14 +67,14 @@ public final class AuditedQueryBundle<CONFIG extends Configuration & HasTokenCon
     @Override
     public void run(final CONFIG configuration,
                     final Environment environment) {
-        environment.jersey().register(AuditedQueryResourceImpl.class);
+        environment.jersey().register(auditedQueryResourceClass);
         environment.jersey().register(auditedDocRefResourceClass);
         environment.jersey().register(new AbstractBinder() {
             @Override
             protected void configure() {
                 bind(QueryEventLoggingService.class).to(EventLoggingService.class);
                 bind(queryServiceClass).to(QueryService.class);
-                bind(docRefServiceClass).to(new ParameterizedTypeImpl(DocRefService.class, docRefClass));
+                bind(docRefServiceClass).to(new ParameterizedTypeImpl(DocRefService.class, docRefEntityClass));
                 bind(AuthorisationServiceImpl.class).to(AuthorisationService.class);
                 bind(configuration.getAuthorisationServiceConfig()).to(AuthorisationServiceConfig.class);
                 bind(configuration.getTokenConfig()).to(TokenConfig.class);

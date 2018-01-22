@@ -11,13 +11,11 @@ import stroom.query.audit.client.DocRefResourceHttpClient;
 import stroom.query.audit.service.DocRefEntity;
 
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 public abstract class DocRefResourceIT<
         DOC_REF_ENTITY extends DocRefEntity,
@@ -434,18 +432,4 @@ public abstract class DocRefResourceIT<
     protected abstract DOC_REF_ENTITY createPopulatedEntity();
 
     protected abstract Map<String, String> exportValues(DOC_REF_ENTITY docRefEntity);
-
-    private <T> T getFromBody(final Response response, Class<T> theClass) {
-        try {
-            return jacksonObjectMapper.readValue(response.readEntity(String.class), theClass);
-        } catch (IOException e) {
-            fail(e.getLocalizedMessage());
-            return null;
-        }
-
-    }
-
-    private DOC_REF_ENTITY getEntityFromBody(final Response response) {
-        return getFromBody(response, getDocRefEntityClass());
-    }
 }
