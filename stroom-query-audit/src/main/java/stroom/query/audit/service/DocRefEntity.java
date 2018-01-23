@@ -1,5 +1,7 @@
 package stroom.query.audit.service;
 
+import stroom.query.api.v2.DocRef;
+
 import java.util.Objects;
 
 public class DocRefEntity {
@@ -96,6 +98,12 @@ public class DocRefEntity {
 
         protected BaseBuilder(final T instance) {
             this.instance = instance;
+        }
+
+        public CHILD_CLASS docRef(final DocRef docRef) {
+            this.instance.setUuid(docRef.getUuid());
+            this.instance.setName(docRef.getUuid());
+            return self();
         }
 
         public CHILD_CLASS uuid(final String value) {

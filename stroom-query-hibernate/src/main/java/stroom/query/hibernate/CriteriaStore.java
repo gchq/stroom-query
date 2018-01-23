@@ -2,7 +2,18 @@ package stroom.query.hibernate;
 
 import stroom.mapreduce.v2.UnsafePairQueue;
 import stroom.query.api.v2.TableSettings;
-import stroom.query.common.v2.*;
+import stroom.query.common.v2.CompiledSorter;
+import stroom.query.common.v2.Coprocessor;
+import stroom.query.common.v2.CoprocessorSettingsMap;
+import stroom.query.common.v2.Data;
+import stroom.query.common.v2.Item;
+import stroom.query.common.v2.Key;
+import stroom.query.common.v2.Payload;
+import stroom.query.common.v2.ResultStoreCreator;
+import stroom.query.common.v2.Store;
+import stroom.query.common.v2.StoreSize;
+import stroom.query.common.v2.TableCoprocessorSettings;
+import stroom.query.common.v2.TablePayload;
 
 import java.util.HashMap;
 import java.util.List;

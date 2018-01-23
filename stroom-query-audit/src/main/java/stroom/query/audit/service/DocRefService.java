@@ -1,5 +1,6 @@
 package stroom.query.audit.service;
 
+import stroom.query.api.v2.DocRef;
 import stroom.query.api.v2.DocRefInfo;
 import stroom.query.audit.ExportDTO;
 import stroom.query.audit.security.ServiceUser;
@@ -43,7 +44,18 @@ public interface DocRefService <T extends DocRefEntity> {
      * @throws Exception if anything goes wrong
      * @return The DocRefInfo for the UUID
      */
-    Optional<DocRefInfo> getInfo(ServiceUser user, String uuid) throws Exception;
+    default Optional<DocRefInfo> getInfo(ServiceUser user, String uuid) throws Exception {
+        return get(user, uuid).map(d -> new DocRefInfo.Builder()
+                .docRef(new DocRef.Builder()
+                        .uuid(d.getUuid())
+                        .name(d.getName())
+                        .build())
+                .createUser(d.getCreateUser())
+                .createTime(d.getCreateTime())
+                .updateUser(d.getUpdateUser())
+                .updateTime(d.getUpdateTime())
+                .build());
+    }
 
     /**
      * A new document has been created in Stroom
