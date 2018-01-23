@@ -32,7 +32,7 @@ public abstract class DocRefResourceIT<
     }
 
     @Before
-    public void beforeTest() {
+    public void beforeDocRefTest() {
         docRefClient = new DocRefResourceHttpClient<>(getAppHost());
     }
 

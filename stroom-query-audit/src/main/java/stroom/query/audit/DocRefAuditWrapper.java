@@ -41,7 +41,6 @@ public class DocRefAuditWrapper<DOC_REF_ENTITY extends DocRefEntity>
         Response getResponse(T docRefEntity) throws Exception;
     }
 
-    // Doc Ref
     private DocRefSupplier docRefSupplier;
     private DocRefAuthorisationSupplier docRefAuthorisationSupplier;
     private DocRefEntitySupplier<DOC_REF_ENTITY> docRefEntitySupplier;

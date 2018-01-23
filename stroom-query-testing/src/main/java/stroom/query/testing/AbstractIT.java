@@ -115,7 +115,7 @@ public abstract class AbstractIT<DOC_REF_ENTITY extends DocRefEntity,
             = new com.fasterxml.jackson.databind.ObjectMapper();
 
     @BeforeClass
-    public static void setupAbstractClass() {
+    public static void beforeAbstractClass() {
 
         //
         // This class will likely be extended multiple times, so clear our any users from previous runs.
@@ -297,7 +297,7 @@ public abstract class AbstractIT<DOC_REF_ENTITY extends DocRefEntity,
     }
 
     @Before
-    public void setupAbstractTest() {
+    public final void beforeAbstractTest() {
         final int appPort = appRule.getLocalPort();
         appHost = String.format("http://%s:%d", LOCALHOST, appPort);
         FifoLogbackAppender.popLogs();
