@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import stroom.query.api.v2.DocRef;
 import stroom.query.api.v2.QueryKey;
 import stroom.query.api.v2.SearchRequest;
-import stroom.query.audit.AuditWrapper;
+import stroom.query.audit.DocRefAuditWrapper;
 import stroom.query.audit.authorisation.AuthorisationService;
 import stroom.query.audit.authorisation.DocumentPermission;
 import stroom.query.audit.security.ServiceUser;
@@ -22,7 +22,6 @@ import stroom.query.audit.service.QueryService;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
-import java.util.Optional;
 
 /**
  * A standard implementation of {@link QueryResource} which logs all activity to the {@link EventLoggingService eventLoggingService}
@@ -32,11 +31,9 @@ public class AuditedQueryResourceImpl<T extends DocRefEntity> implements QueryRe
 
     private final Logger LOGGER = LoggerFactory.getLogger(AuditedQueryResourceImpl.class);
 
-    private final EventLoggingService eventLoggingService;
-
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private final AuditWrapper auditWrapper;
+    private final EventLoggingService eventLoggingService;
 
     private final QueryService service;
 
@@ -52,24 +49,23 @@ public class AuditedQueryResourceImpl<T extends DocRefEntity> implements QueryRe
         this.eventLoggingService = eventLoggingService;
         this.service = service;
         this.authorisationService = authorisationService;
-        this.auditWrapper = new AuditWrapper(eventLoggingService);
         this.docRefService = docRefService;
     }
 
     @Override
     public Response getDataSource(final ServiceUser user,
                                   final DocRef docRef){
-        return auditWrapper.auditFunction(user,
-                docRefService,
-                docRef,
-                () -> authorisationService.isAuthorised(user,
-                        docRef,
-                        DocumentPermission.READ),
-                () -> service.getDataSource(user, docRef)
+        return DocRefAuditWrapper.<T>withUser(user)
+                .withDocRef(docRef)
+                .withDocRefEntity(d -> docRefService.get(user, docRef.getUuid()))
+                .withAuthSupplier(d -> authorisationService.isAuthorised(user,
+                        d,
+                        DocumentPermission.READ))
+                .withResponse(docRefEntity -> service.getDataSource(user, docRef)
                         .map(d -> Response.ok(d).build())
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
-                                .build()),
-                (eventDetail, response, exception) -> {
+                                .build()))
+                .withPopulateAudit((eventDetail, response, exception) -> {
                     eventDetail.setTypeId("GET_DATA_SOURCE");
                     eventDetail.setDescription("Get Datasource For Document");
 
@@ -79,23 +75,23 @@ public class AuditedQueryResourceImpl<T extends DocRefEntity> implements QueryRe
                     final Outcome outcome = new Outcome();
                     outcome.setSuccess(null != exception);
                     search.setOutcome(outcome);
-                });
+                }).callAndAudit(eventLoggingService);
     }
 
     @Override
     public Response search(final ServiceUser user,
                            final SearchRequest request){
-        return auditWrapper.auditFunction(user,
-                docRefService,
-                request.getQuery().getDataSource(),
-                () -> authorisationService.isAuthorised(user,
-                        request.getQuery().getDataSource(),
-                        DocumentPermission.READ),
-                () -> service.search(user, request)
+        return DocRefAuditWrapper.<T>withUser(user)
+                .withDocRef(request.getQuery().getDataSource())
+                .withDocRefEntity(docRef -> docRefService.get(user, docRef.getUuid()))
+                .withAuthSupplier(docRef -> authorisationService.isAuthorised(user,
+                        docRef,
+                        DocumentPermission.READ))
+                .withResponse(docRefEntity -> service.search(user, request)
                         .map(d -> Response.ok(d).build())
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
-                                .build()),
-                (eventDetail, response, exception) -> {
+                                .build()))
+                .withPopulateAudit((eventDetail, response, exception) -> {
                     eventDetail.setTypeId("QUERY_SEARCH");
                     eventDetail.setDescription("Run a Query over the data");
 
@@ -114,42 +110,25 @@ public class AuditedQueryResourceImpl<T extends DocRefEntity> implements QueryRe
                     final Outcome outcome = new Outcome();
                     outcome.setSuccess(null != exception);
                     search.setOutcome(outcome);
-                });
+                }).callAndAudit(eventLoggingService);
     }
 
     @Override
     public Response destroy(final ServiceUser user,
                             final QueryKey queryKey) {
-        // Attempt to retrieve the doc ref for the given query key
-        // This is required in advance so permissions can be checked
-        final DocRef queryDocRef;
-
-        try {
-            final Optional<DocRef> queryDocRefOpt = service.getDocRefForQueryKey(user, queryKey);
-
-            if (queryDocRefOpt.isPresent()) {
-                queryDocRef = queryDocRefOpt.get();
-            } else {
-                return Response.status(HttpStatus.NOT_FOUND_404).build();
-            }
-        } catch (final Exception e) {
-            LOGGER.error("Could not get doc ref for query to destroy");
-            return Response.serverError().build();
-        }
-
-        return auditWrapper.auditFunction(user,
-                docRefService,
-                queryDocRef,
-                () -> authorisationService.isAuthorised(user,
-                        queryDocRef,
-                        DocumentPermission.READ),
-                () -> {
+        return DocRefAuditWrapper.<T>withUser(user)
+                .withDocRefSupplier(() -> service.getDocRefForQueryKey(user, queryKey))
+                .withDocRefEntity(docRef -> docRefService.get(user, docRef.getUuid()))
+                .withAuthSupplier(docRef -> authorisationService.isAuthorised(user,
+                        docRef,
+                        DocumentPermission.READ))
+                .withResponse(docRefEntity -> {
                     final Boolean result = service.destroy(user, queryKey);
                     return Response
                             .ok(result)
                             .build();
-                },
-                (eventDetail, response, exception) -> {
+                })
+                .withPopulateAudit((eventDetail, response, exception) -> {
                     eventDetail.setTypeId("QUERY_DESTROY");
                     eventDetail.setDescription("Destroy a running query");
 
@@ -159,6 +138,6 @@ public class AuditedQueryResourceImpl<T extends DocRefEntity> implements QueryRe
                     final Outcome outcome = new Outcome();
                     outcome.setSuccess(null != exception);
                     search.setOutcome(outcome);
-                });
+                }).callAndAudit(eventLoggingService);
     }
 }

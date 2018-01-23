@@ -2,26 +2,14 @@ package stroom.query.audit.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.auth.Auth;
-import org.eclipse.jetty.http.HttpStatus;
-import stroom.query.api.v2.DocRef;
-import stroom.query.audit.AuditWrapper;
 import stroom.query.audit.security.ServiceUser;
 import stroom.query.audit.service.DocRefEntity;
-import stroom.query.audit.service.DocRefService;
 
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * This is the interface that Stroom uses for externally managed DocRefs.

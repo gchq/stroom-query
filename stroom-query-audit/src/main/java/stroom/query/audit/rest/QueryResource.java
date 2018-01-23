@@ -5,7 +5,6 @@ import stroom.query.api.v2.DocRef;
 import stroom.query.api.v2.QueryKey;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.audit.security.ServiceUser;
-import stroom.query.audit.service.DocRefEntity;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
