@@ -1,4 +1,4 @@
-package stroom.query.testing.app;
+package stroom.query.testing.generic.app;
 
 import event.logging.EventLoggingService;
 import io.dropwizard.Application;
@@ -22,23 +22,23 @@ import stroom.query.audit.service.QueryService;
 import javax.inject.Inject;
 
 public class App extends Application<Config> {
-    public static final class AuditedElasticDocRefResource extends AuditedDocRefResourceImpl<TestDocRefEntity> {
+    public static final class AuditedTestDocRefResource extends AuditedDocRefResourceImpl<TestDocRefEntity> {
 
         @Inject
-        public AuditedElasticDocRefResource(final DocRefService<TestDocRefEntity> service,
-                                            final EventLoggingService eventLoggingService,
-                                            final AuthorisationService authorisationService) {
+        public AuditedTestDocRefResource(final DocRefService<TestDocRefEntity> service,
+                                         final EventLoggingService eventLoggingService,
+                                         final AuthorisationService authorisationService) {
             super(service, eventLoggingService, authorisationService);
         }
     }
 
-    public static final class AuditedElasticQueryResource extends AuditedQueryResourceImpl<TestDocRefEntity> {
+    public static final class AuditedTestQueryResource extends AuditedQueryResourceImpl<TestDocRefEntity> {
 
         @Inject
-        public AuditedElasticQueryResource(final EventLoggingService eventLoggingService,
-                                           final QueryService service,
-                                           final AuthorisationService authorisationService,
-                                           final DocRefService<TestDocRefEntity> docRefService) {
+        public AuditedTestQueryResource(final EventLoggingService eventLoggingService,
+                                        final QueryService service,
+                                        final AuthorisationService authorisationService,
+                                        final DocRefService<TestDocRefEntity> docRefService) {
             super(eventLoggingService, service, authorisationService, docRefService);
         }
     }
@@ -46,15 +46,15 @@ public class App extends Application<Config> {
     private final AuditedQueryBundle<Config,
             TestDocRefEntity,
             TestQueryServiceImpl,
-            AuditedElasticQueryResource,
+            AuditedTestQueryResource,
             TestDocRefServiceImpl,
-            AuditedElasticDocRefResource> auditedQueryBundle =
+            AuditedTestDocRefResource> auditedQueryBundle =
             new AuditedQueryBundle<>(
                     TestDocRefEntity.class,
                     TestQueryServiceImpl.class,
-                    AuditedElasticQueryResource.class,
+                    AuditedTestQueryResource.class,
                     TestDocRefServiceImpl.class,
-                    AuditedElasticDocRefResource.class);
+                    AuditedTestDocRefResource.class);
 
     @Override
     public void run(final Config configuration,

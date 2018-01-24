@@ -37,19 +37,18 @@ public class QueryableEntity implements Serializable {
 
         @Override
         public DataSourceField get() {
-            return new DataSourceField(
-                    DataSourceField.DataSourceFieldType.DATE_FIELD,
-                    DocRefEntity.CREATE_TIME,
-                    true,
-                    Arrays.asList(
+            return new DataSourceField.Builder()
+                    .type(DataSourceField.DataSourceFieldType.DATE_FIELD)
+                    .name(DocRefEntity.CREATE_TIME)
+                    .queryable(true)
+                    .addConditions(
                             ExpressionTerm.Condition.BETWEEN,
                             ExpressionTerm.Condition.EQUALS,
                             ExpressionTerm.Condition.GREATER_THAN,
                             ExpressionTerm.Condition.GREATER_THAN_OR_EQUAL_TO,
                             ExpressionTerm.Condition.LESS_THAN,
                             ExpressionTerm.Condition.LESS_THAN_OR_EQUAL_TO
-                    )
-            );
+                    ).build();
         }
     }
 
@@ -67,19 +66,18 @@ public class QueryableEntity implements Serializable {
 
         @Override
         public DataSourceField get() {
-            return new DataSourceField(
-                    DataSourceField.DataSourceFieldType.DATE_FIELD,
-                    DocRefEntity.UPDATE_TIME,
-                    true,
-                    Arrays.asList(
+            return new DataSourceField.Builder()
+                    .type(DataSourceField.DataSourceFieldType.DATE_FIELD)
+                    .name(DocRefEntity.UPDATE_TIME)
+                    .queryable(true)
+                    .addConditions(
                             ExpressionTerm.Condition.BETWEEN,
                             ExpressionTerm.Condition.EQUALS,
                             ExpressionTerm.Condition.GREATER_THAN,
                             ExpressionTerm.Condition.GREATER_THAN_OR_EQUAL_TO,
                             ExpressionTerm.Condition.LESS_THAN,
                             ExpressionTerm.Condition.LESS_THAN_OR_EQUAL_TO
-                    )
-            );
+                    ).build();
         }
     }
 
@@ -97,17 +95,16 @@ public class QueryableEntity implements Serializable {
 
         @Override
         public DataSourceField get() {
-            return new DataSourceField(
-                    DataSourceField.DataSourceFieldType.FIELD,
-                    DocRefEntity.CREATE_USER,
-                    true,
-                    Arrays.asList(
+            return new DataSourceField.Builder()
+                    .type(DataSourceField.DataSourceFieldType.FIELD)
+                    .name(DocRefEntity.CREATE_USER)
+                    .queryable(true)
+                    .addConditions(
                             ExpressionTerm.Condition.EQUALS,
                             ExpressionTerm.Condition.CONTAINS,
                             ExpressionTerm.Condition.IN,
                             ExpressionTerm.Condition.IN_DICTIONARY
-                    )
-            );
+                    ).build();
         }
     }
 
@@ -125,17 +122,16 @@ public class QueryableEntity implements Serializable {
 
         @Override
         public DataSourceField get() {
-            return new DataSourceField(
-                    DataSourceField.DataSourceFieldType.FIELD,
-                    DocRefEntity.UPDATE_USER,
-                    true,
-                    Arrays.asList(
+            return new DataSourceField.Builder()
+                    .type(DataSourceField.DataSourceFieldType.FIELD)
+                    .name(DocRefEntity.UPDATE_USER)
+                    .queryable(true)
+                    .addConditions(
                             ExpressionTerm.Condition.EQUALS,
                             ExpressionTerm.Condition.CONTAINS,
                             ExpressionTerm.Condition.IN,
                             ExpressionTerm.Condition.IN_DICTIONARY
-                    )
-            );
+                    ).build();
         }
     }
 

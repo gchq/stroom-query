@@ -29,9 +29,16 @@ public abstract class QueryResourceIT<
     protected QueryResourceHttpClient queryClient;
 
     protected QueryResourceIT(final Class<APP_CLASS> appClass,
-                              final Class<DOC_REF_ENTITY> docRefEntityClass,
-                              final String docRefType) {
+                               final Class<DOC_REF_ENTITY> docRefEntityClass,
+                               final String docRefType) {
         super(appClass, docRefEntityClass, docRefType);
+    }
+
+    protected QueryResourceIT(final Class<APP_CLASS> appClass,
+                              final Class<DOC_REF_ENTITY> docRefEntityClass,
+                              final String docRefType,
+                              final String configResourcePath) {
+        super(appClass, docRefEntityClass, docRefType, configResourcePath);
     }
 
     protected abstract SearchRequest getValidSearchRequest(final DocRef docRef,

@@ -1,7 +1,8 @@
-package stroom.query.testing.app;
+package stroom.query.testing.generic.app;
 
 import stroom.query.audit.ExportDTO;
 import stroom.query.audit.security.ServiceUser;
+import stroom.query.audit.service.DocRefEntity;
 import stroom.query.audit.service.DocRefService;
 
 import java.util.ArrayList;
@@ -110,6 +111,7 @@ public class TestDocRefServiceImpl implements DocRefService<TestDocRefEntity> {
                                     final String uuid) throws Exception {
         return get(user, uuid)
                 .map(d -> new ExportDTO.Builder()
+                        .value(DocRefEntity.NAME, d.getName())
                         .value(TestDocRefEntity.INDEX_NAME, d.getIndexName())
                         .build())
                 .orElse(new ExportDTO.Builder()

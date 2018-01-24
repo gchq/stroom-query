@@ -1,10 +1,11 @@
-package stroom.query.testing;
+package stroom.query.testing.generic;
 
 import org.junit.Before;
-import stroom.query.testing.app.App;
-import stroom.query.testing.app.Config;
-import stroom.query.testing.app.TestDocRefEntity;
-import stroom.query.testing.app.TestDocRefServiceImpl;
+import stroom.query.testing.DocRefResourceIT;
+import stroom.query.testing.generic.app.App;
+import stroom.query.testing.generic.app.Config;
+import stroom.query.testing.generic.app.TestDocRefEntity;
+import stroom.query.testing.generic.app.TestDocRefServiceImpl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +13,7 @@ import java.util.UUID;
 
 public class TestDocRefResourceIT extends DocRefResourceIT<TestDocRefEntity, Config, App> {
     public TestDocRefResourceIT() {
-        super(App.class, TestDocRefEntity.class, TestDocRefEntity.TYPE);
+        super(App.class, TestDocRefEntity.class, TestDocRefEntity.TYPE, "generic/config.yml");
     }
 
     @Override

@@ -64,6 +64,15 @@ public class ExportDTO {
             return this;
         }
 
+        public Builder values(final Map<String, Object> values) {
+            values.forEach((k, v) -> {
+                if (v != null) {
+                    this.value(k, v.toString());
+                }
+            });
+            return this;
+        }
+
         public ExportDTO build() {
             return instance;
         }

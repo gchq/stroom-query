@@ -74,4 +74,7 @@ dependencies {
 
     integrationTestCompile libs.dropwizard_core
     integrationTestCompile libs.jackson_annotations
+    integrationTestCompile libs.dropwizard_flyway
+    integrationTestCompile project(':stroom-query-hibernate')
+    integrationTestRuntime libs.mariadb_connector
 }

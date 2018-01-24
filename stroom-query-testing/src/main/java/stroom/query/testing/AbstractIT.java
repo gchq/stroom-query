@@ -52,17 +52,27 @@ public abstract class AbstractIT<DOC_REF_ENTITY extends DocRefEntity,
         APP_CLASS extends Application<CONFIG_CLASS>> {
     protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractIT.class);
 
+    private static final String DEFAULT_CONFIG_RESOURCE_PATH = "config.yml";
+
     private final Class<APP_CLASS> appClass;
     private final Class<DOC_REF_ENTITY> docRefEntityClass;
     private String appHost;
     private final String docRefType;
 
+
     protected AbstractIT(final Class<APP_CLASS> appClass,
                          final Class<DOC_REF_ENTITY> docRefEntityClass,
                          final String docRefType) {
+        this(appClass, docRefEntityClass, docRefType, DEFAULT_CONFIG_RESOURCE_PATH);
+    }
+
+    protected AbstractIT(final Class<APP_CLASS> appClass,
+                         final Class<DOC_REF_ENTITY> docRefEntityClass,
+                         final String docRefType,
+                         final String configResourcePath) {
         this.appClass = appClass;
         this.appRule =
-                new DropwizardAppRule<>(this.appClass, resourceFilePath("config.yml"));
+                new DropwizardAppRule<>(this.appClass, resourceFilePath(configResourcePath));
 
         this.docRefType = docRefType;
         this.docRefEntityClass = docRefEntityClass;

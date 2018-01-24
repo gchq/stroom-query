@@ -31,6 +31,13 @@ public abstract class DocRefResourceIT<
         super(appClass, docRefEntityClass, docRefType);
     }
 
+    protected DocRefResourceIT(final Class<APP_CLASS> appClass,
+                               final Class<DOC_REF_ENTITY> docRefEntityClass,
+                               final String docRefType,
+                               final String configResourcePath) {
+        super(appClass, docRefEntityClass, docRefType, configResourcePath);
+    }
+
     @Before
     public void beforeDocRefTest() {
         docRefClient = new DocRefResourceHttpClient<>(getAppHost());
@@ -370,6 +377,7 @@ public abstract class DocRefResourceIT<
         final ExportDTO exportDTO = getFromBody(authorisedExportResponse, ExportDTO.class);
         assertNotNull(exportDTO);
         final Map<String, String> expectedExportValues = exportValues(entityUpdate);
+        expectedExportValues.put(DocRefEntity.NAME, entityUpdate.getName()); // add common fields
         assertEquals(expectedExportValues, exportDTO.getValues());
 
         // Try exporting it as an unauthorised user
