@@ -1,5 +1,6 @@
 package stroom.query.testing.hibernate;
 
+import org.junit.Ignore;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
 import stroom.query.api.v2.DocRef;
@@ -24,6 +25,8 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertTrue;
 
+// Manually run these for now, needs a database to be running
+@Ignore
 public class TestHibernateQueryResourceIT extends QueryResourceIT<TestDocRefHibernateEntity, HibernateConfig, HibernateApp> {
 
     public TestHibernateQueryResourceIT() {
