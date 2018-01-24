@@ -119,8 +119,8 @@ public class HibernateApp extends Application<HibernateConfig> {
                 bootstrap.getConfigurationSourceProvider(),
                 new EnvironmentVariableSubstitutor(false)));
 
+        bootstrap.addBundle(this.flywayBundle);
         bootstrap.addBundle(this.auditedQueryBundle);
-
     }
 
     private static void configureAuthentication(final TokenConfig tokenConfig,

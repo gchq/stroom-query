@@ -49,6 +49,7 @@ public interface DocRefService <T extends DocRefEntity> {
                 .docRef(new DocRef.Builder()
                         .uuid(d.getUuid())
                         .name(d.getName())
+                        .type(getType())
                         .build())
                 .createUser(d.getCreateUser())
                 .createTime(d.getCreateTime())

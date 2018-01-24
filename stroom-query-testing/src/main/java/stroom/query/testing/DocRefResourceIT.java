@@ -5,6 +5,7 @@ import io.dropwizard.Configuration;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
+import stroom.query.api.v2.DocRefInfo;
 import stroom.query.audit.ExportDTO;
 import stroom.query.audit.authorisation.DocumentPermission;
 import stroom.query.audit.client.DocRefResourceHttpClient;
@@ -14,6 +15,7 @@ import javax.ws.rs.core.Response;
 import java.util.Map;
 import java.util.UUID;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -136,6 +138,54 @@ public abstract class DocRefResourceIT<
         assertEquals(authorisedEntityUpdate, checkEntity);
 
         // Create, update (ok), update (forbidden), get (check)
+        checkAuditLogs(4);
+    }
+
+    @Test
+    public void testGetInfo() {
+        final Long testStartTime = System.currentTimeMillis();
+
+        final String parentFolderUuid = UUID.randomUUID().toString();
+        final String uuid = UUID.randomUUID().toString();
+        final String name = UUID.randomUUID().toString();
+        final String authorisedUsername = UUID.randomUUID().toString();
+        final String unauthorisedUsername = UUID.randomUUID().toString();
+        final String unauthenticatedUsername = UUID.randomUUID().toString();
+
+        giveFolderCreatePermission(adminUser(), parentFolderUuid);
+        giveDocumentPermission(authenticatedUser(authorisedUsername), uuid, DocumentPermission.READ);
+        giveDocumentPermission(authenticatedUser(authorisedUsername), uuid, DocumentPermission.UPDATE);
+
+        // Create a document
+        final Response createResponse = docRefClient.createDocument(adminUser(), uuid, name, parentFolderUuid);
+        assertEquals(HttpStatus.OK_200, createResponse.getStatus());
+
+        // Update it as authorised user
+        final DOC_REF_ENTITY authorisedEntityUpdate = createPopulatedEntity(uuid, name);
+        final Response updateResponse = docRefClient.update(
+                authenticatedUser(authorisedUsername),
+                uuid,
+                authorisedEntityUpdate);
+        assertEquals(HttpStatus.OK_200, updateResponse.getStatus());
+
+        // Get info as authorised user
+        final Response authorisedGetInfoResponse = docRefClient.getInfo(authenticatedUser(authorisedUsername), uuid);
+        assertEquals(HttpStatus.OK_200, authorisedGetInfoResponse.getStatus());
+        final DocRefInfo info = getFromBody(authorisedGetInfoResponse, DocRefInfo.class);
+        assertTrue(info.getCreateTime() >= testStartTime);
+        assertTrue(info.getUpdateTime() > info.getCreateTime());
+        assertEquals(info.getCreateUser(), adminUser().getName());
+        assertEquals(info.getUpdateUser(), authenticatedUser(authorisedUsername).getName());
+
+        // Try to get info as unauthorised user
+        final Response unauthorisedGetInfoResponse = docRefClient.getInfo(authenticatedUser(unauthorisedUsername), uuid);
+        assertEquals(HttpStatus.FORBIDDEN_403, unauthorisedGetInfoResponse.getStatus());
+
+        // Try to get info as unauthenticated user
+        final Response unauthenticatedGetInfoResponse = docRefClient.getInfo(unauthenticatedUser(unauthenticatedUsername), uuid);
+        assertEquals(HttpStatus.UNAUTHORIZED_401, unauthenticatedGetInfoResponse.getStatus());
+
+        // Create, update (ok), get info (ok), get info (forbidden)
         checkAuditLogs(4);
     }
 
