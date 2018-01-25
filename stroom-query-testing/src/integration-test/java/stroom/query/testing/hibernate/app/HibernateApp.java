@@ -15,7 +15,6 @@ import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
-import stroom.query.audit.AuditedQueryBundle;
 import stroom.query.audit.authorisation.AuthorisationService;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.audit.rest.AuditedQueryResourceImpl;
@@ -25,8 +24,6 @@ import stroom.query.audit.security.TokenConfig;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryService;
 import stroom.query.hibernate.AuditedCriteriaQueryBundle;
-import stroom.query.testing.generic.app.TestDocRefServiceImpl;
-import stroom.query.testing.generic.app.TestQueryServiceImpl;
 
 import javax.inject.Inject;
 

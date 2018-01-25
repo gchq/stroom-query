@@ -35,6 +35,9 @@ echo -e "TRAVIS_EVENT_TYPE:    [${GREEN}${TRAVIS_EVENT_TYPE}${NC}]"
 echo -e "PRODUCT_VERSION:      [${GREEN}${PRODUCT_VERSION}${NC}]"
 
 #Run the build (including running maven install task to generate poms
+docker-compose -f stroom-query-testing/src/integration-test/resources/hibernate/stroomQueryTestDb.yml up -d
 ./gradlew -Pversion=$PRODUCT_VERSION clean build ${EXTRA_BUILD_ARGS}
+docker stop stroom-query-test-db
+docker rm stroom-query-test-db
 
 exit 0

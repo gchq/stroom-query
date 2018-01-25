@@ -1,7 +1,6 @@
 package stroom.query.testing.hibernate.app;
 
 import org.hibernate.SessionFactory;
-import stroom.query.audit.ExportDTO;
 import stroom.query.hibernate.DocRefServiceCriteriaImpl;
 
 import javax.inject.Inject;

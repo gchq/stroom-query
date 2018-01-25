@@ -1,0 +1,15 @@
+version: '2.1'
+
+services: 
+
+  stroom-annotations-db:
+    image:  "${MARIADB_DOCKER_REPO:-mariadb}:10.3.0"
+    container_name: stroom-query-test-db
+    ports:
+        # Expose mysql on 3310 to the host so as not to conflict with stroom-db, stroom-stats-db, stroom-auth-db
+      - "4410:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=my-secret-pw
+      - MYSQL_USER=stroomuser
+      - MYSQL_PASSWORD=stroompassword1
+      - MYSQL_DATABASE=test

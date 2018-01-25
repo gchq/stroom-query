@@ -1,9 +1,7 @@
 package stroom.query.testing.hibernate;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import stroom.query.testing.DocRefResourceIT;
-import stroom.query.testing.generic.app.TestDocRefEntity;
 import stroom.query.testing.hibernate.app.HibernateApp;
 import stroom.query.testing.hibernate.app.HibernateConfig;
 import stroom.query.testing.hibernate.app.TestDocRefHibernateEntity;
@@ -12,8 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-// Manually run these for now, needs a database to be running
-@Ignore
 public class TestHibernateDocRefResourceIT extends DocRefResourceIT<TestDocRefHibernateEntity, HibernateConfig, HibernateApp> {
     public TestHibernateDocRefResourceIT() {
         super(HibernateApp.class, TestDocRefHibernateEntity.class, TestDocRefHibernateEntity.TYPE, "hibernate/config.yml");
