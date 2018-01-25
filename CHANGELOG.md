@@ -10,12 +10,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-## [v2.0.0-alpha.24] - 2018-01-17
+## [v2.0.0-alpha.24] - 2018-01-25
 
 ### Changed
 
 * Removed custom test implementations of auth service and http client, use Wiremock and javax.ws.rs.Client
 * Setup the doc ref info fields (created/updated user/time)
+* Providing standard implementations of integration tests, plus demonstration apps for hibernate and generic query apps
 
 ## [v2.0.0-alpha.22] - 2018-01-15
 
