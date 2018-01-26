@@ -38,6 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 /**
@@ -52,30 +53,23 @@ public abstract class AbstractIT<DOC_REF_ENTITY extends DocRefEntity,
         APP_CLASS extends Application<CONFIG_CLASS>> {
     protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractIT.class);
 
-    private static final String DEFAULT_CONFIG_RESOURCE_PATH = "config.yml";
-
     private final Class<APP_CLASS> appClass;
     private final Class<DOC_REF_ENTITY> docRefEntityClass;
     private String appHost;
     private final String docRefType;
-
-
-    protected AbstractIT(final Class<APP_CLASS> appClass,
-                         final Class<DOC_REF_ENTITY> docRefEntityClass,
-                         final String docRefType) {
-        this(appClass, docRefEntityClass, docRefType, DEFAULT_CONFIG_RESOURCE_PATH);
-    }
+    private final DropwizardAppRule<CONFIG_CLASS> appRulePerInstance;
+    private final WireMockClassRule wireMockRulePerInstance;
 
     protected AbstractIT(final Class<APP_CLASS> appClass,
                          final Class<DOC_REF_ENTITY> docRefEntityClass,
                          final String docRefType,
-                         final String configResourcePath) {
+                         final DropwizardAppRule<CONFIG_CLASS> appRule,
+                         final WireMockClassRule wireMockRule) {
         this.appClass = appClass;
-        this.appRule =
-                new DropwizardAppRule<>(this.appClass, resourceFilePath(configResourcePath));
-
         this.docRefType = docRefType;
         this.docRefEntityClass = docRefEntityClass;
+        this.appRulePerInstance = appRule;
+        this.wireMockRulePerInstance = wireMockRule;
     }
 
     protected void checkAuditLogs(final int expected) {
@@ -104,13 +98,6 @@ public abstract class AbstractIT<DOC_REF_ENTITY extends DocRefEntity,
                 .type(this.docRefType)
                 .build();
     }
-
-    @Rule
-    public final DropwizardAppRule<CONFIG_CLASS> appRule;
-
-    @ClassRule
-    public static WireMockClassRule wireMockRule = new WireMockClassRule(
-            WireMockConfiguration.options().port(10080));
 
     protected static final String ADMIN_USER = "testAdminUser";
     protected static final String LOCALHOST = "localhost";
@@ -308,7 +295,7 @@ public abstract class AbstractIT<DOC_REF_ENTITY extends DocRefEntity,
 
     @Before
     public final void beforeAbstractTest() {
-        final int appPort = appRule.getLocalPort();
+        final int appPort = this.appRulePerInstance.getLocalPort();
         appHost = String.format("http://%s:%d", LOCALHOST, appPort);
         FifoLogbackAppender.popLogs();
     }

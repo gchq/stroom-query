@@ -1,5 +1,6 @@
 package stroom.query.testing.generic.app;
 
+import com.codahale.metrics.health.HealthCheck;
 import event.logging.EventLoggingService;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
@@ -60,6 +61,12 @@ public class App extends Application<Config> {
     public void run(final Config configuration,
                     final Environment environment) throws Exception {
 
+        environment.healthChecks().register("Something", new HealthCheck() {
+            @Override
+            protected Result check() throws Exception {
+                return Result.healthy("Keeps Dropwizard Happy");
+            }
+        });
         configureAuthentication(configuration.getTokenConfig(), environment);
     }
 

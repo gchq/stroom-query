@@ -2,6 +2,8 @@
 language: java
 jdk: openjdk8
 
+before_script: ./travis.before_script.sh
+
 script: ./travis.script.sh
 
 services:

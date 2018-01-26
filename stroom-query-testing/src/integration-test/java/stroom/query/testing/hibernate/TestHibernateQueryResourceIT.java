@@ -1,5 +1,9 @@
 package stroom.query.testing.hibernate;
 
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
+import io.dropwizard.testing.junit.DropwizardAppRule;
+import org.junit.ClassRule;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
 import stroom.query.api.v2.DocRef;
@@ -21,12 +25,21 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 import static org.junit.Assert.assertTrue;
 
 public class TestHibernateQueryResourceIT extends QueryResourceIT<TestDocRefHibernateEntity, HibernateConfig, HibernateApp> {
 
+    @ClassRule
+    public static final DropwizardAppRule<HibernateConfig> appRule =
+            new DropwizardAppRule<>(HibernateApp.class, resourceFilePath("hibernate/config.yml"));
+
+    @ClassRule
+    public static WireMockClassRule wireMockRule = new WireMockClassRule(
+            WireMockConfiguration.options().port(10080));
+
     public TestHibernateQueryResourceIT() {
-        super(HibernateApp.class, TestDocRefHibernateEntity.class, TestDocRefHibernateEntity.TYPE, "hibernate/config.yml");
+        super(HibernateApp.class, TestDocRefHibernateEntity.class, TestDocRefHibernateEntity.TYPE, appRule, wireMockRule);
     }
 
     @Override

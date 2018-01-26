@@ -7,7 +7,7 @@ services:
     container_name: stroom-query-test-db
     ports:
         # Expose mysql on 3310 to the host so as not to conflict with stroom-db, stroom-stats-db, stroom-auth-db
-      - "4410:3306"
+      - "4450:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=my-secret-pw
       - MYSQL_USER=stroomuser

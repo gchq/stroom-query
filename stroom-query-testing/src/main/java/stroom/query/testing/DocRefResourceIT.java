@@ -1,7 +1,9 @@
 package stroom.query.testing;
 
+import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import io.dropwizard.Application;
 import io.dropwizard.Configuration;
+import io.dropwizard.testing.junit.DropwizardAppRule;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,15 +31,10 @@ public abstract class DocRefResourceIT<
 
     protected DocRefResourceIT(final Class<APP_CLASS> appClass,
                                final Class<DOC_REF_ENTITY> docRefEntityClass,
-                               final String docRefType) {
-        super(appClass, docRefEntityClass, docRefType);
-    }
-
-    protected DocRefResourceIT(final Class<APP_CLASS> appClass,
-                               final Class<DOC_REF_ENTITY> docRefEntityClass,
                                final String docRefType,
-                               final String configResourcePath) {
-        super(appClass, docRefEntityClass, docRefType, configResourcePath);
+                               final DropwizardAppRule<CONFIG_CLASS> appRule,
+                               final WireMockClassRule wireMockRule) {
+        super(appClass, docRefEntityClass, docRefType, appRule, wireMockRule);
     }
 
     @Before
