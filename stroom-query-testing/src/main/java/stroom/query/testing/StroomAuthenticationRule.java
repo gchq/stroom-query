@@ -1,11 +1,8 @@
 package stroom.query.testing;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.core.Options;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
-import io.dropwizard.Application;
-import io.dropwizard.Configuration;
-import io.dropwizard.testing.junit.DropwizardAppRule;
 import org.eclipse.jetty.http.HttpStatus;
 import org.jose4j.jwk.JsonWebKey;
 import org.jose4j.jwk.RsaJsonWebKey;
@@ -14,111 +11,55 @@ import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.lang.JoseException;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Rule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.query.api.v2.DocRef;
 import stroom.query.audit.authorisation.DocumentPermission;
-import stroom.query.audit.logback.FifoLogbackAppender;
 import stroom.query.audit.security.ServiceUser;
-import stroom.query.audit.service.DocRefEntity;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.containing;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.ok;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.Assert.fail;
 
-/**
- * Generic form of an integration test for a Dropwizard App that uses the authentication and authorisation services.
- * Provides mocked out version of both services, and functions for getting new users.
- *
- * @param <CONFIG_CLASS> The Dropwizard Configuration class
- * @param <APP_CLASS> The Dropwizard Application class, which is tied to the CONFIG_CLASS
- */
-public abstract class AbstractIT<DOC_REF_ENTITY extends DocRefEntity,
-        CONFIG_CLASS extends Configuration,
-        APP_CLASS extends Application<CONFIG_CLASS>> {
-    protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractIT.class);
+public class StroomAuthenticationRule extends WireMockClassRule {
+    private static final Logger LOGGER = LoggerFactory.getLogger(StroomAuthenticationRule.class);
 
-    private final Class<APP_CLASS> appClass;
-    private final Class<DOC_REF_ENTITY> docRefEntityClass;
-    private String appHost;
+    private final String ADMIN_USER = UUID.randomUUID().toString();
+
+    private RsaJsonWebKey jwk;
+    private final ConcurrentHashMap<String, ServiceUser> authenticatedUsers = new ConcurrentHashMap<>();
+
+    private RsaJsonWebKey invalidJwk;
+    private final ConcurrentHashMap<String, ServiceUser> unauthenticatedUsers = new ConcurrentHashMap<>();
+
     private final String docRefType;
-    private final DropwizardAppRule<CONFIG_CLASS> appRulePerInstance;
-    private final WireMockClassRule wireMockRulePerInstance;
 
-    protected AbstractIT(final Class<APP_CLASS> appClass,
-                         final Class<DOC_REF_ENTITY> docRefEntityClass,
-                         final String docRefType,
-                         final DropwizardAppRule<CONFIG_CLASS> appRule,
-                         final WireMockClassRule wireMockRule) {
-        this.appClass = appClass;
-        this.docRefType = docRefType;
-        this.docRefEntityClass = docRefEntityClass;
-        this.appRulePerInstance = appRule;
-        this.wireMockRulePerInstance = wireMockRule;
-    }
-
-    protected void checkAuditLogs(final int expected) {
-        final List<Object> records = FifoLogbackAppender.popLogs();
-
-        LOGGER.info(String.format("Expected %d records, received %d", expected, records.size()));
-
-        assertEquals(expected, records.size());
-    }
-
-    protected Class<APP_CLASS> getAppClass() {
-        return appClass;
-    }
-
-    protected Class<DOC_REF_ENTITY> getDocRefEntityClass() {
-        return docRefEntityClass;
-    }
-
-    protected String getDocRefType() {
-        return docRefType;
-    }
-
-    protected final DocRef getDocRef(final DOC_REF_ENTITY elasticIndexConfig) {
-        return new DocRef.Builder()
-                .uuid(elasticIndexConfig.getUuid())
-                .type(this.docRefType)
-                .build();
-    }
-
-    protected static final String ADMIN_USER = "testAdminUser";
-    protected static final String LOCALHOST = "localhost";
-
-    private static RsaJsonWebKey jwk;
-    private static final ConcurrentHashMap<String, ServiceUser> authenticatedUsers = new ConcurrentHashMap<>();
-
-    private static RsaJsonWebKey invalidJwk;
-    private static final ConcurrentHashMap<String, ServiceUser> unauthenticatedUsers = new ConcurrentHashMap<>();
-
-    protected static final com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper
+    private static final com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper
             = new com.fasterxml.jackson.databind.ObjectMapper();
 
-    @BeforeClass
-    public static void beforeAbstractClass() {
+    public StroomAuthenticationRule(final Options options,
+                                    final String docRefType) {
+        super(options);
 
-        //
-        // This class will likely be extended multiple times, so clear our any users from previous runs.
-        //
-        authenticatedUsers.clear();
-        unauthenticatedUsers.clear();
+        this.docRefType = docRefType;
+    }
+
+    @Override
+    protected void before() {
+        super.before();
+
+        LOGGER.info("Setting Up Stroom Auth with Wiremock");
 
         //
         // Setup Authentication Service
@@ -161,11 +102,19 @@ public abstract class AbstractIT<DOC_REF_ENTITY extends DocRefEntity,
                         .withStatus(HttpStatus.UNAUTHORIZED_401)));
     }
 
+    @Override
+    protected void after() {
+        super.after();
+
+        authenticatedUsers.clear();
+        unauthenticatedUsers.clear();
+    }
+
     /**
      * Function that gets the default admin user, this user will generally have permission to do everything
      * @return The default admin ServiceUser, with an API key
      */
-    protected static ServiceUser adminUser() {
+    public ServiceUser adminUser() {
         return serviceUser(ADMIN_USER, authenticatedUsers, jwk);
     }
 
@@ -174,7 +123,7 @@ public abstract class AbstractIT<DOC_REF_ENTITY extends DocRefEntity,
      * @param username The usernane of the required user.
      * @return the user, with a JWK tied to the valid public key credentials
      */
-    protected static ServiceUser authenticatedUser(final String username) {
+    public ServiceUser authenticatedUser(final String username) {
         return serviceUser(username, authenticatedUsers, jwk);
     }
 
@@ -183,7 +132,7 @@ public abstract class AbstractIT<DOC_REF_ENTITY extends DocRefEntity,
      * @param username The usernane of the required user.
      * @return the user, with a JWK tied to the wrong public key credentials
      */
-    protected static ServiceUser unauthenticatedUser(final String username) {
+    public ServiceUser unauthenticatedUser(final String username) {
         return serviceUser(username, unauthenticatedUsers, invalidJwk);
     }
 
@@ -196,9 +145,9 @@ public abstract class AbstractIT<DOC_REF_ENTITY extends DocRefEntity,
      * @param publicKey The public key that is tied to the users map
      * @return A created ServiceUser, with an API Key
      */
-    private static ServiceUser serviceUser(final String username,
-                                           final ConcurrentHashMap<String, ServiceUser> usersMap,
-                                           final RsaJsonWebKey publicKey) {
+    private ServiceUser serviceUser(final String username,
+                                    final ConcurrentHashMap<String, ServiceUser> usersMap,
+                                    final RsaJsonWebKey publicKey) {
         return usersMap.computeIfAbsent(username, u -> {
             ServiceUser serviceUser = null;
 
@@ -225,8 +174,8 @@ public abstract class AbstractIT<DOC_REF_ENTITY extends DocRefEntity,
         });
     }
 
-    protected void giveFolderCreatePermission(final ServiceUser serviceUser,
-                                              final String folderUuid) {
+    public void giveFolderCreatePermission(final ServiceUser serviceUser,
+                                           final String folderUuid) {
 
         givePermission(serviceUser, new DocRef.Builder()
                         .type(DocumentPermission.FOLDER)
@@ -235,9 +184,9 @@ public abstract class AbstractIT<DOC_REF_ENTITY extends DocRefEntity,
                 DocumentPermission.CREATE.getTypedPermission(this.docRefType));
     }
 
-    protected void giveDocumentPermission(final ServiceUser serviceUser,
-                                          final String uuid,
-                                          final DocumentPermission permission) {
+    public void giveDocumentPermission(final ServiceUser serviceUser,
+                                       final String uuid,
+                                       final DocumentPermission permission) {
         givePermission(serviceUser, new DocRef.Builder()
                         .type(this.docRefType)
                         .uuid(uuid)
@@ -245,9 +194,9 @@ public abstract class AbstractIT<DOC_REF_ENTITY extends DocRefEntity,
                 permission.getName());
     }
 
-    protected void givePermission(final ServiceUser serviceUser,
-                                  final DocRef docRef,
-                                  final String permissionName) {
+    public void givePermission(final ServiceUser serviceUser,
+                               final DocRef docRef,
+                               final String permissionName) {
         /**
          * Setup Authorisation Service for Doc Refs, by default allow everything
          * Specific sub classes may have more specific cases to test for unauthorised actions.
@@ -269,34 +218,5 @@ public abstract class AbstractIT<DOC_REF_ENTITY extends DocRefEntity,
                 .withRequestBody(equalToJson(requestJson))
                 .withHeader("Authorization", containing(serviceUser.getJwt()))
                 .willReturn(ok("Mock approval for authorisation")));
-    }
-
-    /**
-     * Used to get the root URL of the dropwizard app, will be required by HTTP Client libraries.
-     * @return The full URL of the root of the dropwizard app. (http://hostname:port)
-     */
-    protected String getAppHost() {
-        return appHost;
-    }
-
-    protected <T> T getFromBody(final Response response, Class<T> theClass) {
-        try {
-            return jacksonObjectMapper.readValue(response.readEntity(String.class), theClass);
-        } catch (IOException e) {
-            fail(e.getLocalizedMessage());
-            return null;
-        }
-
-    }
-
-    protected DOC_REF_ENTITY getEntityFromBody(final Response response) {
-        return getFromBody(response, getDocRefEntityClass());
-    }
-
-    @Before
-    public final void beforeAbstractTest() {
-        final int appPort = this.appRulePerInstance.getLocalPort();
-        appHost = String.format("http://%s:%d", LOCALHOST, appPort);
-        FifoLogbackAppender.popLogs();
     }
 }

@@ -10,11 +10,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-## [v2.0.0-alpha.25] - 2018-01-26
+## [v2.0.0-alpha.26] - 2018-01-26
 
 ### Changed
 
 * Common integration tests now force sub classes to create their app and wiremock rules.
+* Using TestRules instead of inherited behaviour as much as possible
 
 ## [v2.0.0-alpha.24] - 2018-01-25
 
@@ -167,8 +168,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.25...HEAD
-[v2.0.0-alpha.21]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.24...v2.0.0-alpha.25
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.26...HEAD
+[v2.0.0-alpha.21]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.24...v2.0.0-alpha.26
 [v2.0.0-alpha.21]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.22...v2.0.0-alpha.24
 [v2.0.0-alpha.21]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.21...v2.0.0-alpha.22
 [v2.0.0-alpha.21]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.20...v2.0.0-alpha.21

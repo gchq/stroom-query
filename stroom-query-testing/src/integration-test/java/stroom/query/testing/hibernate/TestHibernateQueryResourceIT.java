@@ -1,7 +1,6 @@
 package stroom.query.testing.hibernate;
 
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import io.dropwizard.testing.junit.DropwizardAppRule;
 import org.junit.ClassRule;
 import stroom.datasource.api.v2.DataSource;
@@ -15,6 +14,7 @@ import stroom.query.api.v2.ResultRequest;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.testing.QueryResourceIT;
+import stroom.query.testing.StroomAuthenticationRule;
 import stroom.query.testing.generic.app.TestQueryServiceImpl;
 import stroom.query.testing.hibernate.app.HibernateApp;
 import stroom.query.testing.hibernate.app.HibernateConfig;
@@ -35,11 +35,14 @@ public class TestHibernateQueryResourceIT extends QueryResourceIT<TestDocRefHibe
             new DropwizardAppRule<>(HibernateApp.class, resourceFilePath("hibernate/config.yml"));
 
     @ClassRule
-    public static WireMockClassRule wireMockRule = new WireMockClassRule(
-            WireMockConfiguration.options().port(10080));
+    public static StroomAuthenticationRule authRule =
+            new StroomAuthenticationRule(WireMockConfiguration.options().port(10080), TestDocRefHibernateEntity.TYPE);
 
     public TestHibernateQueryResourceIT() {
-        super(HibernateApp.class, TestDocRefHibernateEntity.class, TestDocRefHibernateEntity.TYPE, appRule, wireMockRule);
+        super(TestDocRefHibernateEntity.class,
+                TestDocRefHibernateEntity.TYPE,
+                appRule.getLocalPort(),
+                authRule);
     }
 
     @Override

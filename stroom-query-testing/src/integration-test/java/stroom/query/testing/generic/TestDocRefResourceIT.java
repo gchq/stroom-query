@@ -1,17 +1,15 @@
 package stroom.query.testing.generic;
 
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import io.dropwizard.testing.junit.DropwizardAppRule;
 import org.junit.Before;
 import org.junit.ClassRule;
 import stroom.query.testing.DocRefResourceIT;
+import stroom.query.testing.StroomAuthenticationRule;
 import stroom.query.testing.generic.app.App;
 import stroom.query.testing.generic.app.Config;
 import stroom.query.testing.generic.app.TestDocRefEntity;
 import stroom.query.testing.generic.app.TestDocRefServiceImpl;
-import stroom.query.testing.hibernate.app.HibernateApp;
-import stroom.query.testing.hibernate.app.HibernateConfig;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,11 +24,11 @@ public class TestDocRefResourceIT extends DocRefResourceIT<TestDocRefEntity, Con
             new DropwizardAppRule<>(App.class, resourceFilePath("generic/config.yml"));
 
     @ClassRule
-    public static WireMockClassRule wireMockRule = new WireMockClassRule(
-            WireMockConfiguration.options().port(10080));
+    public static StroomAuthenticationRule authRule =
+            new StroomAuthenticationRule(WireMockConfiguration.options().port(10080), TestDocRefEntity.TYPE);
 
     public TestDocRefResourceIT() {
-        super(App.class, TestDocRefEntity.class, TestDocRefEntity.TYPE, appRule, wireMockRule);
+        super(TestDocRefEntity.class, TestDocRefEntity.TYPE, appRule.getLocalPort(), authRule);
     }
 
     @Override

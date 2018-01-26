@@ -1,7 +1,6 @@
 package stroom.query.testing.generic;
 
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import io.dropwizard.testing.junit.DropwizardAppRule;
 import org.junit.ClassRule;
 import stroom.datasource.api.v2.DataSource;
@@ -15,6 +14,7 @@ import stroom.query.api.v2.ResultRequest;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.testing.QueryResourceIT;
+import stroom.query.testing.StroomAuthenticationRule;
 import stroom.query.testing.generic.app.App;
 import stroom.query.testing.generic.app.Config;
 import stroom.query.testing.generic.app.TestDocRefEntity;
@@ -34,11 +34,11 @@ public class TestQueryResourceIT extends QueryResourceIT<TestDocRefEntity, Confi
             new DropwizardAppRule<>(App.class, resourceFilePath("generic/config.yml"));
 
     @ClassRule
-    public static WireMockClassRule wireMockRule = new WireMockClassRule(
-            WireMockConfiguration.options().port(10080));
+    public static StroomAuthenticationRule authRule =
+            new StroomAuthenticationRule(WireMockConfiguration.options().port(10080), TestDocRefEntity.TYPE);
 
     public TestQueryResourceIT() {
-        super(App.class, TestDocRefEntity.class, TestDocRefEntity.TYPE, appRule, wireMockRule);
+        super(TestDocRefEntity.class, TestDocRefEntity.TYPE, appRule.getLocalPort(), authRule);
     }
 
     @Override
