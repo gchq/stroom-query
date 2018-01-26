@@ -13,6 +13,7 @@ import stroom.query.api.v2.Query;
 import stroom.query.api.v2.ResultRequest;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.TableSettings;
+import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.QueryResourceIT;
 import stroom.query.testing.StroomAuthenticationRule;
 import stroom.query.testing.generic.app.App;
@@ -27,18 +28,21 @@ import java.util.stream.Collectors;
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 import static org.junit.Assert.assertTrue;
 
-public class TestQueryResourceIT extends QueryResourceIT<TestDocRefEntity, Config, App> {
+public class TestQueryResourceIT extends QueryResourceIT<TestDocRefEntity, Config> {
 
     @ClassRule
-    public static final DropwizardAppRule<Config> appRule =
-            new DropwizardAppRule<>(App.class, resourceFilePath("generic/config.yml"));
+    public static final DropwizardAppWithClientsRule<Config> appRule =
+            new DropwizardAppWithClientsRule<>(App.class, resourceFilePath("generic/config.yml"));
 
     @ClassRule
     public static StroomAuthenticationRule authRule =
             new StroomAuthenticationRule(WireMockConfiguration.options().port(10080), TestDocRefEntity.TYPE);
 
     public TestQueryResourceIT() {
-        super(TestDocRefEntity.class, TestDocRefEntity.TYPE, appRule.getLocalPort(), authRule);
+        super(TestDocRefEntity.class,
+                TestDocRefEntity.TYPE,
+                appRule,
+                authRule);
     }
 
     @Override

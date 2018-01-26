@@ -1,9 +1,7 @@
 package stroom.query.testing;
 
-import io.dropwizard.Application;
 import io.dropwizard.Configuration;
 import org.eclipse.jetty.http.HttpStatus;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -24,24 +22,20 @@ import static org.junit.Assert.assertNotNull;
 
 public abstract class DocRefResourceIT<
         DOC_REF_ENTITY extends DocRefEntity,
-        CONFIG_CLASS extends Configuration,
-        APP_CLASS extends Application<CONFIG_CLASS>> {
+        CONFIG_CLASS extends Configuration> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DocRefResourceIT.class);
     
     private final Class<DOC_REF_ENTITY> docRefEntityClass;
-    private final String docRefType;
     protected DocRefResourceHttpClient<DOC_REF_ENTITY> docRefClient;
     private final StroomAuthenticationRule authRule;
 
     protected DocRefResourceIT(final Class<DOC_REF_ENTITY> docRefEntityClass,
-                               final String docRefType,
-                               final int appPort,
+                               final DropwizardAppWithClientsRule<CONFIG_CLASS> appRule,
                                final StroomAuthenticationRule authRule) {
         this.docRefEntityClass = docRefEntityClass;
-        this.docRefType = docRefType;
         this.authRule = authRule;
-        this.docRefClient = new DocRefResourceHttpClient<>(String.format("http://localhost:%d", appPort));
+        this.docRefClient = appRule.getClient(DocRefResourceHttpClient::new);
     }
 
     @Rule

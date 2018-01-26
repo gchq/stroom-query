@@ -13,6 +13,7 @@ import stroom.query.api.v2.Query;
 import stroom.query.api.v2.ResultRequest;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.TableSettings;
+import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.QueryResourceIT;
 import stroom.query.testing.StroomAuthenticationRule;
 import stroom.query.testing.generic.app.TestQueryServiceImpl;
@@ -28,11 +29,11 @@ import java.util.stream.Collectors;
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 import static org.junit.Assert.assertTrue;
 
-public class TestHibernateQueryResourceIT extends QueryResourceIT<TestDocRefHibernateEntity, HibernateConfig, HibernateApp> {
+public class TestHibernateQueryResourceIT extends QueryResourceIT<TestDocRefHibernateEntity, HibernateConfig> {
 
     @ClassRule
-    public static final DropwizardAppRule<HibernateConfig> appRule =
-            new DropwizardAppRule<>(HibernateApp.class, resourceFilePath("hibernate/config.yml"));
+    public static final DropwizardAppWithClientsRule<HibernateConfig> appRule =
+            new DropwizardAppWithClientsRule<>(HibernateApp.class, resourceFilePath("hibernate/config.yml"));
 
     @ClassRule
     public static StroomAuthenticationRule authRule =
@@ -41,7 +42,7 @@ public class TestHibernateQueryResourceIT extends QueryResourceIT<TestDocRefHibe
     public TestHibernateQueryResourceIT() {
         super(TestDocRefHibernateEntity.class,
                 TestDocRefHibernateEntity.TYPE,
-                appRule.getLocalPort(),
+                appRule,
                 authRule);
     }
 

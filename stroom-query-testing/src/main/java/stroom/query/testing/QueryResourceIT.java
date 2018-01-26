@@ -1,9 +1,7 @@
 package stroom.query.testing;
 
-import io.dropwizard.Application;
 import io.dropwizard.Configuration;
 import org.eclipse.jetty.http.HttpStatus;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import stroom.datasource.api.v2.DataSource;
@@ -23,8 +21,7 @@ import static org.junit.Assert.assertEquals;
 
 public abstract class QueryResourceIT<
         DOC_REF_ENTITY extends DocRefEntity,
-        CONFIG_CLASS extends Configuration,
-        APP_CLASS extends Application<CONFIG_CLASS>> {
+        CONFIG_CLASS extends Configuration> {
 
     private final Class<DOC_REF_ENTITY> docRefEntityClass;
     private final String docRefType;
@@ -37,13 +34,13 @@ public abstract class QueryResourceIT<
 
     protected QueryResourceIT(final Class<DOC_REF_ENTITY> docRefEntityClass,
                               final String docRefType,
-                              final int appPort,
+                              final DropwizardAppWithClientsRule<CONFIG_CLASS> appRule,
                               final StroomAuthenticationRule authRule) {
         this.docRefEntityClass = docRefEntityClass;
         this.docRefType = docRefType;
         this.authRule = authRule;
-        this.queryClient = new QueryResourceHttpClient(String.format("http://localhost:%d", appPort));
-        this.docRefClient = new DocRefResourceHttpClient<>(String.format("http://localhost:%d", appPort));
+        this.queryClient = appRule.getClient(QueryResourceHttpClient::new);
+        this.docRefClient = appRule.getClient(DocRefResourceHttpClient::new);
     }
 
     protected abstract SearchRequest getValidSearchRequest(final DocRef docRef,

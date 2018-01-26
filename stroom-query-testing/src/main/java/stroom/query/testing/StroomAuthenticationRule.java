@@ -32,6 +32,12 @@ import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.Assert.fail;
 
+/**
+ * This rule effectively builds an Authentication and Authorisation service for use in integration tests.
+ *
+ * It provides methods for getting authenticated and unauthenticated users, it also gives tests the ability
+ * to grant permissions to specific users.
+ */
 public class StroomAuthenticationRule extends WireMockClassRule {
     private static final Logger LOGGER = LoggerFactory.getLogger(StroomAuthenticationRule.class);
 

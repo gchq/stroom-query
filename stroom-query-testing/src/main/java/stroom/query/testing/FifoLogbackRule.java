@@ -9,6 +9,9 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * This rule allows a test to check that the audit logs are being received by the singleton FIFO logback appender.
+ */
 public class FifoLogbackRule extends ExternalResource {
     protected static final Logger LOGGER = LoggerFactory.getLogger(FifoLogbackRule.class);
 
