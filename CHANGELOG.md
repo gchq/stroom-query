@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## [v2.0.0-alpha.25] - 2018-01-26
+
+### Changed
+
+* Common integration tests now force sub classes to create their app and wiremock rules.
+
 ## [v2.0.0-alpha.24] - 2018-01-25
 
 ### Changed
