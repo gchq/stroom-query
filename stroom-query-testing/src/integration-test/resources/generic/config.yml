@@ -19,6 +19,7 @@ logging:
     org.flywaydb: INFO
     "AUDIT":
       level: INFO
+      additive: false
       appenders:
         - type: fifo
   appenders:

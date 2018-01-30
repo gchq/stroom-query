@@ -22,10 +22,14 @@ public class FifoLogbackAppender<E> extends ContextAwareBase implements Appender
 
     private String name;
 
-    public static List<Object> popLogs() {
+    public synchronized static List<Object> popLogs() {
         final List<Object> extracted = new ArrayList<>(logs);
         logs.clear();
         return extracted;
+    }
+
+    private synchronized static void append(final Object log) {
+        logs.add(log);
     }
 
     @Override
@@ -35,7 +39,7 @@ public class FifoLogbackAppender<E> extends ContextAwareBase implements Appender
 
     @Override
     public void doAppend(E e) throws LogbackException {
-        logs.add(e);
+        FifoLogbackAppender.append(e);
     }
 
     @Override

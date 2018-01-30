@@ -22,6 +22,7 @@ public class FifoLogbackRule extends ExternalResource {
 
     @Override
     protected void after() {
+        FifoLogbackAppender.popLogs();
     }
 
     public void checkAuditLogs(final int expected) {

@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## [v2.0.0-alpha.27] - 2018-01-30
+
+### Changed
+
+* Tune the hibernate data source pool
+* Make fifo log appender thread safe
+
 ## [v2.0.0-alpha.26] - 2018-01-26
 
 ### Changed
@@ -168,7 +175,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.26...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.27...HEAD
+[v2.0.0-alpha.21]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.26...v2.0.0-alpha.27
 [v2.0.0-alpha.21]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.24...v2.0.0-alpha.26
 [v2.0.0-alpha.21]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.22...v2.0.0-alpha.24
 [v2.0.0-alpha.21]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.21...v2.0.0-alpha.22

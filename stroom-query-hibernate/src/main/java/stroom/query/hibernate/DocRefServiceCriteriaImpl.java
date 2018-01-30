@@ -109,7 +109,6 @@ public abstract class DocRefServiceCriteriaImpl<
         } catch (NoResultException e) {
             return Optional.empty();
         } catch (final Exception e) {
-            if (tx!=null) tx.rollback();
             LOGGER.warn("Failed to get create index", e);
 
             throw e;
@@ -154,7 +153,6 @@ public abstract class DocRefServiceCriteriaImpl<
             return Optional.empty();
         } catch (final Exception e) {
             LOGGER.warn("Failed to get update annotation", e);
-            if (tx!=null) tx.rollback();
             throw e;
         }
     }
@@ -196,7 +194,6 @@ public abstract class DocRefServiceCriteriaImpl<
         } catch (NoResultException e) {
             return Optional.empty();
         } catch (final Exception e) {
-            if (tx!=null) tx.rollback();
             LOGGER.warn("Failed to get create index", e);
 
             throw e;
@@ -245,7 +242,6 @@ public abstract class DocRefServiceCriteriaImpl<
         } catch (NoResultException e) {
             return Optional.empty();
         } catch (final Exception e) {
-            if (tx!=null) tx.rollback();
             LOGGER.warn("Failed to get update annotation", e);
             throw e;
         }
@@ -276,7 +272,6 @@ public abstract class DocRefServiceCriteriaImpl<
         } catch (NoResultException e) {
             return Optional.empty();
         } catch (final Exception e) {
-            if (tx!=null) tx.rollback();
             LOGGER.warn("Failed to get create annotation", e);
             throw e;
         }

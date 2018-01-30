@@ -1,6 +1,12 @@
 package stroom.query.audit.rest;
 
+import event.logging.CopyMove;
+import event.logging.Event;
 import event.logging.EventLoggingService;
+import event.logging.MultiObject;
+import event.logging.ObjectOutcome;
+import event.logging.Outcome;
+import event.logging.Search;
 import org.eclipse.jetty.http.HttpStatus;
 import stroom.query.api.v2.DocRef;
 import stroom.query.audit.ExportDTO;
@@ -59,6 +65,10 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                 .withPopulateAudit((eventDetail, response, exception) -> {
                     eventDetail.setTypeId("GET_DOC_REF");
                     eventDetail.setDescription("Get a single doc ref");
+
+                    final Search search = new Search();
+                    search.setId(uuid);
+                    eventDetail.setSearch(search);
                 }).callAndAudit(eventLoggingService);
     }
 
@@ -79,6 +89,10 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                 .withPopulateAudit((eventDetail, response, exception) -> {
                     eventDetail.setTypeId("GET_DOC_REF_INFO");
                     eventDetail.setDescription("Get info for a single doc ref");
+
+                    final Search search = new Search();
+                    search.setId(uuid);
+                    eventDetail.setSearch(search);
                 }).callAndAudit(eventLoggingService);
     }
 
@@ -101,6 +115,12 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                 .withPopulateAudit((eventDetail, response, exception) -> {
                     eventDetail.setTypeId("CREATE_DOC_REF");
                     eventDetail.setDescription("Create a Doc Ref");
+
+                    final ObjectOutcome createObj = new ObjectOutcome();
+                    final Outcome create = new Outcome();
+                    createObj.setOutcome(create);
+                    create.setDescription(String.format("Create document %s with name %s in folder %s", uuid, name, parentFolderUUID));
+                    eventDetail.setCreate(createObj);
                 }).callAndAudit(eventLoggingService);
     }
 
@@ -121,6 +141,12 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                 .withPopulateAudit((eventDetail, response, exception) -> {
                     eventDetail.setTypeId("UPDATE_DOC_REF");
                     eventDetail.setDescription("Update a Doc Ref");
+
+                    final Event.EventDetail.Update updateObj = new Event.EventDetail.Update();
+                    final Outcome update = new Outcome();
+                    updateObj.setOutcome(update);
+                    update.setDescription(String.format("Update document %s", uuid));
+                    eventDetail.setUpdate(updateObj);
                 }).callAndAudit(eventLoggingService);
     }
 
@@ -149,6 +175,12 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                 .withPopulateAudit((eventDetail, response, exception) -> {
                     eventDetail.setTypeId("COPY_DOC_REF");
                     eventDetail.setDescription("Copy a Doc Ref");
+
+                    final ObjectOutcome createObj = new ObjectOutcome();
+                    final Outcome create = new Outcome();
+                    createObj.setOutcome(create);
+                    create.setDescription(String.format("Create copy of %s to %s in folder %s", originalUuid, copyUuid, parentFolderUUID));
+                    eventDetail.setCreate(createObj);
                 }).callAndAudit(eventLoggingService);
     }
 
@@ -176,6 +208,12 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                 .withPopulateAudit((eventDetail, response, exception) -> {
                     eventDetail.setTypeId("MOVE_DOC_REF");
                     eventDetail.setDescription("Move a Doc Ref");
+
+                    final Event.EventDetail.Update updateObj = new Event.EventDetail.Update();
+                    final Outcome update = new Outcome();
+                    updateObj.setOutcome(update);
+                    update.setDescription(String.format("Move document %s to %s", uuid, parentFolderUUID));
+                    eventDetail.setUpdate(updateObj);
                 }).callAndAudit(eventLoggingService);
     }
 
@@ -192,6 +230,12 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                 .withPopulateAudit((eventDetail, response, exception) -> {
                     eventDetail.setTypeId("RENAME_DOC_REF");
                     eventDetail.setDescription("Rename a Doc Ref");
+
+                    final Event.EventDetail.Update updateObj = new Event.EventDetail.Update();
+                    final Outcome update = new Outcome();
+                    updateObj.setOutcome(update);
+                    update.setDescription(String.format("Rename document %s to %s", uuid, name));
+                    eventDetail.setUpdate(updateObj);
                 }).callAndAudit(eventLoggingService);
     }
 
@@ -211,6 +255,12 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                 .withPopulateAudit((eventDetail, response, exception) -> {
                     eventDetail.setTypeId("DELETE_DOC_REF");
                     eventDetail.setDescription("Delete a Doc Ref");
+
+                    final ObjectOutcome deleteObj = new ObjectOutcome();
+                    final Outcome delete = new Outcome();
+                    deleteObj.setOutcome(delete);
+                    delete.setDescription(String.format("Delete document %s", uuid));
+                    eventDetail.setDelete(deleteObj);
                 }).callAndAudit(eventLoggingService);
     }
 
@@ -229,6 +279,12 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                 .withPopulateAudit((eventDetail, response, exception) -> {
                     eventDetail.setTypeId("IMPORT_DOC_REF");
                     eventDetail.setDescription("Import a Doc Ref");
+
+                    final ObjectOutcome createObj = new ObjectOutcome();
+                    final Outcome create = new Outcome();
+                    createObj.setOutcome(create);
+                    create.setDescription(String.format("Import document %s with name %s, confirmed: %s", uuid, name, Boolean.toString(confirmed)));
+                    eventDetail.setCreate(createObj);
                 }).callAndAudit(eventLoggingService);
     }
 
@@ -256,6 +312,11 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                 .withPopulateAudit((eventDetail, response, exception) -> {
                     eventDetail.setTypeId("EXPORT_DOC_REF");
                     eventDetail.setDescription("Export a single doc ref");
+
+                    final Search search = new Search();
+                    search.setId(uuid);
+                    search.setDescription(String.format("Export Document %s", uuid));
+                    eventDetail.setSearch(search);
                 }).callAndAudit(eventLoggingService);
     }
 }

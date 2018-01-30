@@ -3,6 +3,7 @@ package stroom.query.audit.rest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import event.logging.EventLoggingService;
+import event.logging.ObjectOutcome;
 import event.logging.Outcome;
 import event.logging.Query;
 import event.logging.Search;
@@ -70,6 +71,9 @@ public class AuditedQueryResourceImpl<T extends DocRefEntity> implements QueryRe
                     eventDetail.setDescription("Get Datasource For Document");
 
                     final Search search = new Search();
+                    search.setId(docRef.getUuid());
+                    search.setType(docRef.getType());
+                    search.setName(docRef.getName());
                     eventDetail.setSearch(search);
 
                     final Outcome outcome = new Outcome();
@@ -96,6 +100,11 @@ public class AuditedQueryResourceImpl<T extends DocRefEntity> implements QueryRe
                     eventDetail.setDescription("Run a Query over the data");
 
                     final Search search = new Search();
+                    if (null != request.getQuery() && null != request.getQuery().getDataSource()) {
+                        search.setId(request.getQuery().getDataSource().getUuid());
+                        search.setType(request.getQuery().getDataSource().getType());
+                        search.setName(request.getQuery().getDataSource().getName());
+                    }
                     eventDetail.setSearch(search);
 
                     final Query query = new Query();
@@ -132,12 +141,11 @@ public class AuditedQueryResourceImpl<T extends DocRefEntity> implements QueryRe
                     eventDetail.setTypeId("QUERY_DESTROY");
                     eventDetail.setDescription("Destroy a running query");
 
-                    final Search search = new Search();
-                    eventDetail.setSearch(search);
-
-                    final Outcome outcome = new Outcome();
-                    outcome.setSuccess(null != exception);
-                    search.setOutcome(outcome);
+                    final ObjectOutcome deleteObj = new ObjectOutcome();
+                    final Outcome delete = new Outcome();
+                    deleteObj.setOutcome(delete);
+                    delete.setDescription(String.format("Destroy query %s", queryKey.getUuid()));
+                    eventDetail.setDelete(deleteObj);
                 }).callAndAudit(eventLoggingService);
     }
 }

@@ -15,6 +15,11 @@ database:
   user: stroomuser
   password: stroompassword1
   url: jdbc:mariadb://localhost:4450/test
+  maxWaitForConnection: 1s
+  validationQuery: "/* MyApplication Health Check */ SELECT 1"
+  minSize: 8
+  maxSize: 32
+  checkConnectionWhileIdle: false
   properties:
     charSet: UTF-8
     hibernate.dialect: org.hibernate.dialect.MySQLInnoDBDialect
@@ -30,6 +35,7 @@ logging:
     org.flywaydb: INFO
     "AUDIT":
       level: INFO
+      additive: false
       appenders:
         - type: fifo
   appenders:
