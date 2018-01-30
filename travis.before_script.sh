@@ -22,7 +22,7 @@ else
     export JAVA_OPTS=-Xmx1024m
 
     echo "Start all the services we need to run the integration tests in stroom"
-    docker-compose -f stroom-query-testing/src/integration-test/resources/hibernate/stroomQueryTestDb.yml up -d
+    docker-compose -f stroomQueryTestDb.yml up -d
 fi
 
 exit 0

@@ -29,6 +29,10 @@ public class FifoLogbackRule extends ExternalResource {
 
         LOGGER.info(String.format("Expected %d records, received %d", expected, records.size()));
 
+        if (expected != records.size()) {
+            records.forEach(r -> LOGGER.info(String.format("\t%s", r)));
+        }
+
         assertEquals(expected, records.size());
     }
 }
