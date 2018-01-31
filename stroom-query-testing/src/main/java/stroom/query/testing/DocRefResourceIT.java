@@ -10,6 +10,7 @@ import stroom.query.api.v2.DocRefInfo;
 import stroom.query.audit.ExportDTO;
 import stroom.query.audit.authorisation.DocumentPermission;
 import stroom.query.audit.client.DocRefResourceHttpClient;
+import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.audit.service.DocRefEntity;
 
 import javax.ws.rs.core.Response;
@@ -19,6 +20,7 @@ import java.util.UUID;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static stroom.query.testing.FifoLogbackRule.containsAllOf;
 
 public abstract class DocRefResourceIT<
         DOC_REF_ENTITY extends DocRefEntity,
@@ -83,7 +85,11 @@ public abstract class DocRefResourceIT<
         assertEquals(name, foundEntity.getName());
 
         // Create (forbidden), Create (ok), get
-        auditLogRule.checkAuditLogs(3);
+        auditLogRule.check()
+                .thereAreAtLeast(3)
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.CREATE_DOC_REF, uuid))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.CREATE_DOC_REF, uuid))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.GET_DOC_REF, uuid));
     }
 
     @Test
@@ -134,7 +140,12 @@ public abstract class DocRefResourceIT<
         assertEquals(authorisedEntityUpdate, checkEntity);
 
         // Create, update (ok), update (forbidden), get (check)
-        auditLogRule.checkAuditLogs(4);
+        auditLogRule.check()
+                .thereAreAtLeast(4)
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.CREATE_DOC_REF, uuid))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.UPDATE_DOC_REF, uuid))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.UPDATE_DOC_REF, uuid))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.GET_DOC_REF, uuid));
     }
 
     @Test
@@ -182,7 +193,12 @@ public abstract class DocRefResourceIT<
         assertEquals(HttpStatus.UNAUTHORIZED_401, unauthenticatedGetInfoResponse.getStatus());
 
         // Create, update (ok), get info (ok), get info (forbidden)
-        auditLogRule.checkAuditLogs(4);
+        auditLogRule.check()
+                .thereAreAtLeast(4)
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.CREATE_DOC_REF, uuid))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.UPDATE_DOC_REF, uuid))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.GET_DOC_REF_INFO, uuid))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.GET_DOC_REF_INFO, uuid));
     }
 
     @Test
@@ -225,7 +241,12 @@ public abstract class DocRefResourceIT<
         assertEquals(HttpStatus.FORBIDDEN_403, getResponseUnauthorisedUser.getStatus());
 
         // Create, get (admin), get (authorized), get (unauthorised)
-        auditLogRule.checkAuditLogs(4);
+        auditLogRule.check()
+                .thereAreAtLeast(4)
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.CREATE_DOC_REF, uuid))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.GET_DOC_REF, uuid))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.GET_DOC_REF, uuid))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.GET_DOC_REF, uuid));
     }
 
     @Test
@@ -281,8 +302,13 @@ public abstract class DocRefResourceIT<
         assertNotNull(updatesPostFailedRenames);
         assertEquals(name2, updatesPostFailedRenames.getName());
 
-        // Create, rename, get, get (check still got name2)
-        auditLogRule.checkAuditLogs(4);
+        // Create, rename, rename, get (check still got name2)
+        auditLogRule.check()
+                .thereAreAtLeast(4)
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.CREATE_DOC_REF, uuid)) // create
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.RENAME_DOC_REF, uuid)) // authorised rename
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.GET_DOC_REF, uuid)) // check name
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.GET_DOC_REF, uuid)); // check name after unauthorised attempt
     }
 
     @Test
@@ -315,6 +341,7 @@ public abstract class DocRefResourceIT<
         assertNotNull(copiedEntity);
         assertEquals(uuid2, copiedEntity.getUuid());
 
+        // Get the copy
         final Response getResponse = docRefClient.get(authRule.authenticatedUser(authorisedUsername), uuid2);
         assertEquals(HttpStatus.OK_200, getResponse.getStatus());
 
@@ -346,7 +373,14 @@ public abstract class DocRefResourceIT<
         assertEquals(HttpStatus.NOT_FOUND_404, getUnauthenticatedCopyResponse.getStatus());
 
         // Create, copy, get, copy (forbidden), get, get
-        auditLogRule.checkAuditLogs(6);
+        auditLogRule.check()
+                .thereAreAtLeast(6)
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.CREATE_DOC_REF, uuid1))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.COPY_DOC_REF, uuid1, uuid2))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.GET_DOC_REF, uuid2))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.COPY_DOC_REF, uuid1, uuid3))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.GET_DOC_REF, uuid3))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.GET_DOC_REF, uuid4));
     }
 
     @Test
@@ -392,7 +426,13 @@ public abstract class DocRefResourceIT<
         assertEquals(HttpStatus.NOT_FOUND_404, getResponse.getStatus());
 
         // Create, delete (forbidden), get (200), delete, get (404)
-        auditLogRule.checkAuditLogs(5);
+        auditLogRule.check()
+                .thereAreAtLeast(5)
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.CREATE_DOC_REF, uuid))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.DELETE_DOC_REF, uuid))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.GET_DOC_REF, uuid))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.DELETE_DOC_REF, uuid))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.GET_DOC_REF, uuid));
     }
 
     @Test
@@ -435,7 +475,12 @@ public abstract class DocRefResourceIT<
         assertEquals(HttpStatus.UNAUTHORIZED_401, unauthenticatedExportResponse.getStatus());
 
         // Create, update, export, export (forbidden)
-        auditLogRule.checkAuditLogs(4);
+        auditLogRule.check()
+                .thereAreAtLeast(4)
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.CREATE_DOC_REF, uuid))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.UPDATE_DOC_REF, uuid))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.EXPORT_DOC_REF, uuid))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.EXPORT_DOC_REF, uuid));
     }
 
     @Test
@@ -473,7 +518,10 @@ public abstract class DocRefResourceIT<
         assertEquals(docRefEntity, getCheckEntity);
 
         // import, get
-        auditLogRule.checkAuditLogs(2);
+        auditLogRule.check()
+                .thereAreAtLeast(2)
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.IMPORT_DOC_REF, uuid))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.GET_DOC_REF, uuid));
     }
 
     private DOC_REF_ENTITY createPopulatedEntity(final String uuid, final String name) {

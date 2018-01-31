@@ -12,12 +12,15 @@ import stroom.query.api.v2.SearchRequest;
 import stroom.query.audit.authorisation.DocumentPermission;
 import stroom.query.audit.client.DocRefResourceHttpClient;
 import stroom.query.audit.client.QueryResourceHttpClient;
+import stroom.query.audit.rest.AuditedDocRefResourceImpl;
+import stroom.query.audit.rest.AuditedQueryResourceImpl;
 import stroom.query.audit.service.DocRefEntity;
 
 import javax.ws.rs.core.Response;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static stroom.query.testing.FifoLogbackRule.containsAllOf;
 
 public abstract class QueryResourceIT<
         DOC_REF_ENTITY extends DocRefEntity,
@@ -63,7 +66,11 @@ public abstract class QueryResourceIT<
         assertValidDataSource(result);
 
         // Create doc ref, update, get data source
-        auditLogRule.checkAuditLogs(3);
+        auditLogRule.check()
+                .thereAreAtLeast(3)
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.CREATE_DOC_REF, docRef.getUuid()))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.UPDATE_DOC_REF, docRef.getUuid()))
+                .containsOrdered(containsAllOf(AuditedQueryResourceImpl.GET_DATA_SOURCE, docRef.getUuid()));
     }
 
     @Test
@@ -86,7 +93,12 @@ public abstract class QueryResourceIT<
         assertEquals(HttpStatus.UNAUTHORIZED_401, unauthenticatedResponse.getStatus());
 
         // Create index, update, authorised get, unauthorised get
-        auditLogRule.checkAuditLogs(4);
+        auditLogRule.check()
+                .thereAreAtLeast(4)
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.CREATE_DOC_REF, docRef.getUuid()))
+                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.UPDATE_DOC_REF, docRef.getUuid()))
+                .containsOrdered(containsAllOf(AuditedQueryResourceImpl.GET_DATA_SOURCE, docRef.getUuid()))
+                .containsOrdered(containsAllOf(AuditedQueryResourceImpl.GET_DATA_SOURCE, docRef.getUuid()));
     }
 
     @Test

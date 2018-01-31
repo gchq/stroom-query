@@ -1,9 +1,7 @@
 package stroom.query.audit.rest;
 
-import event.logging.CopyMove;
 import event.logging.Event;
 import event.logging.EventLoggingService;
-import event.logging.MultiObject;
 import event.logging.ObjectOutcome;
 import event.logging.Outcome;
 import event.logging.Search;
@@ -37,16 +35,20 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
         this.authorisationService = authorisationService;
     }
 
+    public static final String GET_ALL_DOC_REFS = "GET_ALL_DOC_REFS";
+
     @Override
     public Response getAll(final ServiceUser user){
         return SimpleAuditWrapper.withUser(user)
                 .withDefaultAuthSupplier()
                 .withResponse(() -> Response.ok(service.getAll(user)).build())
                 .withPopulateAudit((eventDetail, response, exception) -> {
-                    eventDetail.setTypeId("GET_DOC_REFS");
+                    eventDetail.setTypeId(GET_ALL_DOC_REFS);
                     eventDetail.setDescription("Get the list of doc refs hosted by this service");
                 }).callAndAudit(eventLoggingService);
     }
+
+    public static final String GET_DOC_REF = "GET_DOC_REF";
 
     @Override
     public Response get(final ServiceUser user,
@@ -63,7 +65,7 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
                                 .build()))
                 .withPopulateAudit((eventDetail, response, exception) -> {
-                    eventDetail.setTypeId("GET_DOC_REF");
+                    eventDetail.setTypeId(GET_DOC_REF);
                     eventDetail.setDescription("Get a single doc ref");
 
                     final Search search = new Search();
@@ -71,6 +73,8 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                     eventDetail.setSearch(search);
                 }).callAndAudit(eventLoggingService);
     }
+
+    public static final String GET_DOC_REF_INFO = "GET_DOC_REF_INFO";
 
     @Override
     public Response getInfo(final ServiceUser user,
@@ -87,7 +91,7 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
                                 .build()))
                 .withPopulateAudit((eventDetail, response, exception) -> {
-                    eventDetail.setTypeId("GET_DOC_REF_INFO");
+                    eventDetail.setTypeId(GET_DOC_REF_INFO);
                     eventDetail.setDescription("Get info for a single doc ref");
 
                     final Search search = new Search();
@@ -95,6 +99,8 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                     eventDetail.setSearch(search);
                 }).callAndAudit(eventLoggingService);
     }
+
+    public static final String CREATE_DOC_REF = "CREATE_DOC_REF";
 
     @Override
     public Response createDocument(final ServiceUser user,
@@ -113,7 +119,7 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
                                 .build()))
                 .withPopulateAudit((eventDetail, response, exception) -> {
-                    eventDetail.setTypeId("CREATE_DOC_REF");
+                    eventDetail.setTypeId(CREATE_DOC_REF);
                     eventDetail.setDescription("Create a Doc Ref");
 
                     final ObjectOutcome createObj = new ObjectOutcome();
@@ -123,6 +129,8 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                     eventDetail.setCreate(createObj);
                 }).callAndAudit(eventLoggingService);
     }
+
+    public static final String UPDATE_DOC_REF = "UPDATE_DOC_REF";
 
     @Override
     public Response update(final ServiceUser user,
@@ -139,7 +147,7 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                         .map(d -> Response.ok(d).build())
                         .orElse(Response.noContent().build()))
                 .withPopulateAudit((eventDetail, response, exception) -> {
-                    eventDetail.setTypeId("UPDATE_DOC_REF");
+                    eventDetail.setTypeId(UPDATE_DOC_REF);
                     eventDetail.setDescription("Update a Doc Ref");
 
                     final Event.EventDetail.Update updateObj = new Event.EventDetail.Update();
@@ -149,6 +157,8 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                     eventDetail.setUpdate(updateObj);
                 }).callAndAudit(eventLoggingService);
     }
+
+    public static final String COPY_DOC_REF = "COPY_DOC_REF";
 
     @Override
     public Response copyDocument(final ServiceUser user,
@@ -173,7 +183,7 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
                                 .build()))
                 .withPopulateAudit((eventDetail, response, exception) -> {
-                    eventDetail.setTypeId("COPY_DOC_REF");
+                    eventDetail.setTypeId(COPY_DOC_REF);
                     eventDetail.setDescription("Copy a Doc Ref");
 
                     final ObjectOutcome createObj = new ObjectOutcome();
@@ -183,6 +193,8 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                     eventDetail.setCreate(createObj);
                 }).callAndAudit(eventLoggingService);
     }
+
+    public static final String MOVE_DOC_REF = "MOVE_DOC_REF";
 
     @Override
     public Response moveDocument(final ServiceUser user,
@@ -206,7 +218,7 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
                                 .build()))
                 .withPopulateAudit((eventDetail, response, exception) -> {
-                    eventDetail.setTypeId("MOVE_DOC_REF");
+                    eventDetail.setTypeId(MOVE_DOC_REF);
                     eventDetail.setDescription("Move a Doc Ref");
 
                     final Event.EventDetail.Update updateObj = new Event.EventDetail.Update();
@@ -216,6 +228,8 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                     eventDetail.setUpdate(updateObj);
                 }).callAndAudit(eventLoggingService);
     }
+
+    public static final String RENAME_DOC_REF = "RENAME_DOC_REF";
 
     @Override
     public Response renameDocument(final ServiceUser user,
@@ -228,7 +242,7 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
                                 .build()))
                 .withPopulateAudit((eventDetail, response, exception) -> {
-                    eventDetail.setTypeId("RENAME_DOC_REF");
+                    eventDetail.setTypeId(RENAME_DOC_REF);
                     eventDetail.setDescription("Rename a Doc Ref");
 
                     final Event.EventDetail.Update updateObj = new Event.EventDetail.Update();
@@ -238,6 +252,8 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                     eventDetail.setUpdate(updateObj);
                 }).callAndAudit(eventLoggingService);
     }
+
+    public static final String DELETE_DOC_REF = "DELETE_DOC_REF";
 
     @Override
     public Response deleteDocument(final ServiceUser user,
@@ -253,7 +269,7 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
                                 .build()))
                 .withPopulateAudit((eventDetail, response, exception) -> {
-                    eventDetail.setTypeId("DELETE_DOC_REF");
+                    eventDetail.setTypeId(DELETE_DOC_REF);
                     eventDetail.setDescription("Delete a Doc Ref");
 
                     final ObjectOutcome deleteObj = new ObjectOutcome();
@@ -263,6 +279,8 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                     eventDetail.setDelete(deleteObj);
                 }).callAndAudit(eventLoggingService);
     }
+
+    public static final String IMPORT_DOC_REF = "IMPORT_DOC_REF";
 
     @Override
     public Response importDocument(final ServiceUser user,
@@ -277,7 +295,7 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
                                 .build()))
                 .withPopulateAudit((eventDetail, response, exception) -> {
-                    eventDetail.setTypeId("IMPORT_DOC_REF");
+                    eventDetail.setTypeId(IMPORT_DOC_REF);
                     eventDetail.setDescription("Import a Doc Ref");
 
                     final ObjectOutcome createObj = new ObjectOutcome();
@@ -287,6 +305,8 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                     eventDetail.setCreate(createObj);
                 }).callAndAudit(eventLoggingService);
     }
+
+    public static final String EXPORT_DOC_REF = "EXPORT_DOC_REF";
 
     @Override
     public Response exportDocument(final ServiceUser user,
@@ -310,7 +330,7 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                     }
                 })
                 .withPopulateAudit((eventDetail, response, exception) -> {
-                    eventDetail.setTypeId("EXPORT_DOC_REF");
+                    eventDetail.setTypeId(EXPORT_DOC_REF);
                     eventDetail.setDescription("Export a single doc ref");
 
                     final Search search = new Search();

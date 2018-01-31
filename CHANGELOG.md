@@ -10,12 +10,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-## [v2.0.0-alpha.27] - 2018-01-30
+## [v2.0.0-alpha.27] - 2018-01-31
 
 ### Changed
 
 * Tune the hibernate data source pool
 * Make fifo log appender thread safe
+* Making the audit fifo log rule more sophisticated to allow more detailed assertions about audit logs
 
 ## [v2.0.0-alpha.26] - 2018-01-26
 

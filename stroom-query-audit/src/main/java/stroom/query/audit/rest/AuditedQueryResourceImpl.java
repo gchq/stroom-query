@@ -53,6 +53,8 @@ public class AuditedQueryResourceImpl<T extends DocRefEntity> implements QueryRe
         this.docRefService = docRefService;
     }
 
+    public static final String GET_DATA_SOURCE = "GET_DATA_SOURCE";
+
     @Override
     public Response getDataSource(final ServiceUser user,
                                   final DocRef docRef){
@@ -67,7 +69,7 @@ public class AuditedQueryResourceImpl<T extends DocRefEntity> implements QueryRe
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
                                 .build()))
                 .withPopulateAudit((eventDetail, response, exception) -> {
-                    eventDetail.setTypeId("GET_DATA_SOURCE");
+                    eventDetail.setTypeId(GET_DATA_SOURCE);
                     eventDetail.setDescription("Get Datasource For Document");
 
                     final Search search = new Search();
@@ -81,6 +83,8 @@ public class AuditedQueryResourceImpl<T extends DocRefEntity> implements QueryRe
                     search.setOutcome(outcome);
                 }).callAndAudit(eventLoggingService);
     }
+
+    public static final String QUERY_SEARCH = "QUERY_SEARCH";
 
     @Override
     public Response search(final ServiceUser user,
@@ -96,7 +100,7 @@ public class AuditedQueryResourceImpl<T extends DocRefEntity> implements QueryRe
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
                                 .build()))
                 .withPopulateAudit((eventDetail, response, exception) -> {
-                    eventDetail.setTypeId("QUERY_SEARCH");
+                    eventDetail.setTypeId(QUERY_SEARCH);
                     eventDetail.setDescription("Run a Query over the data");
 
                     final Search search = new Search();
@@ -122,6 +126,8 @@ public class AuditedQueryResourceImpl<T extends DocRefEntity> implements QueryRe
                 }).callAndAudit(eventLoggingService);
     }
 
+    public static final String QUERY_DESTROY = "QUERY_DESTROY";
+
     @Override
     public Response destroy(final ServiceUser user,
                             final QueryKey queryKey) {
@@ -138,7 +144,7 @@ public class AuditedQueryResourceImpl<T extends DocRefEntity> implements QueryRe
                             .build();
                 })
                 .withPopulateAudit((eventDetail, response, exception) -> {
-                    eventDetail.setTypeId("QUERY_DESTROY");
+                    eventDetail.setTypeId(QUERY_DESTROY);
                     eventDetail.setDescription("Destroy a running query");
 
                     final ObjectOutcome deleteObj = new ObjectOutcome();
