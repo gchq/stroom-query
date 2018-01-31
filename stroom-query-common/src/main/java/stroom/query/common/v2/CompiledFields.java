@@ -24,11 +24,11 @@ import stroom.dashboard.expression.v1.ParamFactory;
 import stroom.query.api.v2.Field;
 
 import java.text.ParseException;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class CompiledFields implements Iterable<CompiledField> {
     private final List<CompiledField> compiledFields;

@@ -1,7 +1,10 @@
 package stroom.query.audit;
 
-import event.logging.*;
+import event.logging.Device;
+import event.logging.Event;
+import event.logging.EventLoggingService;
 import event.logging.System;
+import event.logging.User;
 import event.logging.impl.DefaultEventLoggingService;
 import event.logging.impl.DefaultEventSerializer;
 import event.logging.impl.EventSerializer;

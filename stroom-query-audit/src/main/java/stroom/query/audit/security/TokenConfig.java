@@ -40,6 +40,10 @@ public class TokenConfig {
     @JsonProperty
     private String publicKeyUrl;
 
+    @Valid
+    @JsonProperty
+    private Boolean skipAuth;
+
     public String getJwsIssuer() {
         return jwsIssuer;
     }
@@ -62,5 +66,13 @@ public class TokenConfig {
 
     public void setPublicKeyUrl(String publicKeyUrl) {
         this.publicKeyUrl = publicKeyUrl;
+    }
+
+    public Boolean getSkipAuth() {
+        return (skipAuth != null) ? skipAuth : false;
+    }
+
+    public void setSkipAuth(final Boolean skipAuth) {
+        this.skipAuth = skipAuth;
     }
 }

@@ -1,11 +1,9 @@
 package stroom.query.testing.generic;
 
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.Before;
 import org.junit.ClassRule;
-import stroom.query.testing.DocRefResourceIT;
+import stroom.query.testing.DocRefResourceNoAuthIT;
 import stroom.query.testing.DropwizardAppWithClientsRule;
-import stroom.query.testing.StroomAuthenticationRule;
 import stroom.query.testing.generic.app.App;
 import stroom.query.testing.generic.app.Config;
 import stroom.query.testing.generic.app.TestDocRefEntity;
@@ -17,20 +15,15 @@ import java.util.UUID;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 
-public class TestDocRefResourceIT extends DocRefResourceIT<TestDocRefEntity, Config> {
+public class TestDocRefResourceNoAuthIT extends DocRefResourceNoAuthIT<TestDocRefEntity, Config> {
 
     @ClassRule
     public static final DropwizardAppWithClientsRule<Config> appRule =
-            new DropwizardAppWithClientsRule<>(App.class, resourceFilePath("generic/config.yml"));
+            new DropwizardAppWithClientsRule<>(App.class, resourceFilePath("generic_noauth/config.yml"));
 
-    @ClassRule
-    public static StroomAuthenticationRule authRule =
-            new StroomAuthenticationRule(WireMockConfiguration.options().port(10080), TestDocRefEntity.TYPE);
-
-    public TestDocRefResourceIT() {
+    public TestDocRefResourceNoAuthIT() {
         super(TestDocRefEntity.class,
-                appRule,
-                authRule);
+                appRule);
     }
 
     @Override

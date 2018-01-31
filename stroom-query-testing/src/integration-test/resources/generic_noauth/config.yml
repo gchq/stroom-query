@@ -1,0 +1,39 @@
+server:
+  adminMinThreads: 1
+  adminMaxThreads: 10
+  adminContextPath: ${ADMIN_CONTEXT_PATH:- /}
+  applicationContextPath: ${APPLICATION_CONTEXT_PATH:- /}
+  applicationConnectors:
+    - type: ${APPLICATION_CONNEXTOR_TYPE:- http}
+      port: ${APPLICATION_CONNEXTOR_PORT:- 8899}
+  adminConnectors:
+    - type: ${ADMIN_CONNEXTOR_TYPE:- http}
+      port: ${ADMIN_CONNEXTOR_PORT:- 8900}
+
+logging:
+  level: ${LOGGING_LEVEL:- ERROR}
+  loggers:
+    stroom: DEBUG
+    io.dropwizard: INFO
+    org.eclipse.jetty: INFO
+    org.flywaydb: INFO
+    "AUDIT":
+      level: INFO
+      additive: false
+      appenders:
+        - type: fifo
+  appenders:
+    - type: console
+      logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"
+      timeZone: UTC
+
+token:
+  publicKeyUrl: http://localhost:10080/testAuthService/publicKey
+  jwsIssuer: stroomJOE
+  algorithm: RS256
+  skipAuth: true
+
+
+authorisationService:
+  url: http://localhost:10080/api/authorisation/v1
+  isAuthorisedPath: /isAuthorised

@@ -4,8 +4,6 @@ import com.codahale.metrics.health.HealthCheck;
 import event.logging.EventLoggingService;
 import io.dropwizard.Application;
 import io.dropwizard.ConfiguredBundle;
-import io.dropwizard.auth.AuthDynamicFeature;
-import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.db.DataSourceFactory;
@@ -15,13 +13,9 @@ import io.dropwizard.flyway.FlywayFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import stroom.query.audit.authorisation.AuthorisationService;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.audit.rest.AuditedQueryResourceImpl;
-import stroom.query.audit.security.RobustJwtAuthFilter;
-import stroom.query.audit.security.ServiceUser;
-import stroom.query.audit.security.TokenConfig;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryService;
 import stroom.query.hibernate.AuditedCriteriaQueryBundle;
@@ -106,11 +100,10 @@ public class HibernateApp extends Application<HibernateConfig> {
                     final Environment environment) throws Exception {
         environment.healthChecks().register("Something", new HealthCheck() {
             @Override
-            protected Result check() throws Exception {
+            protected Result check() {
                 return Result.healthy("Keeps Dropwizard Happy");
             }
         });
-        configureAuthentication(configuration.getTokenConfig(), environment);
     }
 
     @Override
@@ -124,15 +117,5 @@ public class HibernateApp extends Application<HibernateConfig> {
 
         bootstrap.addBundle(this.flywayBundle);
         bootstrap.addBundle(this.auditedQueryBundle);
-    }
-
-    private static void configureAuthentication(final TokenConfig tokenConfig,
-                                                final Environment environment) {
-        environment.jersey().register(
-                new AuthDynamicFeature(
-                        new RobustJwtAuthFilter(tokenConfig)
-                ));
-        environment.jersey().register(new AuthValueFactoryProvider.Binder<>(ServiceUser.class));
-        environment.jersey().register(RolesAllowedDynamicFeature.class);
     }
 }

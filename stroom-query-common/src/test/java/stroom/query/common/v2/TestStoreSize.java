@@ -2,7 +2,6 @@ package stroom.query.common.v2;
 
 import org.junit.Assert;
 import org.junit.Test;
-import stroom.query.common.v2.StoreSize;
 
 import java.util.Arrays;
 import java.util.Collections;

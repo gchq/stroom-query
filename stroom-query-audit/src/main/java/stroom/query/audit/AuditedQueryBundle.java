@@ -3,17 +3,24 @@ package stroom.query.audit;
 import event.logging.EventLoggingService;
 import io.dropwizard.Configuration;
 import io.dropwizard.ConfiguredBundle;
+import io.dropwizard.auth.AuthDynamicFeature;
+import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.hk2.utilities.reflection.ParameterizedTypeImpl;
+import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import stroom.query.audit.authorisation.AuthorisationService;
 import stroom.query.audit.authorisation.AuthorisationServiceConfig;
 import stroom.query.audit.authorisation.AuthorisationServiceImpl;
 import stroom.query.audit.authorisation.HasAuthorisationConfig;
+import stroom.query.audit.authorisation.NoAuthAuthorisationServiceImpl;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.audit.rest.AuditedQueryResourceImpl;
 import stroom.query.audit.security.HasTokenConfig;
+import stroom.query.audit.security.NoAuthValueFactoryProvider;
+import stroom.query.audit.security.RobustJwtAuthFilter;
+import stroom.query.audit.security.ServiceUser;
 import stroom.query.audit.security.TokenConfig;
 import stroom.query.audit.service.DocRefEntity;
 import stroom.query.audit.service.DocRefService;
@@ -75,10 +82,26 @@ public final class AuditedQueryBundle<CONFIG extends Configuration & HasTokenCon
                 bind(QueryEventLoggingService.class).to(EventLoggingService.class);
                 bind(queryServiceClass).to(QueryService.class);
                 bind(docRefServiceClass).to(new ParameterizedTypeImpl(DocRefService.class, docRefEntityClass));
-                bind(AuthorisationServiceImpl.class).to(AuthorisationService.class);
-                bind(configuration.getAuthorisationServiceConfig()).to(AuthorisationServiceConfig.class);
-                bind(configuration.getTokenConfig()).to(TokenConfig.class);
+                if (configuration.getTokenConfig().getSkipAuth()) {
+                    bind(NoAuthAuthorisationServiceImpl.class).to(AuthorisationService.class);
+                } else {
+                    bind(AuthorisationServiceImpl.class).to(AuthorisationService.class);
+                    bind(configuration.getAuthorisationServiceConfig()).to(AuthorisationServiceConfig.class);
+                    bind(configuration.getTokenConfig()).to(TokenConfig.class);
+                }
             }
         });
+
+        // Configure auth
+        if (configuration.getTokenConfig().getSkipAuth()) {
+            environment.jersey().register(new NoAuthValueFactoryProvider.Binder());
+        } else {
+            environment.jersey().register(
+                    new AuthDynamicFeature(
+                            new RobustJwtAuthFilter(configuration.getTokenConfig())
+                    ));
+            environment.jersey().register(new AuthValueFactoryProvider.Binder<>(ServiceUser.class));
+            environment.jersey().register(RolesAllowedDynamicFeature.class);
+        }
     }
 }

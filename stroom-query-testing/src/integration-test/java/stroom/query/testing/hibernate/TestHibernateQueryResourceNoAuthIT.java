@@ -1,6 +1,5 @@
-package stroom.query.testing.generic;
+package stroom.query.testing.hibernate;
 
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.ClassRule;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
@@ -13,12 +12,12 @@ import stroom.query.api.v2.ResultRequest;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.testing.DropwizardAppWithClientsRule;
-import stroom.query.testing.QueryResourceIT;
-import stroom.query.testing.StroomAuthenticationRule;
-import stroom.query.testing.generic.app.App;
-import stroom.query.testing.generic.app.Config;
-import stroom.query.testing.generic.app.TestDocRefEntity;
+import stroom.query.testing.QueryResourceNoAuthIT;
 import stroom.query.testing.generic.app.TestQueryServiceImpl;
+import stroom.query.testing.hibernate.app.HibernateApp;
+import stroom.query.testing.hibernate.app.HibernateConfig;
+import stroom.query.testing.hibernate.app.TestDocRefHibernateEntity;
+import stroom.query.testing.hibernate.app.TestQueryableEntity;
 
 import java.util.Set;
 import java.util.UUID;
@@ -27,21 +26,16 @@ import java.util.stream.Collectors;
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 import static org.junit.Assert.assertTrue;
 
-public class TestQueryResourceIT extends QueryResourceIT<TestDocRefEntity, Config> {
+public class TestHibernateQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDocRefHibernateEntity, HibernateConfig> {
 
     @ClassRule
-    public static final DropwizardAppWithClientsRule<Config> appRule =
-            new DropwizardAppWithClientsRule<>(App.class, resourceFilePath("generic/config.yml"));
+    public static final DropwizardAppWithClientsRule<HibernateConfig> appRule =
+            new DropwizardAppWithClientsRule<>(HibernateApp.class, resourceFilePath("hibernate_noauth/config.yml"));
 
-    @ClassRule
-    public static StroomAuthenticationRule authRule =
-            new StroomAuthenticationRule(WireMockConfiguration.options().port(10080), TestDocRefEntity.TYPE);
-
-    public TestQueryResourceIT() {
-        super(TestDocRefEntity.class,
-                TestDocRefEntity.TYPE,
-                appRule,
-                authRule);
+    public TestHibernateQueryResourceNoAuthIT() {
+        super(TestDocRefHibernateEntity.class,
+                TestDocRefHibernateEntity.TYPE,
+                appRule);
     }
 
     @Override
@@ -67,8 +61,8 @@ public class TestQueryResourceIT extends QueryResourceIT<TestDocRefEntity, Confi
                                 .extractValues(false)
                                 .showDetail(false)
                                 .addFields(new Field.Builder()
-                                        .name(TestDocRefEntity.INDEX_NAME)
-                                        .expression("${" + TestDocRefEntity.INDEX_NAME + "}")
+                                        .name(TestQueryableEntity.FLAVOUR)
+                                        .expression("${" + TestQueryableEntity.FLAVOUR + "}")
                                         .build())
                                 .addMaxResults(10)
                                 .build())
@@ -82,12 +76,12 @@ public class TestQueryResourceIT extends QueryResourceIT<TestDocRefEntity, Confi
                 .map(DataSourceField::getName)
                 .collect(Collectors.toSet());
 
-        assertTrue(resultFieldNames.contains(TestDocRefEntity.INDEX_NAME));
+        assertTrue(resultFieldNames.contains(TestQueryableEntity.FLAVOUR));
     }
 
     @Override
-    protected TestDocRefEntity getValidEntity(final DocRef docRef) {
-        return new TestDocRefEntity.Builder()
+    protected TestDocRefHibernateEntity getValidEntity(final DocRef docRef) {
+        return new TestDocRefHibernateEntity.Builder()
                 .docRef(docRef)
                 .indexName(TestQueryServiceImpl.VALID_INDEX_NAME)
                 .build();

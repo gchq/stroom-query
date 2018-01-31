@@ -18,7 +18,6 @@ package stroom.query.common.v2;
 
 import org.junit.Assert;
 import org.junit.Test;
-import stroom.query.common.v2.DateExpressionParser;
 
 import java.time.Instant;
 import java.time.ZoneOffset;

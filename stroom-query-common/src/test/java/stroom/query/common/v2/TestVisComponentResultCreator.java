@@ -27,7 +27,6 @@ import stroom.query.api.v2.Format;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.shared.v2.ParamUtil;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 

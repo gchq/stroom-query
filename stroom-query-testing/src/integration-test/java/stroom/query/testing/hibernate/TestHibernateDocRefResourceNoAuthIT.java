@@ -1,11 +1,9 @@
 package stroom.query.testing.hibernate;
 
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.Before;
 import org.junit.ClassRule;
-import stroom.query.testing.DocRefResourceIT;
+import stroom.query.testing.DocRefResourceNoAuthIT;
 import stroom.query.testing.DropwizardAppWithClientsRule;
-import stroom.query.testing.StroomAuthenticationRule;
 import stroom.query.testing.hibernate.app.HibernateApp;
 import stroom.query.testing.hibernate.app.HibernateConfig;
 import stroom.query.testing.hibernate.app.TestDocRefHibernateEntity;
@@ -16,20 +14,15 @@ import java.util.UUID;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 
-public class TestHibernateDocRefResourceIT extends DocRefResourceIT<TestDocRefHibernateEntity, HibernateConfig> {
+public class TestHibernateDocRefResourceNoAuthIT extends DocRefResourceNoAuthIT<TestDocRefHibernateEntity, HibernateConfig> {
 
     @ClassRule
     public static final DropwizardAppWithClientsRule<HibernateConfig> appRule =
-            new DropwizardAppWithClientsRule<>(HibernateApp.class, resourceFilePath("hibernate/config.yml"));
+            new DropwizardAppWithClientsRule<>(HibernateApp.class, resourceFilePath("hibernate_noauth/config.yml"));
 
-    @ClassRule
-    public static StroomAuthenticationRule authRule =
-            new StroomAuthenticationRule(WireMockConfiguration.options().port(10080), TestDocRefHibernateEntity.TYPE);
-
-    public TestHibernateDocRefResourceIT() {
+    public TestHibernateDocRefResourceNoAuthIT() {
         super(TestDocRefHibernateEntity.class,
-                appRule,
-                authRule);
+                appRule);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package stroom.datasource.api.v2;
 
 import org.junit.Test;
-import stroom.query.api.v2.Field;
 
 import static org.junit.Assert.assertEquals;
 

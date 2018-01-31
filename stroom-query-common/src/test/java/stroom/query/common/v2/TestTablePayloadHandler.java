@@ -33,7 +33,6 @@ import stroom.query.common.v2.format.FormatterFactory;
 import stroom.query.shared.v2.ParamUtil;
 import stroom.util.shared.HasTerminate;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

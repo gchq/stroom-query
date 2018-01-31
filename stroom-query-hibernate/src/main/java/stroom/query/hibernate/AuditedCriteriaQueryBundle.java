@@ -3,20 +3,27 @@ package stroom.query.hibernate;
 import event.logging.EventLoggingService;
 import io.dropwizard.Configuration;
 import io.dropwizard.ConfiguredBundle;
+import io.dropwizard.auth.AuthDynamicFeature;
+import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.hk2.utilities.reflection.ParameterizedTypeImpl;
+import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.hibernate.SessionFactory;
 import stroom.query.audit.QueryEventLoggingService;
 import stroom.query.audit.authorisation.AuthorisationService;
 import stroom.query.audit.authorisation.AuthorisationServiceConfig;
 import stroom.query.audit.authorisation.AuthorisationServiceImpl;
 import stroom.query.audit.authorisation.HasAuthorisationConfig;
+import stroom.query.audit.authorisation.NoAuthAuthorisationServiceImpl;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.audit.rest.AuditedQueryResourceImpl;
 import stroom.query.audit.security.HasTokenConfig;
+import stroom.query.audit.security.NoAuthValueFactoryProvider;
+import stroom.query.audit.security.RobustJwtAuthFilter;
+import stroom.query.audit.security.ServiceUser;
 import stroom.query.audit.security.TokenConfig;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryService;
@@ -43,22 +50,21 @@ public class AuditedCriteriaQueryBundle<CONFIG extends Configuration & HasTokenC
 
     private final HibernateBundle<CONFIG> hibernateBundle;
 
-    private final Class<DOC_REF_POJO> docRefClass;
+    private final Class<DOC_REF_POJO> docRefEntityClass;
     private final Class<AUDITED_QUERY_RESOURCE> auditedQueryResourceClass;
     private final Class<AUDITED_DOC_REF_RESOURCE> auditedDocRefResourceClass;
     private final Class<DOC_REF_SERVICE> docRefServiceClass;
 
     public AuditedCriteriaQueryBundle(final Class<QUERY_POJO> queryableEntityClass,
                                       final HibernateBundle<CONFIG> hibernateBundle,
-                                      final Class<DOC_REF_POJO> docRefClass,
+                                      final Class<DOC_REF_POJO> docRefEntityClass,
                                       final Class<AUDITED_QUERY_RESOURCE> auditedQueryResourceClass,
                                       final Class<DOC_REF_SERVICE> docRefServiceClass,
                                       final Class<AUDITED_DOC_REF_RESOURCE> auditedDocRefResourceClass) {
         this.queryableEntityClass = queryableEntityClass;
-
         this.hibernateBundle = hibernateBundle;
 
-        this.docRefClass = docRefClass;
+        this.docRefEntityClass = docRefEntityClass;
         this.auditedDocRefResourceClass = auditedDocRefResourceClass;
         this.auditedQueryResourceClass = auditedQueryResourceClass;
         this.docRefServiceClass = docRefServiceClass;
@@ -80,13 +86,28 @@ public class AuditedCriteriaQueryBundle<CONFIG extends Configuration & HasTokenC
 
                 bind(queryService).to(QueryService.class);
                 bind(hibernateBundle.getSessionFactory()).to(SessionFactory.class);
-                bind(docRefServiceClass).to(new ParameterizedTypeImpl(DocRefService.class, docRefClass));
-                bind(AuthorisationServiceImpl.class).to(AuthorisationService.class);
-                bind(configuration.getAuthorisationServiceConfig()).to(AuthorisationServiceConfig.class);
-                bind(configuration.getTokenConfig()).to(TokenConfig.class);
+                bind(docRefServiceClass).to(new ParameterizedTypeImpl(DocRefService.class, docRefEntityClass));
+                if (configuration.getTokenConfig().getSkipAuth()) {
+                    bind(NoAuthAuthorisationServiceImpl.class).to(AuthorisationService.class);
+                } else {
+                    bind(AuthorisationServiceImpl.class).to(AuthorisationService.class);
+                    bind(configuration.getAuthorisationServiceConfig()).to(AuthorisationServiceConfig.class);
+                    bind(configuration.getTokenConfig()).to(TokenConfig.class);
+                }
             }
         });
 
+        // Configure auth
+        if (configuration.getTokenConfig().getSkipAuth()) {
+            environment.jersey().register(new NoAuthValueFactoryProvider.Binder());
+        } else {
+            environment.jersey().register(
+                    new AuthDynamicFeature(
+                            new RobustJwtAuthFilter(configuration.getTokenConfig())
+                    ));
+            environment.jersey().register(new AuthValueFactoryProvider.Binder<>(ServiceUser.class));
+            environment.jersey().register(RolesAllowedDynamicFeature.class);
+        }
     }
 
     @Override
