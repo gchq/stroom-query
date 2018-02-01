@@ -1,5 +1,6 @@
 package stroom.query.audit.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import event.logging.Event;
 import event.logging.EventLoggingService;
 import event.logging.ObjectOutcome;
@@ -17,9 +18,12 @@ import stroom.query.audit.service.DocRefService;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.util.Map;
 
-public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRefResource<T> {
+public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRefResource {
+    private final Class<T> docRefEntityClass;
+
     private final DocRefService<T> service;
 
     private final EventLoggingService eventLoggingService;
@@ -29,10 +33,12 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
     @Inject
     public AuditedDocRefResourceImpl(final DocRefService<T> service,
                                      final EventLoggingService eventLoggingService,
-                                     final AuthorisationService authorisationService) {
+                                     final AuthorisationService authorisationService,
+                                     final DocRefEntity.ClassProvider<T> docRefEntityClassSupplier) {
         this.service = service;
         this.eventLoggingService = eventLoggingService;
         this.authorisationService = authorisationService;
+        this.docRefEntityClass = docRefEntityClassSupplier.get();
     }
 
     public static final String GET_ALL_DOC_REFS = "GET_ALL_DOC_REFS";
@@ -132,10 +138,12 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
 
     public static final String UPDATE_DOC_REF = "UPDATE_DOC_REF";
 
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
     @Override
     public Response update(final ServiceUser user,
                            final String uuid,
-                           final T updatedConfig){
+                           final String updatedConfigJson) {
         return SimpleAuditWrapper.withUser(user)
                 .withAuthSupplier(() -> authorisationService.isAuthorised(user,
                         new DocRef.Builder()
@@ -143,9 +151,12 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                                 .uuid(uuid)
                                 .build(),
                         DocumentPermission.UPDATE))
-                .withResponse(() -> service.update(user, uuid, updatedConfig)
-                        .map(d -> Response.ok(d).build())
-                        .orElse(Response.noContent().build()))
+                .withResponse(() -> {
+                    final T updatedConfig = objectMapper.readValue(updatedConfigJson, docRefEntityClass);
+                    return service.update(user, uuid, updatedConfig)
+                            .map(d -> Response.ok(d).build())
+                            .orElse(Response.noContent().build());
+                })
                 .withPopulateAudit((eventDetail, response, exception) -> {
                     eventDetail.setTypeId(UPDATE_DOC_REF);
                     eventDetail.setDescription("Update a Doc Ref");

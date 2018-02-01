@@ -58,33 +58,10 @@ public class HibernateApp extends Application<HibernateConfig> {
 
     };
 
-    public static final class AuditedDocRefResource extends AuditedDocRefResourceImpl<TestDocRefHibernateEntity> {
-
-        @Inject
-        public AuditedDocRefResource(final DocRefService<TestDocRefHibernateEntity> service,
-                                     final EventLoggingService eventLoggingService,
-                                     final AuthorisationService authorisationService) {
-            super(service, eventLoggingService, authorisationService);
-        }
-    }
-
-    public static final class AuditedQueryResource extends AuditedQueryResourceImpl<TestDocRefHibernateEntity> {
-
-        @Inject
-        public AuditedQueryResource(final EventLoggingService eventLoggingService,
-                                    final QueryService service,
-                                    final AuthorisationService authorisationService,
-                                    final DocRefService<TestDocRefHibernateEntity> docRefService) {
-            super(eventLoggingService, service, authorisationService, docRefService);
-        }
-    }
-
     private final AuditedCriteriaQueryBundle<HibernateConfig,
             TestQueryableEntity,
             TestDocRefHibernateEntity,
-            AuditedQueryResource,
-            TestDocRefServiceCriteriaImpl,
-            AuditedDocRefResource> auditedQueryBundle =
+            TestDocRefServiceCriteriaImpl> auditedQueryBundle =
             new AuditedCriteriaQueryBundle<>(
                     TestQueryableEntity.class,
                     new HibernateBundle<HibernateConfig>(TestDocRefHibernateEntity.class, TestQueryableEntity.class) {
@@ -94,9 +71,7 @@ public class HibernateApp extends Application<HibernateConfig> {
                         }
                     },
                     TestDocRefHibernateEntity.class,
-                    AuditedQueryResource.class,
-                    TestDocRefServiceCriteriaImpl.class,
-                    AuditedDocRefResource.class);
+                    TestDocRefServiceCriteriaImpl.class);
 
     @Override
     public void run(final HibernateConfig configuration,

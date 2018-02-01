@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class DocRefResourceHttpClient<T extends DocRefEntity> implements DocRefResource<T> {
+public class DocRefResourceHttpClient<T extends DocRefEntity> implements DocRefResource {
 
     @FunctionalInterface
     private interface ImportUrlFunction {
@@ -124,10 +124,20 @@ public class DocRefResourceHttpClient<T extends DocRefEntity> implements DocRefR
                 .post(Entity.json(""));
     }
 
-    @Override
     public Response update(final ServiceUser user,
                            final String uuid,
                            final T updatedConfig){
+        return httpClient
+                .target(this.updateUrl.apply(uuid))
+                .request()
+                .header("Authorization", "Bearer " + user.getJwt())
+                .put(Entity.json(updatedConfig));
+    }
+
+    @Override
+    public Response update(final ServiceUser user,
+                           final String uuid,
+                           final String updatedConfig){
         return httpClient
                 .target(this.updateUrl.apply(uuid))
                 .request()

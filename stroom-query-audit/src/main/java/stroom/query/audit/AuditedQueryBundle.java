@@ -37,32 +37,22 @@ import stroom.query.audit.service.QueryService;
  * @param <CONFIG> The configuration class
  * @param <DOC_REF_POJO> POJO class for the Document
  * @param <QUERY_SERVICE> Implementation class for the Query Service
- * @param <AUDITED_QUERY_RESOURCE> Implementation class for the Audited Query Resource
- * @param <AUDITED_DOC_REF_RESOURCE> Implementation class for the Audited DocRef Resource
  * @param <DOC_REF_SERVICE> Implementation class for the DocRef Service
  */
 public class AuditedQueryBundle<CONFIG extends Configuration & HasTokenConfig & HasAuthorisationConfig,
         DOC_REF_POJO extends DocRefEntity,
         QUERY_SERVICE extends QueryService,
-        AUDITED_QUERY_RESOURCE extends AuditedQueryResourceImpl<DOC_REF_POJO>,
-        DOC_REF_SERVICE extends DocRefService<DOC_REF_POJO>,
-        AUDITED_DOC_REF_RESOURCE extends AuditedDocRefResourceImpl<DOC_REF_POJO>> implements ConfiguredBundle<CONFIG> {
+        DOC_REF_SERVICE extends DocRefService<DOC_REF_POJO>> implements ConfiguredBundle<CONFIG> {
 
-    private final Class< QUERY_SERVICE> queryServiceClass;
-    private final Class<AUDITED_QUERY_RESOURCE> auditedQueryResourceClass;
     protected final Class<DOC_REF_POJO> docRefEntityClass;
-    private final Class<AUDITED_DOC_REF_RESOURCE> auditedDocRefResourceClass;
+    private final Class<QUERY_SERVICE> queryServiceClass;
     protected final Class<DOC_REF_SERVICE> docRefServiceClass;
 
     public AuditedQueryBundle(final Class<DOC_REF_POJO> docRefEntityClass,
                               final Class<QUERY_SERVICE> queryServiceClass,
-                              final Class<AUDITED_QUERY_RESOURCE> auditedQueryResourceClass,
-                              final Class<DOC_REF_SERVICE> docRefServiceClass,
-                              final Class<AUDITED_DOC_REF_RESOURCE> auditedDocRefResourceClass) {
-        this.queryServiceClass = queryServiceClass;
-        this.auditedQueryResourceClass = auditedQueryResourceClass;
+                              final Class<DOC_REF_SERVICE> docRefServiceClass) {
         this.docRefEntityClass = docRefEntityClass;
-        this.auditedDocRefResourceClass = auditedDocRefResourceClass;
+        this.queryServiceClass = queryServiceClass;
         this.docRefServiceClass = docRefServiceClass;
     }
 
@@ -74,14 +64,15 @@ public class AuditedQueryBundle<CONFIG extends Configuration & HasTokenConfig & 
     @Override
     public void run(final CONFIG configuration,
                     final Environment environment) {
-        environment.jersey().register(auditedQueryResourceClass);
-        environment.jersey().register(auditedDocRefResourceClass);
+        environment.jersey().register(AuditedQueryResourceImpl.class);
+        environment.jersey().register(AuditedDocRefResourceImpl.class);
         environment.jersey().register(new AbstractBinder() {
             @Override
             protected void configure() {
                 bind(QueryEventLoggingService.class).to(EventLoggingService.class);
                 bind(queryServiceClass).to(QueryService.class);
-                bind(docRefServiceClass).to(new ParameterizedTypeImpl(DocRefService.class, docRefEntityClass));
+                bind(new DocRefEntity.ClassProvider<>(docRefEntityClass)).to(DocRefEntity.ClassProvider.class);
+                bind(docRefServiceClass).to(DocRefService.class);
                 if (configuration.getTokenConfig().getSkipAuth()) {
                     bind(NoAuthAuthorisationServiceImpl.class).to(AuthorisationService.class);
                 } else {

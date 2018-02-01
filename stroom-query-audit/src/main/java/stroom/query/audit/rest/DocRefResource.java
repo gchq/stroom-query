@@ -20,11 +20,10 @@ import java.util.Map;
 
 /**
  * This is the interface that Stroom uses for externally managed DocRefs.
- * @param <T> The DTO class that encapsulates the fully detailed version of the DocRefResource
  */
 @Path("/docRefApi/v1")
 @Produces(MediaType.APPLICATION_JSON)
-public interface DocRefResource<T extends DocRefEntity> {
+public interface DocRefResource {
 
     /**
      * Retrieve the full config for the given DocRef
@@ -80,7 +79,7 @@ public interface DocRefResource<T extends DocRefEntity> {
      * Update the document
      * @param authenticatedServiceUser Authenticated user passed in from web framework
      * @param uuid              The UUID of the document as created by stroom
-     * @param updatedConfig The updated configuration
+     * @param updatedConfigJson The updated configuration
      * @return The updated config
      */
     @PUT
@@ -88,7 +87,7 @@ public interface DocRefResource<T extends DocRefEntity> {
     @Path("/update/{uuid}")
     Response update(@Auth ServiceUser authenticatedServiceUser,
                     @PathParam("uuid") String uuid,
-                    T updatedConfig);
+                    String updatedConfigJson);
 
     /**
      * A notification from Stroom that a document is being copied. The external system should

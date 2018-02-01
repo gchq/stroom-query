@@ -17,39 +17,16 @@ import stroom.query.audit.service.QueryService;
 import javax.inject.Inject;
 
 public class App extends Application<Config> {
-    public static final class AuditedTestDocRefResource extends AuditedDocRefResourceImpl<TestDocRefEntity> {
 
-        @Inject
-        public AuditedTestDocRefResource(final DocRefService<TestDocRefEntity> service,
-                                         final EventLoggingService eventLoggingService,
-                                         final AuthorisationService authorisationService) {
-            super(service, eventLoggingService, authorisationService);
-        }
-    }
-
-    public static final class AuditedTestQueryResource extends AuditedQueryResourceImpl<TestDocRefEntity> {
-
-        @Inject
-        public AuditedTestQueryResource(final EventLoggingService eventLoggingService,
-                                        final QueryService service,
-                                        final AuthorisationService authorisationService,
-                                        final DocRefService<TestDocRefEntity> docRefService) {
-            super(eventLoggingService, service, authorisationService, docRefService);
-        }
-    }
 
     private final AuditedQueryBundle<Config,
             TestDocRefEntity,
             TestQueryServiceImpl,
-            AuditedTestQueryResource,
-            TestDocRefServiceImpl,
-            AuditedTestDocRefResource> auditedQueryBundle =
+            TestDocRefServiceImpl> auditedQueryBundle =
             new AuditedQueryBundle<>(
                     TestDocRefEntity.class,
                     TestQueryServiceImpl.class,
-                    AuditedTestQueryResource.class,
-                    TestDocRefServiceImpl.class,
-                    AuditedTestDocRefResource.class);
+                    TestDocRefServiceImpl.class);
 
     @Override
     public void run(final Config configuration,
