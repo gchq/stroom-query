@@ -48,14 +48,14 @@ public class AuditedQueryBundle<CONFIG extends Configuration & HasTokenConfig & 
         DOC_REF_SERVICE extends DocRefService<DOC_REF_POJO>,
         AUDITED_DOC_REF_RESOURCE extends AuditedDocRefResourceImpl<DOC_REF_POJO>> implements ConfiguredBundle<CONFIG> {
 
-    private final Class<? extends QUERY_SERVICE> queryServiceClass;
+    private final Class< QUERY_SERVICE> queryServiceClass;
     private final Class<AUDITED_QUERY_RESOURCE> auditedQueryResourceClass;
     protected final Class<DOC_REF_POJO> docRefEntityClass;
     private final Class<AUDITED_DOC_REF_RESOURCE> auditedDocRefResourceClass;
     protected final Class<DOC_REF_SERVICE> docRefServiceClass;
 
     public AuditedQueryBundle(final Class<DOC_REF_POJO> docRefEntityClass,
-                              final Class<? extends QUERY_SERVICE> queryServiceClass,
+                              final Class<QUERY_SERVICE> queryServiceClass,
                               final Class<AUDITED_QUERY_RESOURCE> auditedQueryResourceClass,
                               final Class<DOC_REF_SERVICE> docRefServiceClass,
                               final Class<AUDITED_DOC_REF_RESOURCE> auditedDocRefResourceClass) {

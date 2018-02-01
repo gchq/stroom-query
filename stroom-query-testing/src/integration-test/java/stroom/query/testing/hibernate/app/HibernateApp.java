@@ -62,8 +62,8 @@ public class HibernateApp extends Application<HibernateConfig> {
 
         @Inject
         public AuditedDocRefResource(final DocRefService<TestDocRefHibernateEntity> service,
-                                            final EventLoggingService eventLoggingService,
-                                            final AuthorisationService authorisationService) {
+                                     final EventLoggingService eventLoggingService,
+                                     final AuthorisationService authorisationService) {
             super(service, eventLoggingService, authorisationService);
         }
     }
@@ -72,18 +72,10 @@ public class HibernateApp extends Application<HibernateConfig> {
 
         @Inject
         public AuditedQueryResource(final EventLoggingService eventLoggingService,
-                                           final QueryService service,
-                                           final AuthorisationService authorisationService,
-                                           final DocRefService<TestDocRefHibernateEntity> docRefService) {
+                                    final QueryService service,
+                                    final AuthorisationService authorisationService,
+                                    final DocRefService<TestDocRefHibernateEntity> docRefService) {
             super(eventLoggingService, service, authorisationService, docRefService);
-        }
-    }
-
-    public static final class QueryServiceImpl extends QueryServiceCriteriaImpl<TestQueryableEntity> {
-
-        @Inject
-        public QueryServiceImpl(SessionFactory database) {
-            super(() -> TestQueryableEntity.class, database);
         }
     }
 
@@ -93,12 +85,7 @@ public class HibernateApp extends Application<HibernateConfig> {
             AuditedQueryResource,
             TestDocRefServiceCriteriaImpl,
             AuditedDocRefResource> auditedQueryBundle =
-            new AuditedCriteriaQueryBundle<HibernateConfig,
-                    TestQueryableEntity,
-                    TestDocRefHibernateEntity,
-                    AuditedQueryResource,
-                    TestDocRefServiceCriteriaImpl,
-                    AuditedDocRefResource>(
+            new AuditedCriteriaQueryBundle<>(
                     TestQueryableEntity.class,
                     new HibernateBundle<HibernateConfig>(TestDocRefHibernateEntity.class, TestQueryableEntity.class) {
                         @Override
@@ -107,14 +94,13 @@ public class HibernateApp extends Application<HibernateConfig> {
                         }
                     },
                     TestDocRefHibernateEntity.class,
-                    QueryServiceImpl.class,
                     AuditedQueryResource.class,
                     TestDocRefServiceCriteriaImpl.class,
                     AuditedDocRefResource.class);
 
     @Override
     public void run(final HibernateConfig configuration,
-                    final Environment environment) throws Exception {
+                    final Environment environment) {
         environment.healthChecks().register("Something", new HealthCheck() {
             @Override
             protected Result check() {

@@ -13,6 +13,26 @@ import java.util.function.Supplier;
 
 @MappedSuperclass
 public class QueryableEntity implements Serializable {
+
+    /**
+     * Used for injection based on templated services.
+     *
+     * @param <T> The specific implementation of QueryableEntity used in the application
+     */
+    public static class ClassProvider<T extends QueryableEntity> implements Supplier<Class<T>> {
+
+        private final Class<T> clazz;
+
+        public ClassProvider(Class<T> clazz) {
+            this.clazz = clazz;
+        }
+
+        @Override
+        public Class<T> get() {
+            return this.clazz;
+        }
+    }
+
     public static final String DATA_SOURCE_UUID = "dataSourceUuid";
 
     private String dataSourceUuid;

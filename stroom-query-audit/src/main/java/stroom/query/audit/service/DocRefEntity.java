@@ -3,8 +3,30 @@ package stroom.query.audit.service;
 import stroom.query.api.v2.DocRef;
 
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public class DocRefEntity {
+
+
+    /**
+     * Used for injection based on templated services.
+     *
+     * @param <T> The specific implementation of QueryableEntity used in the application
+     */
+    public static class ClassProvider<T extends DocRefEntity> implements Supplier<Class<T>> {
+
+        private final Class<T> clazz;
+
+        public ClassProvider(Class<T> clazz) {
+            this.clazz = clazz;
+        }
+
+        @Override
+        public Class<T> get() {
+            return this.clazz;
+        }
+    }
+
     public static final String UUID = "uuid";
     public static final String NAME = "name";
     public static final String CREATE_TIME = "createTime";

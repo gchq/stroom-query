@@ -1,6 +1,7 @@
 package stroom.query.hibernate;
 
 import io.dropwizard.Configuration;
+import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -36,7 +37,7 @@ public class AuditedCriteriaQueryBundle<CONFIG extends Configuration & HasTokenC
         AUDITED_DOC_REF_RESOURCE extends AuditedDocRefResourceImpl<DOC_REF_POJO>>
         extends AuditedQueryBundle<CONFIG,
                 DOC_REF_POJO,
-                QueryServiceCriteriaImpl<QUERY_POJO> ,
+                QueryServiceCriteriaImpl,
                 AUDITED_QUERY_RESOURCE,
                 DOC_REF_SERVICE,
                 AUDITED_DOC_REF_RESOURCE> {
@@ -48,12 +49,11 @@ public class AuditedCriteriaQueryBundle<CONFIG extends Configuration & HasTokenC
     public AuditedCriteriaQueryBundle(final Class<QUERY_POJO> queryableEntityClass,
                                       final HibernateBundle<CONFIG> hibernateBundle,
                                       final Class<DOC_REF_POJO> docRefEntityClass,
-                                      final Class<? extends QueryServiceCriteriaImpl<QUERY_POJO>> queryServiceClass,
                                       final Class<AUDITED_QUERY_RESOURCE> auditedQueryResourceClass,
                                       final Class<DOC_REF_SERVICE> docRefServiceClass,
                                       final Class<AUDITED_DOC_REF_RESOURCE> auditedDocRefResourceClass) {
         super(docRefEntityClass,
-                queryServiceClass,
+                QueryServiceCriteriaImpl.class,
                 auditedQueryResourceClass,
                 docRefServiceClass,
                 auditedDocRefResourceClass);
@@ -71,7 +71,7 @@ public class AuditedCriteriaQueryBundle<CONFIG extends Configuration & HasTokenC
             @Override
             protected void configure() {
                 bind(docRefServiceClass).to(new ParameterizedTypeImpl(DocRefService.class, docRefEntityClass));
-                bind((Provider<Class<QUERY_POJO>>) () -> queryableEntityClass).to(new TypeLiteral<Provider<QUERY_POJO>>() {});
+                bind(new QueryableEntity.ClassProvider<>(queryableEntityClass)).to(QueryableEntity.ClassProvider.class);
                 bind(hibernateBundle.getSessionFactory()).to(SessionFactory.class);
             }
         });

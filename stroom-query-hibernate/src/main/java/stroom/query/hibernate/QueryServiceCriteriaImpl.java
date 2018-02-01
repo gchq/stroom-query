@@ -29,11 +29,13 @@ import stroom.util.shared.HasTerminate;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -62,7 +64,7 @@ public class QueryServiceCriteriaImpl<T extends QueryableEntity> implements Quer
     private final List<DataSourceField> fields;
 
     @Inject
-    public QueryServiceCriteriaImpl(final Provider<Class<T>> dtoClassProvider,
+    public QueryServiceCriteriaImpl(final QueryableEntity.ClassProvider<T> dtoClassProvider,
                                     final SessionFactory database) {
         this.database = database;
         this.dtoClass = dtoClassProvider.get();
