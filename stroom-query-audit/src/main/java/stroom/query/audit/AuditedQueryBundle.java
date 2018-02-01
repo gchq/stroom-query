@@ -41,21 +41,21 @@ import stroom.query.audit.service.QueryService;
  * @param <AUDITED_DOC_REF_RESOURCE> Implementation class for the Audited DocRef Resource
  * @param <DOC_REF_SERVICE> Implementation class for the DocRef Service
  */
-public final class AuditedQueryBundle<CONFIG extends Configuration & HasTokenConfig & HasAuthorisationConfig,
+public class AuditedQueryBundle<CONFIG extends Configuration & HasTokenConfig & HasAuthorisationConfig,
         DOC_REF_POJO extends DocRefEntity,
         QUERY_SERVICE extends QueryService,
         AUDITED_QUERY_RESOURCE extends AuditedQueryResourceImpl<DOC_REF_POJO>,
         DOC_REF_SERVICE extends DocRefService<DOC_REF_POJO>,
         AUDITED_DOC_REF_RESOURCE extends AuditedDocRefResourceImpl<DOC_REF_POJO>> implements ConfiguredBundle<CONFIG> {
 
-    private final Class<QUERY_SERVICE> queryServiceClass;
+    private final Class<? extends QUERY_SERVICE> queryServiceClass;
     private final Class<AUDITED_QUERY_RESOURCE> auditedQueryResourceClass;
-    private final Class<DOC_REF_POJO> docRefEntityClass;
+    protected final Class<DOC_REF_POJO> docRefEntityClass;
     private final Class<AUDITED_DOC_REF_RESOURCE> auditedDocRefResourceClass;
-    private final Class<DOC_REF_SERVICE> docRefServiceClass;
+    protected final Class<DOC_REF_SERVICE> docRefServiceClass;
 
     public AuditedQueryBundle(final Class<DOC_REF_POJO> docRefEntityClass,
-                              final Class<QUERY_SERVICE> queryServiceClass,
+                              final Class<? extends QUERY_SERVICE> queryServiceClass,
                               final Class<AUDITED_QUERY_RESOURCE> auditedQueryResourceClass,
                               final Class<DOC_REF_SERVICE> docRefServiceClass,
                               final Class<AUDITED_DOC_REF_RESOURCE> auditedDocRefResourceClass) {

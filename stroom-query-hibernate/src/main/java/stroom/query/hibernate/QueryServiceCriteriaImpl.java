@@ -27,6 +27,8 @@ import stroom.query.common.v2.TableCoprocessor;
 import stroom.query.common.v2.TableCoprocessorSettings;
 import stroom.util.shared.HasTerminate;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -59,9 +61,11 @@ public class QueryServiceCriteriaImpl<T extends QueryableEntity> implements Quer
 
     private final List<DataSourceField> fields;
 
-    public QueryServiceCriteriaImpl(final Class<T> dtoClass, final SessionFactory database) {
+    @Inject
+    public QueryServiceCriteriaImpl(final Provider<Class<T>> dtoClassProvider,
+                                    final SessionFactory database) {
         this.database = database;
-        this.dtoClass = dtoClass;
+        this.dtoClass = dtoClassProvider.get();
 
         this.fields = Arrays.stream(dtoClass.getMethods()).map(method -> method.getAnnotation(IsDataSourceField.class))
                 .filter(Objects::nonNull)
