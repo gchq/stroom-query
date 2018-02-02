@@ -4,6 +4,7 @@ import io.dropwizard.Configuration;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.hibernate.SessionFactory;
 import stroom.query.audit.AuditedQueryBundle;

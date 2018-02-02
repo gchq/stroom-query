@@ -12,7 +12,12 @@ import io.dropwizard.flyway.FlywayFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.glassfish.hk2.api.TypeLiteral;
+import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import stroom.query.audit.service.DocRefService;
 import stroom.query.hibernate.AuditedCriteriaQueryBundle;
+import stroom.query.testing.generic.app.TestDocRefEntity;
+import stroom.query.testing.generic.app.TestDocRefServiceImpl;
 
 public class HibernateApp extends Application<HibernateConfig> {
     // Wrap the flyway bundle so that we can call migrate in the bundles 'run'.
@@ -69,6 +74,13 @@ public class HibernateApp extends Application<HibernateConfig> {
             @Override
             protected Result check() {
                 return Result.healthy("Keeps Dropwizard Happy");
+            }
+        });
+
+        environment.jersey().register(new AbstractBinder() {
+            @Override
+            protected void configure() {
+                bind(TestDocRefServiceCriteriaImpl.class).to(new TypeLiteral<DocRefService<TestDocRefHibernateEntity>>() {});
             }
         });
     }

@@ -8,12 +8,21 @@ import stroom.query.api.v2.QueryKey;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.SearchResponse;
 import stroom.query.audit.security.ServiceUser;
+import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryService;
 
+import javax.inject.Inject;
 import java.util.Optional;
 
 public class TestQueryServiceImpl implements QueryService {
     public static final String VALID_INDEX_NAME = "TestIndex";
+
+    private final DocRefService<TestDocRefEntity> docRefEntityDocRefService;
+
+    @Inject
+    public TestQueryServiceImpl(final DocRefService<TestDocRefEntity> docRefEntityDocRefService) {
+        this.docRefEntityDocRefService = docRefEntityDocRefService;
+    }
 
     @Override
     public Optional<DataSource> getDataSource(final ServiceUser user,

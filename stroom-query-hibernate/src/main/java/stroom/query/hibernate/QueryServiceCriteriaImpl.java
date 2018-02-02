@@ -16,6 +16,7 @@ import stroom.query.api.v2.QueryKey;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.SearchResponse;
 import stroom.query.audit.security.ServiceUser;
+import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryService;
 import stroom.query.common.v2.Coprocessor;
 import stroom.query.common.v2.CoprocessorSettings;
@@ -48,22 +49,28 @@ import java.util.stream.Collectors;
  * a single Java data type.
  *
  * It will use the {@link IsDataSourceField} annotation to find fields to expose as it's data source.
- * @param <T> The annotated hibernate class.
+ * @param <QUERYABLE_ENTITY> The annotated hibernate class.
  */
-public class QueryServiceCriteriaImpl<T extends QueryableEntity> implements QueryService {
+public class QueryServiceCriteriaImpl<
+        DOC_REF_ENTITY extends DocRefHibernateEntity,
+        QUERYABLE_ENTITY extends QueryableEntity> implements QueryService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(QueryServiceCriteriaImpl.class);
 
     private final SessionFactory database;
 
-    private final Class<T> dtoClass;
+    private final Class<QUERYABLE_ENTITY> dtoClass;
 
     private final List<DataSourceField> fields;
 
+    private final DocRefService<DOC_REF_ENTITY> docRefEntityDocRefService;
+
     @Inject
-    public QueryServiceCriteriaImpl(final QueryableEntity.ClassProvider<T> dtoClassProvider,
+    public QueryServiceCriteriaImpl(final QueryableEntity.ClassProvider<QUERYABLE_ENTITY> dtoClassProvider,
+                                    final DocRefService<DOC_REF_ENTITY> docRefEntityDocRefService,
                                     final SessionFactory database) {
         this.database = database;
+        this.docRefEntityDocRefService = docRefEntityDocRefService;
         this.dtoClass = dtoClassProvider.get();
 
         this.fields = Arrays.stream(dtoClass.getMethods()).map(method -> method.getAnnotation(IsDataSourceField.class))
@@ -84,20 +91,32 @@ public class QueryServiceCriteriaImpl<T extends QueryableEntity> implements Quer
 
     @Override
     public Optional<DataSource> getDataSource(final ServiceUser user,
-                                              final DocRef docRef){
+                                              final DocRef docRef) throws Exception {
+        final Optional<DOC_REF_ENTITY> docRefEntity = docRefEntityDocRefService.get(user, docRef.getUuid());
+
+        if (!docRefEntity.isPresent()) {
+            return Optional.empty();
+        }
+
         return Optional.of(new DataSource(this.fields));
     }
 
     @Override
     public Optional<SearchResponse> search(final ServiceUser user,
-                                           final SearchRequest request){
+                                           final SearchRequest request) throws Exception {
         final String dataSourceUuid = request.getQuery().getDataSource().getUuid();
+
+        final Optional<DOC_REF_ENTITY> docRefEntity = docRefEntityDocRefService.get(user, dataSourceUuid);
+
+        if (!docRefEntity.isPresent()) {
+            return Optional.empty();
+        }
 
         try (final Session session = database.openSession()) {
             final CriteriaBuilder cb = session.getCriteriaBuilder();
 
             final CriteriaQuery<Tuple> cq = cb.createTupleQuery();
-            final Root<T> root = cq.from(this.dtoClass);
+            final Root<QUERYABLE_ENTITY> root = cq.from(this.dtoClass);
 
             cq.multiselect(this.fields.stream()
                     .map(f -> root.get(f.getName()))
@@ -127,7 +146,7 @@ public class QueryServiceCriteriaImpl<T extends QueryableEntity> implements Quer
     }
 
     private Predicate getPredicate(final CriteriaBuilder cb,
-                                   final Root<T> root,
+                                   final Root<QUERYABLE_ENTITY> root,
                                    final ExpressionItem item) {
         if (!item.enabled()) {
             return null;
