@@ -1,22 +1,15 @@
 package stroom.query.hibernate;
 
 import io.dropwizard.Configuration;
-import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.hibernate.SessionFactory;
 import stroom.query.audit.AuditedQueryBundle;
 import stroom.query.audit.authorisation.HasAuthorisationConfig;
-import stroom.query.audit.rest.AuditedDocRefResourceImpl;
-import stroom.query.audit.rest.AuditedQueryResourceImpl;
 import stroom.query.audit.security.HasTokenConfig;
 import stroom.query.audit.service.DocRefService;
-
-import javax.inject.Provider;
-import org.glassfish.hk2.utilities.reflection.ParameterizedTypeImpl;
 
 /**
  * This Dropwizard bundle can be used to build the entire Query Resource implementation stack when the data source is

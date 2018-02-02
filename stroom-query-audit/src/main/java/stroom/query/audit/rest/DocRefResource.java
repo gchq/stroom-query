@@ -3,7 +3,6 @@ package stroom.query.audit.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.auth.Auth;
 import stroom.query.audit.security.ServiceUser;
-import stroom.query.audit.service.DocRefEntity;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;

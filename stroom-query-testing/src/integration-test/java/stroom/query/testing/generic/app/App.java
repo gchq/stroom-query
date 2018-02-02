@@ -1,20 +1,12 @@
 package stroom.query.testing.generic.app;
 
 import com.codahale.metrics.health.HealthCheck;
-import event.logging.EventLoggingService;
 import io.dropwizard.Application;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import stroom.query.audit.AuditedQueryBundle;
-import stroom.query.audit.authorisation.AuthorisationService;
-import stroom.query.audit.rest.AuditedDocRefResourceImpl;
-import stroom.query.audit.rest.AuditedQueryResourceImpl;
-import stroom.query.audit.service.DocRefService;
-import stroom.query.audit.service.QueryService;
-
-import javax.inject.Inject;
 
 public class App extends Application<Config> {
 

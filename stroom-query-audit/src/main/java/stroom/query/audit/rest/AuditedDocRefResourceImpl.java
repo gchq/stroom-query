@@ -18,7 +18,6 @@ import stroom.query.audit.service.DocRefService;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.util.Map;
 
 public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRefResource {

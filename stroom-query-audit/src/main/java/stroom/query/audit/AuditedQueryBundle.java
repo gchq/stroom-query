@@ -8,7 +8,6 @@ import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
-import org.glassfish.hk2.utilities.reflection.ParameterizedTypeImpl;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import stroom.query.audit.authorisation.AuthorisationService;
 import stroom.query.audit.authorisation.AuthorisationServiceConfig;

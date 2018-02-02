@@ -1,7 +1,6 @@
 package stroom.query.testing.hibernate.app;
 
 import com.codahale.metrics.health.HealthCheck;
-import event.logging.EventLoggingService;
 import io.dropwizard.Application;
 import io.dropwizard.ConfiguredBundle;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
@@ -13,17 +12,7 @@ import io.dropwizard.flyway.FlywayFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import org.hibernate.SessionFactory;
-import stroom.query.audit.authorisation.AuthorisationService;
-import stroom.query.audit.rest.AuditedDocRefResourceImpl;
-import stroom.query.audit.rest.AuditedQueryResourceImpl;
-import stroom.query.audit.service.DocRefService;
-import stroom.query.audit.service.QueryService;
 import stroom.query.hibernate.AuditedCriteriaQueryBundle;
-import stroom.query.hibernate.QueryServiceCriteriaImpl;
-
-import javax.inject.Inject;
-import javax.inject.Provider;
 
 public class HibernateApp extends Application<HibernateConfig> {
     // Wrap the flyway bundle so that we can call migrate in the bundles 'run'.

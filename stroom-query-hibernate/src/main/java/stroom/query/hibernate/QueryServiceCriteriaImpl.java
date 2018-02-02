@@ -28,14 +28,11 @@ import stroom.query.common.v2.TableCoprocessorSettings;
 import stroom.util.shared.HasTerminate;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
 import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
