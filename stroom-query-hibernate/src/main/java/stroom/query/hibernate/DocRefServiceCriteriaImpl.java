@@ -72,7 +72,8 @@ public abstract class DocRefServiceCriteriaImpl<
             cq.where(cb.equal(root.get(DocRefHibernateEntity.UUID), uuid));
             cq.distinct(true);
 
-            return Optional.of(session.createQuery(cq).getSingleResult());
+            final DOC_REF_ENTITY entity = session.createQuery(cq).getSingleResult();
+            return Optional.of(entity);
         } catch (NoResultException e) {
             return Optional.empty();
         } catch (final Exception e) {
@@ -85,7 +86,7 @@ public abstract class DocRefServiceCriteriaImpl<
     public Optional<DOC_REF_ENTITY> createDocument(final ServiceUser user,
                                                    final String uuid,
                                                    final String name) throws Exception {
-        Transaction tx = null;
+        Transaction tx;
 
         try (final Session session = database.openSession()) {
             tx = session.beginTransaction();
@@ -119,7 +120,7 @@ public abstract class DocRefServiceCriteriaImpl<
     public Optional<DOC_REF_ENTITY> update(final ServiceUser user,
                                            final String uuid,
                                            final DOC_REF_ENTITY updatedConfig) throws Exception {
-        Transaction tx = null;
+        Transaction tx;
 
         try (final Session session = database.openSession()) {
             final Long now = System.currentTimeMillis();
@@ -161,7 +162,7 @@ public abstract class DocRefServiceCriteriaImpl<
     public Optional<DOC_REF_ENTITY> copyDocument(final ServiceUser user,
                                                  final String originalUuid,
                                                  final String copyUuid) throws Exception {
-        Transaction tx = null;
+        Transaction tx;
 
         try (final Session session = database.openSession()) {
             tx = session.beginTransaction();
@@ -212,7 +213,7 @@ public abstract class DocRefServiceCriteriaImpl<
     public Optional<DOC_REF_ENTITY> renameDocument(final ServiceUser user,
                                                    final String uuid,
                                                    final String name) throws Exception {
-        Transaction tx = null;
+        Transaction tx;
 
         try (final Session session = database.openSession()) {
             final Long now = System.currentTimeMillis();
@@ -250,7 +251,7 @@ public abstract class DocRefServiceCriteriaImpl<
     @Override
     public Optional<Boolean> deleteDocument(final ServiceUser user,
                                             final String uuid) throws Exception {
-        Transaction tx = null;
+        Transaction tx;
 
         try (final Session session = database.openSession()) {
             tx = session.beginTransaction();
