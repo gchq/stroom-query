@@ -60,6 +60,7 @@ public abstract class DocRefResourceIT<
                 name,
                 parentFolderUuid);
         assertEquals(HttpStatus.FORBIDDEN_403, unauthorisedCreateResponse.getStatus());
+        unauthorisedCreateResponse.close();
 
         final Response unauthenticatedCreateResponse = docRefClient.createDocument(
                 authRule.unauthenticatedUser(unauthenticatedUsername),
@@ -67,7 +68,7 @@ public abstract class DocRefResourceIT<
                 name,
                 parentFolderUuid);
         assertEquals(HttpStatus.UNAUTHORIZED_401, unauthenticatedCreateResponse.getStatus());
-
+        unauthenticatedCreateResponse.close();
 
         final Response createResponse = docRefClient.createDocument(authRule.adminUser(), uuid, name, parentFolderUuid);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
@@ -108,6 +109,7 @@ public abstract class DocRefResourceIT<
         // Create a document
         final Response createResponse = docRefClient.createDocument(authRule.adminUser(), uuid, name, parentFolderUuid);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
+        createResponse.close();
 
         // Update it as authorised user
         final DOC_REF_ENTITY authorisedEntityUpdate = createPopulatedEntity(uuid, name);
@@ -116,6 +118,7 @@ public abstract class DocRefResourceIT<
                 uuid,
                 authorisedEntityUpdate);
         assertEquals(HttpStatus.OK_200, updateResponse.getStatus());
+        updateResponse.close();
 
         // Try updating it as an unauthorised user
         final DOC_REF_ENTITY unauthorisedEntityUpdate = createPopulatedEntity(uuid, name);
@@ -124,6 +127,7 @@ public abstract class DocRefResourceIT<
                 uuid,
                 unauthorisedEntityUpdate);
         assertEquals(HttpStatus.FORBIDDEN_403, unauthorisedUpdateResponse.getStatus());
+        unauthorisedUpdateResponse.close();
 
         // Try updating it as an unauthenticated user
         final DOC_REF_ENTITY unauthenticatedEntityUpdate = createPopulatedEntity(uuid, name);
@@ -132,6 +136,7 @@ public abstract class DocRefResourceIT<
                 uuid,
                 unauthenticatedEntityUpdate);
         assertEquals(HttpStatus.UNAUTHORIZED_401, unauthenticatedUpdateResponse.getStatus());
+        unauthenticatedUpdateResponse.close();
 
         // Check it is still in the state from the authorised update
         final Response getCheckResponse = docRefClient.get(authRule.authenticatedUser(authorisedUsername), uuid);
@@ -166,6 +171,7 @@ public abstract class DocRefResourceIT<
         // Create a document
         final Response createResponse = docRefClient.createDocument(authRule.adminUser(), uuid, name, parentFolderUuid);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
+        createResponse.close();
 
         // Update it as authorised user
         final DOC_REF_ENTITY authorisedEntityUpdate = createPopulatedEntity(uuid, name);
@@ -174,6 +180,7 @@ public abstract class DocRefResourceIT<
                 uuid,
                 authorisedEntityUpdate);
         assertEquals(HttpStatus.OK_200, updateResponse.getStatus());
+        updateResponse.close();
 
         // Get info as authorised user
         final Response authorisedGetInfoResponse = docRefClient.getInfo(authRule.authenticatedUser(authorisedUsername), uuid);
@@ -187,10 +194,12 @@ public abstract class DocRefResourceIT<
         // Try to get info as unauthorised user
         final Response unauthorisedGetInfoResponse = docRefClient.getInfo(authRule.authenticatedUser(unauthorisedUsername), uuid);
         assertEquals(HttpStatus.FORBIDDEN_403, unauthorisedGetInfoResponse.getStatus());
+        unauthorisedGetInfoResponse.close();
 
         // Try to get info as unauthenticated user
         final Response unauthenticatedGetInfoResponse = docRefClient.getInfo(authRule.unauthenticatedUser(unauthenticatedUsername), uuid);
         assertEquals(HttpStatus.UNAUTHORIZED_401, unauthenticatedGetInfoResponse.getStatus());
+        unauthenticatedGetInfoResponse.close();
 
         // Create, update (ok), get info (ok), get info (forbidden)
         auditLogRule.check()
@@ -221,24 +230,29 @@ public abstract class DocRefResourceIT<
                 name,
                 parentFolderUuid);
         assertEquals(HttpStatus.OK_200, createReponse.getStatus());
+        createReponse.close();
 
         final Response getResponseAdmin = docRefClient.get(authRule.adminUser(), uuid);
         assertEquals(HttpStatus.OK_200, getResponseAdmin.getStatus());
+        getResponseAdmin.close();
 
         final Response getResponseAuthorisedUser = docRefClient.get(
                 authRule.authenticatedUser(authorisedUsername),
                 uuid);
         assertEquals(HttpStatus.OK_200, getResponseAuthorisedUser.getStatus());
+        getResponseAuthorisedUser.close();
 
         final Response getResponseUnauthenticatedUser = docRefClient.get(
                 authRule.unauthenticatedUser(unauthenticatedUsername),
                 uuid);
         assertEquals(HttpStatus.UNAUTHORIZED_401, getResponseUnauthenticatedUser.getStatus());
+        getResponseUnauthenticatedUser.close();
 
         final Response getResponseUnauthorisedUser = docRefClient.get(
                 authRule.authenticatedUser(unauthorisedUsername),
                 uuid);
         assertEquals(HttpStatus.FORBIDDEN_403, getResponseUnauthorisedUser.getStatus());
+        getResponseUnauthorisedUser.close();
 
         // Create, get (admin), get (authorized), get (unauthorised)
         auditLogRule.check()
@@ -269,6 +283,7 @@ public abstract class DocRefResourceIT<
                 name1,
                 parentFolderUuid);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
+        createResponse.close();
 
         // Attempt rename as an authorised user
         final Response renameResponse = docRefClient.renameDocument(
@@ -295,6 +310,7 @@ public abstract class DocRefResourceIT<
                 uuid,
                 name3);
         assertEquals(HttpStatus.UNAUTHORIZED_401, unauthenticatedRenameResponse.getStatus());
+        unauthenticatedRenameResponse.close();
 
         // Check it still has name2
         final Response getPostFailedRenamesResponse = docRefClient.get(authRule.adminUser(), uuid);
@@ -332,6 +348,7 @@ public abstract class DocRefResourceIT<
 
         final Response createResponse = docRefClient.createDocument(authRule.adminUser(), uuid1, name, parentFolderUuid);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
+        createResponse.close();
 
         // Attempt copy as authorised user
         final Response copyResponse = docRefClient.copyDocument(authRule.authenticatedUser(authorisedUsername), uuid1, uuid2, parentFolderUuid);
@@ -357,9 +374,11 @@ public abstract class DocRefResourceIT<
                 uuid3,
                 parentFolderUuid);
         assertEquals(HttpStatus.FORBIDDEN_403, unauthorisedCopyResponse.getStatus());
+        unauthorisedCopyResponse.close();
 
         final Response getUnauthorisedCopyResponse = docRefClient.get(authRule.authenticatedUser(authorisedUsername), uuid3);
         assertEquals(HttpStatus.NOT_FOUND_404, getUnauthorisedCopyResponse.getStatus());
+        getUnauthorisedCopyResponse.close();
 
         // Attempt copy as unauthenticated user
         final Response unauthenticatedCopyResponse = docRefClient.copyDocument(
@@ -368,9 +387,11 @@ public abstract class DocRefResourceIT<
                 uuid4,
                 parentFolderUuid);
         assertEquals(HttpStatus.UNAUTHORIZED_401, unauthenticatedCopyResponse.getStatus());
+        unauthenticatedCopyResponse.close();
 
         final Response getUnauthenticatedCopyResponse = docRefClient.get(authRule.authenticatedUser(authorisedUsername), uuid4);
         assertEquals(HttpStatus.NOT_FOUND_404, getUnauthenticatedCopyResponse.getStatus());
+        getUnauthenticatedCopyResponse.close();
 
         // Create, copy, get, copy (forbidden), get, get
         auditLogRule.check()
@@ -400,30 +421,36 @@ public abstract class DocRefResourceIT<
 
         final Response createResponse = docRefClient.createDocument(authRule.adminUser(), uuid, name, parentFolderUuid);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
+        createResponse.close();
 
         // Make user a user that is not authorised for deletion cannot delete it
         final Response unauthorisedDeleteResponse = docRefClient.deleteDocument(
                 authRule.authenticatedUser(unauthorisedUsername),
                 uuid);
         assertEquals(HttpStatus.FORBIDDEN_403, unauthorisedDeleteResponse.getStatus());
+        unauthorisedDeleteResponse.close();
 
         // Make sure a user that is not authenticated cannot delete it either
         final Response unauthenticatedDeleteResponse = docRefClient.deleteDocument(
                 authRule.unauthenticatedUser(unauthenticatedUsername),
                 uuid);
         assertEquals(HttpStatus.UNAUTHORIZED_401, unauthenticatedDeleteResponse.getStatus());
+        unauthenticatedDeleteResponse.close();
 
         // Ensure the document is still there
         final Response getStillThereResponse = docRefClient.get(authRule.authenticatedUser(authorisedUsername), uuid);
         assertEquals(HttpStatus.OK_200, getStillThereResponse.getStatus());
+        getStillThereResponse.close();
 
         // Check the fully authorised user can delete it
         final Response authorisedDeleteResponse = docRefClient.deleteDocument(authRule.authenticatedUser(authorisedUsername), uuid);
         assertEquals(HttpStatus.OK_200, authorisedDeleteResponse.getStatus());
+        authorisedDeleteResponse.close();
 
         // Now check it has been deleted
         final Response getResponse = docRefClient.get(authRule.authenticatedUser(authorisedUsername), uuid);
         assertEquals(HttpStatus.NOT_FOUND_404, getResponse.getStatus());
+        getResponse.close();
 
         // Create, delete (forbidden), get (200), delete, get (404)
         auditLogRule.check()
@@ -451,17 +478,21 @@ public abstract class DocRefResourceIT<
         // Create a document
         final Response createResponse = docRefClient.createDocument(authRule.adminUser(), uuid, name, parentFolderUuid);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
+        createResponse.close();
 
         // Update it with some real details
         final DOC_REF_ENTITY entityUpdate = createPopulatedEntity(uuid, name);
         final Response updateResponse = docRefClient.update(authRule.adminUser(), uuid, entityUpdate);
         assertEquals(HttpStatus.OK_200, updateResponse.getStatus());
+        updateResponse.close();
 
         // Try exporting it as an authorised user
         final Response authorisedExportResponse = docRefClient.exportDocument(authRule.authenticatedUser(authorisedUsername), uuid);
         assertEquals(HttpStatus.OK_200, authorisedExportResponse.getStatus());
+
         final ExportDTO exportDTO = authorisedExportResponse.readEntity(ExportDTO.class);
         assertNotNull(exportDTO);
+
         final Map<String, String> expectedExportValues = exportValues(entityUpdate);
         expectedExportValues.put(DocRefEntity.NAME, entityUpdate.getName()); // add common fields
         assertEquals(expectedExportValues, exportDTO.getValues());
@@ -469,10 +500,12 @@ public abstract class DocRefResourceIT<
         // Try exporting it as an unauthorised user
         final Response unauthorisedExportResponse = docRefClient.exportDocument(authRule.authenticatedUser(unauthorisedUsername), uuid);
         assertEquals(HttpStatus.FORBIDDEN_403, unauthorisedExportResponse.getStatus());
+        unauthorisedExportResponse.close();
 
         // Try exporting it as an unauthenticated user
         final Response unauthenticatedExportResponse = docRefClient.exportDocument(authRule.unauthenticatedUser(unauthenticatedUsername), uuid);
         assertEquals(HttpStatus.UNAUTHORIZED_401, unauthenticatedExportResponse.getStatus());
+        unauthenticatedExportResponse.close();
 
         // Create, update, export, export (forbidden)
         auditLogRule.check()

@@ -50,7 +50,9 @@ public class AuthorisationServiceImpl implements AuthorisationService {
     public boolean isAuthorised(final ServiceUser serviceUser,
                                 final DocRef docRef,
                                 final String permissionName) {
-        Response response;
+        boolean isUserAuthorised;
+
+        Response response = null;
         try {
             final Map<String, Object> request = new HashMap<>();
             request.put("docRef", new DocRef.Builder()
@@ -64,28 +66,30 @@ public class AuthorisationServiceImpl implements AuthorisationService {
                     .request()
                     .header("Authorization", "Bearer " + serviceUser.getJwt())
                     .post(Entity.json(request));
+
+            switch (response.getStatus()) {
+                case HttpStatus.UNAUTHORIZED_401:
+                    isUserAuthorised = false;
+                    break;
+                case HttpStatus.OK_200:
+                    isUserAuthorised = true;
+                    break;
+                case HttpStatus.NOT_FOUND_404:
+                    isUserAuthorised = false;
+                    LOGGER.error("Received a 404 when trying to access the authorisation service! I am unable to check authorisation so all requests will be rejected until this is fixed. Is the service location correctly configured? Is the service running? The URL I tried was: {}", this.isAuthorisedUrl);
+                    break;
+                default:
+                    isUserAuthorised = false;
+                    LOGGER.error("Tried to check authorisation for a user but got an unknown response!",
+                            response.getStatus());
+            }
         } catch (final Exception e) {
             LOGGER.error("Could not request authorisation " + e.getLocalizedMessage());
-            return false;
-        }
-
-        boolean isUserAuthorised;
-
-        switch (response.getStatus()) {
-            case HttpStatus.UNAUTHORIZED_401:
-                isUserAuthorised = false;
-                break;
-            case HttpStatus.OK_200:
-                isUserAuthorised = true;
-                break;
-            case HttpStatus.NOT_FOUND_404:
-                isUserAuthorised = false;
-                LOGGER.error("Received a 404 when trying to access the authorisation service! I am unable to check authorisation so all requests will be rejected until this is fixed. Is the service location correctly configured? Is the service running? The URL I tried was: {}", this.isAuthorisedUrl);
-                break;
-            default:
-                isUserAuthorised = false;
-                LOGGER.error("Tried to check authorisation for a user but got an unknown response!",
-                        response.getStatus());
+            isUserAuthorised = false;
+        } finally {
+            if (null != response) {
+                response.close();
+            }
         }
 
         return isUserAuthorised;

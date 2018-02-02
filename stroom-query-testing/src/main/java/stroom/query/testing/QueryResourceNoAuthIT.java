@@ -83,6 +83,7 @@ public abstract class QueryResourceNoAuthIT<
 
         final Response authorisedResponse = queryClient.search(NoAuthValueFactoryProvider.ADMIN_USER, searchRequest);
         assertEquals(HttpStatus.OK_200, authorisedResponse.getStatus());
+        authorisedResponse.close();
     }
 
     /**
@@ -109,6 +110,7 @@ public abstract class QueryResourceNoAuthIT<
                 docRef.getName(),
                 parentFolderUuid);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
+        createResponse.close();
 
         final DOC_REF_ENTITY docRefEntityToUse = (docRefEntity != null) ? docRefEntity : getValidEntity(docRef);
         final Response updateIndexResponse =
@@ -116,6 +118,7 @@ public abstract class QueryResourceNoAuthIT<
                         docRef.getUuid(),
                         docRefEntityToUse);
         assertEquals(HttpStatus.OK_200, updateIndexResponse.getStatus());
+        updateIndexResponse.close();
 
         return docRef;
     }

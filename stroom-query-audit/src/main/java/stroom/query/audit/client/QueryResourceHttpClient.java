@@ -12,8 +12,9 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
+import java.io.Closeable;
 
-public class QueryResourceHttpClient implements QueryResource {
+public class QueryResourceHttpClient implements QueryResource, Closeable {
 
     private final Client httpClient;
     private final String baseUrl;
@@ -29,6 +30,12 @@ public class QueryResourceHttpClient implements QueryResource {
         this.dataSourceUrl = String.format("%s/queryApi/v1/dataSource", baseUrl);
         this.searchUrl = String.format("%s/queryApi/v1/search", baseUrl);
         this.destroyUrl = String.format("%s/queryApi/v1/destroy", baseUrl);
+    }
+
+    public void close() {
+        if (null != httpClient) {
+            this.httpClient.close();
+        }
     }
 
     @Override

@@ -60,9 +60,7 @@ public abstract class QueryResourceIT<
 
         final Response response = queryClient.getDataSource(authRule.adminUser(), docRef);
         assertEquals(HttpStatus.OK_200, response.getStatus());
-
         final DataSource result = response.readEntity(DataSource.class);
-
         assertValidDataSource(result);
 
         // Create doc ref, update, get data source
@@ -85,12 +83,15 @@ public abstract class QueryResourceIT<
 
         final Response authorisedResponse = queryClient.getDataSource(authRule.authenticatedUser(authorisedUsername), docRef);
         assertEquals(HttpStatus.OK_200, authorisedResponse.getStatus());
+        authorisedResponse.close();
 
         final Response unauthorisedResponse = queryClient.getDataSource(authRule.authenticatedUser(unauthorisedUsername), docRef);
         assertEquals(HttpStatus.FORBIDDEN_403, unauthorisedResponse.getStatus());
+        unauthorisedResponse.close();
 
         final Response unauthenticatedResponse = queryClient.getDataSource(authRule.unauthenticatedUser(unauthenticatedUsername), docRef);
         assertEquals(HttpStatus.UNAUTHORIZED_401, unauthenticatedResponse.getStatus());
+        unauthenticatedResponse.close();
 
         // Create index, update, authorised get, unauthorised get
         auditLogRule.check()
@@ -120,12 +121,15 @@ public abstract class QueryResourceIT<
 
         final Response authorisedResponse = queryClient.search(authRule.authenticatedUser(authorisedUsername), searchRequest);
         assertEquals(HttpStatus.OK_200, authorisedResponse.getStatus());
+        authorisedResponse.close();
 
         final Response unauthorisedResponse = queryClient.getDataSource(authRule.authenticatedUser(unauthorisedUsername), docRef);
         assertEquals(HttpStatus.FORBIDDEN_403, unauthorisedResponse.getStatus());
+        unauthorisedResponse.close();
 
         final Response unauthenticatedResponse = queryClient.getDataSource(authRule.unauthenticatedUser(unauthenticatedUsername), docRef);
         assertEquals(HttpStatus.UNAUTHORIZED_401, unauthenticatedResponse.getStatus());
+        unauthenticatedResponse.close();
 
     }
 
@@ -156,6 +160,7 @@ public abstract class QueryResourceIT<
                 docRef.getName(),
                 parentFolderUuid);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
+        createResponse.close();
 
         // Give admin all the roles required to manipulate the document and it's underlying data
         authRule.giveDocumentPermission(authRule.adminUser(), docRef.getUuid(), DocumentPermission.READ);
@@ -167,6 +172,7 @@ public abstract class QueryResourceIT<
                         docRef.getUuid(),
                         docRefEntityToUse);
         assertEquals(HttpStatus.OK_200, updateIndexResponse.getStatus());
+        updateIndexResponse.close();
 
         return docRef;
     }

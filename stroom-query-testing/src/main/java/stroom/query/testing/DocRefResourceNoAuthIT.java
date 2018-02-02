@@ -146,9 +146,11 @@ public abstract class DocRefResourceNoAuthIT<
                 name,
                 parentFolderUuid);
         assertEquals(HttpStatus.OK_200, createReponse.getStatus());
+        createReponse.close();
 
         final Response getResponseAdmin = docRefClient.get(NoAuthValueFactoryProvider.ADMIN_USER, uuid);
         assertEquals(HttpStatus.OK_200, getResponseAdmin.getStatus());
+        getResponseAdmin.close();
 
         auditLogRule.check()
                 .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.CREATE_DOC_REF, uuid))
@@ -168,6 +170,7 @@ public abstract class DocRefResourceNoAuthIT<
                 name1,
                 parentFolderUuid);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
+        createResponse.close();
 
         // Attempt rename as an authorised user
         final Response renameResponse = docRefClient.renameDocument(
@@ -204,6 +207,7 @@ public abstract class DocRefResourceNoAuthIT<
 
         final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid1, name, parentFolderUuid);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
+        createResponse.close();
 
         // Attempt copy as authorised user
         final Response copyResponse = docRefClient.copyDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid1, uuid2, parentFolderUuid);
@@ -237,14 +241,17 @@ public abstract class DocRefResourceNoAuthIT<
 
         final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid, name, parentFolderUuid);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
+        createResponse.close();
 
         // Check the fully authorised user can delete it
         final Response authorisedDeleteResponse = docRefClient.deleteDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid);
         assertEquals(HttpStatus.OK_200, authorisedDeleteResponse.getStatus());
+        authorisedDeleteResponse.close();
 
         // Now check it has been deleted
         final Response getResponse = docRefClient.get(NoAuthValueFactoryProvider.ADMIN_USER, uuid);
         assertEquals(HttpStatus.NOT_FOUND_404, getResponse.getStatus());
+        getResponse.close();
 
         // Create, delete (forbidden), get (200), delete, get (404)
         auditLogRule.check()
@@ -262,17 +269,21 @@ public abstract class DocRefResourceNoAuthIT<
         // Create a document
         final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid, name, parentFolderUuid);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
+        createResponse.close();
 
         // Update it with some real details
         final DOC_REF_ENTITY entityUpdate = createPopulatedEntity(uuid, name);
         final Response updateResponse = docRefClient.update(NoAuthValueFactoryProvider.ADMIN_USER, uuid, entityUpdate);
         assertEquals(HttpStatus.OK_200, updateResponse.getStatus());
+        updateResponse.close();
 
         // Try exporting it as an authorised user
         final Response authorisedExportResponse = docRefClient.exportDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid);
         assertEquals(HttpStatus.OK_200, authorisedExportResponse.getStatus());
+
         final ExportDTO exportDTO = authorisedExportResponse.readEntity(ExportDTO.class);
         assertNotNull(exportDTO);
+
         final Map<String, String> expectedExportValues = exportValues(entityUpdate);
         expectedExportValues.put(DocRefEntity.NAME, entityUpdate.getName()); // add common fields
         assertEquals(expectedExportValues, exportDTO.getValues());
@@ -286,7 +297,6 @@ public abstract class DocRefResourceNoAuthIT<
 
     @Test
     public void testImport() {
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
 

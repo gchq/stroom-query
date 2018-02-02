@@ -1,7 +1,5 @@
 package stroom.query.audit.client;
 
-import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.ClientResponse;
 import stroom.query.audit.rest.DocRefResource;
 import stroom.query.audit.security.ServiceUser;
 import stroom.query.audit.service.DocRefEntity;
@@ -10,11 +8,12 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
+import java.io.Closeable;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class DocRefResourceHttpClient<T extends DocRefEntity> implements DocRefResource {
+public class DocRefResourceHttpClient<T extends DocRefEntity> implements DocRefResource, Closeable {
 
     @FunctionalInterface
     private interface ImportUrlFunction {
@@ -80,7 +79,13 @@ public class DocRefResourceHttpClient<T extends DocRefEntity> implements DocRefR
         this.exportUrl = (uuid) -> String.format("%s/docRefApi/v1/export/%s",
                 baseUrl,
                 uuid);
-        httpClient = ClientBuilder.newClient(new ClientConfig().register(ClientResponse.class));
+        httpClient = ClientBuilder.newClient();
+    }
+
+    public void close() {
+        if (null != httpClient) {
+            this.httpClient.close();
+        }
     }
 
     @Override
