@@ -92,17 +92,22 @@ public final class SearchRequest implements Serializable {
     /**
      * @param key            A unique key to identify the instance of the search by. This key is used to identify multiple
      *                       requests for the same search when running in incremental mode.
+     *
      * @param query          The query terms for the search
+     *
      * @param resultRequests A list of {@link ResultRequest resultRequest} definitions. If null or the list is empty
      *                       no results will be returned. Allows the caller to request that the results of the query
      *                       are returned in multiple forms, e.g. using a number of different
      *                       filtering/aggregation/sorting approaches.
+     *
      * @param dateTimeLocale The locale to use when formatting date values in the search results. The value is the
      *                       string form of a {@link java.time.ZoneId zoneId}
+     *
      * @param incremental    If true the response will contain all results found so far. Future requests for the same
      *                       query key may return more results. Intended for use on longer running searches to allow
      *                       partial result sets to be returned as soon as they are available rather than waiting for the
      *                       full result set.
+     *
      * @param timeout        Set the maximum time (in ms) for the server to wait for a complete result set. The timeout applies to both
      *                       incremental and non incremental queries, though the behaviour is slightly different. The timeout
      *                       will make the server wait for which ever comes first out of the query completing or the timeout period
@@ -163,6 +168,13 @@ public final class SearchRequest implements Serializable {
     }
 
     /**
+     * @return The timeout period in ms. Can be null.
+     */
+    public Long getTimeout() {
+        return timeout;
+    }
+
+    /**
      * @return Whether the search should return immediately with the results found so far or wait for the search
      * to finish
      */
@@ -183,7 +195,9 @@ public final class SearchRequest implements Serializable {
             return false;
         if (dateTimeLocale != null ? !dateTimeLocale.equals(that.dateTimeLocale) : that.dateTimeLocale != null)
             return false;
-        return incremental != null ? incremental.equals(that.incremental) : that.incremental == null;
+        if (incremental != null ? incremental.equals(that.incremental) : that.incremental == null)
+            return false;
+        return timeout != null ? timeout.equals(that.timeout) : that.timeout == null;
     }
 
     @Override
@@ -193,6 +207,7 @@ public final class SearchRequest implements Serializable {
         result = 31 * result + (resultRequests != null ? resultRequests.hashCode() : 0);
         result = 31 * result + (dateTimeLocale != null ? dateTimeLocale.hashCode() : 0);
         result = 31 * result + (incremental != null ? incremental.hashCode() : 0);
+        result = 31 * result + (timeout != null ? timeout.hashCode() : 0);
         return result;
     }
 
@@ -204,6 +219,7 @@ public final class SearchRequest implements Serializable {
                 ", resultRequests=" + resultRequests +
                 ", dateTimeLocale='" + dateTimeLocale + '\'' +
                 ", incremental=" + incremental +
+                ", timeout=" + timeout +
                 '}';
     }
 
