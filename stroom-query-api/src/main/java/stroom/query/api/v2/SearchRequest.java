@@ -35,9 +35,9 @@ import java.util.List;
  * A class for describing a search request including the query to run and definition(s) of how the results
  * should be returned
  */
-@JsonPropertyOrder({"key", "query", "resultRequests", "dateTimeLocale", "incremental"})
+@JsonPropertyOrder({"key", "query", "resultRequests", "dateTimeLocale", "incremental", "timeout"})
 @XmlRootElement(name = "searchRequest")
-@XmlType(name = "SearchRequest", propOrder = {"key", "query", "resultRequests", "dateTimeLocale", "incremental"})
+@XmlType(name = "SearchRequest", propOrder = {"key", "query", "resultRequests", "dateTimeLocale", "incremental", "timeout"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = "A request for new search or a follow up request for more data for an existing iterative search")
 public final class SearchRequest implements Serializable {
@@ -66,12 +66,25 @@ public final class SearchRequest implements Serializable {
 
     @XmlElement
     @ApiModelProperty(
-            value = "If true the response will contain all results found so far. Future requests " +
-            "for the same query key may return more results. Intended for use on longer running searches to allow " +
-            "partial result sets to be returned as soon as they are available rather than waiting for the full " +
-            "result set.",
+            value = "If true the response will contain all results found so far, typically no results on the first " +
+                    "request. Future requests for the same query key may return more results. Intended for use on " +
+                    "longer running searches to allow partial result sets to be returned as soon as they are " +
+                    "available rather than waiting for the full result set.",
             required = true)
     private Boolean incremental;
+
+    @XmlElement
+    @ApiModelProperty(
+            value = "Set the maximum time (in ms) for the server to wait for a complete result set. The timeout applies to both " +
+                    "incremental and non incremental queries, though the behaviour is slightly different. The timeout " +
+                    "will make the server wait for which ever comes first out of the query completing or the timeout period " +
+                    "being reached. If no value is supplied then for an incremental query a default value of 0 will be used " +
+                    "(i.e. returning immediately) and for a non-incremental query the server's default timeout period will be " +
+                    "used. For an incremental query, if the query has not completed by the end of the timeout period, it will " +
+                    "return the currently know results with complete=false, however for a non-incremental query it will return " +
+                    "no results, complete=false and details of the timeout in the error field",
+            required = false)
+    private Long timeout;
 
     private SearchRequest() {
     }
@@ -90,17 +103,27 @@ public final class SearchRequest implements Serializable {
      *                       query key may return more results. Intended for use on longer running searches to allow
      *                       partial result sets to be returned as soon as they are available rather than waiting for the
      *                       full result set.
+     * @param timeout        Set the maximum time (in ms) for the server to wait for a complete result set. The timeout applies to both
+     *                       incremental and non incremental queries, though the behaviour is slightly different. The timeout
+     *                       will make the server wait for which ever comes first out of the query completing or the timeout period
+     *                       being reached. If no value is supplied then for an incremental query a default value of 0 will be used
+     *                       (i.e. returning immediately) and for a non-incremental query the server's default timeout period will be
+     *                       used. For an incremental query, if the query has not completed by the end of the timeout period, it will
+     *                       return the currently know results with complete=false, however for a non-incremental query it will return
+     *                       no results, complete=false and details of the timeout in the error field
      */
     public SearchRequest(final QueryKey key,
                          final Query query,
                          final List<ResultRequest> resultRequests,
                          final String dateTimeLocale,
-                         final Boolean incremental) {
+                         final Boolean incremental,
+                         final Long timeout) {
         this.key = key;
         this.query = query;
         this.resultRequests = resultRequests;
         this.dateTimeLocale = dateTimeLocale;
         this.incremental = incremental;
+        this.timeout = timeout;
     }
 
     /**
@@ -186,7 +209,6 @@ public final class SearchRequest implements Serializable {
 
     /**
      * Builder for constructing a {@link SearchRequest}
-     *
      */
     public static class Builder {
 
@@ -200,10 +222,11 @@ public final class SearchRequest implements Serializable {
 
         private Boolean incremental;
 
+        private Long timeout;
+
         /**
          * @param value A unique key to identify the instance of the search by. This key is used to identify multiple
-         * requests for the same search when running in incremental mode.
-         *
+         *              requests for the same search when running in incremental mode.
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder key(final QueryKey value) {
@@ -213,6 +236,7 @@ public final class SearchRequest implements Serializable {
 
         /**
          * Shortcut function to add a key value in one go
+         *
          * @param uuid The UUID of the query key
          * @return this builder
          */
@@ -222,7 +246,6 @@ public final class SearchRequest implements Serializable {
 
         /**
          * @param value The query terms for the search
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder query(final Query value) {
@@ -232,17 +255,15 @@ public final class SearchRequest implements Serializable {
 
         /**
          * @param values The various forms of results required by the caller.
-         *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder addResultRequests(final ResultRequest...values) {
+        public Builder addResultRequests(final ResultRequest... values) {
             this.resultRequests.addAll(Arrays.asList(values));
             return this;
         }
 
         /**
          * @param value The date time locale to apply to any date/time results
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder dateTimeLocale(final String value) {
@@ -255,7 +276,6 @@ public final class SearchRequest implements Serializable {
          *              query key may return more results. Intended for use on longer running searches to allow
          *              partial result sets to be returned as soon as they are available rather than waiting for the
          *              full result set.
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder incremental(final Boolean value) {
@@ -263,8 +283,17 @@ public final class SearchRequest implements Serializable {
             return this;
         }
 
+        /**
+         * @param value See {@link SearchRequest#SearchRequest(QueryKey, Query, List, String, Boolean, Long)}
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public Builder timeout(final Long value) {
+            this.timeout = value;
+            return this;
+        }
+
         public SearchRequest build() {
-            return new SearchRequest(key, query, resultRequests, dateTimeLocale, incremental);
+            return new SearchRequest(key, query, resultRequests, dateTimeLocale, incremental, timeout);
         }
     }
 
