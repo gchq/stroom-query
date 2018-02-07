@@ -28,30 +28,78 @@ import stroom.query.api.v2.TableResult;
 import stroom.query.common.v2.format.FieldFormatter;
 import stroom.query.common.v2.format.FormatterFactory;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class SearchResponseCreator {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchResponseCreator.class);
 
+    private static final Duration FALL_BACK_DEFAULT_TIMEOUT = Duration.ofSeconds(30);
+
     private final Store store;
+    private final Duration defaultTimeout;
 
     private final Map<String, ResultCreator> cachedResultCreators = new HashMap<>();
 
     // Cache the last results for each component.
     private final Map<String, Result> resultCache = new HashMap<>();
 
+    //TODO add arg for default timeout duration as the service has to supply this
     public SearchResponseCreator(final Store store) {
-        this.store = store;
+
+        this.store = Objects.requireNonNull(store);
+        this.defaultTimeout = FALL_BACK_DEFAULT_TIMEOUT;
+    }
+
+    public SearchResponseCreator(final Store store, final Duration defaultTimeout) {
+
+        this.store = Objects.requireNonNull(store);
+        this.defaultTimeout = Objects.requireNonNull(defaultTimeout);
     }
 
     public SearchResponse create(final SearchRequest searchRequest) {
-        List<Result> results = new ArrayList<>(searchRequest.getResultRequests().size());
-        final boolean complete = store.isComplete();
+        final boolean isComplete = store.isComplete();
+
+        //TODO determine effective timeout from request, default timeout and incremental=true/false
+        Duration effectiveTimeout = getEffectiveTimeout(searchRequest);
+
+        //TODO refactor to use ConditionalWait
+
+        List<Result> results = getResults(searchRequest, isComplete);
+
+        if (results.size() == 0) {
+            results = null;
+        }
+
+        return new SearchResponse(store.getHighlights(), results, store.getErrors(), isComplete);
+    }
+
+    private Duration getEffectiveTimeout(final SearchRequest searchRequest) {
+        Duration requestedTimeout = searchRequest.getTimeout() == null
+                ? null
+                : Duration.ofMillis(searchRequest.getTimeout());
+        if (requestedTimeout != null) {
+            return requestedTimeout;
+        } else {
+            if (searchRequest.incremental()) {
+                //no timeout supplied so they want a response immediately
+                return Duration.ZERO;
+            }else {
+                //this is synchronous so just use the service's default
+                return defaultTimeout;
+            }
+        }
+    }
+
+    private List<Result> getResults(final SearchRequest searchRequest, final boolean complete) {
 
         // Provide results if this search is incremental or the search is complete.
+        List<Result> results = new ArrayList<>(searchRequest.getResultRequests().size());
+        //TODO move this conditon outside this method
         if (searchRequest.incremental() || complete) {
             // Copy the requested portion of the result cache into the result.
             for (final ResultRequest resultRequest : searchRequest.getResultRequests()) {
@@ -120,12 +168,7 @@ public class SearchResponseCreator {
                 }
             }
         }
-
-        if (results.size() == 0) {
-            results = null;
-        }
-
-        return new SearchResponse(store.getHighlights(), results, store.getErrors(), complete);
+        return results;
     }
 
     private ResultCreator getResultCreator(final String componentId,
