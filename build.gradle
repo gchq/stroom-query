@@ -27,6 +27,7 @@ ext.versions = [
     //------------3rd-party------------
     dropwizard: '1.2.0',
     jackson: '2.8.6',
+    logback: '1.2.1', //in line with dropwizard 1.1.0
     kafka: '0.10.0.1',
     slf4j: '1.7.24', //in line with dropwizard 1.1.0
     swagger: '1.5.16',
@@ -51,6 +52,8 @@ ext.libs = [
     jackson_core: "com.fasterxml.jackson.core:jackson-core:$versions.jackson",
     jackson_databind: "com.fasterxml.jackson.core:jackson-databind:$versions.jackson", 
     junit: "junit:junit:4.12",
+    logback_classic: "ch.qos.logback:logback-classic:$versions.logback",
+    logback_core: "ch.qos.logback:logback-core:$versions.logback",
     kafka: "org.apache.kafka:kafka-clients:$versions.kafka", //CDH5.10 uses kafka 10.0, Kafka <10.2 is picky about client and server versions.
     mariadb_connector: 'org.mariadb.jdbc:mariadb-java-client:2.0.2',
     mockito_core: "org.mockito:mockito-core:2.0.2-beta",
