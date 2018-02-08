@@ -30,5 +30,7 @@ public interface ResultHandler {
 
     void setComplete(boolean complete);
 
+    void registerCompletionListener(final CompletionListener completionListener);
+
     Data getResultStore(String componentId);
 }

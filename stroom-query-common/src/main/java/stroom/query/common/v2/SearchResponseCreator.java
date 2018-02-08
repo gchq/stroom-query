@@ -18,6 +18,7 @@ package stroom.query.common.v2;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.helpers.MessageFormatter;
 import stroom.query.api.v2.Result;
 import stroom.query.api.v2.ResultRequest;
 import stroom.query.api.v2.ResultRequest.Fetch;
@@ -29,16 +30,14 @@ import stroom.query.common.v2.format.FieldFormatter;
 import stroom.query.common.v2.format.FormatterFactory;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class SearchResponseCreator {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchResponseCreator.class);
 
-    private static final Duration FALL_BACK_DEFAULT_TIMEOUT = Duration.ofSeconds(30);
+    private static final Duration FALL_BACK_DEFAULT_TIMEOUT = Duration.ofMinutes(5);
 
     private final Store store;
     private final Duration defaultTimeout;
@@ -67,15 +66,55 @@ public class SearchResponseCreator {
         //TODO determine effective timeout from request, default timeout and incremental=true/false
         Duration effectiveTimeout = getEffectiveTimeout(searchRequest);
 
-        //TODO refactor to use ConditionalWait
+        final CountDownLatch storeCompletionLatch = new CountDownLatch(1);
 
-        List<Result> results = getResults(searchRequest, isComplete);
+        store.registerCompletionListener(storeCompletionLatch::countDown);
 
-        if (results.size() == 0) {
-            results = null;
+        final boolean didComplete;
+        try {
+            //wait for the store to notify us of its completion, or timeout
+            didComplete = storeCompletionLatch.await(effectiveTimeout.toMillis(), TimeUnit.MILLISECONDS);
+
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            LOGGER.debug("Thread {} interrupted", Thread.currentThread().getName(), e);
+            return createErrorResponse(
+                    store, "Thread was interrupted before the search could complete");
         }
 
-        return new SearchResponse(store.getHighlights(), results, store.getErrors(), isComplete);
+        if (didComplete || searchRequest.incremental()) {
+            //either it completed or this is an incremental search so just return what we have
+            //regardless of state
+            List<Result> results = getResults(searchRequest, isComplete);
+
+            if (results.size() == 0) {
+                results = null;
+            }
+            return new SearchResponse(store.getHighlights(), results, store.getErrors(), isComplete);
+
+        } else {
+            //search didn't complete in time so return a timed out response
+            createErrorResponse(
+                    store,
+                    MessageFormatter.format("The search timed out after {}", effectiveTimeout.toString()));
+
+        }
+
+        //TODO refactor to use ConditionalWait
+
+    }
+
+    private SearchResponse createErrorResponse(final Store store, String errorMessage) {
+        Objects.requireNonNull(store);
+        Objects.requireNonNull(errorMessage);
+        List<String> errors = new ArrayList<>();
+        errors.add(errorMessage);
+        errors.addAll(store.getErrors());
+        return new SearchResponse(
+                null,
+                null,
+                errors,
+                false);
     }
 
     private Duration getEffectiveTimeout(final SearchRequest searchRequest) {

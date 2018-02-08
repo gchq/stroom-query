@@ -72,5 +72,6 @@ public interface Store {
      */
     StoreSize getStoreSize();
 
+    void registerCompletionListener(final CompletionListener completionListener);
 
 }
