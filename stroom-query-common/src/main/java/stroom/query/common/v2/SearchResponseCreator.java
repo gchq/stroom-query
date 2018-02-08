@@ -34,6 +34,9 @@ import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+//TODO copy SearchResultCreatorManager from stroom into here for a common solution to
+//caching the response creators. Will require an abstraction of a cache and a cache manager
+
 public class SearchResponseCreator {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchResponseCreator.class);
 
