@@ -93,8 +93,11 @@ public class SearchResponseCreator {
         final boolean didSearchComplete;
 
         if (!store.isComplete()) {
+            LOGGER.debug("Store not complete so will wait for completion or timeout");
             try {
-                Duration effectiveTimeout = getEffectiveTimeout(searchRequest);
+                final Duration effectiveTimeout = getEffectiveTimeout(searchRequest);
+
+                LOGGER.debug("effectiveTimeout: {}", effectiveTimeout);
 
                 final CountDownLatch storeCompletionLatch = new CountDownLatch(1);
 
