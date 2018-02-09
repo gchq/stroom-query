@@ -21,20 +21,25 @@ import stroom.query.api.v2.TableSettings;
 import stroom.query.common.v2.CoprocessorSettingsMap.CoprocessorKey;
 import stroom.util.shared.HasTerminate;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SearchResultHandler implements ResultHandler {
     private final CoprocessorSettingsMap coprocessorSettingsMap;
     private final Map<CoprocessorKey, TablePayloadHandler> handlerMap = new HashMap<>();
     private final AtomicBoolean complete = new AtomicBoolean();
+    private final List<CompletionListener> completionListeners = Collections.synchronizedList(new ArrayList<>());
 
     public SearchResultHandler(final CoprocessorSettingsMap coprocessorSettingsMap,
                                final List<Integer> defaultMaxResultsSizes,
                                final StoreSize storeSize) {
+
         this.coprocessorSettingsMap = coprocessorSettingsMap;
 
         for (final Entry<CoprocessorKey, CoprocessorSettings> entry : coprocessorSettingsMap.getMap().entrySet()) {
@@ -104,7 +109,24 @@ public class SearchResultHandler implements ResultHandler {
 
     @Override
     public void setComplete(final boolean complete) {
+        final boolean previousValue = this.complete.get();
+
         this.complete.set(complete);
+
+        //notify the listeners
+        if (complete && (complete != previousValue)) {
+            completionListeners.forEach(CompletionListener::onCompletion);
+        }
+    }
+
+    @Override
+    public void registerCompletionListener(final CompletionListener completionListener) {
+        if (complete.get()) {
+            //immediate notification
+            completionListener.onCompletion();
+        } else {
+            completionListeners.add(Objects.requireNonNull(completionListener));
+        }
     }
 
     @Override

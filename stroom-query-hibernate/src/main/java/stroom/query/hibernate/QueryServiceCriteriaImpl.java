@@ -314,10 +314,10 @@ public class QueryServiceCriteriaImpl<
 
         // Construct the store
         final List<Integer> storeSize = Collections.singletonList(tuples.size());
-        CriteriaStore store = new CriteriaStore(storeSize, new StoreSize(storeSize));
-        store.process(coprocessorSettingsMap);
-        store.coprocessorMap(coprocessorMap);
-        store.payloadMap(payloadMap);
+        CriteriaStore store = new CriteriaStore(storeSize, new StoreSize(storeSize),
+                coprocessorSettingsMap,
+                coprocessorMap,
+                payloadMap);
 
         // defaultMaxResultsSizes could be obtained from the StatisticsStore but at this point that object is ephemeral.
         // It seems a little pointless to put it into the StatisticsStore only to get it out again so for now
