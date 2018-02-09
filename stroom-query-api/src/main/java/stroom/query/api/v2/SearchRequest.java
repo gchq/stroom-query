@@ -132,6 +132,22 @@ public final class SearchRequest implements Serializable {
     }
 
     /**
+     * See {@link SearchRequest#SearchRequest(QueryKey, Query, List, String, Boolean, Long)}
+     */
+    public SearchRequest(final QueryKey key,
+                         final Query query,
+                         final List<ResultRequest> resultRequests,
+                         final String dateTimeLocale,
+                         final Boolean incremental) {
+        this.key = key;
+        this.query = query;
+        this.resultRequests = resultRequests;
+        this.dateTimeLocale = dateTimeLocale;
+        this.incremental = incremental;
+        this.timeout = null;
+    }
+
+    /**
      * @return The unique {@link QueryKey queryKey} for the search request
      */
     public QueryKey getKey() {
