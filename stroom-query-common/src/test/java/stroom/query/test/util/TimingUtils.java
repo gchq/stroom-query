@@ -38,6 +38,21 @@ public class TimingUtils {
         return result;
     }
 
+    public static boolean sleep(final long millis) {
+        try {
+            if (millis > 0) {
+                Thread.sleep(millis);
+            }
+        } catch (final InterruptedException e) {
+            Thread.currentThread().interrupt();
+            // It's not an error that we were Interrupted!! Don't log the
+            // exception !
+            return false;
+        }
+
+        return true;
+    }
+
     public static class TimedResult<T> {
         private final Duration duration;
         private final T result;

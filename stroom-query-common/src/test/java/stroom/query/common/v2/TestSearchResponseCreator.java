@@ -24,9 +24,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestSearchResponseCreator {
+
+    private static Duration TOLLERANCE = Duration.ofMillis(100);
 
     @Mock
     private Store mockStore;
@@ -66,14 +69,14 @@ public class TestSearchResponseCreator {
         Assertions.assertThat(TimingUtils.isWithinTollerance(
                 serverTimeout,
                 actualDuration,
-                Duration.ofMillis(100))).isTrue();
+                TOLLERANCE)).isTrue();
 
         Assertions.assertThat(searchResponse.getErrors()).hasSize(1);
         Assertions.assertThat(searchResponse.getErrors().get(0)).containsIgnoringCase("timed out");
     }
 
     @Test
-    public void create_nonIncremental_completes() {
+    public void create_nonIncremental_completesImmediately() {
 
         //long timeout because we should return almost immediately
         Duration serverTimeout = Duration.ofMillis(5_000);
@@ -90,18 +93,44 @@ public class TestSearchResponseCreator {
         SearchResponse searchResponse = timedResult.getResult();
         Duration actualDuration = timedResult.getDuration();
 
-        Assertions.assertThat(searchResponse).isNotNull();
-        Assertions.assertThat(searchResponse.getResults()).hasSize(1);
-        Assertions.assertThat(searchResponse.getResults().get(0)).isInstanceOf(TableResult.class);
-        TableResult tableResult = (TableResult) searchResponse.getResults().get(0);
-        Assertions.assertThat(tableResult.getTotalResults()).isEqualTo(1);
+        assertResponseWithData(searchResponse);
 
         //allow 100ms for java to run the code, it will never be 0
         Assertions.assertThat(TimingUtils.isWithinTollerance(
                 Duration.ZERO,
                 actualDuration,
-                Duration.ofMillis(100))).isTrue();
+                TOLLERANCE)).isTrue();
     }
+
+    @Test
+    public void create_nonIncremental_completesBeforeTimeout() {
+
+        Duration serverTimeout = Duration.ofMillis(5_000);
+        Duration clienTimeout = Duration.ofMillis(5_000);
+        SearchResponseCreator searchResponseCreator = new SearchResponseCreator(mockStore, serverTimeout);
+
+        //store initially not complete
+        Mockito.when(mockStore.isComplete()).thenReturn(false);
+
+        long sleepTime = 200L;
+        makeSearchCompleteAfter(sleepTime);
+
+        SearchRequest searchRequest = getSearchRequest(false, clienTimeout.toMillis());
+
+        TimingUtils.TimedResult<SearchResponse> timedResult = TimingUtils.timeIt(() ->
+                searchResponseCreator.create(searchRequest));
+
+        SearchResponse searchResponse = timedResult.getResult();
+        Duration actualDuration = timedResult.getDuration();
+
+        assertResponseWithData(searchResponse);
+
+        Assertions.assertThat(TimingUtils.isWithinTollerance(
+                Duration.ofMillis(sleepTime),
+                actualDuration,
+                TOLLERANCE)).isTrue();
+    }
+
 
     @Test
     public void create_incremental_noTimeout() {
@@ -131,7 +160,7 @@ public class TestSearchResponseCreator {
         Assertions.assertThat(TimingUtils.isWithinTollerance(
                 clientTimeout,
                 actualDuration,
-                Duration.ofMillis(100))).isTrue();
+                TOLLERANCE)).isTrue();
 
         Assertions.assertThat(searchResponse.getErrors()).isNullOrEmpty();
     }
@@ -155,53 +184,49 @@ public class TestSearchResponseCreator {
         SearchResponse searchResponse = timedResult.getResult();
         Duration actualDuration = timedResult.getDuration();
 
-        Assertions.assertThat(searchResponse).isNotNull();
-        Assertions.assertThat(searchResponse.getResults()).hasSize(1);
-        Assertions.assertThat(searchResponse.getResults().get(0)).isInstanceOf(TableResult.class);
-        TableResult tableResult = (TableResult) searchResponse.getResults().get(0);
-        Assertions.assertThat(tableResult.getTotalResults()).isEqualTo(1);
+        assertResponseWithData(searchResponse);
 
         //allow 100ms for java to run the code, it will never be 0
         Assertions.assertThat(TimingUtils.isWithinTollerance(
                 clientTimeout,
                 actualDuration,
-                Duration.ofMillis(100))).isTrue();
+                TOLLERANCE)).isTrue();
 
 
         //Now the search request is sent again but this time the data will be available and the search complete
         //so should return immediately
-
         long sleepTime = 200L;
-
-        //200ms after the request is made it should complete the search
-        Mockito.doAnswer(invocation -> {
-            Thread.sleep(sleepTime);
-            //change the store to be complete
-            Mockito.when(mockStore.isComplete()).thenReturn(true);
-            //notify completionListener
-            invocation.getArgumentAt(0, CompletionListener.class).onCompletion();
-            return null;
-        }).when(mockStore).registerCompletionListener(Mockito.any());
+        makeSearchCompleteAfter(sleepTime);
 
         SearchRequest searchRequest2 = getSearchRequest(true, clientTimeout.toMillis());
 
         timedResult = TimingUtils.timeIt(() ->
                 searchResponseCreator.create(searchRequest2));
 
-        searchResponse = timedResult.getResult();
+        SearchResponse searchResponse2 = timedResult.getResult();
         actualDuration = timedResult.getDuration();
 
-        Assertions.assertThat(searchResponse).isNotNull();
-        Assertions.assertThat(searchResponse.getResults()).hasSize(1);
-        Assertions.assertThat(searchResponse.getResults().get(0)).isInstanceOf(TableResult.class);
-        tableResult = (TableResult) searchResponse.getResults().get(0);
-        Assertions.assertThat(tableResult.getTotalResults()).isEqualTo(1);
+        assertResponseWithData(searchResponse2);
 
         //allow 100ms for java to run the code, it will never be 0
         Assertions.assertThat(TimingUtils.isWithinTollerance(
                 Duration.ofMillis(sleepTime),
                 actualDuration,
-                Duration.ofMillis(100))).isTrue();
+                TOLLERANCE)).isTrue();
+    }
+
+    private void makeSearchCompleteAfter(final long sleepTime) {
+        //200ms after the request is made another thread should complete the search
+        Mockito.doAnswer(invocation -> {
+            CompletableFuture.runAsync(() -> {
+                TimingUtils.sleep(sleepTime);
+                //change the store to be complete
+                Mockito.when(mockStore.isComplete()).thenReturn(true);
+                //notify completionListener
+                invocation.getArgumentAt(0, CompletionListener.class).onCompletion();
+            });
+            return null;
+        }).when(mockStore).registerCompletionListener(Mockito.any());
     }
 
     private SearchRequest getSearchRequest(final boolean isIncremental, final Long timeout) {
@@ -251,6 +276,13 @@ public class TestSearchResponseCreator {
         return new Data(map, items.size(), items.size());
     }
 
+    private void assertResponseWithData(final SearchResponse searchResponse) {
+        Assertions.assertThat(searchResponse).isNotNull();
+        Assertions.assertThat(searchResponse.getResults()).hasSize(1);
+        Assertions.assertThat(searchResponse.getResults().get(0)).isInstanceOf(TableResult.class);
+        TableResult tableResult = (TableResult) searchResponse.getResults().get(0);
+        Assertions.assertThat(tableResult.getTotalResults()).isEqualTo(1);
+    }
 
 
 }
