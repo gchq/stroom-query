@@ -30,6 +30,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A class for describing a search request including the query to run and definition(s) of how the results
@@ -202,29 +203,18 @@ public final class SearchRequest implements Serializable {
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         final SearchRequest that = (SearchRequest) o;
-
-        if (key != null ? !key.equals(that.key) : that.key != null) return false;
-        if (query != null ? !query.equals(that.query) : that.query != null) return false;
-        if (resultRequests != null ? !resultRequests.equals(that.resultRequests) : that.resultRequests != null)
-            return false;
-        if (dateTimeLocale != null ? !dateTimeLocale.equals(that.dateTimeLocale) : that.dateTimeLocale != null)
-            return false;
-        if (incremental != null ? incremental.equals(that.incremental) : that.incremental == null)
-            return false;
-        return timeout != null ? timeout.equals(that.timeout) : that.timeout == null;
+        return Objects.equals(key, that.key) &&
+                Objects.equals(query, that.query) &&
+                Objects.equals(resultRequests, that.resultRequests) &&
+                Objects.equals(dateTimeLocale, that.dateTimeLocale) &&
+                Objects.equals(incremental, that.incremental) &&
+                Objects.equals(timeout, that.timeout);
     }
 
     @Override
     public int hashCode() {
-        int result = key != null ? key.hashCode() : 0;
-        result = 31 * result + (query != null ? query.hashCode() : 0);
-        result = 31 * result + (resultRequests != null ? resultRequests.hashCode() : 0);
-        result = 31 * result + (dateTimeLocale != null ? dateTimeLocale.hashCode() : 0);
-        result = 31 * result + (incremental != null ? incremental.hashCode() : 0);
-        result = 31 * result + (timeout != null ? timeout.hashCode() : 0);
-        return result;
+        return Objects.hash(key, query, resultRequests, dateTimeLocale, incremental, timeout);
     }
 
     @Override
