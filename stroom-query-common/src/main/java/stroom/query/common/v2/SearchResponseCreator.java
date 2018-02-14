@@ -165,7 +165,9 @@ public class SearchResponseCreator {
         Objects.requireNonNull(errorMessages);
         List<String> errors = new ArrayList<>();
         errors.addAll(errorMessages);
-        errors.addAll(store.getErrors());
+        if (store.getErrors() != null) {
+            errors.addAll(store.getErrors());
+        }
         return createErrorResponse(errors);
     }
 
