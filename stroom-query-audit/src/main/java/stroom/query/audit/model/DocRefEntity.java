@@ -1,4 +1,4 @@
-package stroom.query.audit.service;
+package stroom.query.audit.model;
 
 import stroom.query.api.v2.DocRef;
 

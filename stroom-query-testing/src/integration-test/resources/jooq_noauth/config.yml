@@ -1,0 +1,55 @@
+server:
+  adminMinThreads: 1
+  adminMaxThreads: 10
+  adminContextPath: /
+  applicationContextPath: /
+  applicationConnectors:
+    - type:  http
+      port: 8899
+  adminConnectors:
+    - type: http
+      port: 8900
+
+database:
+  driverClass: org.mariadb.jdbc.Driver
+  user: stroomuser
+  password: stroompassword1
+  url: jdbc:mariadb://localhost:4450/test
+  maxWaitForConnection: 1s
+  validationQuery: "/* MyApplication Health Check */ SELECT 1"
+  minSize: 8
+  maxSize: 32
+  checkConnectionWhileIdle: false
+  properties:
+    charSet: UTF-8
+    hibernate.dialect: org.hibernate.dialect.MySQLInnoDBDialect
+    hibernate.show_sql: false
+    hibernate.hbm2ddl.auto: validate
+
+logging:
+  level: ERROR
+  loggers:
+    stroom: DEBUG
+    io.dropwizard: INFO
+    org.eclipse.jetty: INFO
+    org.flywaydb: INFO
+    "AUDIT":
+      level: INFO
+      additive: false
+      appenders:
+        - type: fifo
+  appenders:
+    - type: console
+      logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"
+      timeZone: UTC
+
+token:
+  publicKeyUrl: http://localhost:10080/testAuthService/publicKey
+  jwsIssuer: stroom
+  algorithm: RS256
+  skipAuth: true
+
+
+authorisationService:
+  url: http://localhost:10080/api/authorisation/v1
+  isAuthorisedPath: /isAuthorised

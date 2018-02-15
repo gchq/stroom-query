@@ -1,4 +1,4 @@
-package stroom.query.hibernate;
+package stroom.query.audit.model;
 
 import stroom.datasource.api.v2.DataSourceField;
 
@@ -15,4 +15,6 @@ import java.util.function.Supplier;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface IsDataSourceField {
     Class<? extends Supplier<DataSourceField>> fieldSupplier();
+
+
 }

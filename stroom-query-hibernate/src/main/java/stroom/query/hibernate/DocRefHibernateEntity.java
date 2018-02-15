@@ -1,6 +1,6 @@
 package stroom.query.hibernate;
 
-import stroom.query.audit.service.DocRefEntity;
+import stroom.query.audit.model.DocRefEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Id;

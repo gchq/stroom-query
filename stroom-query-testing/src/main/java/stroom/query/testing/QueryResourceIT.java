@@ -12,9 +12,9 @@ import stroom.query.api.v2.SearchRequest;
 import stroom.query.audit.authorisation.DocumentPermission;
 import stroom.query.audit.client.DocRefResourceHttpClient;
 import stroom.query.audit.client.QueryResourceHttpClient;
+import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.audit.rest.AuditedQueryResourceImpl;
-import stroom.query.audit.service.DocRefEntity;
 
 import javax.ws.rs.core.Response;
 import java.util.UUID;
@@ -55,12 +55,13 @@ public abstract class QueryResourceIT<
     protected abstract DOC_REF_ENTITY getValidEntity(final DocRef docRef);
 
     @Test
-    public void testGetDataSource() throws Exception {
+    public void testGetDataSource() {
         final DocRef docRef = createDocument();
 
         final Response response = queryClient.getDataSource(authRule.adminUser(), docRef);
         assertEquals(HttpStatus.OK_200, response.getStatus());
         final DataSource result = response.readEntity(DataSource.class);
+
         assertValidDataSource(result);
 
         // Create doc ref, update, get data source

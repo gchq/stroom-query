@@ -15,6 +15,8 @@ import stroom.query.api.v2.Param;
 import stroom.query.api.v2.QueryKey;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.SearchResponse;
+import stroom.query.audit.model.IsDataSourceField;
+import stroom.query.audit.model.QueryableEntity;
 import stroom.query.audit.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryService;
@@ -53,7 +55,7 @@ import java.util.stream.Collectors;
  */
 public class QueryServiceCriteriaImpl<
         DOC_REF_ENTITY extends DocRefHibernateEntity,
-        QUERYABLE_ENTITY extends QueryableEntity> implements QueryService {
+        QUERYABLE_ENTITY extends QueryableHibernateEntity> implements QueryService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(QueryServiceCriteriaImpl.class);
 
@@ -66,15 +68,14 @@ public class QueryServiceCriteriaImpl<
     private final DocRefService<DOC_REF_ENTITY> docRefEntityDocRefService;
 
     @Inject
-    public QueryServiceCriteriaImpl(final QueryableEntity.ClassProvider<QUERYABLE_ENTITY> dtoClassProvider,
+    public QueryServiceCriteriaImpl(final QueryableHibernateEntity.ClassProvider<QUERYABLE_ENTITY> dtoClassProvider,
                                     final DocRefService<DOC_REF_ENTITY> docRefEntityDocRefService,
                                     final SessionFactory database) {
         this.database = database;
         this.docRefEntityDocRefService = docRefEntityDocRefService;
         this.dtoClass = dtoClassProvider.get();
 
-        this.fields = Arrays.stream(dtoClass.getMethods()).map(method -> method.getAnnotation(IsDataSourceField.class))
-                .filter(Objects::nonNull)
+        this.fields = QueryableEntity.getFields(dtoClass)
                 .map(IsDataSourceField::fieldSupplier)
                 .map(aClass -> {
                     try {
@@ -123,7 +124,7 @@ public class QueryServiceCriteriaImpl<
                     .collect(Collectors.toList()));
 
             final Predicate requestPredicate = getPredicate(cb, root, request.getQuery().getExpression());
-            final Predicate dataSourcePredicate = cb.equal(root.get(QueryableEntity.DATA_SOURCE_UUID), dataSourceUuid);
+            final Predicate dataSourcePredicate = cb.equal(root.get(QueryableHibernateEntity.DATA_SOURCE_UUID), dataSourceUuid);
 
             cq.where(cb.and(requestPredicate, dataSourcePredicate));
             final List<Tuple> tuples = session.createQuery(cq).getResultList();

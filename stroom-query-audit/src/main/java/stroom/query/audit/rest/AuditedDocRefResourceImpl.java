@@ -12,8 +12,8 @@ import stroom.query.audit.ExportDTO;
 import stroom.query.audit.SimpleAuditWrapper;
 import stroom.query.audit.authorisation.AuthorisationService;
 import stroom.query.audit.authorisation.DocumentPermission;
+import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.security.ServiceUser;
-import stroom.query.audit.service.DocRefEntity;
 import stroom.query.audit.service.DocRefService;
 
 import javax.inject.Inject;

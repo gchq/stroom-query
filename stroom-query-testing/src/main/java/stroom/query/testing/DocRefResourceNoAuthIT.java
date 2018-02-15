@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 import stroom.query.api.v2.DocRefInfo;
 import stroom.query.audit.ExportDTO;
 import stroom.query.audit.client.DocRefResourceHttpClient;
+import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.audit.security.NoAuthValueFactoryProvider;
-import stroom.query.audit.service.DocRefEntity;
 
 import javax.ws.rs.core.Response;
 import java.util.Map;

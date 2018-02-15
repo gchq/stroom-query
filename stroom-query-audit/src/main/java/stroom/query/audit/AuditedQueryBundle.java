@@ -14,6 +14,7 @@ import stroom.query.audit.authorisation.AuthorisationServiceConfig;
 import stroom.query.audit.authorisation.AuthorisationServiceImpl;
 import stroom.query.audit.authorisation.HasAuthorisationConfig;
 import stroom.query.audit.authorisation.NoAuthAuthorisationServiceImpl;
+import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.audit.rest.AuditedQueryResourceImpl;
 import stroom.query.audit.security.HasTokenConfig;
@@ -21,7 +22,6 @@ import stroom.query.audit.security.NoAuthValueFactoryProvider;
 import stroom.query.audit.security.RobustJwtAuthFilter;
 import stroom.query.audit.security.ServiceUser;
 import stroom.query.audit.security.TokenConfig;
-import stroom.query.audit.service.DocRefEntity;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryService;
 

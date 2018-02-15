@@ -1,18 +1,34 @@
-package stroom.query.hibernate;
+package stroom.query.audit.model;
 
 import stroom.datasource.api.v2.DataSourceField;
 import stroom.query.api.v2.ExpressionTerm;
-import stroom.query.audit.service.DocRefEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
-@MappedSuperclass
 public class QueryableEntity implements Serializable {
+
+    /**
+     * Climbs the super-class chain to find all instances of an annotation on any method.
+     *
+     * @param clazz             The class to search through, will be called recursively
+     * @return A stream of Annotations
+     */
+    public static Stream<IsDataSourceField> getFields(final Class clazz) {
+        if (!Object.class.equals(clazz)) {
+            final Stream<IsDataSourceField> onThis = Stream.of(clazz.getMethods())
+                    .map(m -> m.getAnnotation(IsDataSourceField.class))
+                    .filter(Objects::nonNull);
+
+            final Stream<IsDataSourceField> inherited = getFields(clazz.getSuperclass());
+
+            return Stream.concat(onThis, inherited);
+        } else {
+            return Stream.empty();
+        }
+    }
 
     /**
      * Used for injection based on templated services.
@@ -42,8 +58,6 @@ public class QueryableEntity implements Serializable {
     private String createUser;
     private String updateUser;
 
-    @Id
-    @Column(name= DATA_SOURCE_UUID)
     public String getDataSourceUuid() {
         return dataSourceUuid;
     }
@@ -71,7 +85,6 @@ public class QueryableEntity implements Serializable {
         }
     }
 
-    @Column(name=DocRefEntity.CREATE_TIME)
     @IsDataSourceField(fieldSupplier = CreateTimeField.class)
     public Long getCreateTime() {
         return createTime;
@@ -100,7 +113,6 @@ public class QueryableEntity implements Serializable {
         }
     }
 
-    @Column(name=DocRefEntity.UPDATE_TIME)
     @IsDataSourceField(fieldSupplier = UpdateTimeField.class)
     public Long getUpdateTime() {
         return updateTime;
@@ -127,7 +139,6 @@ public class QueryableEntity implements Serializable {
         }
     }
 
-    @Column(name=DocRefEntity.CREATE_USER)
     @IsDataSourceField(fieldSupplier = CreateUserField.class)
     public String getCreateUser() {
         return createUser;
@@ -154,7 +165,6 @@ public class QueryableEntity implements Serializable {
         }
     }
 
-    @Column(name=DocRefEntity.UPDATE_USER)
     @IsDataSourceField(fieldSupplier = UpdateUserField.class)
     public String getUpdateUser() {
         return updateUser;
@@ -185,11 +195,11 @@ public class QueryableEntity implements Serializable {
         return sb.toString();
     }
 
-    public static abstract class Builder<T extends QueryableEntity, CHILD_CLASS extends Builder<T, ?>> {
+    public static abstract class BaseBuilder<T extends QueryableEntity, CHILD_CLASS extends BaseBuilder<T, ?>> {
 
         protected final T instance;
 
-        protected Builder(final T instance) {
+        protected BaseBuilder(final T instance) {
             this.instance = instance;
         }
 
@@ -222,5 +232,17 @@ public class QueryableEntity implements Serializable {
         }
 
         protected abstract CHILD_CLASS self();
+    }
+
+    public static class Builder<T extends QueryableEntity> extends BaseBuilder<T, Builder<T>> {
+
+        public Builder(final T instance) {
+            super(instance);
+        }
+
+        @Override
+        protected Builder self() {
+            return this;
+        }
     }
 }

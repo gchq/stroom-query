@@ -16,8 +16,6 @@ import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.hibernate.AuditedCriteriaQueryBundle;
-import stroom.query.testing.generic.app.TestDocRefEntity;
-import stroom.query.testing.generic.app.TestDocRefServiceImpl;
 
 public class HibernateApp extends Application<HibernateConfig> {
     // Wrap the flyway bundle so that we can call migrate in the bundles 'run'.

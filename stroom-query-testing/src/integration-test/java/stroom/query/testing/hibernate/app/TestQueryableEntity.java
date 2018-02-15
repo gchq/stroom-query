@@ -2,8 +2,8 @@ package stroom.query.testing.hibernate.app;
 
 import stroom.datasource.api.v2.DataSourceField;
 import stroom.query.api.v2.ExpressionTerm;
-import stroom.query.hibernate.IsDataSourceField;
-import stroom.query.hibernate.QueryableEntity;
+import stroom.query.audit.model.IsDataSourceField;
+import stroom.query.hibernate.QueryableHibernateEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.function.Supplier;
 
 @Entity(name="test_entity")
-public class TestQueryableEntity extends QueryableEntity {
+public class TestQueryableEntity extends QueryableHibernateEntity {
     public static final String FLAVOUR = "flavour";
     public static final String ID = "id";
 

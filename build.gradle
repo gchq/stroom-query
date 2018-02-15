@@ -26,6 +26,8 @@ ext.versions = [
 
     //------------3rd-party------------
     dropwizard: '1.2.0',
+    jooq: '3.9.3',
+    dropwizard_jooq:'1.1.0-0',
     jackson: '2.8.6',
     logback: '1.2.1', //in line with dropwizard 1.1.0
     kafka: '0.10.0.1',
@@ -46,12 +48,14 @@ ext.libs = [
     dropwizard_hibernate: "io.dropwizard:dropwizard-hibernate:$versions.dropwizard",
     dropwizard_auth: "io.dropwizard:dropwizard-auth:$versions.dropwizard",
     dropwizard_auth_jwt: "com.github.toastshaman:dropwizard-auth-jwt:1.0.2-0",
+    dropwizard_jooq: "com.bendb.dropwizard:dropwizard-jooq:$versions.dropwizard_jooq",
     dropwizard_flyway: 'io.dropwizard.modules:dropwizard-flyway:1.0.0-1',
     dropwizard_testing: "io.dropwizard:dropwizard-testing:$versions.dropwizard",
     jackson_annotations: "com.fasterxml.jackson.core:jackson-annotations:$versions.jackson",
     jackson_core: "com.fasterxml.jackson.core:jackson-core:$versions.jackson",
     jackson_databind: "com.fasterxml.jackson.core:jackson-databind:$versions.jackson", 
     junit: "junit:junit:4.12",
+    jooq: "org.jooq:jooq:$versions.jooq",
     logback_classic: "ch.qos.logback:logback-classic:$versions.logback",
     logback_core: "ch.qos.logback:logback-core:$versions.logback",
     kafka: "org.apache.kafka:kafka-clients:$versions.kafka", //CDH5.10 uses kafka 10.0, Kafka <10.2 is picky about client and server versions.

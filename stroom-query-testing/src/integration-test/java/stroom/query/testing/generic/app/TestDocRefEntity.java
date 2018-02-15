@@ -1,6 +1,6 @@
 package stroom.query.testing.generic.app;
 
-import stroom.query.audit.service.DocRefEntity;
+import stroom.query.audit.model.DocRefEntity;
 
 public class TestDocRefEntity extends DocRefEntity {
     public static final String TYPE = "TestDocRefEntity";

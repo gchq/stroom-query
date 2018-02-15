@@ -1,8 +1,8 @@
 package stroom.query.audit.client;
 
+import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.DocRefResource;
 import stroom.query.audit.security.ServiceUser;
-import stroom.query.audit.service.DocRefEntity;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;

@@ -12,6 +12,7 @@ import stroom.query.api.v2.Query;
 import stroom.query.api.v2.ResultRequest;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.TableSettings;
+import stroom.query.audit.model.DocRefEntity;
 import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.QueryResourceIT;
 import stroom.query.testing.StroomAuthenticationRule;
@@ -83,6 +84,11 @@ public class TestHibernateQueryResourceIT extends QueryResourceIT<TestDocRefHibe
                 .map(DataSourceField::getName)
                 .collect(Collectors.toSet());
 
+        assertTrue(resultFieldNames.contains(DocRefEntity.CREATE_TIME));
+        assertTrue(resultFieldNames.contains(DocRefEntity.CREATE_USER));
+        assertTrue(resultFieldNames.contains(DocRefEntity.UPDATE_TIME));
+        assertTrue(resultFieldNames.contains(DocRefEntity.UPDATE_USER));
+        assertTrue(resultFieldNames.contains(TestQueryableEntity.ID));
         assertTrue(resultFieldNames.contains(TestQueryableEntity.FLAVOUR));
     }
 

@@ -11,6 +11,7 @@ import stroom.query.api.v2.Query;
 import stroom.query.api.v2.ResultRequest;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.TableSettings;
+import stroom.query.audit.model.DocRefEntity;
 import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.QueryResourceNoAuthIT;
 import stroom.query.testing.generic.app.TestQueryServiceImpl;
@@ -76,6 +77,11 @@ public class TestHibernateQueryResourceNoAuthIT extends QueryResourceNoAuthIT<Te
                 .map(DataSourceField::getName)
                 .collect(Collectors.toSet());
 
+        assertTrue(resultFieldNames.contains(DocRefEntity.CREATE_TIME));
+        assertTrue(resultFieldNames.contains(DocRefEntity.CREATE_USER));
+        assertTrue(resultFieldNames.contains(DocRefEntity.UPDATE_TIME));
+        assertTrue(resultFieldNames.contains(DocRefEntity.UPDATE_USER));
+        assertTrue(resultFieldNames.contains(TestQueryableEntity.ID));
         assertTrue(resultFieldNames.contains(TestQueryableEntity.FLAVOUR));
     }
 
