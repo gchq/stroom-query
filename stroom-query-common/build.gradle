@@ -28,4 +28,9 @@ dependencies {
     compile libs.jackson_databind
     compile libs.jackson_annotations
     compile libs.jackson_core
+
+    //--------testing----------
+    testCompile libs.assertj
+    testCompile libs.logback_classic
+    testCompile libs.logback_core
 }

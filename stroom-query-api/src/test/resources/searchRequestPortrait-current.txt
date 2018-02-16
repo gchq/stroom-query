@@ -295,6 +295,7 @@ class stroom.query.api.v2.SearchRequest - public final void java.lang.Object.wai
 class stroom.query.api.v2.SearchRequest - public final void java.lang.Object.wait(long,int) throws java.lang.InterruptedException
 class stroom.query.api.v2.SearchRequest - public int stroom.query.api.v2.SearchRequest.hashCode()
 class stroom.query.api.v2.SearchRequest - public java.lang.Boolean stroom.query.api.v2.SearchRequest.getIncremental()
+class stroom.query.api.v2.SearchRequest - public java.lang.Long stroom.query.api.v2.SearchRequest.getTimeout()
 class stroom.query.api.v2.SearchRequest - public java.lang.String stroom.query.api.v2.SearchRequest.getDateTimeLocale()
 class stroom.query.api.v2.SearchRequest - public java.lang.String stroom.query.api.v2.SearchRequest.toString()
 class stroom.query.api.v2.SearchRequest - public java.util.List<stroom.query.api.v2.ResultRequest> stroom.query.api.v2.SearchRequest.getResultRequests()

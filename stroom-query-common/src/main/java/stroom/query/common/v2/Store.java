@@ -72,5 +72,10 @@ public interface Store {
      */
     StoreSize getStoreSize();
 
+    /**
+     * Register a listener to be informed when the store is deemed complete
+     * @param completionListener The listener to inform
+     */
+    void registerCompletionListener(final CompletionListener completionListener);
 
 }
