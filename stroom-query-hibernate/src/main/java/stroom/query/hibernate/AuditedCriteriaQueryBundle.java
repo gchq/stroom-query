@@ -8,6 +8,8 @@ import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.hibernate.SessionFactory;
 import stroom.query.audit.AuditedQueryBundle;
 import stroom.query.audit.authorisation.HasAuthorisationConfig;
+import stroom.query.audit.model.IsDataSourceField;
+import stroom.query.audit.model.QueryableEntity;
 import stroom.query.audit.security.HasTokenConfig;
 import stroom.query.audit.service.DocRefService;
 
@@ -53,7 +55,7 @@ public class AuditedCriteriaQueryBundle<CONFIG extends Configuration & HasTokenC
         environment.jersey().register(new AbstractBinder() {
             @Override
             protected void configure() {
-                bind(new QueryableHibernateEntity.ClassProvider<>(queryableEntityClass)).to(QueryableHibernateEntity.ClassProvider.class);
+                bind(new QueryableEntity.ClassProvider<>(queryableEntityClass)).to(QueryableHibernateEntity.ClassProvider.class);
                 bind(hibernateBundle.getSessionFactory()).to(SessionFactory.class);
             }
         });

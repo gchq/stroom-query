@@ -35,14 +35,14 @@ public class TestHibernateDocRefResourceIT extends DocRefResourceIT<TestDocRefHi
     @Override
     protected TestDocRefHibernateEntity createPopulatedEntity() {
         return new TestDocRefHibernateEntity.Builder()
-                .indexName(UUID.randomUUID().toString())
+                .clanName(UUID.randomUUID().toString())
                 .build();
     }
 
     @Override
     protected Map<String, String> exportValues(final TestDocRefHibernateEntity docRefEntity) {
         final Map<String, String> values = new HashMap<>();
-        values.put(TestDocRefHibernateEntity.INDEX_NAME, docRefEntity.getIndexName());
+        values.put(TestDocRefHibernateEntity.CLAN_NAME, docRefEntity.getClanName());
         return values;
     }
 

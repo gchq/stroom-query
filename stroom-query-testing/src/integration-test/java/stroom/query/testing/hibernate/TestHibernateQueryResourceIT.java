@@ -20,7 +20,7 @@ import stroom.query.testing.generic.app.TestQueryServiceImpl;
 import stroom.query.testing.hibernate.app.HibernateApp;
 import stroom.query.testing.hibernate.app.HibernateConfig;
 import stroom.query.testing.hibernate.app.TestDocRefHibernateEntity;
-import stroom.query.testing.hibernate.app.TestQueryableEntity;
+import stroom.query.testing.hibernate.app.TestQueryableHibernateEntity;
 
 import java.util.Set;
 import java.util.UUID;
@@ -69,8 +69,8 @@ public class TestHibernateQueryResourceIT extends QueryResourceIT<TestDocRefHibe
                                 .extractValues(false)
                                 .showDetail(false)
                                 .addFields(new Field.Builder()
-                                        .name(TestQueryableEntity.FLAVOUR)
-                                        .expression("${" + TestQueryableEntity.FLAVOUR + "}")
+                                        .name(TestQueryableHibernateEntity.FLAVOUR)
+                                        .expression("${" + TestQueryableHibernateEntity.FLAVOUR + "}")
                                         .build())
                                 .addMaxResults(10)
                                 .build())
@@ -88,15 +88,15 @@ public class TestHibernateQueryResourceIT extends QueryResourceIT<TestDocRefHibe
         assertTrue(resultFieldNames.contains(DocRefEntity.CREATE_USER));
         assertTrue(resultFieldNames.contains(DocRefEntity.UPDATE_TIME));
         assertTrue(resultFieldNames.contains(DocRefEntity.UPDATE_USER));
-        assertTrue(resultFieldNames.contains(TestQueryableEntity.ID));
-        assertTrue(resultFieldNames.contains(TestQueryableEntity.FLAVOUR));
+        assertTrue(resultFieldNames.contains(TestQueryableHibernateEntity.ID));
+        assertTrue(resultFieldNames.contains(TestQueryableHibernateEntity.FLAVOUR));
     }
 
     @Override
     protected TestDocRefHibernateEntity getValidEntity(final DocRef docRef) {
         return new TestDocRefHibernateEntity.Builder()
                 .docRef(docRef)
-                .indexName(TestQueryServiceImpl.VALID_INDEX_NAME)
+                .clanName("TestClan")
                 .build();
     }
 }

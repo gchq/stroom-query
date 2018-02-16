@@ -22,21 +22,21 @@ public class TestDocRefServiceCriteriaImpl extends DocRefServiceCriteriaImpl<Tes
     @Override
     protected TestDocRefHibernateEntity.Builder copyEntity(final TestDocRefHibernateEntity original) {
         return new TestDocRefHibernateEntity.Builder()
-                .indexName(original.getIndexName());
+                .clanName(original.getClanName());
     }
 
     @Override
     protected TestDocRefHibernateEntity.Builder createImport(final Map<String, String> dataMap) {
         return new TestDocRefHibernateEntity.Builder()
-                .indexName(dataMap.get(TestDocRefHibernateEntity.INDEX_NAME));
+                .clanName(dataMap.get(TestDocRefHibernateEntity.CLAN_NAME));
     }
 
     @Override
-    protected Map<String, Object> exportValues(final TestDocRefHibernateEntity testDocRefHibernateEntity) {
+    protected Map<String, Object> exportValues(final TestDocRefHibernateEntity entity) {
         return new HashMap<String, Object>()
         {
             {
-                put(TestDocRefHibernateEntity.INDEX_NAME, testDocRefHibernateEntity.getIndexName());
+                put(TestDocRefHibernateEntity.CLAN_NAME, entity.getClanName());
             }
         };
     }

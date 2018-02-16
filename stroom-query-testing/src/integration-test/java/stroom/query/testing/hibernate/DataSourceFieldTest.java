@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.query.audit.model.IsDataSourceField;
 import stroom.query.audit.model.QueryableEntity;
-import stroom.query.testing.hibernate.app.TestQueryableEntity;
+import stroom.query.testing.hibernate.app.TestQueryableHibernateEntity;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,7 +17,7 @@ public class DataSourceFieldTest {
 
     @Test
     public void test() {
-        final Set<IsDataSourceField> annotations = QueryableEntity.getFields(TestQueryableEntity.class).collect(Collectors.toSet());
+        final Set<IsDataSourceField> annotations = QueryableEntity.getFields(TestQueryableHibernateEntity.class).collect(Collectors.toSet());
         LOGGER.info("Annotations Found: " + annotations);
         assertTrue(annotations.size() > 0);
     }

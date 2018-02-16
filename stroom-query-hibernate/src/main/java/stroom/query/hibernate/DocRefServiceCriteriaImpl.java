@@ -6,8 +6,8 @@ import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.query.audit.ExportDTO;
-import stroom.query.audit.security.ServiceUser;
 import stroom.query.audit.model.DocRefEntity;
+import stroom.query.audit.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
 
 import javax.inject.Inject;
@@ -36,6 +36,8 @@ public abstract class DocRefServiceCriteriaImpl<
     protected abstract DOC_REF_BUILDER copyEntity(DOC_REF_ENTITY original);
 
     protected abstract DOC_REF_BUILDER createImport(Map<String, String> dataMap);
+
+    protected abstract Map<String, Object> exportValues(DOC_REF_ENTITY docRefEntity);
 
     @Inject
     public DocRefServiceCriteriaImpl(final SessionFactory database,
@@ -291,8 +293,6 @@ public abstract class DocRefServiceCriteriaImpl<
                         .message("could not find document")
                         .build());
     }
-
-    protected abstract Map<String, Object> exportValues(DOC_REF_ENTITY docRefEntity);
 
     @Override
     public Optional<DOC_REF_ENTITY> importDocument(final ServiceUser user,

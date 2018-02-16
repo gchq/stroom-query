@@ -76,6 +76,7 @@ dependencies {
     integrationTestCompile libs.jackson_annotations
     integrationTestCompile libs.dropwizard_flyway
     integrationTestCompile project(':stroom-query-hibernate')
+    integrationTestCompile project(':stroom-query-jooq')
     integrationTestRuntime libs.mariadb_connector
     integrationTestRuntime 'org.apache.derby:derby:10.8.2.2'
 }

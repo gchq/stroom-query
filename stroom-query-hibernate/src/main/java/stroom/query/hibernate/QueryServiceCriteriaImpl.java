@@ -65,14 +65,14 @@ public class QueryServiceCriteriaImpl<
 
     private final List<DataSourceField> fields;
 
-    private final DocRefService<DOC_REF_ENTITY> docRefEntityDocRefService;
+    private final DocRefService<DOC_REF_ENTITY> docRefService;
 
     @Inject
-    public QueryServiceCriteriaImpl(final QueryableHibernateEntity.ClassProvider<QUERYABLE_ENTITY> dtoClassProvider,
-                                    final DocRefService<DOC_REF_ENTITY> docRefEntityDocRefService,
+    public QueryServiceCriteriaImpl(final QueryableEntity.ClassProvider<QUERYABLE_ENTITY> dtoClassProvider,
+                                    final DocRefService<DOC_REF_ENTITY> docRefService,
                                     final SessionFactory database) {
         this.database = database;
-        this.docRefEntityDocRefService = docRefEntityDocRefService;
+        this.docRefService = docRefService;
         this.dtoClass = dtoClassProvider.get();
 
         this.fields = QueryableEntity.getFields(dtoClass)
@@ -93,7 +93,7 @@ public class QueryServiceCriteriaImpl<
     @Override
     public Optional<DataSource> getDataSource(final ServiceUser user,
                                               final DocRef docRef) throws Exception {
-        final Optional<DOC_REF_ENTITY> docRefEntity = docRefEntityDocRefService.get(user, docRef.getUuid());
+        final Optional<DOC_REF_ENTITY> docRefEntity = docRefService.get(user, docRef.getUuid());
 
         if (!docRefEntity.isPresent()) {
             return Optional.empty();
@@ -107,7 +107,7 @@ public class QueryServiceCriteriaImpl<
                                            final SearchRequest request) throws Exception {
         final String dataSourceUuid = request.getQuery().getDataSource().getUuid();
 
-        final Optional<DOC_REF_ENTITY> docRefEntity = docRefEntityDocRefService.get(user, dataSourceUuid);
+        final Optional<DOC_REF_ENTITY> docRefEntity = docRefService.get(user, dataSourceUuid);
 
         if (!docRefEntity.isPresent()) {
             return Optional.empty();

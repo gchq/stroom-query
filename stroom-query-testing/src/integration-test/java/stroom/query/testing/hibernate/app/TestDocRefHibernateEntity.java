@@ -5,21 +5,21 @@ import stroom.query.hibernate.DocRefHibernateEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
-@Entity(name="test_doc_ref")
+@Entity(name="test_hibernate_doc_ref")
 public class TestDocRefHibernateEntity extends DocRefHibernateEntity {
     public static final String TYPE = "TestDocRefHibernateEntity";
 
-    public static final String INDEX_NAME = "indexName";
+    public static final String CLAN_NAME = "clanName";
 
-    private String indexName;
+    private String clanName;
 
-    @Column(name=INDEX_NAME)
-    public String getIndexName() {
-        return indexName;
+    @Column(name=CLAN_NAME)
+    public String getClanName() {
+        return clanName;
     }
 
-    public void setIndexName(String indexName) {
-        this.indexName = indexName;
+    public void setClanName(String clanName) {
+        this.clanName = clanName;
     }
 
     public static final class Builder
@@ -33,8 +33,8 @@ public class TestDocRefHibernateEntity extends DocRefHibernateEntity {
             super(new TestDocRefHibernateEntity());
         }
 
-        public Builder indexName(final String value) {
-            this.instance.indexName = value;
+        public Builder clanName(final String value) {
+            this.instance.clanName = value;
             return self();
         }
 

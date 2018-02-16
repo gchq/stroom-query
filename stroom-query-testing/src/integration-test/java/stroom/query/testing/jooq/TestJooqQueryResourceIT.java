@@ -1,5 +1,6 @@
-package stroom.query.testing.hibernate;
+package stroom.query.testing.jooq;
 
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.ClassRule;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
@@ -13,12 +14,13 @@ import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.testing.DropwizardAppWithClientsRule;
-import stroom.query.testing.QueryResourceNoAuthIT;
+import stroom.query.testing.QueryResourceIT;
+import stroom.query.testing.StroomAuthenticationRule;
 import stroom.query.testing.generic.app.TestQueryServiceImpl;
-import stroom.query.testing.hibernate.app.HibernateApp;
-import stroom.query.testing.hibernate.app.HibernateConfig;
-import stroom.query.testing.hibernate.app.TestDocRefHibernateEntity;
-import stroom.query.testing.hibernate.app.TestQueryableHibernateEntity;
+import stroom.query.testing.jooq.app.JooqApp;
+import stroom.query.testing.jooq.app.JooqConfig;
+import stroom.query.testing.jooq.app.TestDocRefJooqEntity;
+import stroom.query.testing.jooq.app.TestQueryableJooqEntity;
 
 import java.util.Set;
 import java.util.UUID;
@@ -27,16 +29,21 @@ import java.util.stream.Collectors;
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 import static org.junit.Assert.assertTrue;
 
-public class TestHibernateQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDocRefHibernateEntity, HibernateConfig> {
+public class TestJooqQueryResourceIT extends QueryResourceIT<TestDocRefJooqEntity, JooqConfig> {
 
     @ClassRule
-    public static final DropwizardAppWithClientsRule<HibernateConfig> appRule =
-            new DropwizardAppWithClientsRule<>(HibernateApp.class, resourceFilePath("hibernate_noauth/config.yml"));
+    public static final DropwizardAppWithClientsRule<JooqConfig> appRule =
+            new DropwizardAppWithClientsRule<>(JooqApp.class, resourceFilePath("hibernate/config.yml"));
 
-    public TestHibernateQueryResourceNoAuthIT() {
-        super(TestDocRefHibernateEntity.class,
-                TestDocRefHibernateEntity.TYPE,
-                appRule);
+    @ClassRule
+    public static StroomAuthenticationRule authRule =
+            new StroomAuthenticationRule(WireMockConfiguration.options().port(10080), TestDocRefJooqEntity.TYPE);
+
+    public TestJooqQueryResourceIT() {
+        super(TestDocRefJooqEntity.class,
+                TestDocRefJooqEntity.TYPE,
+                appRule,
+                authRule);
     }
 
     @Override
@@ -62,8 +69,8 @@ public class TestHibernateQueryResourceNoAuthIT extends QueryResourceNoAuthIT<Te
                                 .extractValues(false)
                                 .showDetail(false)
                                 .addFields(new Field.Builder()
-                                        .name(TestQueryableHibernateEntity.FLAVOUR)
-                                        .expression("${" + TestQueryableHibernateEntity.FLAVOUR + "}")
+                                        .name(TestQueryableJooqEntity.COLOUR)
+                                        .expression("${" + TestQueryableJooqEntity.COLOUR + "}")
                                         .build())
                                 .addMaxResults(10)
                                 .build())
@@ -81,15 +88,15 @@ public class TestHibernateQueryResourceNoAuthIT extends QueryResourceNoAuthIT<Te
         assertTrue(resultFieldNames.contains(DocRefEntity.CREATE_USER));
         assertTrue(resultFieldNames.contains(DocRefEntity.UPDATE_TIME));
         assertTrue(resultFieldNames.contains(DocRefEntity.UPDATE_USER));
-        assertTrue(resultFieldNames.contains(TestQueryableHibernateEntity.ID));
-        assertTrue(resultFieldNames.contains(TestQueryableHibernateEntity.FLAVOUR));
+        assertTrue(resultFieldNames.contains(TestQueryableJooqEntity.ID));
+        assertTrue(resultFieldNames.contains(TestQueryableJooqEntity.COLOUR));
     }
 
     @Override
-    protected TestDocRefHibernateEntity getValidEntity(final DocRef docRef) {
-        return new TestDocRefHibernateEntity.Builder()
+    protected TestDocRefJooqEntity getValidEntity(final DocRef docRef) {
+        return new TestDocRefJooqEntity.Builder()
                 .docRef(docRef)
-                .clanName("ClanName")
+                .planetName("TestPlanet")
                 .build();
     }
 }

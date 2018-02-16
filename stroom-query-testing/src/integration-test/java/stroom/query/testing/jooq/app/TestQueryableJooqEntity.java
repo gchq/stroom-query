@@ -1,9 +1,9 @@
-package stroom.query.testing.hibernate.app;
+package stroom.query.testing.jooq.app;
 
 import stroom.datasource.api.v2.DataSourceField;
 import stroom.query.api.v2.ExpressionTerm;
 import stroom.query.audit.model.IsDataSourceField;
-import stroom.query.hibernate.QueryableHibernateEntity;
+import stroom.query.jooq.QueryableJooqEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,22 +11,22 @@ import javax.persistence.Id;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
-@Entity(name="test_entity")
-public class TestQueryableEntity extends QueryableHibernateEntity {
-    public static final String FLAVOUR = "flavour";
+@Entity(name="test_jooq_entity")
+public class TestQueryableJooqEntity extends QueryableJooqEntity {
+    public static final String COLOUR = "colour";
     public static final String ID = "id";
 
     private String id;
 
-    private String flavour;
+    private String colour;
 
-    public static class FlavourField implements Supplier<DataSourceField> {
+    public static class ColourField implements Supplier<DataSourceField> {
 
         @Override
         public DataSourceField get() {
             return new DataSourceField(
                     DataSourceField.DataSourceFieldType.FIELD,
-                    FLAVOUR,
+                    COLOUR,
                     true,
                     Arrays.asList(
                             ExpressionTerm.Condition.EQUALS,
@@ -38,14 +38,14 @@ public class TestQueryableEntity extends QueryableHibernateEntity {
     }
 
     @Id
-    @Column(name= FLAVOUR)
-    @IsDataSourceField(fieldSupplier = FlavourField.class)
-    public String getFlavour() {
-        return flavour;
+    @Column(name= COLOUR)
+    @IsDataSourceField(fieldSupplier = ColourField.class)
+    public String getColour() {
+        return colour;
     }
 
-    public void setFlavour(String flavour) {
-        this.flavour = flavour;
+    public void setColour(String colour) {
+        this.colour = colour;
     }
 
     public static class IdField implements Supplier<DataSourceField> {

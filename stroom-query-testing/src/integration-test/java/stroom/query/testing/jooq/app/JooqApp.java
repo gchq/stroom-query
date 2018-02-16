@@ -1,5 +1,7 @@
-package stroom.query.testing.hibernate.app;
+package stroom.query.testing.jooq.app;
 
+import com.bendb.dropwizard.jooq.JooqBundle;
+import com.bendb.dropwizard.jooq.JooqFactory;
 import com.codahale.metrics.health.HealthCheck;
 import io.dropwizard.Application;
 import io.dropwizard.ConfiguredBundle;
@@ -9,33 +11,30 @@ import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.db.ManagedDataSource;
 import io.dropwizard.flyway.FlywayBundle;
 import io.dropwizard.flyway.FlywayFactory;
-import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import stroom.query.audit.service.DocRefService;
-import stroom.query.hibernate.AuditedCriteriaQueryBundle;
+import stroom.query.jooq.AuditedJooqQueryBundle;
 
-import java.util.Collections;
-
-public class HibernateApp extends Application<HibernateConfig> {
+public class JooqApp extends Application<JooqConfig> {
     // Wrap the flyway bundle so that we can call migrate in the bundles 'run'.
     // This allows the flyway migration to happen before the hibernate validation
-    private final ConfiguredBundle<HibernateConfig> flywayBundle = new ConfiguredBundle<HibernateConfig>() {
+    private final ConfiguredBundle<JooqConfig> flywayBundle = new ConfiguredBundle<JooqConfig>() {
 
-        private final FlywayBundle<HibernateConfig> wrappedBundle = new FlywayBundle<HibernateConfig>() {
-            public DataSourceFactory getDataSourceFactory(HibernateConfig config) {
+        private final FlywayBundle<JooqConfig> wrappedBundle = new FlywayBundle<JooqConfig>() {
+            public DataSourceFactory getDataSourceFactory(JooqConfig config) {
                 return config.getDataSourceFactory();
             }
 
-            public FlywayFactory getFlywayFactory(final HibernateConfig config) {
+            public FlywayFactory getFlywayFactory(final JooqConfig config) {
                 return config.getFlywayFactory();
             }
         };
 
         @Override
-        public void run(final HibernateConfig configuration, final Environment environment) throws Exception {
+        public void run(final JooqConfig configuration, final Environment environment) throws Exception {
             wrappedBundle.run(environment);
 
             final ManagedDataSource dataSource = configuration.getDataSourceFactory()
@@ -52,23 +51,27 @@ public class HibernateApp extends Application<HibernateConfig> {
 
     };
 
-    private final AuditedCriteriaQueryBundle<HibernateConfig,
-            TestQueryableHibernateEntity,
-            TestDocRefHibernateEntity,
-            TestDocRefServiceCriteriaImpl> auditedQueryBundle =
-            new AuditedCriteriaQueryBundle<>(
-                    TestQueryableHibernateEntity.class,
-                    new HibernateBundle<HibernateConfig>(TestDocRefHibernateEntity.class, TestQueryableHibernateEntity.class) {
-                        @Override
-                        public DataSourceFactory getDataSourceFactory(HibernateConfig configuration) {
+    private final AuditedJooqQueryBundle<JooqConfig,
+            TestQueryableJooqEntity,
+            TestDocRefJooqEntity,
+            TestDocRefServiceJooqImpl> auditedQueryBundle =
+            new AuditedJooqQueryBundle<>(
+                    TestQueryableJooqEntity.class,
+                    new JooqBundle<JooqConfig>() {
+                        public DataSourceFactory getDataSourceFactory(JooqConfig configuration) {
                             return configuration.getDataSourceFactory();
                         }
+
+                        public JooqFactory getJooqFactory(JooqConfig configuration) {
+                            return configuration.getJooqFactory();
+                        }
+
                     },
-                    TestDocRefHibernateEntity.class,
-                    TestDocRefServiceCriteriaImpl.class);
+                    TestDocRefJooqEntity.class,
+                    TestDocRefServiceJooqImpl.class);
 
     @Override
-    public void run(final HibernateConfig configuration,
+    public void run(final JooqConfig configuration,
                     final Environment environment) {
         environment.healthChecks().register("Something", new HealthCheck() {
             @Override
@@ -80,13 +83,13 @@ public class HibernateApp extends Application<HibernateConfig> {
         environment.jersey().register(new AbstractBinder() {
             @Override
             protected void configure() {
-                bind(TestDocRefServiceCriteriaImpl.class).to(new TypeLiteral<DocRefService<TestDocRefHibernateEntity>>() {});
+                bind(TestDocRefServiceJooqImpl.class).to(new TypeLiteral<DocRefService<TestDocRefJooqEntity>>() {});
             }
         });
     }
 
     @Override
-    public void initialize(final Bootstrap<HibernateConfig> bootstrap) {
+    public void initialize(final Bootstrap<JooqConfig> bootstrap) {
         super.initialize(bootstrap);
 
         // This allows us to use templating in the YAML configuration.
