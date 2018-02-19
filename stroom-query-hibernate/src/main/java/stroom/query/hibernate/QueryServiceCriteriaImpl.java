@@ -15,6 +15,7 @@ import stroom.query.api.v2.Param;
 import stroom.query.api.v2.QueryKey;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.SearchResponse;
+import stroom.query.audit.CriteriaStore;
 import stroom.query.audit.model.IsDataSourceField;
 import stroom.query.audit.model.QueryableEntity;
 import stroom.query.audit.security.ServiceUser;

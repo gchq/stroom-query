@@ -86,6 +86,7 @@ public class JooqApp extends Application<JooqConfig> {
                 bind(TestDocRefServiceJooqImpl.class).to(new TypeLiteral<DocRefService<TestDocRefJooqEntity>>() {});
             }
         });
+        environment.jersey().register(CreateTestDataJooqImpl.class);
     }
 
     @Override

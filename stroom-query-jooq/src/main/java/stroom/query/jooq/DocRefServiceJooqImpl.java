@@ -4,8 +4,8 @@ import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.Record;
+import org.jooq.Result;
 import org.jooq.Table;
-import org.jooq.UpdatableRecord;
 import org.jooq.UpdateSetMoreStep;
 import org.jooq.impl.DSL;
 import org.jooq.types.ULong;
@@ -15,44 +15,98 @@ import stroom.query.audit.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
 
 import javax.inject.Inject;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.inline;
 import static org.jooq.impl.DSL.table;
 
-public abstract class DocRefServiceJooqImpl<
-        DOC_REF_ENTITY extends DocRefJooqEntity,
-        DOC_REF_BUILDER extends DocRefJooqEntity.BaseBuilder<DOC_REF_ENTITY, ?>>
+public class DocRefServiceJooqImpl<DOC_REF_ENTITY extends DocRefJooqEntity>
         implements DocRefService<DOC_REF_ENTITY> {
 
-    protected abstract DOC_REF_BUILDER createDocumentBuilder(Record record);
+    @FunctionalInterface
+    protected interface ImportValue {
+        <T> Optional<T> getValue(Field<T> fieldName);
 
-    protected abstract Map<Field<?>, Object> getMappedFields(DOC_REF_ENTITY docRefEntity);
+        static ImportValue ofRecord(final Record record) {
+            return new ImportValue() {
+                @Override
+                public <T> Optional<T> getValue(Field<T> field) {
+                    return Optional.ofNullable(record.getValue(field));
+                }
+            };
+        }
+    }
+
+    @FunctionalInterface
+    protected interface ValueImporter<
+            E extends DocRefJooqEntity,
+            B extends DocRefJooqEntity.BaseBuilder<E, ?>> {
+        B importValues(ImportValue dataMap);
+    }
+
+
+    @FunctionalInterface
+    protected interface ExportValue {
+        <T> void setValue(final Field<T> field, final T fieldValue);
+    }
+
+    @FunctionalInterface
+    protected interface ValueExporter<E extends DocRefJooqEntity> {
+        void exportValues(E docRefEntity, ExportValue consumer);
+    }
+
+    private final String type;
+
+    private final Class<DOC_REF_ENTITY> docRefEntityClass;
 
     private final DSLContext database;
 
     private final Table<Record> table;
 
+    private final ValueImporter<DOC_REF_ENTITY, DocRefJooqEntity.BaseBuilder<DOC_REF_ENTITY, ?>> valueImporter;
+
+    private final ValueExporter<DOC_REF_ENTITY> valueExporter;
+
     @Inject
-    public DocRefServiceJooqImpl(final String tableName,
+    public DocRefServiceJooqImpl(final String type,
+                                 final ValueImporter<DOC_REF_ENTITY, DocRefJooqEntity.BaseBuilder<DOC_REF_ENTITY, ?>> valueImporter,
+                                 final ValueExporter<DOC_REF_ENTITY> valueExporter,
+                                 final Class<DOC_REF_ENTITY> docRefEntityClass,
                                  final Configuration jooqConfig) {
-        this.table = table(tableName);
+        this.type = type;
+        this.docRefEntityClass = docRefEntityClass;
+
+        this.table = Optional.ofNullable(docRefEntityClass.getAnnotation(JooqEntity.class))
+                .map(JooqEntity::tableName)
+                .map(DSL::table)
+                .orElseThrow(() -> new IllegalArgumentException("The Document Entity Class must be annotated with JooqEntity"));
+
         this.database = DSL.using(jooqConfig);
+        this.valueImporter = valueImporter;
+        this.valueExporter = valueExporter;
     }
 
 
     @Override
+    public String getType() {
+        return type;
+    }
+
+    @Override
     public List<DOC_REF_ENTITY> getAll(final ServiceUser user) throws Exception {
-        return null;
+        return database.transactionResult(configuration -> DSL.using(configuration)
+                .select()
+                .from(table)
+                .fetch()
+                .into(docRefEntityClass));
     }
 
     private DOC_REF_ENTITY convertRecord(final Record record) {
-        return createDocumentBuilder(record)
+        return valueImporter.importValues(ImportValue.ofRecord(record))
                 .uuid(record.getValue(DocRefJooqEntity.UUID_FIELD))
                 .name(record.getValue(DocRefJooqEntity.NAME_FIELD))
                 .createUser(record.getValue(DocRefJooqEntity.CREATE_USER_FIELD))
@@ -67,7 +121,8 @@ public abstract class DocRefServiceJooqImpl<
                                         final String uuid) throws Exception {
 
         return database.transactionResult(configuration -> {
-            final Record record = database.select()
+            final Record record = DSL.using(configuration)
+                    .select()
                     .from(table)
                     .where(DocRefJooqEntity.UUID_FIELD.equal(uuid))
                     .fetchOne();
@@ -80,9 +135,9 @@ public abstract class DocRefServiceJooqImpl<
     public Optional<DOC_REF_ENTITY> createDocument(final ServiceUser user,
                                                    final String uuid,
                                                    final String name) throws Exception {
-        final ULong now = ULong.valueOf(System.currentTimeMillis());
 
         return database.transactionResult(configuration -> {
+            final ULong now = ULong.valueOf(System.currentTimeMillis());
 
             DSL.using(configuration)
                     .insertInto(table)
@@ -95,13 +150,13 @@ public abstract class DocRefServiceJooqImpl<
                     .values(uuid, name, user.getName(), now, user.getName(), now)
                     .execute();
 
-            final Record record = DSL.using(configuration)
+            final DOC_REF_ENTITY result = DSL.using(configuration)
                     .select()
                     .from(table)
                     .where(DocRefJooqEntity.UUID_FIELD.equal(uuid))
-                    .fetchOne();
+                    .fetchOneInto(docRefEntityClass);
 
-            return Optional.ofNullable(record).map(this::convertRecord);
+            return Optional.ofNullable(result);
         });
     }
 
@@ -118,9 +173,7 @@ public abstract class DocRefServiceJooqImpl<
                     .set(DocRefJooqEntity.UPDATE_USER_FIELD, user.getName())
                     .set(DocRefJooqEntity.UPDATE_TIME_FIELD, now);
 
-            final Map<Field<?>, Object> fields = getMappedFields(updated);
-
-            fields.forEach((field, o) -> updateStmt.set((Field<Object>) field, o));
+            valueExporter.exportValues(updated, updateStmt::set);
 
             updateStmt
                     .where(DocRefJooqEntity.UUID_FIELD.equal(uuid))
@@ -207,7 +260,8 @@ public abstract class DocRefServiceJooqImpl<
                                             final String uuid) throws Exception {
         return database.transactionResult(configuration -> {
 
-            final int rowsDeleted = database.deleteFrom(table)
+            final int rowsDeleted = DSL.using(configuration)
+                    .deleteFrom(table)
                     .where(DocRefJooqEntity.UUID_FIELD.equal(uuid))
                     .execute();
 
@@ -229,15 +283,19 @@ public abstract class DocRefServiceJooqImpl<
             return Optional.ofNullable(record)
                     .map(this::convertRecord)
                     .map(e -> {
+                        final ExportDTO.Builder builder = new ExportDTO.Builder()
+                                .value(DocRefEntity.NAME, e.getName());
+                        valueExporter.exportValues(e, new ExportValue() {
+                            @Override
+                            public <T> void setValue(Field<T> field, T fieldValue) {
+                                builder.value(field.getName(),
+                                        Optional.ofNullable(fieldValue).
+                                                map(Object::toString)
+                                                .orElse(null));
+                            }
+                        });
 
-                        final Map<String, Object> fieldValues = new HashMap<>();
-                        getMappedFields(e)
-                                .forEach((field, o) -> fieldValues.put(field.getName(), o));
-
-                        return new ExportDTO.Builder()
-                            .value(DocRefEntity.NAME, e.getName())
-                            .values(fieldValues)
-                            .build();
+                        return builder.build();
                     })
                     .orElse(new ExportDTO.Builder()
                             .message("could not find document")

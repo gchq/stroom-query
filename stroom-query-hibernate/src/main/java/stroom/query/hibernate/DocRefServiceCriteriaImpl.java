@@ -21,24 +21,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.BiConsumer;
 
-public abstract class DocRefServiceCriteriaImpl<
-        DOC_REF_ENTITY extends DocRefHibernateEntity,
-        DOC_REF_BUILDER extends DocRefHibernateEntity.BaseBuilder<DOC_REF_ENTITY, ?>>
+public class DocRefServiceCriteriaImpl<
+        DOC_REF_ENTITY extends DocRefHibernateEntity>
         implements DocRefService<DOC_REF_ENTITY> {
     private static final Logger LOGGER = LoggerFactory.getLogger(DocRefServiceCriteriaImpl.class);
 
-    private SessionFactory database;
-    
-    private final Class<DOC_REF_ENTITY> docRefEntityClass;
-
     @FunctionalInterface
-    protected interface GetValue {
+    protected interface ImportValue {
         <T> Optional<T> getValue(String fieldName, Class<T> clazz);
 
-        static GetValue empty() {
-            return new GetValue() {
+        static ImportValue empty() {
+            return new ImportValue() {
                 @Override
                 public <T> Optional<T> getValue(String fieldName, Class<T> clazz) {
                     return Optional.empty();
@@ -46,9 +40,9 @@ public abstract class DocRefServiceCriteriaImpl<
             };
         }
 
-        static GetValue fromMap(final Map<String, ?> map) {
+        static ImportValue fromMap(final Map<String, ?> map) {
 
-            return new GetValue() {
+            return new ImportValue() {
                 @Override
                 public <T> Optional<T> getValue(String fieldName, Class<T> clazz) {
                     final Object value = map.get(fieldName);
@@ -62,25 +56,54 @@ public abstract class DocRefServiceCriteriaImpl<
     }
 
     @FunctionalInterface
-    protected interface SetValue {
+    protected interface ValueImporter<
+            E extends DocRefHibernateEntity,
+            B extends DocRefHibernateEntity.BaseBuilder<E, ?>> {
+        B importValues(ImportValue dataMap);
+    }
+    @FunctionalInterface
+    protected interface ExportValue {
         void setValue(final String fieldName, final Object fieldValue);
     }
 
-    protected abstract DOC_REF_BUILDER createImport(GetValue dataMap);
+    @FunctionalInterface
+    protected interface ValueExporter<E extends DocRefHibernateEntity> {
+        void exportValues(E docRefEntity, ExportValue consumer);
+    }
 
-    protected abstract void exportValues(DOC_REF_ENTITY docRefEntity, SetValue consumer);
+    private SessionFactory database;
+
+    private final String type;
+
+    private final Class<DOC_REF_ENTITY> docRefEntityClass;
+
+    private final ValueImporter<DOC_REF_ENTITY, DocRefHibernateEntity.BaseBuilder<DOC_REF_ENTITY, ?>> valueImporter;
+
+    private final ValueExporter<DOC_REF_ENTITY> valueExporter;
+
 
     private Map<String, Object> exportValuesToMap(DOC_REF_ENTITY docRefEntity) {
         final Map<String, Object> map = new HashMap<>();
-        exportValues(docRefEntity, map::put);
+        valueExporter.exportValues(docRefEntity, map::put);
         return map;
     }
 
     @Inject
-    public DocRefServiceCriteriaImpl(final SessionFactory database,
-                                     final Class<DOC_REF_ENTITY> docRefEntityClass) { 
-        this.database = database;
+    public DocRefServiceCriteriaImpl(final String type,
+                                     final Class<DOC_REF_ENTITY> docRefEntityClass,
+                                     final ValueImporter<DOC_REF_ENTITY, DocRefHibernateEntity.BaseBuilder<DOC_REF_ENTITY, ?>> valueImporter,
+                                     final ValueExporter<DOC_REF_ENTITY> valueExporter,
+                                     final SessionFactory database) {
+        this.type = type;
         this.docRefEntityClass = docRefEntityClass;
+        this.valueImporter = valueImporter;
+        this.valueExporter = valueExporter;
+        this.database = database;
+    }
+
+    @Override
+    public String getType() {
+        return type;
     }
 
     @Override
@@ -132,7 +155,7 @@ public abstract class DocRefServiceCriteriaImpl<
 
             final Long now = System.currentTimeMillis();
 
-            final DOC_REF_ENTITY entity = createImport(GetValue.empty())
+            final DOC_REF_ENTITY entity = valueImporter.importValues(ImportValue.empty())
                     .uuid(uuid)
                     .name(name)
                     .createTime(now)
@@ -175,7 +198,7 @@ public abstract class DocRefServiceCriteriaImpl<
             cq.set(root.get(DocRefHibernateEntity.UPDATE_TIME), now);
 
             // include all the specific values
-            exportValues(updatedConfig, (k, v) -> cq.set(root.get(k), v));
+            valueExporter.exportValues(updatedConfig, (k, v) -> cq.set(root.get(k), v));
 
             cq.where(cb.equal(root.get(DocRefHibernateEntity.UUID), uuid));
 
@@ -219,7 +242,7 @@ public abstract class DocRefServiceCriteriaImpl<
             final Long now = System.currentTimeMillis();
 
             final Map<String, ?> exportedValues = exportValuesToMap(original);
-            final DOC_REF_ENTITY entity = createImport(GetValue.fromMap(exportedValues))
+            final DOC_REF_ENTITY entity = valueImporter.importValues(ImportValue.fromMap(exportedValues))
                     .uuid(copyUuid)
                     .name(original.getName())
                     .createTime(now)
@@ -347,7 +370,7 @@ public abstract class DocRefServiceCriteriaImpl<
 
                 final Long now = System.currentTimeMillis();
 
-                final DOC_REF_ENTITY entity = createImport(GetValue.fromMap(dataMap))
+                final DOC_REF_ENTITY entity = valueImporter.importValues(ImportValue.fromMap(dataMap))
                         .uuid(uuid)
                         .name(name)
                         .createTime(now)

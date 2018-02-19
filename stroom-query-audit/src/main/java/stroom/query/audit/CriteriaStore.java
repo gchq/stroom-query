@@ -1,4 +1,4 @@
-package stroom.query.hibernate;
+package stroom.query.audit;
 
 import stroom.mapreduce.v2.UnsafePairQueue;
 import stroom.query.api.v2.TableSettings;
@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Used to store the results from a query made on a {@link QueryServiceCriteriaImpl}
+ * Used to store the results from a query made on a {@link stroom.query.audit.service.QueryService}
  */
 public class CriteriaStore implements Store {
 
@@ -41,10 +41,10 @@ public class CriteriaStore implements Store {
     private final AtomicBoolean isComplete = new AtomicBoolean(true);
 
     public CriteriaStore(final List<Integer> defaultMaxResultsSizes,
-                              final StoreSize storeSize,
-                              final CoprocessorSettingsMap coprocessorSettingsMap,
-                              final Map<CoprocessorSettingsMap.CoprocessorKey, Coprocessor> coprocessorMap,
-                              final Map<CoprocessorSettingsMap.CoprocessorKey, Payload> payloadMap) {
+                         final StoreSize storeSize,
+                         final CoprocessorSettingsMap coprocessorSettingsMap,
+                         final Map<CoprocessorSettingsMap.CoprocessorKey, Coprocessor> coprocessorMap,
+                         final Map<CoprocessorSettingsMap.CoprocessorKey, Payload> payloadMap) {
 
         this.defaultMaxResultsSizes = defaultMaxResultsSizes;
         this.storeSize = storeSize;

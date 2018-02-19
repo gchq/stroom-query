@@ -3,15 +3,15 @@ package stroom.query.testing.jooq.app;
 import stroom.datasource.api.v2.DataSourceField;
 import stroom.query.api.v2.ExpressionTerm;
 import stroom.query.audit.model.IsDataSourceField;
+import stroom.query.jooq.JooqEntity;
 import stroom.query.jooq.QueryableJooqEntity;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
-@Entity(name="test_jooq_entity")
+@JooqEntity(tableName="test_jooq_entity")
 public class TestQueryableJooqEntity extends QueryableJooqEntity {
     public static final String COLOUR = "colour";
     public static final String ID = "id";

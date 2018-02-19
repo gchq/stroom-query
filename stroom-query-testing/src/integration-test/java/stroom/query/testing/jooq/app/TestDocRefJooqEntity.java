@@ -2,11 +2,13 @@ package stroom.query.testing.jooq.app;
 
 import org.jooq.Field;
 import stroom.query.jooq.DocRefJooqEntity;
+import stroom.query.jooq.JooqEntity;
 
 import java.util.Objects;
 
 import static org.jooq.impl.DSL.field;
 
+@JooqEntity(tableName="test_jooq_doc_ref")
 public class TestDocRefJooqEntity extends DocRefJooqEntity {
     public static final String TYPE = "TestDocRefJooqEntity";
 

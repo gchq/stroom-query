@@ -224,6 +224,16 @@ project(':stroom-query-hibernate') {
     }
 }
 
+project(':stroom-query-jooq') {
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
+    }
+}
+
 project(':stroom-query-testing') {
     publishing {
         publications {

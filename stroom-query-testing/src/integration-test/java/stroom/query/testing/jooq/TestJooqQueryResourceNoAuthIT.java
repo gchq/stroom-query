@@ -1,5 +1,7 @@
 package stroom.query.testing.jooq;
 
+import org.eclipse.jetty.http.HttpStatus;
+import org.junit.Before;
 import org.junit.ClassRule;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
@@ -12,19 +14,23 @@ import stroom.query.api.v2.ResultRequest;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.audit.model.DocRefEntity;
+import stroom.query.audit.security.NoAuthValueFactoryProvider;
 import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.QueryResourceNoAuthIT;
+import stroom.query.testing.data.CreateTestDataClient;
 import stroom.query.testing.generic.app.TestQueryServiceImpl;
 import stroom.query.testing.jooq.app.JooqApp;
 import stroom.query.testing.jooq.app.JooqConfig;
 import stroom.query.testing.jooq.app.TestDocRefJooqEntity;
 import stroom.query.testing.jooq.app.TestQueryableJooqEntity;
 
+import javax.ws.rs.core.Response;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TestJooqQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDocRefJooqEntity, JooqConfig> {
@@ -33,10 +39,24 @@ public class TestJooqQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDoc
     public static final DropwizardAppWithClientsRule<JooqConfig> appRule =
             new DropwizardAppWithClientsRule<>(JooqApp.class, resourceFilePath("hibernate_noauth/config.yml"));
 
+    private final CreateTestDataClient testDataClient;
+
+    private String testDataSeed;
+    private DocRef testDataDocRef;
+
     public TestJooqQueryResourceNoAuthIT() {
         super(TestDocRefJooqEntity.class,
                 TestDocRefJooqEntity.TYPE,
                 appRule);
+        testDataClient = appRule.getClient(CreateTestDataClient::new);
+    }
+
+    @Before
+    public void beforeTest() {
+        this.testDataSeed = UUID.randomUUID().toString();
+        final Response response = testDataClient.createTestData(NoAuthValueFactoryProvider.ADMIN_USER, this.testDataSeed);
+        assertEquals(HttpStatus.OK_200, response.getStatus());
+        this.testDataDocRef = response.readEntity(DocRef.class);
     }
 
     @Override
