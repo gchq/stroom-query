@@ -9,8 +9,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 ### Changed
-
 * Issue **#10**: Added a jOOQ implementation of the audit bundle
+
+## [v2.0.0-alpha.28] - 2018-02-16
+
+### Changed
 * Issue **#8** : Fix handling of non-incremental queries on the query API. Adds timeout option in request and blocking code to wait for the query to complete.
 
 ## [v2.0.0-alpha.27] - 2018-01-31
@@ -18,7 +21,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 * Tune the hibernate data source pool
+
 * Make fifo log appender thread safe
+
 * Making the audit fifo log rule more sophisticated to allow more detailed assertions about audit logs
 
 ## [v2.0.0-alpha.26] - 2018-01-26
@@ -26,6 +31,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 * Common integration tests now force sub classes to create their app and wiremock rules.
+
 * Using TestRules instead of inherited behaviour as much as possible
 
 ## [v2.0.0-alpha.24] - 2018-01-25
@@ -33,7 +39,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 * Removed custom test implementations of auth service and http client, use Wiremock and javax.ws.rs.Client
+
 * Setup the doc ref info fields (created/updated user/time)
+
 * Providing standard implementations of integration tests, plus demonstration apps for hibernate and generic query apps
 
 ## [v2.0.0-alpha.22] - 2018-01-15
@@ -41,6 +49,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 * Added Authentication to DocRef and Query resources.
+
 * Implementations now need to create Service implementations, REST layers are now entirely common.
 
 ## [v2.0.0-alpha.21] - 2018-01-09
@@ -78,6 +87,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 * Now using openjdk instead of oraclejdk
+
 * Changed the builders to remove the parenting/templating. Now using a simpler pattern where developers will create the child builders themselves.
 
 ## [v2.0.0-alpha.11] - 2017-12-01
@@ -179,11 +189,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.27...HEAD
-[v2.0.0-alpha.21]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.26...v2.0.0-alpha.27
-[v2.0.0-alpha.21]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.24...v2.0.0-alpha.26
-[v2.0.0-alpha.21]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.22...v2.0.0-alpha.24
-[v2.0.0-alpha.21]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.21...v2.0.0-alpha.22
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.28...HEAD
+[v2.0.0-alpha.28]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.27...v2.0.0-alpha.28
+[v2.0.0-alpha.27]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.26...v2.0.0-alpha.27
+[v2.0.0-alpha.26]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.24...v2.0.0-alpha.26
+[v2.0.0-alpha.24]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.23...v2.0.0-alpha.24
+[v2.0.0-alpha.23]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.22...v2.0.0-alpha.23
+[v2.0.0-alpha.22]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.21...v2.0.0-alpha.22
 [v2.0.0-alpha.21]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.20...v2.0.0-alpha.21
 [v2.0.0-alpha.20]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.19...v2.0.0-alpha.20
 [v2.0.0-alpha.19]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.14...v2.0.0-alpha.19
