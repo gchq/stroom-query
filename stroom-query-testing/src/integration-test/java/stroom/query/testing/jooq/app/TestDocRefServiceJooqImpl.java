@@ -1,41 +1,37 @@
 package stroom.query.testing.jooq.app;
 
+import org.jooq.Configuration;
+import org.jooq.Field;
+import org.jooq.Record;
+import org.jooq.UpdateSetMoreStep;
 import stroom.query.jooq.DocRefServiceJooqImpl;
 
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+
+import static stroom.query.testing.jooq.app.TestDocRefJooqEntity.PLANET_NAME_FIELD;
 
 public class TestDocRefServiceJooqImpl extends DocRefServiceJooqImpl<TestDocRefJooqEntity, TestDocRefJooqEntity.Builder> {
 
     @Inject
-    public TestDocRefServiceJooqImpl() {
-        super(TestDocRefJooqEntity.class);
+    public TestDocRefServiceJooqImpl(final Configuration jooqConfiguration) {
+        super("test_jooq_doc_ref", jooqConfiguration);
     }
 
     @Override
-    protected TestDocRefJooqEntity.Builder createDocumentBuilder() {
-        return new TestDocRefJooqEntity.Builder();
-    }
-
-    @Override
-    protected TestDocRefJooqEntity.Builder copyEntity(final TestDocRefJooqEntity original) {
+    protected TestDocRefJooqEntity.Builder createDocumentBuilder(final Record record) {
         return new TestDocRefJooqEntity.Builder()
-                .planetName(original.getPlanetName());
+                .planetName(record.getValue(PLANET_NAME_FIELD));
     }
 
     @Override
-    protected TestDocRefJooqEntity.Builder createImport(final Map<String, String> dataMap) {
-        return new TestDocRefJooqEntity.Builder()
-                .planetName(dataMap.get(TestDocRefJooqEntity.PLANET_NAME));
-    }
-
-    @Override
-    protected Map<String, Object> exportValues(final TestDocRefJooqEntity entity) {
-        return new HashMap<String, Object>()
+    protected Map<Field<?>, Object> getMappedFields(final TestDocRefJooqEntity entity) {
+        return new HashMap<Field<?>, Object>()
         {
             {
-                put(TestDocRefJooqEntity.PLANET_NAME, entity.getPlanetName());
+                put(PLANET_NAME_FIELD, entity.getPlanetName());
             }
         };
     }

@@ -36,7 +36,7 @@ CREATE TABLE test_jooq_entity (
 CREATE TABLE test_jooq_doc_ref (
     uuid            VARCHAR(255) NOT NULL,
     name            VARCHAR(127) NOT NULL,
-    planetNam       VARCHAR(255),
+    planetName      VARCHAR(255),
     updateUser      VARCHAR(255) NOT NULL,
     updateTime      BIGINT UNSIGNED NOT NULL,
     createUser      VARCHAR(255) NOT NULL,

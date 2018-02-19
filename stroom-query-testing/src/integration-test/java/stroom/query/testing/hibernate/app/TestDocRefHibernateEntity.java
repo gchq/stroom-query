@@ -4,6 +4,7 @@ import stroom.query.hibernate.DocRefHibernateEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import java.util.Objects;
 
 @Entity(name="test_hibernate_doc_ref")
 public class TestDocRefHibernateEntity extends DocRefHibernateEntity {
@@ -20,6 +21,30 @@ public class TestDocRefHibernateEntity extends DocRefHibernateEntity {
 
     public void setClanName(String clanName) {
         this.clanName = clanName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        TestDocRefHibernateEntity that = (TestDocRefHibernateEntity) o;
+        return Objects.equals(clanName, that.clanName);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(), clanName);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("TestDocRefHibernateEntity{");
+        sb.append("super='").append(super.toString()).append('\'');
+        sb.append("clanName='").append(clanName).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 
     public static final class Builder

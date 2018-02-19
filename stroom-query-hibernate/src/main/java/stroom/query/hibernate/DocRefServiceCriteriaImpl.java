@@ -17,9 +17,11 @@ import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Root;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 
 public abstract class DocRefServiceCriteriaImpl<
         DOC_REF_ENTITY extends DocRefHibernateEntity,
@@ -31,13 +33,48 @@ public abstract class DocRefServiceCriteriaImpl<
     
     private final Class<DOC_REF_ENTITY> docRefEntityClass;
 
-    protected abstract DOC_REF_BUILDER createDocumentBuilder();
+    @FunctionalInterface
+    protected interface GetValue {
+        <T> Optional<T> getValue(String fieldName, Class<T> clazz);
 
-    protected abstract DOC_REF_BUILDER copyEntity(DOC_REF_ENTITY original);
+        static GetValue empty() {
+            return new GetValue() {
+                @Override
+                public <T> Optional<T> getValue(String fieldName, Class<T> clazz) {
+                    return Optional.empty();
+                }
+            };
+        }
 
-    protected abstract DOC_REF_BUILDER createImport(Map<String, String> dataMap);
+        static GetValue fromMap(final Map<String, ?> map) {
 
-    protected abstract Map<String, Object> exportValues(DOC_REF_ENTITY docRefEntity);
+            return new GetValue() {
+                @Override
+                public <T> Optional<T> getValue(String fieldName, Class<T> clazz) {
+                    final Object value = map.get(fieldName);
+
+                    return Optional.ofNullable(value)
+                            .filter(clazz::isInstance)
+                            .map((d) -> (T) d);
+                }
+            };
+        }
+    }
+
+    @FunctionalInterface
+    protected interface SetValue {
+        void setValue(final String fieldName, final Object fieldValue);
+    }
+
+    protected abstract DOC_REF_BUILDER createImport(GetValue dataMap);
+
+    protected abstract void exportValues(DOC_REF_ENTITY docRefEntity, SetValue consumer);
+
+    private Map<String, Object> exportValuesToMap(DOC_REF_ENTITY docRefEntity) {
+        final Map<String, Object> map = new HashMap<>();
+        exportValues(docRefEntity, map::put);
+        return map;
+    }
 
     @Inject
     public DocRefServiceCriteriaImpl(final SessionFactory database,
@@ -95,7 +132,7 @@ public abstract class DocRefServiceCriteriaImpl<
 
             final Long now = System.currentTimeMillis();
 
-            final DOC_REF_ENTITY annotation = createDocumentBuilder()
+            final DOC_REF_ENTITY entity = createImport(GetValue.empty())
                     .uuid(uuid)
                     .name(name)
                     .createTime(now)
@@ -104,11 +141,11 @@ public abstract class DocRefServiceCriteriaImpl<
                     .updateUser(user.getName())
                     .build();
 
-            session.persist(annotation);
+            session.persist(entity);
 
             tx.commit();
 
-            return Optional.of(annotation);
+            return Optional.of(entity);
         } catch (NoResultException e) {
             return Optional.empty();
         } catch (final Exception e) {
@@ -138,7 +175,7 @@ public abstract class DocRefServiceCriteriaImpl<
             cq.set(root.get(DocRefHibernateEntity.UPDATE_TIME), now);
 
             // include all the specific values
-            exportValues(updatedConfig).forEach((k, v) -> cq.set(root.get(k), v));
+            exportValues(updatedConfig, (k, v) -> cq.set(root.get(k), v));
 
             cq.where(cb.equal(root.get(DocRefHibernateEntity.UUID), uuid));
 
@@ -155,7 +192,7 @@ public abstract class DocRefServiceCriteriaImpl<
         } catch (NoResultException e) {
             return Optional.empty();
         } catch (final Exception e) {
-            LOGGER.warn("Failed to get update annotation", e);
+            LOGGER.warn("Failed to get update entity", e);
             throw e;
         }
     }
@@ -181,7 +218,8 @@ public abstract class DocRefServiceCriteriaImpl<
 
             final Long now = System.currentTimeMillis();
 
-            final DOC_REF_ENTITY annotation = copyEntity(original)
+            final Map<String, ?> exportedValues = exportValuesToMap(original);
+            final DOC_REF_ENTITY entity = createImport(GetValue.fromMap(exportedValues))
                     .uuid(copyUuid)
                     .name(original.getName())
                     .createTime(now)
@@ -189,11 +227,11 @@ public abstract class DocRefServiceCriteriaImpl<
                     .updateTime(now)
                     .updateUser(user.getName())
                     .build();
-            session.persist(annotation);
+            session.persist(entity);
 
             tx.commit();
 
-            return Optional.of(annotation);
+            return Optional.of(entity);
         } catch (NoResultException e) {
             return Optional.empty();
         } catch (final Exception e) {
@@ -245,7 +283,7 @@ public abstract class DocRefServiceCriteriaImpl<
         } catch (NoResultException e) {
             return Optional.empty();
         } catch (final Exception e) {
-            LOGGER.warn("Failed to get update annotation", e);
+            LOGGER.warn("Failed to get update entity", e);
             throw e;
         }
     }
@@ -275,7 +313,7 @@ public abstract class DocRefServiceCriteriaImpl<
         } catch (NoResultException e) {
             return Optional.empty();
         } catch (final Exception e) {
-            LOGGER.warn("Failed to get create annotation", e);
+            LOGGER.warn("Failed to get create entity", e);
             throw e;
         }
     }
@@ -287,7 +325,7 @@ public abstract class DocRefServiceCriteriaImpl<
 
         return optionalIndex.map(index -> new ExportDTO.Builder()
                     .value(DocRefEntity.NAME, index.getName())
-                    .values(exportValues(index))
+                    .values(exportValuesToMap(index))
                     .build())
                 .orElse(new ExportDTO.Builder()
                         .message("could not find document")
@@ -300,19 +338,47 @@ public abstract class DocRefServiceCriteriaImpl<
                                                    final String name,
                                                    final Boolean confirmed,
                                                    final Map<String, String> dataMap) throws Exception {
-        if (confirmed) {
-            return createDocument(user, uuid, name);
-        } else {
-            final Optional<DOC_REF_ENTITY> existing = get(user, uuid);
 
-            if (null != existing) {
-                return Optional.empty();
-            } else {
-                return Optional.of(createImport(dataMap)
+        Transaction tx;
+
+        try (final Session session = database.openSession()) {
+            if (confirmed) {
+                tx = session.beginTransaction();
+
+                final Long now = System.currentTimeMillis();
+
+                final DOC_REF_ENTITY entity = createImport(GetValue.fromMap(dataMap))
                         .uuid(uuid)
                         .name(name)
-                        .build());
+                        .createTime(now)
+                        .createUser(user.getName())
+                        .updateTime(now)
+                        .updateUser(user.getName())
+                        .build();
+
+                session.persist(entity);
+
+                tx.commit();
+
+                return Optional.of(entity);
+            } else {
+                final CriteriaBuilder cb = session.getCriteriaBuilder();
+                final CriteriaQuery<DOC_REF_ENTITY> cq = cb.createQuery(docRefEntityClass);
+                final Root<DOC_REF_ENTITY> root = cq.from(docRefEntityClass);
+
+                cq.select(root);
+                cq.where(cb.equal(root.get(DocRefHibernateEntity.UUID), uuid));
+                cq.distinct(true);
+
+                final DOC_REF_ENTITY entity = session.createQuery(cq).getSingleResult();
+                return Optional.of(entity);
             }
+        } catch (NoResultException e) {
+            return Optional.empty();
+        } catch (final Exception e) {
+            LOGGER.warn("Failed to get create index", e);
+
+            throw e;
         }
     }
 }

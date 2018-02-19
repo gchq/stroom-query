@@ -1,25 +1,50 @@
 package stroom.query.testing.jooq.app;
 
+import org.jooq.Field;
 import stroom.query.jooq.DocRefJooqEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import java.util.Objects;
 
-@Entity(name="test_doc_ref")
+import static org.jooq.impl.DSL.field;
+
 public class TestDocRefJooqEntity extends DocRefJooqEntity {
     public static final String TYPE = "TestDocRefJooqEntity";
 
     public static final String PLANET_NAME = "planetName";
+    public static final Field<String> PLANET_NAME_FIELD = field(PLANET_NAME, String.class);
 
     private String planetName;
 
-    @Column(name=PLANET_NAME)
     public String getPlanetName() {
         return planetName;
     }
 
     public void setPlanetName(String planetName) {
         this.planetName = planetName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        TestDocRefJooqEntity that = (TestDocRefJooqEntity) o;
+        return Objects.equals(planetName, that.planetName);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(), planetName);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("TestDocRefJooqEntity{");
+        sb.append("super='").append(super.toString()).append('\'');
+        sb.append("planetName='").append(planetName).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 
     public static final class Builder

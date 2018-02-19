@@ -44,6 +44,7 @@ public class AuditedJooqQueryBundle<CONFIG extends Configuration & HasTokenConfi
             @Override
             protected void configure() {
                 bind(new QueryableEntity.ClassProvider<>(queryableEntityClass)).to(QueryableEntity.ClassProvider.class);
+                bind(jooqBundle.getConfiguration()).to(org.jooq.Configuration.class);
             }
         });
     }

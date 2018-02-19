@@ -1,5 +1,8 @@
 package stroom.query.jooq;
 
+import org.jooq.Configuration;
+import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.datasource.api.v2.DataSource;
@@ -32,11 +35,15 @@ public class QueryServiceJooqImpl<
 
     private final DocRefService<DOC_REF_ENTITY> docRefService;
 
+    private final DSLContext database;
+
     @Inject
     public QueryServiceJooqImpl(final QueryableEntity.ClassProvider<QUERYABLE_ENTITY> dtoClassProvider,
-                                final DocRefService<DOC_REF_ENTITY> docRefService) {
+                                final DocRefService<DOC_REF_ENTITY> docRefService,
+                                final Configuration jooqConfig) {
         this.docRefService = docRefService;
         this.dtoClass = dtoClassProvider.get();
+        this.database = DSL.using(jooqConfig);
 
         this.fields = QueryableEntity.getFields(dtoClass)
                 .map(IsDataSourceField::fieldSupplier)
