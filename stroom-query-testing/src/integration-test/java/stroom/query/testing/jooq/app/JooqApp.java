@@ -51,22 +51,23 @@ public class JooqApp extends Application<JooqConfig> {
 
     };
 
+    private final JooqBundle<JooqConfig> jooqBundle = new JooqBundle<JooqConfig>() {
+        public DataSourceFactory getDataSourceFactory(JooqConfig configuration) {
+            return configuration.getDataSourceFactory();
+        }
+
+        public JooqFactory getJooqFactory(JooqConfig configuration) {
+            return configuration.getJooqFactory();
+        }
+    };
+
     private final AuditedJooqQueryBundle<JooqConfig,
             TestQueryableJooqEntity,
             TestDocRefJooqEntity,
             TestDocRefServiceJooqImpl> auditedQueryBundle =
             new AuditedJooqQueryBundle<>(
                     TestQueryableJooqEntity.class,
-                    new JooqBundle<JooqConfig>() {
-                        public DataSourceFactory getDataSourceFactory(JooqConfig configuration) {
-                            return configuration.getDataSourceFactory();
-                        }
-
-                        public JooqFactory getJooqFactory(JooqConfig configuration) {
-                            return configuration.getJooqFactory();
-                        }
-
-                    },
+                    jooqBundle,
                     TestDocRefJooqEntity.class,
                     TestDocRefServiceJooqImpl.class);
 

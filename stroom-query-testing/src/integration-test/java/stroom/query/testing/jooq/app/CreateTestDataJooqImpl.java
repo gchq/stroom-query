@@ -52,8 +52,6 @@ public class CreateTestDataJooqImpl implements CreateTestDataResource {
                         UUID.randomUUID().toString());
 
         final ULong now = ULong.valueOf(System.currentTimeMillis());
-        final Field<String> ID_FIELD = field(TestQueryableJooqEntity.ID, String.class);
-        final Field<String> COLOUR_FIELD = field(TestQueryableJooqEntity.COLOUR, String.class);
 
         docRefEntity.ifPresent(docRef ->
             database.transaction(configuration -> {
@@ -71,8 +69,8 @@ public class CreateTestDataJooqImpl implements CreateTestDataResource {
                                     DocRefJooqEntity.CREATE_TIME_FIELD,
                                     DocRefJooqEntity.UPDATE_USER_FIELD,
                                     DocRefJooqEntity.UPDATE_TIME_FIELD,
-                                    ID_FIELD,
-                                    COLOUR_FIELD)
+                                    TestQueryableJooqEntity.ID_FIELD,
+                                    TestQueryableJooqEntity.COLOUR_FIELD)
                             .values(docRef.getUuid(),
                                     user.getName(),
                                     now,

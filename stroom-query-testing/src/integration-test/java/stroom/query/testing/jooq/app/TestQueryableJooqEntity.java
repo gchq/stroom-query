@@ -1,5 +1,6 @@
 package stroom.query.testing.jooq.app;
 
+import org.jooq.Field;
 import stroom.datasource.api.v2.DataSourceField;
 import stroom.query.api.v2.ExpressionTerm;
 import stroom.query.audit.model.IsDataSourceField;
@@ -11,10 +12,15 @@ import javax.persistence.Id;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
+import static org.jooq.impl.DSL.field;
+
 @JooqEntity(tableName="test_jooq_entity")
 public class TestQueryableJooqEntity extends QueryableJooqEntity {
     public static final String COLOUR = "colour";
     public static final String ID = "id";
+
+    public static final Field<String> ID_FIELD = field(ID, String.class);
+    public static final Field<String> COLOUR_FIELD = field(COLOUR, String.class);
 
     private String id;
 
