@@ -15,6 +15,9 @@ import stroom.query.api.v2.Param;
 import stroom.query.api.v2.QueryKey;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.SearchResponse;
+import stroom.query.audit.CriteriaStore;
+import stroom.query.audit.model.IsDataSourceField;
+import stroom.query.audit.model.QueryableEntity;
 import stroom.query.audit.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryService;
@@ -53,7 +56,7 @@ import java.util.stream.Collectors;
  */
 public class QueryServiceCriteriaImpl<
         DOC_REF_ENTITY extends DocRefHibernateEntity,
-        QUERYABLE_ENTITY extends QueryableEntity> implements QueryService {
+        QUERYABLE_ENTITY extends QueryableHibernateEntity> implements QueryService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(QueryServiceCriteriaImpl.class);
 
@@ -63,18 +66,17 @@ public class QueryServiceCriteriaImpl<
 
     private final List<DataSourceField> fields;
 
-    private final DocRefService<DOC_REF_ENTITY> docRefEntityDocRefService;
+    private final DocRefService<DOC_REF_ENTITY> docRefService;
 
     @Inject
     public QueryServiceCriteriaImpl(final QueryableEntity.ClassProvider<QUERYABLE_ENTITY> dtoClassProvider,
-                                    final DocRefService<DOC_REF_ENTITY> docRefEntityDocRefService,
+                                    final DocRefService<DOC_REF_ENTITY> docRefService,
                                     final SessionFactory database) {
         this.database = database;
-        this.docRefEntityDocRefService = docRefEntityDocRefService;
+        this.docRefService = docRefService;
         this.dtoClass = dtoClassProvider.get();
 
-        this.fields = Arrays.stream(dtoClass.getMethods()).map(method -> method.getAnnotation(IsDataSourceField.class))
-                .filter(Objects::nonNull)
+        this.fields = QueryableEntity.getFields(dtoClass)
                 .map(IsDataSourceField::fieldSupplier)
                 .map(aClass -> {
                     try {
@@ -92,7 +94,7 @@ public class QueryServiceCriteriaImpl<
     @Override
     public Optional<DataSource> getDataSource(final ServiceUser user,
                                               final DocRef docRef) throws Exception {
-        final Optional<DOC_REF_ENTITY> docRefEntity = docRefEntityDocRefService.get(user, docRef.getUuid());
+        final Optional<DOC_REF_ENTITY> docRefEntity = docRefService.get(user, docRef.getUuid());
 
         if (!docRefEntity.isPresent()) {
             return Optional.empty();
@@ -106,7 +108,7 @@ public class QueryServiceCriteriaImpl<
                                            final SearchRequest request) throws Exception {
         final String dataSourceUuid = request.getQuery().getDataSource().getUuid();
 
-        final Optional<DOC_REF_ENTITY> docRefEntity = docRefEntityDocRefService.get(user, dataSourceUuid);
+        final Optional<DOC_REF_ENTITY> docRefEntity = docRefService.get(user, dataSourceUuid);
 
         if (!docRefEntity.isPresent()) {
             return Optional.empty();
@@ -123,7 +125,7 @@ public class QueryServiceCriteriaImpl<
                     .collect(Collectors.toList()));
 
             final Predicate requestPredicate = getPredicate(cb, root, request.getQuery().getExpression());
-            final Predicate dataSourcePredicate = cb.equal(root.get(QueryableEntity.DATA_SOURCE_UUID), dataSourceUuid);
+            final Predicate dataSourcePredicate = cb.equal(root.get(QueryableHibernateEntity.DATA_SOURCE_UUID), dataSourceUuid);
 
             cq.where(cb.and(requestPredicate, dataSourcePredicate));
             final List<Tuple> tuples = session.createQuery(cq).getResultList();

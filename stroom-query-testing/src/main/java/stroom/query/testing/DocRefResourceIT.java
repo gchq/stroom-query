@@ -10,8 +10,8 @@ import stroom.query.api.v2.DocRefInfo;
 import stroom.query.audit.ExportDTO;
 import stroom.query.audit.authorisation.DocumentPermission;
 import stroom.query.audit.client.DocRefResourceHttpClient;
+import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
-import stroom.query.audit.service.DocRefEntity;
 
 import javax.ws.rs.core.Response;
 import java.util.Map;
@@ -118,7 +118,8 @@ public abstract class DocRefResourceIT<
                 uuid,
                 authorisedEntityUpdate);
         assertEquals(HttpStatus.OK_200, updateResponse.getStatus());
-        updateResponse.close();
+        final DOC_REF_ENTITY updateResponseBody = updateResponse.readEntity(docRefEntityClass);
+        assertEquals(authorisedEntityUpdate, updateResponseBody);
 
         // Try updating it as an unauthorised user
         final DOC_REF_ENTITY unauthorisedEntityUpdate = createPopulatedEntity(uuid, name);
@@ -224,13 +225,13 @@ public abstract class DocRefResourceIT<
         authRule.giveDocumentPermission(authRule.adminUser(), uuid, DocumentPermission.READ);
         authRule.giveDocumentPermission(authRule.authenticatedUser(authorisedUsername), uuid, DocumentPermission.READ);
 
-        final Response createReponse = docRefClient.createDocument(
+        final Response createResponse = docRefClient.createDocument(
                 authRule.adminUser(),
                 uuid,
                 name,
                 parentFolderUuid);
-        assertEquals(HttpStatus.OK_200, createReponse.getStatus());
-        createReponse.close();
+        assertEquals(HttpStatus.OK_200, createResponse.getStatus());
+        createResponse.close();
 
         final Response getResponseAdmin = docRefClient.get(authRule.adminUser(), uuid);
         assertEquals(HttpStatus.OK_200, getResponseAdmin.getStatus());

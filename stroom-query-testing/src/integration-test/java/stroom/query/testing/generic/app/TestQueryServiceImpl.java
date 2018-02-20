@@ -15,13 +15,12 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 public class TestQueryServiceImpl implements QueryService {
-    public static final String VALID_INDEX_NAME = "TestIndex";
 
-    private final DocRefService<TestDocRefEntity> docRefEntityDocRefService;
+    private final DocRefService<TestDocRefEntity> docRefService;
 
     @Inject
-    public TestQueryServiceImpl(final DocRefService<TestDocRefEntity> docRefEntityDocRefService) {
-        this.docRefEntityDocRefService = docRefEntityDocRefService;
+    public TestQueryServiceImpl(final DocRefService<TestDocRefEntity> docRefService) {
+        this.docRefService = docRefService;
     }
 
     @Override

@@ -25,20 +25,20 @@ public interface QueryResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/dataSource")
-    Response getDataSource(@Auth @NotNull ServiceUser authenticatedServiceUser,
+    Response getDataSource(@Auth @NotNull ServiceUser user,
                            DocRef docRef);
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/search")
-    Response search(@Auth @NotNull ServiceUser authenticatedServiceUser,
+    Response search(@Auth @NotNull ServiceUser user,
                     SearchRequest request);
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/destroy")
-    Response destroy(@Auth @NotNull ServiceUser authenticatedServiceUser,
+    Response destroy(@Auth @NotNull ServiceUser user,
                      QueryKey queryKey);
 }

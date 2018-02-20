@@ -6,8 +6,8 @@ import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.query.audit.ExportDTO;
+import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.security.ServiceUser;
-import stroom.query.audit.service.DocRefEntity;
 import stroom.query.audit.service.DocRefService;
 
 import javax.inject.Inject;
@@ -17,31 +17,93 @@ import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Root;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public abstract class DocRefServiceCriteriaImpl<
-        DOC_REF_ENTITY extends DocRefHibernateEntity,
-        DOC_REF_BUILDER extends DocRefHibernateEntity.BaseBuilder<DOC_REF_ENTITY, ?>>
+public class DocRefServiceCriteriaImpl<
+        DOC_REF_ENTITY extends DocRefHibernateEntity>
         implements DocRefService<DOC_REF_ENTITY> {
     private static final Logger LOGGER = LoggerFactory.getLogger(DocRefServiceCriteriaImpl.class);
 
+    @FunctionalInterface
+    protected interface ImportValue {
+        <T> Optional<T> getValue(String fieldName, Class<T> clazz);
+
+        static ImportValue empty() {
+            return new ImportValue() {
+                @Override
+                public <T> Optional<T> getValue(String fieldName, Class<T> clazz) {
+                    return Optional.empty();
+                }
+            };
+        }
+
+        static ImportValue fromMap(final Map<String, ?> map) {
+
+            return new ImportValue() {
+                @Override
+                public <T> Optional<T> getValue(String fieldName, Class<T> clazz) {
+                    final Object value = map.get(fieldName);
+
+                    return Optional.ofNullable(value)
+                            .filter(clazz::isInstance)
+                            .map((d) -> (T) d);
+                }
+            };
+        }
+    }
+
+    @FunctionalInterface
+    protected interface ValueImporter<
+            E extends DocRefHibernateEntity,
+            B extends DocRefHibernateEntity.BaseBuilder<E, ?>> {
+        B importValues(ImportValue dataMap);
+    }
+    @FunctionalInterface
+    protected interface ExportValue {
+        void setValue(final String fieldName, final Object fieldValue);
+    }
+
+    @FunctionalInterface
+    protected interface ValueExporter<E extends DocRefHibernateEntity> {
+        void exportValues(E docRefEntity, ExportValue consumer);
+    }
+
     private SessionFactory database;
-    
+
+    private final String type;
+
     private final Class<DOC_REF_ENTITY> docRefEntityClass;
 
-    protected abstract DOC_REF_BUILDER createDocumentBuilder();
+    private final ValueImporter<DOC_REF_ENTITY, DocRefHibernateEntity.BaseBuilder<DOC_REF_ENTITY, ?>> valueImporter;
 
-    protected abstract DOC_REF_BUILDER copyEntity(DOC_REF_ENTITY original);
+    private final ValueExporter<DOC_REF_ENTITY> valueExporter;
 
-    protected abstract DOC_REF_BUILDER createImport(Map<String, String> dataMap);
+
+    private Map<String, Object> exportValuesToMap(DOC_REF_ENTITY docRefEntity) {
+        final Map<String, Object> map = new HashMap<>();
+        valueExporter.exportValues(docRefEntity, map::put);
+        return map;
+    }
 
     @Inject
-    public DocRefServiceCriteriaImpl(final SessionFactory database,
-                                     final Class<DOC_REF_ENTITY> docRefEntityClass) { 
-        this.database = database;
+    public DocRefServiceCriteriaImpl(final String type,
+                                     final Class<DOC_REF_ENTITY> docRefEntityClass,
+                                     final ValueImporter<DOC_REF_ENTITY, DocRefHibernateEntity.BaseBuilder<DOC_REF_ENTITY, ?>> valueImporter,
+                                     final ValueExporter<DOC_REF_ENTITY> valueExporter,
+                                     final SessionFactory database) {
+        this.type = type;
         this.docRefEntityClass = docRefEntityClass;
+        this.valueImporter = valueImporter;
+        this.valueExporter = valueExporter;
+        this.database = database;
+    }
+
+    @Override
+    public String getType() {
+        return type;
     }
 
     @Override
@@ -93,7 +155,7 @@ public abstract class DocRefServiceCriteriaImpl<
 
             final Long now = System.currentTimeMillis();
 
-            final DOC_REF_ENTITY annotation = createDocumentBuilder()
+            final DOC_REF_ENTITY entity = valueImporter.importValues(ImportValue.empty())
                     .uuid(uuid)
                     .name(name)
                     .createTime(now)
@@ -102,11 +164,11 @@ public abstract class DocRefServiceCriteriaImpl<
                     .updateUser(user.getName())
                     .build();
 
-            session.persist(annotation);
+            session.persist(entity);
 
             tx.commit();
 
-            return Optional.of(annotation);
+            return Optional.of(entity);
         } catch (NoResultException e) {
             return Optional.empty();
         } catch (final Exception e) {
@@ -136,7 +198,7 @@ public abstract class DocRefServiceCriteriaImpl<
             cq.set(root.get(DocRefHibernateEntity.UPDATE_TIME), now);
 
             // include all the specific values
-            exportValues(updatedConfig).forEach((k, v) -> cq.set(root.get(k), v));
+            valueExporter.exportValues(updatedConfig, (k, v) -> cq.set(root.get(k), v));
 
             cq.where(cb.equal(root.get(DocRefHibernateEntity.UUID), uuid));
 
@@ -153,7 +215,7 @@ public abstract class DocRefServiceCriteriaImpl<
         } catch (NoResultException e) {
             return Optional.empty();
         } catch (final Exception e) {
-            LOGGER.warn("Failed to get update annotation", e);
+            LOGGER.warn("Failed to get update entity", e);
             throw e;
         }
     }
@@ -179,7 +241,8 @@ public abstract class DocRefServiceCriteriaImpl<
 
             final Long now = System.currentTimeMillis();
 
-            final DOC_REF_ENTITY annotation = copyEntity(original)
+            final Map<String, ?> exportedValues = exportValuesToMap(original);
+            final DOC_REF_ENTITY entity = valueImporter.importValues(ImportValue.fromMap(exportedValues))
                     .uuid(copyUuid)
                     .name(original.getName())
                     .createTime(now)
@@ -187,11 +250,11 @@ public abstract class DocRefServiceCriteriaImpl<
                     .updateTime(now)
                     .updateUser(user.getName())
                     .build();
-            session.persist(annotation);
+            session.persist(entity);
 
             tx.commit();
 
-            return Optional.of(annotation);
+            return Optional.of(entity);
         } catch (NoResultException e) {
             return Optional.empty();
         } catch (final Exception e) {
@@ -243,7 +306,7 @@ public abstract class DocRefServiceCriteriaImpl<
         } catch (NoResultException e) {
             return Optional.empty();
         } catch (final Exception e) {
-            LOGGER.warn("Failed to get update annotation", e);
+            LOGGER.warn("Failed to get update entity", e);
             throw e;
         }
     }
@@ -273,7 +336,7 @@ public abstract class DocRefServiceCriteriaImpl<
         } catch (NoResultException e) {
             return Optional.empty();
         } catch (final Exception e) {
-            LOGGER.warn("Failed to get create annotation", e);
+            LOGGER.warn("Failed to get create entity", e);
             throw e;
         }
     }
@@ -285,14 +348,12 @@ public abstract class DocRefServiceCriteriaImpl<
 
         return optionalIndex.map(index -> new ExportDTO.Builder()
                     .value(DocRefEntity.NAME, index.getName())
-                    .values(exportValues(index))
+                    .values(exportValuesToMap(index))
                     .build())
                 .orElse(new ExportDTO.Builder()
                         .message("could not find document")
                         .build());
     }
-
-    protected abstract Map<String, Object> exportValues(DOC_REF_ENTITY docRefEntity);
 
     @Override
     public Optional<DOC_REF_ENTITY> importDocument(final ServiceUser user,
@@ -300,19 +361,47 @@ public abstract class DocRefServiceCriteriaImpl<
                                                    final String name,
                                                    final Boolean confirmed,
                                                    final Map<String, String> dataMap) throws Exception {
-        if (confirmed) {
-            return createDocument(user, uuid, name);
-        } else {
-            final Optional<DOC_REF_ENTITY> existing = get(user, uuid);
 
-            if (null != existing) {
-                return Optional.empty();
-            } else {
-                return Optional.of(createImport(dataMap)
+        Transaction tx;
+
+        try (final Session session = database.openSession()) {
+            if (confirmed) {
+                tx = session.beginTransaction();
+
+                final Long now = System.currentTimeMillis();
+
+                final DOC_REF_ENTITY entity = valueImporter.importValues(ImportValue.fromMap(dataMap))
                         .uuid(uuid)
                         .name(name)
-                        .build());
+                        .createTime(now)
+                        .createUser(user.getName())
+                        .updateTime(now)
+                        .updateUser(user.getName())
+                        .build();
+
+                session.persist(entity);
+
+                tx.commit();
+
+                return Optional.of(entity);
+            } else {
+                final CriteriaBuilder cb = session.getCriteriaBuilder();
+                final CriteriaQuery<DOC_REF_ENTITY> cq = cb.createQuery(docRefEntityClass);
+                final Root<DOC_REF_ENTITY> root = cq.from(docRefEntityClass);
+
+                cq.select(root);
+                cq.where(cb.equal(root.get(DocRefHibernateEntity.UUID), uuid));
+                cq.distinct(true);
+
+                final DOC_REF_ENTITY entity = session.createQuery(cq).getSingleResult();
+                return Optional.of(entity);
             }
+        } catch (NoResultException e) {
+            return Optional.empty();
+        } catch (final Exception e) {
+            LOGGER.warn("Failed to get create index", e);
+
+            throw e;
         }
     }
 }

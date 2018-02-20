@@ -82,7 +82,7 @@ public class TestQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDocRefE
     protected TestDocRefEntity getValidEntity(final DocRef docRef) {
         return new TestDocRefEntity.Builder()
                 .docRef(docRef)
-                .indexName(TestQueryServiceImpl.VALID_INDEX_NAME)
+                .indexName("TestIndex")
                 .build();
     }
 }

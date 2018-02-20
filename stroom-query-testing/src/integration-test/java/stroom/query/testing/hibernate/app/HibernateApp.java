@@ -16,8 +16,8 @@ import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.hibernate.AuditedCriteriaQueryBundle;
-import stroom.query.testing.generic.app.TestDocRefEntity;
-import stroom.query.testing.generic.app.TestDocRefServiceImpl;
+
+import java.util.Collections;
 
 public class HibernateApp extends Application<HibernateConfig> {
     // Wrap the flyway bundle so that we can call migrate in the bundles 'run'.
@@ -53,12 +53,12 @@ public class HibernateApp extends Application<HibernateConfig> {
     };
 
     private final AuditedCriteriaQueryBundle<HibernateConfig,
-            TestQueryableEntity,
+            TestQueryableHibernateEntity,
             TestDocRefHibernateEntity,
             TestDocRefServiceCriteriaImpl> auditedQueryBundle =
             new AuditedCriteriaQueryBundle<>(
-                    TestQueryableEntity.class,
-                    new HibernateBundle<HibernateConfig>(TestDocRefHibernateEntity.class, TestQueryableEntity.class) {
+                    TestQueryableHibernateEntity.class,
+                    new HibernateBundle<HibernateConfig>(TestDocRefHibernateEntity.class, TestQueryableHibernateEntity.class) {
                         @Override
                         public DataSourceFactory getDataSourceFactory(HibernateConfig configuration) {
                             return configuration.getDataSourceFactory();

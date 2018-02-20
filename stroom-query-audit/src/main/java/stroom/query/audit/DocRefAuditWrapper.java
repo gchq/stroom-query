@@ -6,8 +6,8 @@ import org.eclipse.jetty.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.query.api.v2.DocRef;
+import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.security.ServiceUser;
-import stroom.query.audit.service.DocRefEntity;
 
 import javax.ws.rs.core.Response;
 import java.util.Optional;

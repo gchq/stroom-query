@@ -4,11 +4,12 @@ import io.dropwizard.Configuration;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.hibernate.SessionFactory;
 import stroom.query.audit.AuditedQueryBundle;
 import stroom.query.audit.authorisation.HasAuthorisationConfig;
+import stroom.query.audit.model.IsDataSourceField;
+import stroom.query.audit.model.QueryableEntity;
 import stroom.query.audit.security.HasTokenConfig;
 import stroom.query.audit.service.DocRefService;
 
@@ -22,7 +23,7 @@ import stroom.query.audit.service.DocRefService;
  * @param <DOC_REF_SERVICE> Implementation class for the DocRef Service
  */
 public class AuditedCriteriaQueryBundle<CONFIG extends Configuration & HasTokenConfig & HasAuthorisationConfig,
-        QUERY_POJO extends QueryableEntity,
+        QUERY_POJO extends QueryableHibernateEntity,
         DOC_REF_POJO extends DocRefHibernateEntity,
         DOC_REF_SERVICE extends DocRefService<DOC_REF_POJO>>
         extends AuditedQueryBundle<CONFIG,
@@ -54,7 +55,7 @@ public class AuditedCriteriaQueryBundle<CONFIG extends Configuration & HasTokenC
         environment.jersey().register(new AbstractBinder() {
             @Override
             protected void configure() {
-                bind(new QueryableEntity.ClassProvider<>(queryableEntityClass)).to(QueryableEntity.ClassProvider.class);
+                bind(new QueryableEntity.ClassProvider<>(queryableEntityClass)).to(QueryableHibernateEntity.ClassProvider.class);
                 bind(hibernateBundle.getSessionFactory()).to(SessionFactory.class);
             }
         });

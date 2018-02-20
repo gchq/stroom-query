@@ -5,4 +5,5 @@ include 'stroom-query-sample'
 include 'stroom-query-audit'
 include 'stroom-query-hibernate'
 include 'stroom-query-testing'
+include 'stroom-query-jooq'
 
