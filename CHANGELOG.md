@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## [v2.0.0-alpha.30] - 2018-02-20
+
+### Changed
+* Tidied up the inheritable bundles for JOOQ and JPA
+
 ## [v2.0.0-alpha.29] - 2018-02-20
 
 ### Added
@@ -193,7 +198,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.29...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.30...HEAD
+[v2.0.0-alpha.28]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.29...v2.0.0-alpha.30
 [v2.0.0-alpha.28]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.28...v2.0.0-alpha.29
 [v2.0.0-alpha.28]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.27...v2.0.0-alpha.28
 [v2.0.0-alpha.27]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.26...v2.0.0-alpha.27
