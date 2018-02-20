@@ -1,7 +1,6 @@
 package stroom.query.testing.jooq.app;
 
 import org.jooq.Configuration;
-import stroom.query.audit.model.DocRefEntity;
 import stroom.query.jooq.DocRefServiceJooqImpl;
 
 import javax.inject.Inject;

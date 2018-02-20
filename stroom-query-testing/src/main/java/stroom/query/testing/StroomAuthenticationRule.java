@@ -61,6 +61,10 @@ public class StroomAuthenticationRule extends WireMockClassRule {
         this.docRefType = docRefType;
     }
 
+    public String getDocRefType() {
+        return docRefType;
+    }
+
     @Override
     protected void before() {
         super.before();

@@ -14,11 +14,11 @@ import stroom.query.api.v2.ResultRequest;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.audit.model.DocRefEntity;
+import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.audit.security.NoAuthValueFactoryProvider;
 import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.QueryResourceNoAuthIT;
 import stroom.query.testing.data.CreateTestDataClient;
-import stroom.query.testing.generic.app.TestQueryServiceImpl;
 import stroom.query.testing.jooq.app.JooqApp;
 import stroom.query.testing.jooq.app.JooqConfig;
 import stroom.query.testing.jooq.app.TestDocRefJooqEntity;
@@ -53,10 +53,32 @@ public class TestJooqQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDoc
 
     @Before
     public void beforeTest() {
-        this.testDataSeed = UUID.randomUUID().toString();
-        final Response response = testDataClient.createTestData(NoAuthValueFactoryProvider.ADMIN_USER, this.testDataSeed);
-        assertEquals(HttpStatus.OK_200, response.getStatus());
-        this.testDataDocRef = response.readEntity(DocRef.class);
+        testDataSeed = UUID.randomUUID().toString();
+
+        final String parentFolderUuid = UUID.randomUUID().toString();
+        testDataDocRef = new DocRef.Builder()
+                .uuid(UUID.randomUUID().toString())
+                .name(UUID.randomUUID().toString())
+                .type(TestDocRefJooqEntity.TYPE)
+                .build();
+
+        final Response createDocumentResponse = docRefClient.createDocument(
+                NoAuthValueFactoryProvider.ADMIN_USER,
+                testDataDocRef.getUuid(),
+                testDataDocRef.getName(),
+                parentFolderUuid);
+        assertEquals(HttpStatus.OK_200, createDocumentResponse.getStatus());
+        createDocumentResponse.close();
+
+        final Response createTestDataResponse = testDataClient.createTestData(
+                NoAuthValueFactoryProvider.ADMIN_USER,
+                testDataDocRef.getUuid(),
+                testDataSeed);
+        assertEquals(HttpStatus.NO_CONTENT_204, createTestDataResponse.getStatus());
+        createTestDataResponse.close();
+
+        // Clear the audit log for the create document
+        auditLogRule.check().containsOrdered(d -> d.contains(AuditedDocRefResourceImpl.CREATE_DOC_REF));
     }
 
     @Override

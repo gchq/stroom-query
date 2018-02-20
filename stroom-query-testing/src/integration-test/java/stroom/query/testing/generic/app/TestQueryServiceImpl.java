@@ -26,6 +26,12 @@ public class TestQueryServiceImpl implements QueryService {
     @Override
     public Optional<DataSource> getDataSource(final ServiceUser user,
                                               final DocRef docRef) throws Exception {
+        final Optional<TestDocRefEntity> docRefEntity = docRefService.get(user, docRef.getUuid());
+
+        if (!docRefEntity.isPresent()) {
+            return Optional.empty();
+        }
+
         return Optional.of(new DataSource.Builder()
                 .addFields(new DataSourceField.Builder()
                         .type(DataSourceField.DataSourceFieldType.FIELD)
@@ -42,6 +48,14 @@ public class TestQueryServiceImpl implements QueryService {
     @Override
     public Optional<SearchResponse> search(final ServiceUser user,
                                            final SearchRequest request) throws Exception {
+        final String dataSourceUuid = request.getQuery().getDataSource().getUuid();
+
+        final Optional<TestDocRefEntity> docRefEntity = docRefService.get(user, dataSourceUuid);
+
+        if (!docRefEntity.isPresent()) {
+            return Optional.empty();
+        }
+
         return Optional.of(new SearchResponse.TableResultBuilder()
                 // Yeah whatever...
                 .build());

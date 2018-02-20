@@ -16,7 +16,6 @@ import stroom.query.audit.model.DocRefEntity;
 import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.QueryResourceIT;
 import stroom.query.testing.StroomAuthenticationRule;
-import stroom.query.testing.generic.app.TestQueryServiceImpl;
 import stroom.query.testing.hibernate.app.HibernateApp;
 import stroom.query.testing.hibernate.app.HibernateConfig;
 import stroom.query.testing.hibernate.app.TestDocRefHibernateEntity;

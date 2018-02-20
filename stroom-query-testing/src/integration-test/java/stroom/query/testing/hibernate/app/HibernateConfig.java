@@ -8,11 +8,13 @@ import stroom.query.audit.authorisation.AuthorisationServiceConfig;
 import stroom.query.audit.authorisation.HasAuthorisationConfig;
 import stroom.query.audit.security.HasTokenConfig;
 import stroom.query.audit.security.TokenConfig;
+import stroom.query.hibernate.HasDataSourceFactory;
+import stroom.query.hibernate.HasFlywayFactory;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-public class HibernateConfig extends Configuration implements HasAuthorisationConfig, HasTokenConfig {
+public class HibernateConfig extends Configuration implements HasAuthorisationConfig, HasTokenConfig, HasFlywayFactory, HasDataSourceFactory {
     @Valid
     @NotNull
     @JsonProperty("database")

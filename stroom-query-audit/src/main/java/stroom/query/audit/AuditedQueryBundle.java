@@ -7,6 +7,7 @@ import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import stroom.query.audit.authorisation.AuthorisationService;
@@ -39,20 +40,20 @@ import stroom.query.audit.service.QueryService;
  * @param <DOC_REF_SERVICE> Implementation class for the DocRef Service
  */
 public class AuditedQueryBundle<CONFIG extends Configuration & HasTokenConfig & HasAuthorisationConfig,
+        DOC_REF_SERVICE extends DocRefService<DOC_REF_POJO>,
         DOC_REF_POJO extends DocRefEntity,
-        QUERY_SERVICE extends QueryService,
-        DOC_REF_SERVICE extends DocRefService<DOC_REF_POJO>> implements ConfiguredBundle<CONFIG> {
+        QUERY_SERVICE extends QueryService> implements ConfiguredBundle<CONFIG> {
 
+    protected final Class<DOC_REF_SERVICE> docRefServiceClass;
     protected final Class<DOC_REF_POJO> docRefEntityClass;
     private final Class<QUERY_SERVICE> queryServiceClass;
-    protected final Class<DOC_REF_SERVICE> docRefServiceClass;
 
-    public AuditedQueryBundle(final Class<DOC_REF_POJO> docRefEntityClass,
-                              final Class<QUERY_SERVICE> queryServiceClass,
-                              final Class<DOC_REF_SERVICE> docRefServiceClass) {
+    public AuditedQueryBundle(final Class<DOC_REF_SERVICE> docRefServiceClass,
+                              final Class<DOC_REF_POJO> docRefEntityClass,
+                              final Class<QUERY_SERVICE> queryServiceClass) {
+        this.docRefServiceClass = docRefServiceClass;
         this.docRefEntityClass = docRefEntityClass;
         this.queryServiceClass = queryServiceClass;
-        this.docRefServiceClass = docRefServiceClass;
     }
 
     @Override
@@ -72,6 +73,7 @@ public class AuditedQueryBundle<CONFIG extends Configuration & HasTokenConfig & 
                 bind(queryServiceClass).to(QueryService.class);
                 bind(new DocRefEntity.ClassProvider<>(docRefEntityClass)).to(DocRefEntity.ClassProvider.class);
                 bind(docRefServiceClass).to(DocRefService.class);
+                bind(docRefServiceClass).to(new TypeLiteral<DocRefService<DOC_REF_POJO>>(){});
                 if (configuration.getTokenConfig().getSkipAuth()) {
                     bind(NoAuthAuthorisationServiceImpl.class).to(AuthorisationService.class);
                 } else {

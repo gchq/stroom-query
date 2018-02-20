@@ -23,5 +23,6 @@ dependencies {
     //--------3rd party--------
     compile libs.dropwizard_core
     compile libs.dropwizard_hibernate
+    compile libs.dropwizard_flyway
     compile libs.slf4j_api
 }

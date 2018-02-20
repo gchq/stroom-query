@@ -7,16 +7,16 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import java.io.Closeable;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 public class CreateTestDataClient implements CreateTestDataResource, Closeable {
     private final Client httpClient;
 
-    private final Function<String, String> createTestDataUrl;
+    private final BiFunction<String, String, String> createTestDataUrl;
 
     public CreateTestDataClient(final String baseUrl) {
-        this.createTestDataUrl = seed -> String.format("%s/createTestData/%s",
-                baseUrl, seed);
+        this.createTestDataUrl = (docRefUuid, seed) -> String.format("%s/createTestData/%s/%s",
+                baseUrl, docRefUuid, seed);
         httpClient = ClientBuilder.newClient();
     }
 
@@ -28,9 +28,10 @@ public class CreateTestDataClient implements CreateTestDataResource, Closeable {
 
     @Override
     public Response createTestData(final ServiceUser user,
+                                   final String docRefUuid,
                                    final String seed) {
         return httpClient
-                .target(createTestDataUrl.apply(seed))
+                .target(createTestDataUrl.apply(docRefUuid, seed))
                 .request()
                 .header("Authorization", "Bearer " + user.getJwt())
                 .post(Entity.json(""));

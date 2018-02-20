@@ -15,13 +15,13 @@ public class App extends Application<Config> {
 
 
     private final AuditedQueryBundle<Config,
+            TestDocRefServiceImpl,
             TestDocRefEntity,
-            TestQueryServiceImpl,
-            TestDocRefServiceImpl> auditedQueryBundle =
+            TestQueryServiceImpl> auditedQueryBundle =
             new AuditedQueryBundle<>(
+                    TestDocRefServiceImpl.class,
                     TestDocRefEntity.class,
-                    TestQueryServiceImpl.class,
-                    TestDocRefServiceImpl.class);
+                    TestQueryServiceImpl.class);
 
     @Override
     public void run(final Config configuration,
@@ -34,10 +34,11 @@ public class App extends Application<Config> {
             }
         });
 
+        // Why is this required???
         environment.jersey().register(new AbstractBinder() {
             @Override
             protected void configure() {
-                bind(TestDocRefServiceImpl.class).to(new TypeLiteral<DocRefService<TestDocRefEntity>>() {});
+                bind(TestDocRefServiceImpl.class).to(new TypeLiteral<DocRefService<TestDocRefEntity>>(){});
             }
         });
     }

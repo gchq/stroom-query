@@ -16,7 +16,6 @@ import stroom.query.testing.QueryResourceNoAuthIT;
 import stroom.query.testing.generic.app.App;
 import stroom.query.testing.generic.app.Config;
 import stroom.query.testing.generic.app.TestDocRefEntity;
-import stroom.query.testing.generic.app.TestQueryServiceImpl;
 
 import java.util.Set;
 import java.util.UUID;

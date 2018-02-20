@@ -23,12 +23,11 @@ import stroom.query.api.v2.SearchResponse;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.audit.authorisation.DocumentPermission;
 import stroom.query.audit.model.DocRefEntity;
-import stroom.query.audit.security.NoAuthValueFactoryProvider;
+import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.QueryResourceIT;
 import stroom.query.testing.StroomAuthenticationRule;
 import stroom.query.testing.data.CreateTestDataClient;
-import stroom.query.testing.generic.app.TestQueryServiceImpl;
 import stroom.query.testing.jooq.app.CreateTestDataJooqImpl;
 import stroom.query.testing.jooq.app.JooqApp;
 import stroom.query.testing.jooq.app.JooqConfig;
@@ -47,7 +46,6 @@ import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static stroom.query.testing.jooq.app.CreateTestDataJooqImpl.RECORDS_TO_CREATE;
 
 public class TestJooqQueryResourceIT extends QueryResourceIT<TestDocRefJooqEntity, JooqConfig> {
 
@@ -76,11 +74,27 @@ public class TestJooqQueryResourceIT extends QueryResourceIT<TestDocRefJooqEntit
 
     @Before
     public void beforeTest() {
-        this.testDataSeed = UUID.randomUUID().toString();
-        final Response response = testDataClient.createTestData(authRule.adminUser(), this.testDataSeed);
-        assertEquals(HttpStatus.OK_200, response.getStatus());
-        this.testDataDocRef = response.readEntity(DocRef.class);
-        authRule.giveDocumentPermission(authRule.adminUser(), this.testDataDocRef.getUuid(), DocumentPermission.READ);
+        testDataSeed = UUID.randomUUID().toString();
+
+        final String parentFolderUuid = UUID.randomUUID().toString();
+        testDataDocRef = new DocRef.Builder()
+                .uuid(UUID.randomUUID().toString())
+                .name(UUID.randomUUID().toString())
+                .type(TestDocRefJooqEntity.TYPE)
+                .build();
+        authRule.giveFolderCreatePermission(authRule.adminUser(), parentFolderUuid);
+        authRule.giveDocumentPermission(authRule.adminUser(), testDataDocRef.getUuid(), DocumentPermission.READ);
+
+        final Response createDocumentResponse = docRefClient.createDocument(authRule.adminUser(), testDataDocRef.getUuid(), testDataDocRef.getName(), parentFolderUuid);
+        assertEquals(HttpStatus.OK_200, createDocumentResponse.getStatus());
+        createDocumentResponse.close();
+
+        final Response createTestDataResponse = testDataClient.createTestData(authRule.adminUser(), testDataDocRef.getUuid(), testDataSeed);
+        assertEquals(HttpStatus.NO_CONTENT_204, createTestDataResponse.getStatus());
+        createTestDataResponse.close();
+
+        // Clear the audit log for the create document
+        auditLogRule.check().containsOrdered(d -> d.contains(AuditedDocRefResourceImpl.CREATE_DOC_REF));
     }
 
     @Override
