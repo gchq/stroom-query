@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 ### Changed
+
+## [v2.0.0-alpha.31] - 2018-03-20
+
+### Changed
 * Fluent API for building authentication rules in the test Auth Wiremock service
 * jOOQ based Doc Ref service that still permits any Query Service implementation
 
@@ -200,9 +204,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.30...HEAD
-[v2.0.0-alpha.28]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.29...v2.0.0-alpha.30
-[v2.0.0-alpha.28]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.28...v2.0.0-alpha.29
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.31...HEAD
+[v2.0.0-alpha.31]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.30...v2.0.0-alpha.31
+[v2.0.0-alpha.30]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.29...v2.0.0-alpha.30
+[v2.0.0-alpha.29]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.28...v2.0.0-alpha.29
 [v2.0.0-alpha.28]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.27...v2.0.0-alpha.28
 [v2.0.0-alpha.27]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.26...v2.0.0-alpha.27
 [v2.0.0-alpha.26]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.24...v2.0.0-alpha.26
