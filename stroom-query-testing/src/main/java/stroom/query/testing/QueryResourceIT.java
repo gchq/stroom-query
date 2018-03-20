@@ -80,7 +80,10 @@ public abstract class QueryResourceIT<
         final String unauthorisedUsername = UUID.randomUUID().toString();
         final String unauthenticatedUsername = UUID.randomUUID().toString();
 
-        authRule.giveDocumentPermission(authRule.authenticatedUser(authorisedUsername), docRef.getUuid(), DocumentPermission.READ);
+        authRule.permitAuthenticatedUser(authorisedUsername)
+                .docRef(docRef.getUuid(), docRefType)
+                .permission(DocumentPermission.READ)
+                .done();
 
         final Response authorisedResponse = queryClient.getDataSource(authRule.authenticatedUser(authorisedUsername), docRef);
         assertEquals(HttpStatus.OK_200, authorisedResponse.getStatus());
@@ -111,7 +114,10 @@ public abstract class QueryResourceIT<
         final String unauthorisedUsername = UUID.randomUUID().toString();
         final String unauthenticatedUsername = UUID.randomUUID().toString();
 
-        authRule.giveDocumentPermission(authRule.authenticatedUser(authorisedUsername), docRef.getUuid(), DocumentPermission.READ);
+        authRule.permitAuthenticatedUser(authorisedUsername)
+                .docRef(docRef.getUuid(), docRefType)
+                .permission(DocumentPermission.READ)
+                .done();
 
         final SearchRequest searchRequest = getValidSearchRequest(docRef,
                 new ExpressionOperator.Builder(ExpressionOperator.Op.OR).build(),
@@ -152,7 +158,10 @@ public abstract class QueryResourceIT<
                 .build();
 
         // Ensure admin user can create the document in the folder
-        authRule.giveFolderCreatePermission(authRule.adminUser(), parentFolderUuid);
+        authRule.permitAdminUser()
+                .createInFolder(parentFolderUuid)
+                .docRefType(docRefType)
+                .done();
 
         // Create a doc ref to hang the search from
         final Response createResponse = docRefClient.createDocument(
@@ -164,8 +173,11 @@ public abstract class QueryResourceIT<
         createResponse.close();
 
         // Give admin all the roles required to manipulate the document and it's underlying data
-        authRule.giveDocumentPermission(authRule.adminUser(), docRef.getUuid(), DocumentPermission.READ);
-        authRule.giveDocumentPermission(authRule.adminUser(), docRef.getUuid(), DocumentPermission.UPDATE);
+        authRule.permitAdminUser()
+                .docRef(docRef)
+                .permission(DocumentPermission.READ)
+                .permission(DocumentPermission.UPDATE)
+                .done();
 
         final DOC_REF_ENTITY docRefEntityToUse = (docRefEntity != null) ? docRefEntity : getValidEntity(docRef);
         final Response updateIndexResponse =

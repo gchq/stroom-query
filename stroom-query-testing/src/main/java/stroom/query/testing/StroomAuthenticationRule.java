@@ -18,18 +18,10 @@ import stroom.query.audit.authorisation.DocumentPermission;
 import stroom.query.audit.security.ServiceUser;
 
 import javax.ws.rs.core.MediaType;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.containing;
-import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.ok;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.fail;
 
 /**
@@ -49,20 +41,11 @@ public class StroomAuthenticationRule extends WireMockClassRule {
     private RsaJsonWebKey invalidJwk;
     private final ConcurrentHashMap<String, ServiceUser> unauthenticatedUsers = new ConcurrentHashMap<>();
 
-    private final String docRefType;
-
     private static final com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper
             = new com.fasterxml.jackson.databind.ObjectMapper();
 
-    public StroomAuthenticationRule(final Options options,
-                                    final String docRefType) {
+    public StroomAuthenticationRule(final Options options) {
         super(options);
-
-        this.docRefType = docRefType;
-    }
-
-    public String getDocRefType() {
-        return docRefType;
     }
 
     @Override
@@ -147,6 +130,23 @@ public class StroomAuthenticationRule extends WireMockClassRule {
     }
 
     /**
+     * Function that starts building permissions for the admin user
+     * @return A permission builder tied to the admin user
+     */
+    public PermissionBuilder permitAdminUser() {
+        return new PermissionBuilder(serviceUser(ADMIN_USER, authenticatedUsers, jwk));
+    }
+
+    /**
+     * Utility function to generate an authenticated user and start building permissions.
+     * @param username The usernane of the required user.
+     * @return a permission builder tied to the named authenticated user
+     */
+    public PermissionBuilder permitAuthenticatedUser(final String username) {
+        return new PermissionBuilder(serviceUser(username, authenticatedUsers, jwk));
+    }
+
+    /**
      * Request a user with a given name, if the user does not exist, a new API key is created for that user.
      * Allows for the creation of multiple users, which may have different levels of access to doc refs for testing
      * that authorisation works.
@@ -184,27 +184,88 @@ public class StroomAuthenticationRule extends WireMockClassRule {
         });
     }
 
-    public void giveFolderCreatePermission(final ServiceUser serviceUser,
-                                           final String folderUuid) {
+    public class PermissionBuilder {
+        private final List<ServiceUser> serviceUsers = new ArrayList<>();
+        private final List<DocRef> docRefs = new ArrayList<>();
+        private final List<String> permissionNames = new ArrayList<>();
 
-        givePermission(serviceUser, new DocRef.Builder()
+        public class FolderBuilder {
+
+            public FolderBuilder(final String folderUuid) {
+                PermissionBuilder.this.docRef(new DocRef.Builder()
                         .type(DocumentPermission.FOLDER)
                         .uuid(folderUuid)
-                        .build(),
-                DocumentPermission.CREATE.getTypedPermission(this.docRefType));
+                        .build());
+            }
+
+            public FolderBuilder docRefType(final String docRefType) {
+                PermissionBuilder.this.permissionName(DocumentPermission.CREATE.getTypedPermission(docRefType));
+                return this;
+            }
+
+            public void done() {
+                PermissionBuilder.this.done();
+            }
+        }
+
+        private PermissionBuilder(final ServiceUser serviceUser) {
+            this.serviceUsers.add(serviceUser);
+        }
+
+        public FolderBuilder createInFolder(final String folderUuid) {
+            return new FolderBuilder(folderUuid);
+        }
+
+        public PermissionBuilder andAuthenticatedUser(final String username) {
+            return andUser(StroomAuthenticationRule.this.authenticatedUser(username));
+        }
+
+        public PermissionBuilder andUser(final ServiceUser serviceUser) {
+            this.serviceUsers.add(serviceUser);
+            return this;
+        }
+
+        public PermissionBuilder docRef(final DocRef docRef) {
+            // The name may not be supplied, so let's put with AND without name into the list
+            // The wiremock matcher will expect exact JSON, so we need both options to work
+            if (null != docRef.getName()) {
+                this.docRefs.add(new DocRef.Builder()
+                        .uuid(docRef.getUuid())
+                        .type(docRef.getType())
+                        .build());
+            }
+            this.docRefs.add(docRef);
+            return this;
+        }
+
+        public PermissionBuilder docRef(final String uuid, final String type) {
+            return this.docRef(new DocRef.Builder()
+                    .uuid(uuid)
+                    .type(type)
+                    .build());
+        }
+
+        public PermissionBuilder permission(final DocumentPermission permission) {
+            return this.permissionName(permission.getName());
+        }
+
+        public PermissionBuilder permissionName(final String permissionName) {
+            this.permissionNames.add(permissionName);
+            return this;
+        }
+
+        public void done() {
+            serviceUsers.forEach(serviceUser ->
+                docRefs.forEach(docRef ->
+                        permissionNames.forEach(permissionName ->
+                                StroomAuthenticationRule.this.givePermission(serviceUser, docRef, permissionName)
+                        )
+                )
+            );
+        }
     }
 
-    public void giveDocumentPermission(final ServiceUser serviceUser,
-                                       final String uuid,
-                                       final DocumentPermission permission) {
-        givePermission(serviceUser, new DocRef.Builder()
-                        .type(this.docRefType)
-                        .uuid(uuid)
-                        .build(),
-                permission.getName());
-    }
-
-    public void givePermission(final ServiceUser serviceUser,
+    private void givePermission(final ServiceUser serviceUser,
                                final DocRef docRef,
                                final String permissionName) {
         /**

@@ -24,10 +24,11 @@ public class TestHibernateDocRefResourceIT extends DocRefResourceIT<TestDocRefHi
 
     @ClassRule
     public static StroomAuthenticationRule authRule =
-            new StroomAuthenticationRule(WireMockConfiguration.options().port(10080), TestDocRefHibernateEntity.TYPE);
+            new StroomAuthenticationRule(WireMockConfiguration.options().port(10080));
 
     public TestHibernateDocRefResourceIT() {
-        super(TestDocRefHibernateEntity.class,
+        super(TestDocRefHibernateEntity.TYPE,
+                TestDocRefHibernateEntity.class,
                 appRule,
                 authRule);
     }

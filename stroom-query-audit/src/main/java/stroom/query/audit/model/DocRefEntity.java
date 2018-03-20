@@ -5,7 +5,7 @@ import stroom.query.api.v2.DocRef;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public class DocRefEntity {
+public class    DocRefEntity {
 
 
     /**

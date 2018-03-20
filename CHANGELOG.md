@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 ### Changed
+* Fluent API for building authentication rules in the test Auth Wiremock service
+* jOOQ based Doc Ref service that still permits any Query Service implementation
 
 ## [v2.0.0-alpha.30] - 2018-02-20
 

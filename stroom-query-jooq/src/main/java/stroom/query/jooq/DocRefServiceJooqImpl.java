@@ -1,12 +1,6 @@
 package stroom.query.jooq;
 
-import org.jooq.Configuration;
-import org.jooq.DSLContext;
-import org.jooq.Field;
-import org.jooq.Record;
-import org.jooq.Result;
-import org.jooq.Table;
-import org.jooq.UpdateSetMoreStep;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.types.ULong;
 import stroom.query.audit.ExportDTO;
@@ -18,11 +12,9 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.inline;
-import static org.jooq.impl.DSL.table;
 
 public class DocRefServiceJooqImpl<DOC_REF_ENTITY extends DocRefJooqEntity>
         implements DocRefService<DOC_REF_ENTITY> {

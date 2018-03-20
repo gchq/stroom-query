@@ -24,10 +24,11 @@ public class TestJooqDocRefResourceIT extends DocRefResourceIT<TestDocRefJooqEnt
 
     @ClassRule
     public static StroomAuthenticationRule authRule =
-            new StroomAuthenticationRule(WireMockConfiguration.options().port(10080), TestDocRefJooqEntity.TYPE);
+            new StroomAuthenticationRule(WireMockConfiguration.options().port(10080));
 
     public TestJooqDocRefResourceIT() {
-        super(TestDocRefJooqEntity.class,
+        super(TestDocRefJooqEntity.TYPE,
+                TestDocRefJooqEntity.class,
                 appRule,
                 authRule);
     }

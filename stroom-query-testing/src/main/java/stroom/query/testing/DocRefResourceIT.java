@@ -27,14 +27,17 @@ public abstract class DocRefResourceIT<
         CONFIG_CLASS extends Configuration> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DocRefResourceIT.class);
-    
+
+    private final String docRefType;
     private final Class<DOC_REF_ENTITY> docRefEntityClass;
     protected DocRefResourceHttpClient<DOC_REF_ENTITY> docRefClient;
     private final StroomAuthenticationRule authRule;
 
-    protected DocRefResourceIT(final Class<DOC_REF_ENTITY> docRefEntityClass,
+    protected DocRefResourceIT(final String docRefType,
+                               final Class<DOC_REF_ENTITY> docRefEntityClass,
                                final DropwizardAppWithClientsRule<CONFIG_CLASS> appRule,
                                final StroomAuthenticationRule authRule) {
+        this.docRefType = docRefType;
         this.docRefEntityClass = docRefEntityClass;
         this.authRule = authRule;
         this.docRefClient = appRule.getClient(DocRefResourceHttpClient::new);
@@ -51,8 +54,14 @@ public abstract class DocRefResourceIT<
         final String unauthorisedUsername = UUID.randomUUID().toString();
         final String unauthenticatedUsername = UUID.randomUUID().toString();
 
-        authRule.giveFolderCreatePermission(authRule.adminUser(), parentFolderUuid);
-        authRule.giveDocumentPermission(authRule.adminUser(), uuid, DocumentPermission.READ);
+        authRule.permitAdminUser()
+                .createInFolder(parentFolderUuid)
+                .docRefType(docRefType)
+                .done();
+        authRule.permitAdminUser()
+                .docRef(uuid, docRefType)
+                .permission(DocumentPermission.READ)
+                .done();
 
         final Response unauthorisedCreateResponse = docRefClient.createDocument(
                 authRule.authenticatedUser(unauthorisedUsername),
@@ -102,9 +111,15 @@ public abstract class DocRefResourceIT<
         final String unauthorisedUsername = UUID.randomUUID().toString();
         final String unauthenticatedUsername = UUID.randomUUID().toString();
 
-        authRule.giveFolderCreatePermission(authRule.adminUser(), parentFolderUuid);
-        authRule.giveDocumentPermission(authRule.authenticatedUser(authorisedUsername), uuid, DocumentPermission.READ);
-        authRule.giveDocumentPermission(authRule.authenticatedUser(authorisedUsername), uuid, DocumentPermission.UPDATE);
+        authRule.permitAdminUser()
+                .createInFolder(parentFolderUuid)
+                .docRefType(docRefType)
+                .done();
+        authRule.permitAuthenticatedUser(authorisedUsername)
+                .docRef(uuid, docRefType)
+                .permission(DocumentPermission.READ)
+                .permission(DocumentPermission.UPDATE)
+                .done();
 
         // Create a document
         final Response createResponse = docRefClient.createDocument(authRule.adminUser(), uuid, name, parentFolderUuid);
@@ -165,9 +180,15 @@ public abstract class DocRefResourceIT<
         final String unauthorisedUsername = UUID.randomUUID().toString();
         final String unauthenticatedUsername = UUID.randomUUID().toString();
 
-        authRule.giveFolderCreatePermission(authRule.adminUser(), parentFolderUuid);
-        authRule.giveDocumentPermission(authRule.authenticatedUser(authorisedUsername), uuid, DocumentPermission.READ);
-        authRule.giveDocumentPermission(authRule.authenticatedUser(authorisedUsername), uuid, DocumentPermission.UPDATE);
+        authRule.permitAdminUser()
+                .createInFolder(parentFolderUuid)
+                .docRefType(docRefType)
+                .done();
+        authRule.permitAuthenticatedUser(authorisedUsername)
+                .docRef(uuid, docRefType)
+                .permission(DocumentPermission.READ)
+                .permission(DocumentPermission.UPDATE)
+                .done();
 
         // Create a document
         final Response createResponse = docRefClient.createDocument(authRule.adminUser(), uuid, name, parentFolderUuid);
@@ -221,9 +242,16 @@ public abstract class DocRefResourceIT<
         final String uuid = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
 
-        authRule.giveFolderCreatePermission(authRule.adminUser(), parentFolderUuid);
-        authRule.giveDocumentPermission(authRule.adminUser(), uuid, DocumentPermission.READ);
-        authRule.giveDocumentPermission(authRule.authenticatedUser(authorisedUsername), uuid, DocumentPermission.READ);
+        authRule.permitAdminUser()
+                .createInFolder(parentFolderUuid)
+                .docRefType(docRefType)
+                .done();
+
+        authRule.permitAdminUser()
+                .andAuthenticatedUser(authorisedUsername)
+                .docRef(uuid, docRefType)
+                .permission(DocumentPermission.READ)
+                .done();
 
         final Response createResponse = docRefClient.createDocument(
                 authRule.adminUser(),
@@ -275,8 +303,14 @@ public abstract class DocRefResourceIT<
         final String unauthenticatedUsername = UUID.randomUUID().toString();
         // No specific permissions required for rename (is this right?)
 
-        authRule.giveFolderCreatePermission(authRule.adminUser(), parentFolderUuid);
-        authRule.giveDocumentPermission(authRule.adminUser(), uuid, DocumentPermission.READ);
+        authRule.permitAdminUser()
+                .createInFolder(parentFolderUuid)
+                .docRefType(docRefType)
+                .done();
+        authRule.permitAdminUser()
+                .docRef(uuid, docRefType)
+                .permission(DocumentPermission.READ)
+                .done();
 
         final Response createResponse = docRefClient.createDocument(
                 authRule.adminUser(),
@@ -340,12 +374,21 @@ public abstract class DocRefResourceIT<
         final String unauthorisedUsername = UUID.randomUUID().toString();
         final String unauthenticatedUsername = UUID.randomUUID().toString();
 
-        authRule.giveFolderCreatePermission(authRule.adminUser(), parentFolderUuid);
-        authRule.giveFolderCreatePermission(authRule.authenticatedUser(authorisedUsername), parentFolderUuid);
-        authRule.giveDocumentPermission(authRule.authenticatedUser(authorisedUsername), uuid1, DocumentPermission.READ);
-        authRule.giveDocumentPermission(authRule.authenticatedUser(authorisedUsername), uuid2, DocumentPermission.READ);
-        authRule.giveDocumentPermission(authRule.authenticatedUser(authorisedUsername), uuid3, DocumentPermission.READ);
-        authRule.giveDocumentPermission(authRule.authenticatedUser(authorisedUsername), uuid4, DocumentPermission.READ);
+        authRule.permitAdminUser()
+                .createInFolder(parentFolderUuid)
+                .docRefType(docRefType)
+                .done();
+        authRule.permitAuthenticatedUser(authorisedUsername)
+                .createInFolder(parentFolderUuid)
+                .docRefType(docRefType)
+                .done();
+        authRule.permitAuthenticatedUser(authorisedUsername)
+                .permission(DocumentPermission.READ)
+                .docRef(uuid1, docRefType)
+                .docRef(uuid2, docRefType)
+                .docRef(uuid3, docRefType)
+                .docRef(uuid4, docRefType)
+                .done();
 
         final Response createResponse = docRefClient.createDocument(authRule.adminUser(), uuid1, name, parentFolderUuid);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
@@ -415,10 +458,19 @@ public abstract class DocRefResourceIT<
         final String unauthorisedUsername = UUID.randomUUID().toString();
         final String unauthenticatedUsername = UUID.randomUUID().toString();
 
-        authRule.giveFolderCreatePermission(authRule.adminUser(), parentFolderUuid);
-        authRule.giveDocumentPermission(authRule.authenticatedUser(authorisedUsername), uuid, DocumentPermission.READ);
-        authRule.giveDocumentPermission(authRule.authenticatedUser(unauthorisedUsername), uuid, DocumentPermission.READ);
-        authRule.giveDocumentPermission(authRule.authenticatedUser(authorisedUsername), uuid, DocumentPermission.DELETE);
+        authRule.permitAdminUser()
+                .createInFolder(parentFolderUuid)
+                .docRefType(docRefType)
+                .done();
+        authRule.permitAuthenticatedUser(authorisedUsername)
+                .andAuthenticatedUser(unauthorisedUsername)
+                .docRef(uuid, docRefType)
+                .permission(DocumentPermission.READ)
+                .done();
+        authRule.permitAuthenticatedUser(authorisedUsername)
+                .docRef(uuid, docRefType)
+                .permission(DocumentPermission.DELETE)
+                .done();
 
         final Response createResponse = docRefClient.createDocument(authRule.adminUser(), uuid, name, parentFolderUuid);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
@@ -472,9 +524,18 @@ public abstract class DocRefResourceIT<
         final String unauthorisedUsername = UUID.randomUUID().toString();
         final String unauthenticatedUsername = UUID.randomUUID().toString();
 
-        authRule.giveFolderCreatePermission(authRule.adminUser(), parentFolderUuid);
-        authRule.giveDocumentPermission(authRule.adminUser(), uuid, DocumentPermission.UPDATE);
-        authRule.giveDocumentPermission(authRule.authenticatedUser(authorisedUsername), uuid, DocumentPermission.EXPORT);
+        authRule.permitAdminUser()
+                .createInFolder(parentFolderUuid)
+                .docRefType(docRefType)
+                .done();
+        authRule.permitAdminUser()
+                .docRef(uuid, docRefType)
+                .permission(DocumentPermission.UPDATE)
+                .done();
+        authRule.permitAuthenticatedUser(authorisedUsername)
+                .docRef(uuid, docRefType)
+                .permission(DocumentPermission.EXPORT)
+                .done();
 
         // Create a document
         final Response createResponse = docRefClient.createDocument(authRule.adminUser(), uuid, name, parentFolderUuid);
@@ -524,9 +585,15 @@ public abstract class DocRefResourceIT<
         final String name = UUID.randomUUID().toString();
         final String authorisedUsername = UUID.randomUUID().toString();
 
-        authRule.giveFolderCreatePermission(authRule.adminUser(), parentFolderUuid);
-        authRule.giveDocumentPermission(authRule.authenticatedUser(authorisedUsername), uuid, DocumentPermission.IMPORT);
-        authRule.giveDocumentPermission(authRule.authenticatedUser(authorisedUsername), uuid, DocumentPermission.READ);
+        authRule.permitAdminUser()
+                .createInFolder(parentFolderUuid)
+                .docRefType(docRefType)
+                .done();
+        authRule.permitAuthenticatedUser(authorisedUsername)
+                .docRef(uuid, docRefType)
+                .permission(DocumentPermission.IMPORT)
+                .permission(DocumentPermission.READ)
+                .done();
 
         // Create an entity to import
         final DOC_REF_ENTITY docRefEntity = createPopulatedEntity(uuid, name);
