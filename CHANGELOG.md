@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## [v2.0.0-alpha.32] - 2018-03-21
+
 * Fix to ensure completion listeners are always notified on completion
 
 ## [v2.0.0-alpha.31] - 2018-03-20
@@ -206,7 +208,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.31...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.32...HEAD
+[v2.0.0-alpha.32]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.31...v2.0.0-alpha.32
 [v2.0.0-alpha.31]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.30...v2.0.0-alpha.31
 [v2.0.0-alpha.30]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.29...v2.0.0-alpha.30
 [v2.0.0-alpha.29]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.28...v2.0.0-alpha.29
