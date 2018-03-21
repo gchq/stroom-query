@@ -114,26 +114,27 @@ public class SearchResultHandler implements ResultHandler {
 
     @Override
     public void setComplete(final boolean complete) {
-        final boolean previousValue = this.complete.get();
         this.complete.set(complete);
 
-        //notify the listeners
-        if (complete && (complete != previousValue)) {
-            for (CompletionListener listener; (listener = completionListeners.poll()) != null;){
-                //when notified they will check isComplete
-                LOGGER.debug("Notifying {} {} that we are complete", listener.getClass().getName(), listener);
-                listener.onCompletion();
-            }
+        // Notify the listeners
+        if (complete) {
+            notifyCompletionListeners();
         }
     }
 
     @Override
     public void registerCompletionListener(final CompletionListener completionListener) {
+        completionListeners.add(Objects.requireNonNull(completionListener));
         if (complete.get()) {
-            //immediate notification
-            completionListener.onCompletion();
-        } else {
-            completionListeners.add(Objects.requireNonNull(completionListener));
+            notifyCompletionListeners();
+        }
+    }
+
+    private void notifyCompletionListeners() {
+        for (CompletionListener listener; (listener = completionListeners.poll()) != null;){
+            // When notified they will check isComplete
+            LOGGER.debug("Notifying {} {} that we are complete", listener.getClass().getName(), listener);
+            listener.onCompletion();
         }
     }
 
