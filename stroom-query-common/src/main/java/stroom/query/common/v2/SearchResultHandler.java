@@ -16,52 +16,36 @@
 
 package stroom.query.common.v2;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import stroom.mapreduce.v2.UnsafePairQueue;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.common.v2.CoprocessorSettingsMap.CoprocessorKey;
 import stroom.util.shared.HasTerminate;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 public class SearchResultHandler implements ResultHandler {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(SearchResultHandler.class);
-
     private final CoprocessorSettingsMap coprocessorSettingsMap;
-    private final Map<CoprocessorKey, TablePayloadHandler> handlerMap = new HashMap<>();
-    private final AtomicBoolean complete = new AtomicBoolean();
-    private final Queue<CompletionListener> completionListeners = new ConcurrentLinkedQueue<>();
+    private final CompletionState completionState;
+    private final Map<CoprocessorKey, TablePayloadHandler> handlerMap;
 
-    public SearchResultHandler(final CoprocessorSettingsMap coprocessorSettingsMap,
+    public SearchResultHandler(final CompletionState completionState,
+                               final CoprocessorSettingsMap coprocessorSettingsMap,
                                final List<Integer> defaultMaxResultsSizes,
                                final StoreSize storeSize) {
 
+        this.completionState = completionState;
         this.coprocessorSettingsMap = coprocessorSettingsMap;
-
-        for (final Entry<CoprocessorKey, CoprocessorSettings> entry : coprocessorSettingsMap.getMap().entrySet()) {
-            final CoprocessorKey coprocessorKey = entry.getKey();
-            final CoprocessorSettings coprocessorSettings = entry.getValue();
-            if (coprocessorSettings instanceof TableCoprocessorSettings) {
-                final TableCoprocessorSettings tableCoprocessorSettings = (TableCoprocessorSettings) coprocessorSettings;
-                final TableSettings tableSettings = tableCoprocessorSettings.getTableSettings();
-                final MaxResults maxResults = new MaxResults(tableSettings.getMaxResults(), defaultMaxResultsSizes);
-
-                handlerMap.put(coprocessorKey, new TablePayloadHandler(
-                        tableSettings.getFields(),
-                        tableSettings.showDetail(),
-                        maxResults,
-                        storeSize));
-            }
-        }
+        this.handlerMap = coprocessorSettingsMap.getMap().entrySet().stream()
+                .filter(entry -> entry.getValue() instanceof TableCoprocessorSettings)
+                .collect(Collectors.toMap(Entry::getKey, entry -> {
+                    final TableCoprocessorSettings tableCoprocessorSettings = (TableCoprocessorSettings) entry.getValue();
+                    final TableSettings tableSettings = tableCoprocessorSettings.getTableSettings();
+                    final MaxResults maxResults = new MaxResults(tableSettings.getMaxResults(), defaultMaxResultsSizes);
+                    return new TablePayloadHandler(tableSettings.getFields(), tableSettings.showDetail(), maxResults, storeSize);
+                }));
     }
 
     @Override
@@ -80,62 +64,27 @@ public class SearchResultHandler implements ResultHandler {
                 }
             }
         }
+
+        // See if we should terminate.
+        boolean terminate = true;
+        for (final PayloadHandler payloadHandler : handlerMap.values()) {
+            if (!payloadHandler.shouldTerminateSearch()) {
+                terminate = false;
+                break;
+            }
+        }
+        if (terminate) {
+            completionState.complete();
+        }
     }
 
-    public TablePayloadHandler getPayloadHandler(final String componentId) {
+    private TablePayloadHandler getPayloadHandler(final String componentId) {
         final CoprocessorKey coprocessorKey = coprocessorSettingsMap.getCoprocessorKey(componentId);
         if (coprocessorKey == null) {
             return null;
         }
 
         return handlerMap.get(coprocessorKey);
-    }
-
-    @Override
-    public boolean shouldTerminateSearch() {
-        boolean terminate = false;
-        if (handlerMap.size() == coprocessorSettingsMap.getMap().size()) {
-            terminate = true;
-            for (final PayloadHandler payloadHandler : handlerMap.values()) {
-                if (!payloadHandler.shouldTerminateSearch()) {
-                    terminate = false;
-                    break;
-                }
-            }
-        }
-
-        return terminate;
-    }
-
-    @Override
-    public boolean isComplete() {
-        return complete.get();
-    }
-
-    @Override
-    public void setComplete(final boolean complete) {
-        this.complete.set(complete);
-
-        // Notify the listeners
-        if (complete) {
-            notifyCompletionListeners();
-        }
-    }
-
-    @Override
-    public void registerCompletionListener(final CompletionListener completionListener) {
-        completionListeners.add(Objects.requireNonNull(completionListener));
-        if (complete.get()) {
-            notifyCompletionListeners();
-        }
-    }
-
-    private void notifyCompletionListeners() {
-        for (CompletionListener listener; (listener = completionListeners.poll()) != null;){
-            // When notified they will check isComplete
-            LOGGER.debug("Notifying {} {} that we are complete", listener.getClass().getName(), listener);
-            listener.onCompletion();
-        }
     }
 
     @Override

@@ -22,16 +22,7 @@ import stroom.util.shared.HasTerminate;
 import java.util.Map;
 
 public interface ResultHandler {
-
     void handle(Map<CoprocessorKey, Payload> payloadMap, HasTerminate hasTerminate);
-
-    boolean shouldTerminateSearch();
-
-    boolean isComplete();
-
-    void setComplete(boolean complete);
-
-    void registerCompletionListener(final CompletionListener completionListener);
 
     Data getResultStore(String componentId);
 }

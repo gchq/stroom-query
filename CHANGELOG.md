@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## [v2.0.0-alpha.33] - 2018-03-21
+
+* Simplification of search completion state.
+
 ## [v2.0.0-alpha.32] - 2018-03-21
 
 * Fix to ensure completion listeners are always notified on completion
@@ -208,7 +212,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.32...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.33...HEAD
+[v2.0.0-alpha.33]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.32...v2.0.0-alpha.33
 [v2.0.0-alpha.32]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.31...v2.0.0-alpha.32
 [v2.0.0-alpha.31]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.30...v2.0.0-alpha.31
 [v2.0.0-alpha.30]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.29...v2.0.0-alpha.30
