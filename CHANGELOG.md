@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+* Fix to ensure completion listeners are always notified on completion
+
 ## [v2.0.0-alpha.31] - 2018-03-20
 
 ### Changed
