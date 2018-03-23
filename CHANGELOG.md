@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * gh-13 - Using Guice for common auditable query resource implementations
 
+* Simplification of search completion state.
+
 ## [v2.0.0-alpha.33] - 2018-03-21
 
 * Simplification of search completion state.

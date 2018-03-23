@@ -36,7 +36,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 //TODO copy SearchResultCreatorManager from stroom into here for a common solution to
@@ -59,7 +58,6 @@ public class SearchResponseCreator {
      * @param store The underlying store to use for creating the search responses.
      */
     public SearchResponseCreator(final Store store) {
-
         this.store = Objects.requireNonNull(store);
         this.defaultTimeout = FALL_BACK_DEFAULT_TIMEOUT;
     }
@@ -70,23 +68,30 @@ public class SearchResponseCreator {
      *                       will be used when the search request hasn't specified a timeout period.
      */
     public SearchResponseCreator(final Store store, final Duration defaultTimeout) {
-
         this.store = Objects.requireNonNull(store);
         this.defaultTimeout = Objects.requireNonNull(defaultTimeout);
     }
 
     /**
+     * Stop searching and destroy any stored data.
+     */
+    public void destroy() {
+        store.destroy();
+    }
+
+    /**
      * Build a {@link SearchResponse} from the passed {@link SearchRequest}.
+     *
      * @param searchRequest The {@link SearchRequest} containing the query terms and the result requests
      * @return A {@link SearchResponse} object that may be one of:
      * <ul>
-     *     <li>A 'complete' {@link SearchResponse} containing all the data requested</li>
-     *     <li>An incomplete {@link SearchResponse} containing none, some or all of the data requested, i.e the
-     *     currently know results at the point the request is made.</li>
-     *     <li>An empty response with an error message indicating the request timed out waiting for a 'complete'
-     *     result set. This only applies to non-incremental queries.</li>
-     *     <li>An empty response with a different error message. This will happen when some unexpected error has
-     *     occurred while assembling the {@link SearchResponse}</li>
+     * <li>A 'complete' {@link SearchResponse} containing all the data requested</li>
+     * <li>An incomplete {@link SearchResponse} containing none, some or all of the data requested, i.e the
+     * currently know results at the point the request is made.</li>
+     * <li>An empty response with an error message indicating the request timed out waiting for a 'complete'
+     * result set. This only applies to non-incremental queries.</li>
+     * <li>An empty response with a different error message. This will happen when some unexpected error has
+     * occurred while assembling the {@link SearchResponse}</li>
      * </ul>
      */
     public SearchResponse create(final SearchRequest searchRequest) {
@@ -99,17 +104,12 @@ public class SearchResponseCreator {
 
                 LOGGER.debug("effectiveTimeout: {}", effectiveTimeout);
 
-                final CountDownLatch storeCompletionLatch = new CountDownLatch(1);
-
-                //When the store completes/terminates the latch will be counted down to release the block
-                store.registerCompletionListener(storeCompletionLatch::countDown);
-
-                //block and wait for the store to notify us of its completion/termination, or
-                //if the wait is too long we will timeout
-                didSearchComplete = storeCompletionLatch.await(effectiveTimeout.toMillis(), TimeUnit.MILLISECONDS);
+                // Block and wait for the store to notify us of its completion/termination, or if the wait is too long
+                // we will timeout
+                didSearchComplete = store.awaitCompletion(effectiveTimeout.toMillis(), TimeUnit.MILLISECONDS);
 
                 if (!didSearchComplete && !searchRequest.incremental()) {
-                    //search didn't complete non-incremental search in time so return a timed out error response
+                    // Search didn't complete non-incremental search in time so return a timed out error response
                     return createErrorResponse(
                             store,
                             Collections.singletonList(
@@ -124,15 +124,18 @@ public class SearchResponseCreator {
             }
         }
 
-        //we will only get here if the search is complete or it is an incremental search in which case we don't care
-        //about completion state. Therefore assemble whatever results we currently have
+        // We will only get here if the search is complete or it is an incremental search in which case we don't care
+        // about completion state. Therefore assemble whatever results we currently have
         try {
-            List<Result> results = getResults(searchRequest);
+            // Get completion state before we get results.
+            final boolean complete = store.isComplete();
 
+            List<Result> results = getResults(searchRequest);
             if (results.size() == 0) {
                 results = null;
             }
-            return new SearchResponse(store.getHighlights(), results, store.getErrors(), store.isComplete());
+
+            return new SearchResponse(store.getHighlights(), results, store.getErrors(), complete);
 
         } catch (Exception e) {
             LOGGER.error("Error getting search results for query {}", searchRequest.getKey().toString(), e);
@@ -180,10 +183,10 @@ public class SearchResponseCreator {
             return requestedTimeout;
         } else {
             if (searchRequest.incremental()) {
-                //no timeout supplied so they want a response immediately
+                // No timeout supplied so they want a response immediately
                 return Duration.ZERO;
             } else {
-                //this is synchronous so just use the service's default
+                // This is synchronous so just use the service's default
                 return defaultTimeout;
             }
         }
@@ -290,9 +293,5 @@ public class SearchResponseCreator {
         }
 
         return resultCreator;
-    }
-
-    public void destroy() {
-        store.destroy();
     }
 }

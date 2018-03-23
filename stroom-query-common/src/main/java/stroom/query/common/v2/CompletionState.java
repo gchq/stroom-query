@@ -16,46 +16,28 @@
 
 package stroom.query.common.v2;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Objects;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CompletionState {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CompletionState.class);
-
     private final AtomicBoolean complete = new AtomicBoolean();
     private final CountDownLatch countDownLatch = new CountDownLatch(1);
-    private final Queue<CompletionListener> completionListeners = new ConcurrentLinkedQueue<>();
 
-    void complete() {
+    public void complete() {
         complete.set(true);
         countDownLatch.countDown();
+    }
 
-        // Notify the listeners
-        notifyCompletionListeners();
+    public boolean isComplete() {
+        return complete.get();
     }
 
     public void awaitCompletion() throws InterruptedException {
         countDownLatch.await();
     }
 
-    public void registerCompletionListener(final CompletionListener completionListener) {
-        completionListeners.add(Objects.requireNonNull(completionListener));
-        if (complete.get()) {
-            notifyCompletionListeners();
-        }
-    }
-
-    private void notifyCompletionListeners() {
-        for (CompletionListener listener; (listener = completionListeners.poll()) != null; ) {
-            // When notified they will check isComplete
-            LOGGER.debug("Notifying {} {} that we are complete", listener.getClass().getName(), listener);
-            listener.onCompletion();
-        }
+    public boolean awaitCompletion(final long timeout, final TimeUnit unit) throws InterruptedException {
+        return countDownLatch.await(timeout, unit);
     }
 }

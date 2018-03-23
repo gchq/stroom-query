@@ -17,6 +17,7 @@
 package stroom.query.common.v2;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public interface Store {
     /**
@@ -31,6 +32,23 @@ public interface Store {
      * @return True if the search has completed.
      */
     boolean isComplete();
+
+    /**
+     * Wait indefinitely for search to complete unless interrupted.
+     *
+     * @throws InterruptedException Thrown if the waiting thread is interrupted.
+     */
+    void awaitCompletion() throws InterruptedException;
+
+    /**
+     * Wait for search to complete unless interrupted or the wait timeout is exceeded.
+     *
+     * @param timeout The timeout.
+     * @param unit    The unit of the timeout.
+     * @return True if search completed.
+     * @throws InterruptedException Thrown if the waiting thread is interrupted.
+     */
+    boolean awaitCompletion(final long timeout, final TimeUnit unit) throws InterruptedException;
 
     /**
      * Get the current data that is available for the specified component.
@@ -61,21 +79,16 @@ public interface Store {
      * Get a list of the default maximum result row counts for each grouping level,
      * e.g. [100,10,1] means at most 100 rows for group level 0, 10 for each group level
      * 1 and 1 for each group level 2
+     *
      * @return A list of {@link Integer} values, where the value represents the default
      * maximum number of results at a grouping depth equal to the position in the list
      */
-   List<Integer> getDefaultMaxResultsSizes();
+    List<Integer> getDefaultMaxResultsSizes();
 
     /**
      * Get the store size configuration for this store
+     *
      * @return A non-null {@link StoreSize} object
      */
     StoreSize getStoreSize();
-
-    /**
-     * Register a listener to be informed when the store is deemed complete
-     * @param completionListener The listener to inform
-     */
-    void registerCompletionListener(final CompletionListener completionListener);
-
 }

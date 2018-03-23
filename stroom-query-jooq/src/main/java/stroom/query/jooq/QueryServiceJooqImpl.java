@@ -280,7 +280,7 @@ public class QueryServiceJooqImpl<
 
             //TODO should probably drive this off a new fieldIndexMap.getEntries() method or similar
             //then we only loop round fields we car about
-            for (int x=0; x<this.fields.size(); x++) {
+            for (int x = 0; x < this.fields.size(); x++) {
                 final Object value = criteriaDataPoint.get(x);
                 final String fieldName = this.fields.get(x).getName();
 
@@ -316,7 +316,6 @@ public class QueryServiceJooqImpl<
         final List<Integer> storeSize = Collections.singletonList(tuples.size());
         CriteriaStore store = new CriteriaStore(storeSize, new StoreSize(storeSize),
                 coprocessorSettingsMap,
-                coprocessorMap,
                 payloadMap);
 
         // defaultMaxResultsSizes could be obtained from the StatisticsStore but at this point that object is ephemeral.
