@@ -5,6 +5,7 @@ import com.bendb.dropwizard.jooq.JooqFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import com.google.inject.util.Modules;
 import io.dropwizard.Configuration;
 import io.dropwizard.ConfiguredBundle;
 import io.dropwizard.db.DataSourceFactory;
@@ -24,7 +25,7 @@ import stroom.query.audit.security.HasTokenConfig;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryService;
 
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * This Dropwizard bundle can be used to build the entire Query Resource implementation stack when the data source is
@@ -61,21 +62,11 @@ public class AuditedJooqDocRefBundle<CONFIG extends Configuration & HasTokenConf
             DOC_REF_POJO,
             QUERY_SERVICE> auditedQueryBundle;
 
-    public AuditedJooqDocRefBundle(final Class<DOC_REF_SERVICE> docRefServiceClass,
+    public AuditedJooqDocRefBundle(final Function<CONFIG, Injector> injectorSupplier,
+                                   final Class<DOC_REF_SERVICE> docRefServiceClass,
                                    final Class<DOC_REF_POJO> docRefEntityClass,
                                    final Class<QUERY_SERVICE> queryServiceClass) {
-        auditedQueryBundle = new AuditedQueryBundle<CONFIG,
-                DOC_REF_SERVICE,
-                DOC_REF_POJO,
-                QUERY_SERVICE>(docRefServiceClass, docRefEntityClass, queryServiceClass) {
-            @Override
-            protected void iterateGuiceModules(final CONFIG configuration,
-                                               final Consumer<Module> moduleConsumer) {
-                super.iterateGuiceModules(configuration, moduleConsumer);
-
-                AuditedJooqDocRefBundle.this.iterateGuiceModules(configuration, moduleConsumer);
-            }
-        };
+        auditedQueryBundle = new AuditedQueryBundle<>(injectorSupplier, docRefServiceClass, docRefEntityClass, queryServiceClass);
 
         this.jooqBundle = new JooqBundle<CONFIG>() {
             public DataSourceFactory getDataSourceFactory(CONFIG configuration) {
@@ -88,18 +79,13 @@ public class AuditedJooqDocRefBundle<CONFIG extends Configuration & HasTokenConf
         };
     }
 
-    protected void iterateGuiceModules(final CONFIG configuration,
-                                       final Consumer<Module> moduleConsumer) {
-        moduleConsumer.accept(new AbstractModule() {
+    public Module getGuiceModule(CONFIG configuration) {
+        return Modules.combine(new AbstractModule() {
             @Override
             protected void configure() {
                 bind(org.jooq.Configuration.class).toInstance(jooqBundle.getConfiguration());
             }
-        });
-    }
-
-    public Injector getInjector() {
-        return auditedQueryBundle.getInjector();
+        }, auditedQueryBundle.getGuiceModule(configuration));
     }
 
     @Override

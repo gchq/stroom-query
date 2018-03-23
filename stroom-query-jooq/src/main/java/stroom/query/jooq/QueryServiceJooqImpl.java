@@ -1,30 +1,56 @@
 package stroom.query.jooq;
 
-import org.jooq.*;
+import org.jooq.Condition;
+import org.jooq.Configuration;
+import org.jooq.DSLContext;
+import org.jooq.Record;
 import org.jooq.Result;
+import org.jooq.Table;
 import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.dashboard.expression.v1.FieldIndexMap;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
-import stroom.query.api.v2.*;
+import stroom.query.api.v2.DocRef;
+import stroom.query.api.v2.ExpressionItem;
+import stroom.query.api.v2.ExpressionOperator;
+import stroom.query.api.v2.ExpressionTerm;
 import stroom.query.api.v2.Param;
+import stroom.query.api.v2.QueryKey;
+import stroom.query.api.v2.SearchRequest;
+import stroom.query.api.v2.SearchResponse;
 import stroom.query.audit.CriteriaStore;
 import stroom.query.audit.model.IsDataSourceField;
 import stroom.query.audit.model.QueryableEntity;
 import stroom.query.audit.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryService;
-import stroom.query.common.v2.*;
+import stroom.query.common.v2.Coprocessor;
+import stroom.query.common.v2.CoprocessorSettings;
+import stroom.query.common.v2.CoprocessorSettingsMap;
+import stroom.query.common.v2.Payload;
+import stroom.query.common.v2.SearchResponseCreator;
+import stroom.query.common.v2.StoreSize;
+import stroom.query.common.v2.TableCoprocessor;
+import stroom.query.common.v2.TableCoprocessorSettings;
 import stroom.util.shared.HasTerminate;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static org.jooq.impl.DSL.*;
+import static org.jooq.impl.DSL.and;
+import static org.jooq.impl.DSL.field;
+import static org.jooq.impl.DSL.not;
+import static org.jooq.impl.DSL.or;
 
 public class QueryServiceJooqImpl<
         DOC_REF_ENTITY extends DocRefJooqEntity,

@@ -3,6 +3,7 @@ package stroom.query.hibernate;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import com.google.inject.util.Modules;
 import io.dropwizard.Configuration;
 import io.dropwizard.ConfiguredBundle;
 import io.dropwizard.db.DataSourceFactory;
@@ -25,6 +26,7 @@ import stroom.query.audit.security.HasTokenConfig;
 import stroom.query.audit.service.DocRefService;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -107,28 +109,12 @@ public class AuditedCriteriaQueryBundle<CONFIG extends Configuration & HasTokenC
             DOC_REF_POJO,
             QueryServiceCriteriaImpl> auditedQueryBundle;
 
-    public AuditedCriteriaQueryBundle(final Class<DOC_REF_SERVICE> docRefServiceClass,
+    public AuditedCriteriaQueryBundle(final Function<CONFIG, Injector> injectorSupplier,
+                                      final Class<DOC_REF_SERVICE> docRefServiceClass,
                                       final Class<DOC_REF_POJO> docRefEntityClass,
                                       final Class<QUERY_POJO> queryableEntityClass,
                                       final Class<?> ... additionalHibernateClasses) {
-        auditedQueryBundle = new AuditedQueryBundle<CONFIG,
-                DOC_REF_SERVICE,
-                DOC_REF_POJO,
-                QueryServiceCriteriaImpl>(docRefServiceClass, docRefEntityClass, QueryServiceCriteriaImpl.class) {
-            @Override
-            protected void iterateGuiceModules(final CONFIG configuration,
-                                               final Consumer<Module> moduleConsumer) {
-                super.iterateGuiceModules(configuration, moduleConsumer);
-
-                moduleConsumer.accept(new AbstractModule() {
-                    @Override
-                    protected void configure() {
-                        bind(QueryableHibernateEntity.ClassProvider.class).toInstance(new QueryableEntity.ClassProvider<>(queryableEntityClass));
-                        bind(SessionFactory.class).toInstance(hibernateBundle.getSessionFactory());
-                    }
-                });
-            }
-        };
+        auditedQueryBundle = new AuditedQueryBundle<>(injectorSupplier, docRefServiceClass, docRefEntityClass, QueryServiceCriteriaImpl.class);
 
         // Put the doc ref class and additional classes into an array
         final Class<?>[] hibernateClasses = Stream.concat(
@@ -145,8 +131,14 @@ public class AuditedCriteriaQueryBundle<CONFIG extends Configuration & HasTokenC
         };
     }
 
-    public Injector getInjector() {
-        return auditedQueryBundle.getInjector();
+    public Module getGuiceModule(CONFIG configuration) {
+        return Modules.combine(new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(QueryableHibernateEntity.ClassProvider.class).toInstance(new QueryableEntity.ClassProvider<>(queryableEntityClass));
+                bind(SessionFactory.class).toInstance(hibernateBundle.getSessionFactory());
+            }
+        }, auditedQueryBundle.getGuiceModule(configuration));
     }
 
     @Override

@@ -1,7 +1,6 @@
 package stroom.query.audit;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import event.logging.EventLoggingService;
@@ -28,9 +27,7 @@ import stroom.query.audit.security.TokenConfig;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * This Dropwizard bundle can be used to register an implementation of Query Resource implementation
@@ -50,14 +47,16 @@ public class AuditedQueryBundle<CONFIG extends Configuration & HasTokenConfig & 
         DOC_REF_POJO extends DocRefEntity,
         QUERY_SERVICE extends QueryService> implements ConfiguredBundle<CONFIG> {
 
-    private Injector injector;
+    private Function<CONFIG, Injector> injectorSupplier;
     protected final Class<DOC_REF_SERVICE> docRefServiceClass;
     protected final Class<DOC_REF_POJO> docRefEntityClass;
     private final Class<QUERY_SERVICE> queryServiceClass;
 
-    public AuditedQueryBundle(final Class<DOC_REF_SERVICE> docRefServiceClass,
+    public AuditedQueryBundle(final Function<CONFIG, Injector> injectorSupplier,
+                              final Class<DOC_REF_SERVICE> docRefServiceClass,
                               final Class<DOC_REF_POJO> docRefEntityClass,
                               final Class<QUERY_SERVICE> queryServiceClass) {
+        this.injectorSupplier = injectorSupplier;
         this.docRefServiceClass = docRefServiceClass;
         this.docRefEntityClass = docRefEntityClass;
         this.queryServiceClass = queryServiceClass;
@@ -66,11 +65,9 @@ public class AuditedQueryBundle<CONFIG extends Configuration & HasTokenConfig & 
     /**
      * This function will be overridden by child classes that have further specific modules to register.
      * @param configuration The dropwizard application configuration
-     * @param moduleConsumer A consumer for Guice modules
      */
-    protected void iterateGuiceModules(final CONFIG configuration,
-                                       final Consumer<Module> moduleConsumer) {
-        moduleConsumer.accept(new AbstractModule() {
+    public Module getGuiceModule(final CONFIG configuration) {
+        return new AbstractModule() {
             @Override
             @SuppressWarnings("unchecked")
             protected void configure() {
@@ -87,11 +84,7 @@ public class AuditedQueryBundle<CONFIG extends Configuration & HasTokenConfig & 
                     bind(TokenConfig.class).toInstance(configuration.getTokenConfig());
                 }
             }
-        });
-    }
-
-    public Injector getInjector() {
-        return injector;
+        };
     }
 
     @Override
@@ -102,10 +95,7 @@ public class AuditedQueryBundle<CONFIG extends Configuration & HasTokenConfig & 
     @Override
     public void run(final CONFIG configuration,
                     final Environment environment) {
-        final List<Module> modules = new ArrayList<>();
-        iterateGuiceModules(configuration, modules::add);
-
-        injector = Guice.createInjector(modules);
+        final Injector injector = injectorSupplier.apply(configuration);
 
         environment.jersey().register(injector.getInstance(AuditedQueryResourceImpl.class));
         environment.jersey().register(injector.getInstance(AuditedDocRefResourceImpl.class));

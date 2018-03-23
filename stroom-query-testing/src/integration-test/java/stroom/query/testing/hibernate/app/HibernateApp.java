@@ -2,7 +2,6 @@ package stroom.query.testing.hibernate.app;
 
 import com.codahale.metrics.health.HealthCheck;
 import com.google.inject.Guice;
-import com.google.inject.Injector;
 import io.dropwizard.Application;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
@@ -39,6 +38,7 @@ public class HibernateApp extends Application<HibernateConfig> {
 
         auditedQueryBundle =
                 new AuditedCriteriaQueryBundle<>(
+                        (c) -> Guice.createInjector(auditedQueryBundle.getGuiceModule(c)),
                         TestDocRefServiceCriteriaImpl.class,
                         TestDocRefHibernateEntity.class,
                         TestQueryableHibernateEntity.class);

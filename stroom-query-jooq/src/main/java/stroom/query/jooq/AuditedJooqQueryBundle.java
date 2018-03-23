@@ -3,6 +3,7 @@ package stroom.query.jooq;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import com.google.inject.util.Modules;
 import io.dropwizard.Configuration;
 import io.dropwizard.ConfiguredBundle;
 import io.dropwizard.setup.Bootstrap;
@@ -13,7 +14,7 @@ import stroom.query.audit.model.QueryableEntity;
 import stroom.query.audit.security.HasTokenConfig;
 import stroom.query.audit.service.DocRefService;
 
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * This Dropwizard bundle can be used to build the entire Query Resource implementation stack when the data source is
@@ -35,30 +36,21 @@ public class AuditedJooqQueryBundle<CONFIG extends Configuration & HasTokenConfi
             DOC_REF_POJO,
             QueryServiceJooqImpl> auditedJooqDocRefBundle;
 
-    public AuditedJooqQueryBundle(final Class<DOC_REF_SERVICE> docRefServiceClass,
+    public AuditedJooqQueryBundle(final Function<CONFIG, Injector> injectorSupplier,
+                                  final Class<DOC_REF_SERVICE> docRefServiceClass,
                                   final Class<DOC_REF_POJO> docRefEntityClass,
                                   final Class<QUERY_POJO> queryableEntityClass) {
         this.queryableEntityClass = queryableEntityClass;
-        this.auditedJooqDocRefBundle = new AuditedJooqDocRefBundle<CONFIG,
-                DOC_REF_SERVICE,
-                DOC_REF_POJO,
-                QueryServiceJooqImpl>(docRefServiceClass, docRefEntityClass, QueryServiceJooqImpl.class) {
-            @Override
-            protected void iterateGuiceModules(final CONFIG config,
-                                               final Consumer<Module> moduleConsumer) {
-                super.iterateGuiceModules(config, moduleConsumer);
-                moduleConsumer.accept(new AbstractModule() {
-                    @Override
-                    protected void configure() {
-                        bind(QueryableEntity.ClassProvider.class).toInstance(new QueryableEntity.ClassProvider<>(queryableEntityClass));
-                    }
-                });
-            }
-        };
+        this.auditedJooqDocRefBundle = new AuditedJooqDocRefBundle<>(injectorSupplier, docRefServiceClass, docRefEntityClass, QueryServiceJooqImpl.class);
     }
 
-    public Injector getInjector() {
-        return auditedJooqDocRefBundle.getInjector();
+    public Module getGuiceModule(CONFIG configuration) {
+        return Modules.combine(new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(QueryableEntity.ClassProvider.class).toInstance(new QueryableEntity.ClassProvider<>(queryableEntityClass));
+            }
+        }, auditedJooqDocRefBundle.getGuiceModule(configuration));
     }
 
     @Override

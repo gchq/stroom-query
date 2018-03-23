@@ -9,7 +9,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
-import stroom.query.api.v2.*;
+import stroom.query.api.v2.DocRef;
+import stroom.query.api.v2.ExpressionOperator;
+import stroom.query.api.v2.ExpressionTerm;
+import stroom.query.api.v2.Field;
+import stroom.query.api.v2.FlatResult;
+import stroom.query.api.v2.OffsetRange;
+import stroom.query.api.v2.Query;
+import stroom.query.api.v2.Result;
+import stroom.query.api.v2.ResultRequest;
+import stroom.query.api.v2.SearchRequest;
+import stroom.query.api.v2.SearchResponse;
+import stroom.query.api.v2.TableSettings;
 import stroom.query.audit.authorisation.DocumentPermission;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
@@ -17,7 +28,11 @@ import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.QueryResourceIT;
 import stroom.query.testing.StroomAuthenticationRule;
 import stroom.query.testing.data.CreateTestDataClient;
-import stroom.query.testing.jooq.app.*;
+import stroom.query.testing.jooq.app.CreateTestDataJooqImpl;
+import stroom.query.testing.jooq.app.JooqApp;
+import stroom.query.testing.jooq.app.JooqConfig;
+import stroom.query.testing.jooq.app.TestDocRefJooqEntity;
+import stroom.query.testing.jooq.app.TestQueryableJooqEntity;
 
 import javax.ws.rs.core.Response;
 import java.util.Collection;
@@ -28,7 +43,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TestJooqQueryResourceIT extends QueryResourceIT<TestDocRefJooqEntity, JooqConfig> {
 
