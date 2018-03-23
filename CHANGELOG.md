@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## [v2.0.0-alpha.34] - 2018-03-23
+
+### Changed
+
+* gh-13 - Using Guice for common auditable query resource implementations
+
 ## [v2.0.0-alpha.33] - 2018-03-21
 
 * Simplification of search completion state.
@@ -165,8 +171,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Added null check to cope with empty field list when running queries
 
-* gh-13 - Using Guice for common auditable query resource implementations
-
 ## [v2.0.0-alpha.3] - 2017-09-04
 
 ### Changed
@@ -214,7 +218,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.33...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.34...HEAD
+[v2.0.0-alpha.34]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.33...v2.0.0-alpha.34
 [v2.0.0-alpha.33]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.32...v2.0.0-alpha.33
 [v2.0.0-alpha.32]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.31...v2.0.0-alpha.32
 [v2.0.0-alpha.31]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.30...v2.0.0-alpha.31
