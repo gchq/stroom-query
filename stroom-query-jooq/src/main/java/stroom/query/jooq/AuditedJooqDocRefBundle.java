@@ -3,8 +3,10 @@ package stroom.query.jooq;
 import com.bendb.dropwizard.jooq.JooqBundle;
 import com.bendb.dropwizard.jooq.JooqFactory;
 import com.google.inject.AbstractModule;
+import com.google.inject.Injector;
 import com.google.inject.Module;
 import io.dropwizard.Configuration;
+import io.dropwizard.ConfiguredBundle;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.db.ManagedDataSource;
 import io.dropwizard.flyway.FlywayBundle;
@@ -39,11 +41,7 @@ import java.util.function.Consumer;
 public class AuditedJooqDocRefBundle<CONFIG extends Configuration & HasTokenConfig & HasAuthorisationConfig & HasDataSourceFactory & HasFlywayFactory & HasJooqFactory,
         DOC_REF_SERVICE extends DocRefService<DOC_REF_POJO>,
         DOC_REF_POJO extends DocRefJooqEntity,
-        QUERY_SERVICE extends QueryService>
-        extends AuditedQueryBundle<CONFIG,
-        DOC_REF_SERVICE,
-        DOC_REF_POJO,
-        QUERY_SERVICE> {
+        QUERY_SERVICE extends QueryService> implements ConfiguredBundle<CONFIG> {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuditedJooqQueryBundle.class);
 
     private final FlywayBundle flywayBundle = new FlywayBundle<CONFIG>() {
@@ -58,10 +56,26 @@ public class AuditedJooqDocRefBundle<CONFIG extends Configuration & HasTokenConf
 
     private final JooqBundle<CONFIG> jooqBundle;
 
+    private final AuditedQueryBundle<CONFIG,
+            DOC_REF_SERVICE,
+            DOC_REF_POJO,
+            QUERY_SERVICE> auditedQueryBundle;
+
     public AuditedJooqDocRefBundle(final Class<DOC_REF_SERVICE> docRefServiceClass,
                                    final Class<DOC_REF_POJO> docRefEntityClass,
                                    final Class<QUERY_SERVICE> queryServiceClass) {
-        super(docRefServiceClass, docRefEntityClass, queryServiceClass);
+        auditedQueryBundle = new AuditedQueryBundle<CONFIG,
+                DOC_REF_SERVICE,
+                DOC_REF_POJO,
+                QUERY_SERVICE>(docRefServiceClass, docRefEntityClass, queryServiceClass) {
+            @Override
+            protected void iterateGuiceModules(final CONFIG configuration,
+                                               final Consumer<Module> moduleConsumer) {
+                super.iterateGuiceModules(configuration, moduleConsumer);
+
+                AuditedJooqDocRefBundle.this.iterateGuiceModules(configuration, moduleConsumer);
+            }
+        };
 
         this.jooqBundle = new JooqBundle<CONFIG>() {
             public DataSourceFactory getDataSourceFactory(CONFIG configuration) {
@@ -74,11 +88,8 @@ public class AuditedJooqDocRefBundle<CONFIG extends Configuration & HasTokenConf
         };
     }
 
-    @Override
     protected void iterateGuiceModules(final CONFIG configuration,
                                        final Consumer<Module> moduleConsumer) {
-        super.iterateGuiceModules(configuration, moduleConsumer);
-
         moduleConsumer.accept(new AbstractModule() {
             @Override
             protected void configure() {
@@ -87,11 +98,13 @@ public class AuditedJooqDocRefBundle<CONFIG extends Configuration & HasTokenConf
         });
     }
 
+    public Injector getInjector() {
+        return auditedQueryBundle.getInjector();
+    }
+
     @Override
     public void run(final CONFIG configuration,
                     final Environment environment) {
-        super.run(configuration, environment);
-
         // We need the database before we need most other things
         migrate(configuration, environment);
     }
@@ -125,10 +138,9 @@ public class AuditedJooqDocRefBundle<CONFIG extends Configuration & HasTokenConf
 
     @Override
     public void initialize(final Bootstrap<?> bootstrap) {
-        super.initialize(bootstrap);
-
         final Bootstrap<CONFIG> castBootstrap = (Bootstrap<CONFIG>) bootstrap; // this initialize function should have used the templated config type
         castBootstrap.addBundle(jooqBundle);
         castBootstrap.addBundle(flywayBundle);
+        castBootstrap.addBundle(auditedQueryBundle);
     }
 }

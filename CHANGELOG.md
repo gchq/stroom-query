@@ -165,6 +165,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Added null check to cope with empty field list when running queries
 
+* gh-13 - Using Guice for common auditable query resource implementations
+
 ## [v2.0.0-alpha.3] - 2017-09-04
 
 ### Changed

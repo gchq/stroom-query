@@ -1,6 +1,7 @@
 package stroom.query.hibernate;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Injector;
 import com.google.inject.Module;
 import io.dropwizard.Configuration;
 import io.dropwizard.ConfiguredBundle;
@@ -38,11 +39,7 @@ import java.util.stream.Stream;
 public class AuditedCriteriaQueryBundle<CONFIG extends Configuration & HasTokenConfig & HasAuthorisationConfig & HasDataSourceFactory & HasFlywayFactory,
                 DOC_REF_SERVICE extends DocRefService<DOC_REF_POJO>,
                 DOC_REF_POJO extends DocRefHibernateEntity,
-                QUERY_POJO extends QueryableHibernateEntity>
-        extends AuditedQueryBundle<CONFIG,
-                DOC_REF_SERVICE,
-                DOC_REF_POJO,
-                QueryServiceCriteriaImpl> {
+                QUERY_POJO extends QueryableHibernateEntity> implements ConfiguredBundle<CONFIG> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuditedCriteriaQueryBundle.class);
 
@@ -105,11 +102,33 @@ public class AuditedCriteriaQueryBundle<CONFIG extends Configuration & HasTokenC
 
     private final HibernateBundle<CONFIG> hibernateBundle;
 
+    private final AuditedQueryBundle<CONFIG,
+            DOC_REF_SERVICE,
+            DOC_REF_POJO,
+            QueryServiceCriteriaImpl> auditedQueryBundle;
+
     public AuditedCriteriaQueryBundle(final Class<DOC_REF_SERVICE> docRefServiceClass,
                                       final Class<DOC_REF_POJO> docRefEntityClass,
                                       final Class<QUERY_POJO> queryableEntityClass,
                                       final Class<?> ... additionalHibernateClasses) {
-        super(docRefServiceClass, docRefEntityClass, QueryServiceCriteriaImpl.class);
+        auditedQueryBundle = new AuditedQueryBundle<CONFIG,
+                DOC_REF_SERVICE,
+                DOC_REF_POJO,
+                QueryServiceCriteriaImpl>(docRefServiceClass, docRefEntityClass, QueryServiceCriteriaImpl.class) {
+            @Override
+            protected void iterateGuiceModules(final CONFIG configuration,
+                                               final Consumer<Module> moduleConsumer) {
+                super.iterateGuiceModules(configuration, moduleConsumer);
+
+                moduleConsumer.accept(new AbstractModule() {
+                    @Override
+                    protected void configure() {
+                        bind(QueryableHibernateEntity.ClassProvider.class).toInstance(new QueryableEntity.ClassProvider<>(queryableEntityClass));
+                        bind(SessionFactory.class).toInstance(hibernateBundle.getSessionFactory());
+                    }
+                });
+            }
+        };
 
         // Put the doc ref class and additional classes into an array
         final Class<?>[] hibernateClasses = Stream.concat(
@@ -126,26 +145,19 @@ public class AuditedCriteriaQueryBundle<CONFIG extends Configuration & HasTokenC
         };
     }
 
-    @Override
-    protected void iterateGuiceModules(final CONFIG configuration,
-                                       final Consumer<Module> moduleConsumer) {
-        super.iterateGuiceModules(configuration, moduleConsumer);
-
-        moduleConsumer.accept(new AbstractModule() {
-            @Override
-            protected void configure() {
-                bind(QueryableHibernateEntity.ClassProvider.class).toInstance(new QueryableEntity.ClassProvider<>(queryableEntityClass));
-                bind(SessionFactory.class).toInstance(hibernateBundle.getSessionFactory());
-            }
-        });
+    public Injector getInjector() {
+        return auditedQueryBundle.getInjector();
     }
 
     @Override
-    public void initialize(final Bootstrap<?> bootstrap) {
-        super.initialize(bootstrap);
+    public void run(CONFIG configuration, Environment environment) throws Exception {
 
+    }
+
+    public void initialize(final Bootstrap<?> bootstrap) {
         final Bootstrap<CONFIG> castBootstrap = (Bootstrap<CONFIG>) bootstrap; // this initialize function should have used the templated config type
         castBootstrap.addBundle(flywayBundle);
         castBootstrap.addBundle(hibernateBundle);
+        castBootstrap.addBundle(auditedQueryBundle);
     }
 }
