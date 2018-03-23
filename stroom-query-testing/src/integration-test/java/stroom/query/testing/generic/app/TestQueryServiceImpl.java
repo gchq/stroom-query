@@ -15,8 +15,8 @@ public class TestQueryServiceImpl implements QueryService {
     private final DocRefService<TestDocRefEntity> docRefService;
 
     @Inject
-    public TestQueryServiceImpl(final DocRefService<TestDocRefEntity> docRefService) {
-        this.docRefService = docRefService;
+    public TestQueryServiceImpl(final DocRefService docRefService) {
+        this.docRefService = (DocRefService<TestDocRefEntity>) docRefService;
     }
 
     @Override

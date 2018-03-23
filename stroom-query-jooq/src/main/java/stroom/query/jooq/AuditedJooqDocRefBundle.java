@@ -2,6 +2,8 @@ package stroom.query.jooq;
 
 import com.bendb.dropwizard.jooq.JooqBundle;
 import com.bendb.dropwizard.jooq.JooqFactory;
+import com.google.inject.AbstractModule;
+import com.google.inject.Module;
 import io.dropwizard.Configuration;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.db.ManagedDataSource;
@@ -11,7 +13,6 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.FlywayException;
-import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.query.audit.AuditedQueryBundle;
@@ -20,6 +21,8 @@ import stroom.query.audit.model.IsDataSourceField;
 import stroom.query.audit.security.HasTokenConfig;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryService;
+
+import java.util.function.Consumer;
 
 /**
  * This Dropwizard bundle can be used to build the entire Query Resource implementation stack when the data source is
@@ -72,19 +75,25 @@ public class AuditedJooqDocRefBundle<CONFIG extends Configuration & HasTokenConf
     }
 
     @Override
+    protected void iterateGuiceModules(final CONFIG configuration,
+                                       final Consumer<Module> moduleConsumer) {
+        super.iterateGuiceModules(configuration, moduleConsumer);
+
+        moduleConsumer.accept(new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(org.jooq.Configuration.class).toInstance(jooqBundle.getConfiguration());
+            }
+        });
+    }
+
+    @Override
     public void run(final CONFIG configuration,
                     final Environment environment) {
         super.run(configuration, environment);
 
         // We need the database before we need most other things
         migrate(configuration, environment);
-
-        environment.jersey().register(new AbstractBinder() {
-            @Override
-            protected void configure() {
-                bind(jooqBundle.getConfiguration()).to(org.jooq.Configuration.class);
-            }
-        });
     }
 
     private void migrate(CONFIG config, Environment environment) {

@@ -24,5 +24,6 @@ dependencies {
     compile libs.dropwizard_core
     compile libs.dropwizard_jooq
     compile libs.dropwizard_flyway
+    compile libs.guice
     compile libs.slf4j_api
 }

@@ -1,6 +1,8 @@
 package stroom.query.testing.jooq.app;
 
 import com.codahale.metrics.health.HealthCheck;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import io.dropwizard.Application;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
@@ -34,7 +36,7 @@ public class JooqApp extends Application<JooqConfig> {
             }
         });
 
-        environment.jersey().register(CreateTestDataJooqImpl.class);
+        environment.jersey().register(auditedQueryBundle.getInjector().getInstance(CreateTestDataJooqImpl.class));
     }
 
     @Override

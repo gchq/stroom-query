@@ -42,10 +42,11 @@ public class QueryServiceJooqImpl<
     private final Table<Record> table;
 
     @Inject
-    public QueryServiceJooqImpl(final QueryableEntity.ClassProvider<QUERYABLE_ENTITY> dtoClassProvider,
-                                final DocRefService<DOC_REF_ENTITY> docRefService,
+    @SuppressWarnings("unchecked")
+    public QueryServiceJooqImpl(final QueryableEntity.ClassProvider dtoClassProvider,
+                                final DocRefService docRefService,
                                 final Configuration jooqConfig) {
-        this.docRefService = docRefService;
+        this.docRefService = (DocRefService<DOC_REF_ENTITY>) docRefService;
         this.dtoClass = dtoClassProvider.get();
         this.database = DSL.using(jooqConfig);
 

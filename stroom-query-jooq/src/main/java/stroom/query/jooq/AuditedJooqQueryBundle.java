@@ -1,13 +1,16 @@
 package stroom.query.jooq;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Module;
 import io.dropwizard.Configuration;
 import io.dropwizard.setup.Environment;
-import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import stroom.query.audit.authorisation.HasAuthorisationConfig;
 import stroom.query.audit.model.IsDataSourceField;
 import stroom.query.audit.model.QueryableEntity;
 import stroom.query.audit.security.HasTokenConfig;
 import stroom.query.audit.service.DocRefService;
+
+import java.util.function.Consumer;
 
 /**
  * This Dropwizard bundle can be used to build the entire Query Resource implementation stack when the data source is
@@ -37,15 +40,20 @@ public class AuditedJooqQueryBundle<CONFIG extends Configuration & HasTokenConfi
     }
 
     @Override
+    protected void iterateGuiceModules(final CONFIG config,
+                                       final Consumer<Module> moduleConsumer) {
+        super.iterateGuiceModules(config, moduleConsumer);
+        moduleConsumer.accept(new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(QueryableEntity.ClassProvider.class).toInstance(new QueryableEntity.ClassProvider<>(queryableEntityClass));
+            }
+        });
+    }
+
+    @Override
     public void run(final CONFIG configuration,
                     final Environment environment) {
         super.run(configuration, environment);
-
-        environment.jersey().register(new AbstractBinder() {
-            @Override
-            protected void configure() {
-                bind(new QueryableEntity.ClassProvider<>(queryableEntityClass)).to(QueryableEntity.ClassProvider.class);
-            }
-        });
     }
 }

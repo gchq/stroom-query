@@ -1,5 +1,7 @@
 package stroom.query.hibernate;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Module;
 import io.dropwizard.Configuration;
 import io.dropwizard.ConfiguredBundle;
 import io.dropwizard.db.DataSourceFactory;
@@ -11,8 +13,6 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.FlywayException;
-import org.glassfish.hk2.api.TypeLiteral;
-import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +23,7 @@ import stroom.query.audit.model.QueryableEntity;
 import stroom.query.audit.security.HasTokenConfig;
 import stroom.query.audit.service.DocRefService;
 
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
@@ -126,15 +127,15 @@ public class AuditedCriteriaQueryBundle<CONFIG extends Configuration & HasTokenC
     }
 
     @Override
-    public void run(final CONFIG configuration,
-                    final Environment environment) {
-        super.run(configuration, environment);
+    protected void iterateGuiceModules(final CONFIG configuration,
+                                       final Consumer<Module> moduleConsumer) {
+        super.iterateGuiceModules(configuration, moduleConsumer);
 
-        environment.jersey().register(new AbstractBinder() {
+        moduleConsumer.accept(new AbstractModule() {
             @Override
             protected void configure() {
-                bind(new QueryableEntity.ClassProvider<>(queryableEntityClass)).to(QueryableHibernateEntity.ClassProvider.class);
-                bind(hibernateBundle.getSessionFactory()).to(SessionFactory.class);
+                bind(QueryableHibernateEntity.ClassProvider.class).toInstance(new QueryableEntity.ClassProvider<>(queryableEntityClass));
+                bind(SessionFactory.class).toInstance(hibernateBundle.getSessionFactory());
             }
         });
     }

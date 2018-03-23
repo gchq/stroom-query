@@ -43,10 +43,11 @@ public class AuditedQueryResourceImpl<T extends DocRefEntity> implements QueryRe
     private final DocRefService<T> docRefService;
 
     @Inject
+    @SuppressWarnings("unchecked")
     public AuditedQueryResourceImpl(final EventLoggingService eventLoggingService,
                                     final QueryService service,
                                     final AuthorisationService authorisationService,
-                                    final DocRefService<T> docRefService) {
+                                    final DocRefService docRefService) {
         this.eventLoggingService = eventLoggingService;
         this.service = service;
         this.authorisationService = authorisationService;
