@@ -9,6 +9,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 import stroom.query.api.v2.Field;
 import stroom.query.api.v2.OffsetRange;
 import stroom.query.api.v2.ResultRequest;
@@ -24,7 +25,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestSearchResponseCreator {
@@ -54,6 +55,7 @@ public class TestSearchResponseCreator {
 
         //store is never complete
         Mockito.when(mockStore.isComplete()).thenReturn(false);
+        makeSearchStateAfter(500, false);
 
         SearchRequest searchRequest = getSearchRequest(false, null);
 
@@ -84,6 +86,7 @@ public class TestSearchResponseCreator {
 
         //store is immediately complete to replicate a synchronous store
         Mockito.when(mockStore.isComplete()).thenReturn(true);
+        makeSearchStateAfter(0, true);
 
         SearchRequest searchRequest = getSearchRequest(false, null);
 
@@ -106,16 +109,15 @@ public class TestSearchResponseCreator {
     public void create_nonIncremental_completesBeforeTimeout() {
 
         Duration serverTimeout = Duration.ofMillis(5_000);
-        Duration clienTimeout = Duration.ofMillis(5_000);
+        Duration clientTimeout = Duration.ofMillis(5_000);
         SearchResponseCreator searchResponseCreator = new SearchResponseCreator(mockStore, serverTimeout);
 
         //store initially not complete
         Mockito.when(mockStore.isComplete()).thenReturn(false);
-
         long sleepTime = 200L;
-        makeSearchCompleteAfter(sleepTime);
+        makeSearchStateAfter(sleepTime, true);
 
-        SearchRequest searchRequest = getSearchRequest(false, clienTimeout.toMillis());
+        SearchRequest searchRequest = getSearchRequest(false, clientTimeout.toMillis());
 
         TimingUtils.TimedResult<SearchResponse> timedResult = TimingUtils.timeIt(() ->
                 searchResponseCreator.create(searchRequest));
@@ -141,6 +143,7 @@ public class TestSearchResponseCreator {
 
         //store is not complete during test
         Mockito.when(mockStore.isComplete()).thenReturn(false);
+        makeSearchStateAfter(0, true);
 
         //When getData is called it should return null as it won't have had a chance to get any data yet
         Mockito.when(mockStore.getData(Mockito.any())).thenReturn(null);
@@ -175,6 +178,7 @@ public class TestSearchResponseCreator {
 
         //store is immediately complete to replicate a synchronous store
         Mockito.when(mockStore.isComplete()).thenReturn(false);
+        makeSearchStateAfter(500, false);
 
         SearchRequest searchRequest = getSearchRequest(true, clientTimeout.toMillis());
 
@@ -196,7 +200,7 @@ public class TestSearchResponseCreator {
         //Now the search request is sent again but this time the data will be available and the search complete
         //so should return immediately
         long sleepTime = 200L;
-        makeSearchCompleteAfter(sleepTime);
+        makeSearchStateAfter(sleepTime, true);
 
         SearchRequest searchRequest2 = getSearchRequest(true, clientTimeout.toMillis());
 
@@ -215,18 +219,21 @@ public class TestSearchResponseCreator {
                 TOLLERANCE)).isTrue();
     }
 
-    private void makeSearchCompleteAfter(final long sleepTime) {
-        //200ms after the request is made another thread should complete the search
-        Mockito.doAnswer(invocation -> {
-            CompletableFuture.runAsync(() -> {
+    private void makeSearchStateAfter(final long sleepTime, final boolean state) {
+        try {
+            final Answer answer = invocation -> {
                 TimingUtils.sleep(sleepTime);
                 //change the store to be complete
-                Mockito.when(mockStore.isComplete()).thenReturn(true);
-                //notify completionListener
-                invocation.getArgumentAt(0, CompletionListener.class).onCompletion();
-            });
-            return null;
-        }).when(mockStore).registerCompletionListener(Mockito.any());
+                Mockito.when(mockStore.isComplete()).thenReturn(state);
+                return state;
+            };
+
+            //200ms after the request is made another thread should complete the search
+//            Mockito.doAnswer(answer).when(mockStore).awaitCompletion();
+            Mockito.doAnswer(answer).when(mockStore).awaitCompletion(Mockito.anyLong(), Mockito.any(TimeUnit.class));
+        } catch (final InterruptedException e) {
+            // Ignore.
+        }
     }
 
     private SearchRequest getSearchRequest(final boolean isIncremental, final Long timeout) {
