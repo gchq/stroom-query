@@ -1,6 +1,11 @@
 package stroom.query.jooq;
 
-import org.jooq.*;
+import org.jooq.Configuration;
+import org.jooq.DSLContext;
+import org.jooq.Field;
+import org.jooq.Record;
+import org.jooq.Table;
+import org.jooq.UpdateSetMoreStep;
 import org.jooq.impl.DSL;
 import org.jooq.types.ULong;
 import stroom.query.audit.ExportDTO;

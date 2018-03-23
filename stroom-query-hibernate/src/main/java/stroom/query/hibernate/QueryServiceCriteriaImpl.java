@@ -70,11 +70,12 @@ public class QueryServiceCriteriaImpl<
     private final DocRefService<DOC_REF_ENTITY> docRefService;
 
     @Inject
-    public QueryServiceCriteriaImpl(final QueryableEntity.ClassProvider<QUERYABLE_ENTITY> dtoClassProvider,
-                                    final DocRefService<DOC_REF_ENTITY> docRefService,
+    @SuppressWarnings("unchecked")
+    public QueryServiceCriteriaImpl(final QueryableEntity.ClassProvider dtoClassProvider,
+                                    final DocRefService docRefService,
                                     final SessionFactory database) {
         this.database = database;
-        this.docRefService = docRefService;
+        this.docRefService =  docRefService;
         this.dtoClass = dtoClassProvider.get();
 
         this.fields = QueryableEntity.getFields(dtoClass)

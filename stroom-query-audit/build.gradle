@@ -24,9 +24,10 @@ dependencies {
     compile libs.stroomExpression
 
     //--------3rd party--------
-    compile libs.kafka
     compile libs.dropwizard_core
     compile libs.dropwizard_auth
     compile libs.dropwizard_auth_jwt
+    compile libs.guice
+    compile libs.kafka
     compile libs.slf4j_api
 }

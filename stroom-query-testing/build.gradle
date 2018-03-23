@@ -63,6 +63,7 @@ dependencies {
     compile libs.kafka
     compile libs.dropwizard_auth
     compile libs.dropwizard_auth_jwt
+    compile libs.guice
     compile libs.slf4j_api
 
     compile libs.junit
