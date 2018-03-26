@@ -1,6 +1,6 @@
 package stroom.query.testing.jooq.app;
 
-import org.jooq.Configuration;
+import org.jooq.DSLContext;
 import stroom.query.jooq.DocRefServiceJooqImpl;
 
 import javax.inject.Inject;
@@ -10,7 +10,7 @@ import static stroom.query.testing.jooq.app.TestDocRefJooqEntity.PLANET_NAME_FIE
 public class TestDocRefServiceJooqImpl extends DocRefServiceJooqImpl<TestDocRefJooqEntity> {
 
     @Inject
-    public TestDocRefServiceJooqImpl(final Configuration jooqConfiguration) {
+    public TestDocRefServiceJooqImpl(final DSLContext jooqConfiguration) {
         super(TestDocRefJooqEntity.TYPE,
                 dataMap -> new TestDocRefJooqEntity.Builder()
                         .planetName(dataMap.getValue(PLANET_NAME_FIELD).orElse(null)),

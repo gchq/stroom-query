@@ -16,6 +16,8 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.FlywayException;
+import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.query.audit.AuditedQueryBundle;
@@ -83,7 +85,7 @@ public class AuditedJooqDocRefBundle<CONFIG extends Configuration & HasTokenConf
         return Modules.combine(new AbstractModule() {
             @Override
             protected void configure() {
-                bind(org.jooq.Configuration.class).toInstance(jooqBundle.getConfiguration());
+                bind(DSLContext.class).toInstance(DSL.using(jooqBundle.getConfiguration()));
             }
         }, auditedQueryBundle.getGuiceModule(configuration));
     }

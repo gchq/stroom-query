@@ -71,10 +71,10 @@ public class QueryServiceJooqImpl<
     @SuppressWarnings("unchecked")
     public QueryServiceJooqImpl(final QueryableEntity.ClassProvider dtoClassProvider,
                                 final DocRefService docRefService,
-                                final Configuration jooqConfig) {
+                                final DSLContext database) {
         this.docRefService = (DocRefService<DOC_REF_ENTITY>) docRefService;
         this.dtoClass = dtoClassProvider.get();
-        this.database = DSL.using(jooqConfig);
+        this.database = database;
 
         this.table = Optional.ofNullable(dtoClass.getAnnotation(JooqEntity.class))
                 .map(JooqEntity::tableName)
