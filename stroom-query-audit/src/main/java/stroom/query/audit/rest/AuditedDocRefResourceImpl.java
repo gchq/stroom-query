@@ -31,11 +31,12 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
     private final AuthorisationService authorisationService;
 
     @Inject
-    public AuditedDocRefResourceImpl(final DocRefService<T> service,
+    @SuppressWarnings("unchecked")
+    public AuditedDocRefResourceImpl(final DocRefService service,
                                      final EventLoggingService eventLoggingService,
                                      final AuthorisationService authorisationService,
-                                     final DocRefEntity.ClassProvider<T> docRefEntityClassSupplier) {
-        this.service = service;
+                                     final DocRefEntity.ClassProvider docRefEntityClassSupplier) {
+        this.service = (DocRefService<T>) service;
         this.eventLoggingService = eventLoggingService;
         this.authorisationService = authorisationService;
         this.docRefEntityClass = docRefEntityClassSupplier.get();

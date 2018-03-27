@@ -1,6 +1,7 @@
 package stroom.query.testing.hibernate.app;
 
 import com.codahale.metrics.health.HealthCheck;
+import com.google.inject.Guice;
 import io.dropwizard.Application;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
@@ -12,11 +13,7 @@ public class HibernateApp extends Application<HibernateConfig> {
     private final AuditedCriteriaQueryBundle<HibernateConfig,
             TestDocRefServiceCriteriaImpl,
             TestDocRefHibernateEntity,
-            TestQueryableHibernateEntity> auditedQueryBundle =
-            new AuditedCriteriaQueryBundle<>(
-                    TestDocRefServiceCriteriaImpl.class,
-                    TestDocRefHibernateEntity.class,
-                    TestQueryableHibernateEntity.class);
+            TestQueryableHibernateEntity> auditedQueryBundle;
 
     public static void main(final String[] args) throws Exception {
         new HibernateApp().run(args);
@@ -37,6 +34,13 @@ public class HibernateApp extends Application<HibernateConfig> {
     @Override
     public void initialize(final Bootstrap<HibernateConfig> bootstrap) {
         super.initialize(bootstrap);
+
+        auditedQueryBundle =
+                new AuditedCriteriaQueryBundle<>(
+                        (c) -> Guice.createInjector(auditedQueryBundle.getGuiceModule(c)),
+                        TestDocRefServiceCriteriaImpl.class,
+                        TestDocRefHibernateEntity.class,
+                        TestQueryableHibernateEntity.class);
 
         // This allows us to use templating in the YAML configuration.
         bootstrap.setConfigurationSourceProvider(new SubstitutingSourceProvider(

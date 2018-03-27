@@ -1,6 +1,5 @@
 package stroom.query.testing.jooq.app;
 
-import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Table;
@@ -26,8 +25,8 @@ public class CreateTestDataJooqImpl implements CreateTestDataResource {
     public static final int RECORDS_TO_CREATE = 1000;
 
     @Inject
-    public CreateTestDataJooqImpl(final Configuration jooqConfiguration) {
-        this.database = DSL.using(jooqConfiguration);
+    public CreateTestDataJooqImpl(final DSLContext database) {
+        this.database = database;
         this.table = Optional.ofNullable(TestQueryableJooqEntity.class.getAnnotation(JooqEntity.class))
                 .map(JooqEntity::tableName)
                 .map(DSL::table)

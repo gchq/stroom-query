@@ -1,6 +1,11 @@
 package stroom.query.jooq;
 
-import org.jooq.*;
+import org.jooq.Configuration;
+import org.jooq.DSLContext;
+import org.jooq.Field;
+import org.jooq.Record;
+import org.jooq.Table;
+import org.jooq.UpdateSetMoreStep;
 import org.jooq.impl.DSL;
 import org.jooq.types.ULong;
 import stroom.query.audit.ExportDTO;
@@ -68,7 +73,7 @@ public class DocRefServiceJooqImpl<DOC_REF_ENTITY extends DocRefJooqEntity>
                                  final ValueImporter<DOC_REF_ENTITY, DocRefJooqEntity.BaseBuilder<DOC_REF_ENTITY, ?>> valueImporter,
                                  final ValueExporter<DOC_REF_ENTITY> valueExporter,
                                  final Class<DOC_REF_ENTITY> docRefEntityClass,
-                                 final Configuration jooqConfig) {
+                                 final DSLContext database) {
         this.type = type;
         this.docRefEntityClass = docRefEntityClass;
 
@@ -77,7 +82,7 @@ public class DocRefServiceJooqImpl<DOC_REF_ENTITY extends DocRefJooqEntity>
                 .map(DSL::table)
                 .orElseThrow(() -> new IllegalArgumentException("The Document Entity Class must be annotated with JooqEntity"));
 
-        this.database = DSL.using(jooqConfig);
+        this.database = database;
         this.valueImporter = valueImporter;
         this.valueExporter = valueExporter;
     }

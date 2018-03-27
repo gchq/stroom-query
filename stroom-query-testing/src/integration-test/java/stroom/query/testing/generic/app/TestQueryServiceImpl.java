@@ -2,7 +2,11 @@ package stroom.query.testing.generic.app;
 
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
-import stroom.query.api.v2.*;
+import stroom.query.api.v2.DocRef;
+import stroom.query.api.v2.ExpressionTerm;
+import stroom.query.api.v2.QueryKey;
+import stroom.query.api.v2.SearchRequest;
+import stroom.query.api.v2.SearchResponse;
 import stroom.query.audit.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryService;
@@ -15,8 +19,8 @@ public class TestQueryServiceImpl implements QueryService {
     private final DocRefService<TestDocRefEntity> docRefService;
 
     @Inject
-    public TestQueryServiceImpl(final DocRefService<TestDocRefEntity> docRefService) {
-        this.docRefService = docRefService;
+    public TestQueryServiceImpl(final DocRefService docRefService) {
+        this.docRefService = (DocRefService<TestDocRefEntity>) docRefService;
     }
 
     @Override

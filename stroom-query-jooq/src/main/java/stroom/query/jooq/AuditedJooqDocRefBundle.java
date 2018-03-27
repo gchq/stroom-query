@@ -2,7 +2,12 @@ package stroom.query.jooq;
 
 import com.bendb.dropwizard.jooq.JooqBundle;
 import com.bendb.dropwizard.jooq.JooqFactory;
+import com.google.inject.AbstractModule;
+import com.google.inject.Injector;
+import com.google.inject.Module;
+import com.google.inject.util.Modules;
 import io.dropwizard.Configuration;
+import io.dropwizard.ConfiguredBundle;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.db.ManagedDataSource;
 import io.dropwizard.flyway.FlywayBundle;
@@ -11,7 +16,8 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.FlywayException;
-import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.query.audit.AuditedQueryBundle;
@@ -20,6 +26,8 @@ import stroom.query.audit.model.IsDataSourceField;
 import stroom.query.audit.security.HasTokenConfig;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryService;
+
+import java.util.function.Function;
 
 /**
  * This Dropwizard bundle can be used to build the entire Query Resource implementation stack when the data source is
@@ -36,11 +44,7 @@ import stroom.query.audit.service.QueryService;
 public class AuditedJooqDocRefBundle<CONFIG extends Configuration & HasTokenConfig & HasAuthorisationConfig & HasDataSourceFactory & HasFlywayFactory & HasJooqFactory,
         DOC_REF_SERVICE extends DocRefService<DOC_REF_POJO>,
         DOC_REF_POJO extends DocRefJooqEntity,
-        QUERY_SERVICE extends QueryService>
-        extends AuditedQueryBundle<CONFIG,
-        DOC_REF_SERVICE,
-        DOC_REF_POJO,
-        QUERY_SERVICE> {
+        QUERY_SERVICE extends QueryService> implements ConfiguredBundle<CONFIG> {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuditedJooqQueryBundle.class);
 
     private final FlywayBundle flywayBundle = new FlywayBundle<CONFIG>() {
@@ -55,10 +59,16 @@ public class AuditedJooqDocRefBundle<CONFIG extends Configuration & HasTokenConf
 
     private final JooqBundle<CONFIG> jooqBundle;
 
-    public AuditedJooqDocRefBundle(final Class<DOC_REF_SERVICE> docRefServiceClass,
+    private final AuditedQueryBundle<CONFIG,
+            DOC_REF_SERVICE,
+            DOC_REF_POJO,
+            QUERY_SERVICE> auditedQueryBundle;
+
+    public AuditedJooqDocRefBundle(final Function<CONFIG, Injector> injectorSupplier,
+                                   final Class<DOC_REF_SERVICE> docRefServiceClass,
                                    final Class<DOC_REF_POJO> docRefEntityClass,
                                    final Class<QUERY_SERVICE> queryServiceClass) {
-        super(docRefServiceClass, docRefEntityClass, queryServiceClass);
+        auditedQueryBundle = new AuditedQueryBundle<>(injectorSupplier, docRefServiceClass, docRefEntityClass, queryServiceClass);
 
         this.jooqBundle = new JooqBundle<CONFIG>() {
             public DataSourceFactory getDataSourceFactory(CONFIG configuration) {
@@ -71,20 +81,20 @@ public class AuditedJooqDocRefBundle<CONFIG extends Configuration & HasTokenConf
         };
     }
 
+    public Module getGuiceModule(CONFIG configuration) {
+        return Modules.combine(new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(DSLContext.class).toInstance(DSL.using(jooqBundle.getConfiguration()));
+            }
+        }, auditedQueryBundle.getGuiceModule(configuration));
+    }
+
     @Override
     public void run(final CONFIG configuration,
                     final Environment environment) {
-        super.run(configuration, environment);
-
         // We need the database before we need most other things
         migrate(configuration, environment);
-
-        environment.jersey().register(new AbstractBinder() {
-            @Override
-            protected void configure() {
-                bind(jooqBundle.getConfiguration()).to(org.jooq.Configuration.class);
-            }
-        });
     }
 
     private void migrate(CONFIG config, Environment environment) {
@@ -116,10 +126,9 @@ public class AuditedJooqDocRefBundle<CONFIG extends Configuration & HasTokenConf
 
     @Override
     public void initialize(final Bootstrap<?> bootstrap) {
-        super.initialize(bootstrap);
-
         final Bootstrap<CONFIG> castBootstrap = (Bootstrap<CONFIG>) bootstrap; // this initialize function should have used the templated config type
         castBootstrap.addBundle(jooqBundle);
         castBootstrap.addBundle(flywayBundle);
+        castBootstrap.addBundle(auditedQueryBundle);
     }
 }
