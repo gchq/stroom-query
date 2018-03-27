@@ -193,7 +193,7 @@ public class FlatResultCreator implements ResultCreator {
 
                 return resultBuilder.build();
 
-            } catch (final Exception e) {
+            } catch (final RuntimeException e) {
                 error = e.getMessage();
             }
         }

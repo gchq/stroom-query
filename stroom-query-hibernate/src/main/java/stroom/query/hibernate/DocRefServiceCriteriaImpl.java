@@ -117,7 +117,7 @@ public class DocRefServiceCriteriaImpl<
             cq.distinct(true);
 
             return session.createQuery(cq).getResultList();
-        } catch (final Exception e) {
+        } catch (final RuntimeException e) {
             LOGGER.warn("Failed to get index list", e);
             throw e;
         }
@@ -138,7 +138,7 @@ public class DocRefServiceCriteriaImpl<
             return Optional.of(entity);
         } catch (NoResultException e) {
             return Optional.empty();
-        } catch (final Exception e) {
+        } catch (final RuntimeException e) {
             LOGGER.warn("Failed to get index list", e);
             throw e;
         }
@@ -171,7 +171,7 @@ public class DocRefServiceCriteriaImpl<
             return Optional.of(entity);
         } catch (NoResultException e) {
             return Optional.empty();
-        } catch (final Exception e) {
+        } catch (final RuntimeException e) {
             LOGGER.warn("Failed to get create index", e);
 
             throw e;
@@ -214,7 +214,7 @@ public class DocRefServiceCriteriaImpl<
 
         } catch (NoResultException e) {
             return Optional.empty();
-        } catch (final Exception e) {
+        } catch (final RuntimeException e) {
             LOGGER.warn("Failed to get update entity", e);
             throw e;
         }
@@ -257,7 +257,7 @@ public class DocRefServiceCriteriaImpl<
             return Optional.of(entity);
         } catch (NoResultException e) {
             return Optional.empty();
-        } catch (final Exception e) {
+        } catch (final RuntimeException e) {
             LOGGER.warn("Failed to get create index", e);
 
             throw e;
@@ -305,7 +305,7 @@ public class DocRefServiceCriteriaImpl<
 
         } catch (NoResultException e) {
             return Optional.empty();
-        } catch (final Exception e) {
+        } catch (final RuntimeException e) {
             LOGGER.warn("Failed to get update entity", e);
             throw e;
         }
@@ -335,7 +335,7 @@ public class DocRefServiceCriteriaImpl<
             return Optional.of(Boolean.TRUE);
         } catch (NoResultException e) {
             return Optional.empty();
-        } catch (final Exception e) {
+        } catch (final RuntimeException e) {
             LOGGER.warn("Failed to get create entity", e);
             throw e;
         }
@@ -398,7 +398,7 @@ public class DocRefServiceCriteriaImpl<
             }
         } catch (NoResultException e) {
             return Optional.empty();
-        } catch (final Exception e) {
+        } catch (final RuntimeException e) {
             LOGGER.warn("Failed to get create index", e);
 
             throw e;

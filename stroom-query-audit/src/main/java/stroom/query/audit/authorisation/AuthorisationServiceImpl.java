@@ -83,7 +83,7 @@ public class AuthorisationServiceImpl implements AuthorisationService {
                     LOGGER.error("Tried to check authorisation for a user but got an unknown response!",
                             response.getStatus());
             }
-        } catch (final Exception e) {
+        } catch (final RuntimeException e) {
             LOGGER.error("Could not request authorisation " + e.getLocalizedMessage());
             isUserAuthorised = false;
         } finally {

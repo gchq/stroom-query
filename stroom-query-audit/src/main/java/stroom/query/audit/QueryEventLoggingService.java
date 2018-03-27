@@ -148,7 +148,7 @@ public class QueryEventLoggingService extends DefaultEventLoggingService impleme
                     client.setIPAddress(ip);
                     return client;
                 }
-            } catch (final Exception e) {
+            } catch (final RuntimeException e) {
                 LOGGER.warn("Problem getting client IP address and host name", e);
             }
         }

@@ -213,7 +213,7 @@ public class SearchResponseCreator {
                         if (resultCreator != null) {
                             result = resultCreator.create(data, resultRequest);
                         }
-                    } catch (final Exception e) {
+                    } catch (final RuntimeException e) {
                         result = new TableResult(componentId, null, null, null, e.getMessage());
                     }
                 }
@@ -249,7 +249,7 @@ public class SearchResponseCreator {
                             // StreamUtil.stringToFile(cr.getJSON(), new
                             // File(dir, "current.json"));
                             // }
-                            // } catch (final Exception e) {
+                            // } catch (final RuntimeException e) {
                             // LOGGER.error(e.getMessage(), e);
                             // }
 
@@ -286,7 +286,7 @@ public class SearchResponseCreator {
                         store.getDefaultMaxResultsSizes(),
                         store.getStoreSize());
             }
-        } catch (final Exception e) {
+        } catch (final RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         } finally {
             cachedResultCreators.put(componentId, resultCreator);

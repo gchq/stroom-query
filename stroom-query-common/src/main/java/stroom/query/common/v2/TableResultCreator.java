@@ -82,7 +82,7 @@ public class TableResultCreator implements ResultCreator {
                     null,
                     0,
                     0);
-        } catch (final Exception e) {
+        } catch (final RuntimeException e) {
             error = e.getMessage();
         }
 

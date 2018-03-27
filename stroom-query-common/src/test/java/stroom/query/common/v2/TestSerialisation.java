@@ -218,49 +218,6 @@ public class TestSerialisation {
         return in.replaceAll("\\s", "");
     }
 
-//    private <T> void testXML(final T objIn, final Class<T> type, final String testName) throws IOException, JAXBException {
-//        final JAXBContext context = JAXBContext.newInstance(type);
-//
-//        final Path dir = TestFileUtil.getTestResourcesDir().resolve("SerialisationTest");
-//        Path expectedFile = dir.resolve(testName + "-XML.expected.xml");
-//        Path actualFile = dir.resolve(testName + "-XML.actual.xml");
-//
-//        final StringWriter stringWriterIn = new StringWriter();
-//        getMarshaller(context).marshal(objIn, stringWriterIn);
-//
-//        String serialisedIn = stringWriterIn.toString();
-//        System.out.println(serialisedIn);
-//
-//        if (!Files.isRegularFile(expectedFile)) {
-//            StreamUtil.stringToFile(serialisedIn, expectedFile);
-//        }
-//        StreamUtil.stringToFile(serialisedIn, actualFile);
-//
-//        final String expected = StreamUtil.fileToString(expectedFile);
-//        Assert.assertEquals(expected, serialisedIn);
-//
-//        Object objOut = context.createUnmarshaller().unmarshal(new StringReader(serialisedIn));
-//
-//        final StringWriter stringWriterOut = new StringWriter();
-//        getMarshaller(context).marshal(objOut, stringWriterOut);
-//
-//        String serialisedOut = stringWriterOut.toString();
-//        System.out.println(serialisedOut);
-//
-//        Assert.assertEquals(serialisedIn, serialisedOut);
-//        Assert.assertEquals(objIn, objOut);
-//    }
-
-    private Marshaller getMarshaller(final JAXBContext context) {
-        try {
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            return marshaller;
-        } catch (final Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-    }
-
     private SearchResponse getSearchResponse() {
         final List<String> values = Collections.singletonList("test");
         final List<Row> rows = Collections.singletonList(new Row("groupKey", values, 5));

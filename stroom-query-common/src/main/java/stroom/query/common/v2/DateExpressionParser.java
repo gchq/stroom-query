@@ -71,7 +71,7 @@ public class DateExpressionParser {
                     if (timeZoneId != null) {
                         zoneId = ZoneId.of(timeZoneId);
                     }
-                } catch (final Exception ex) {
+                } catch (final RuntimeException ex) {
                 }
 
                 // If no time zone was specified then try and parse as a local datetime.
