@@ -26,6 +26,7 @@ public interface QueryService {
      *
      * @param user    The authenticated user
      * @param request The details of the search
+     * @return An optional search response.
      */
     Optional<SearchResponse> search(ServiceUser user,
                                     SearchRequest request);
