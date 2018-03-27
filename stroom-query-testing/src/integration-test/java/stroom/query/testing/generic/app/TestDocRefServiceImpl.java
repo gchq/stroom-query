@@ -21,20 +21,20 @@ public class TestDocRefServiceImpl implements DocRefService<TestDocRefEntity> {
     }
 
     @Override
-    public List<TestDocRefEntity> getAll(final ServiceUser user) throws Exception {
+    public List<TestDocRefEntity> getAll(final ServiceUser user) {
         return new ArrayList<>(data.values());
     }
 
     @Override
     public Optional<TestDocRefEntity> get(final ServiceUser user,
-                                          final String uuid) throws Exception {
+                                          final String uuid) {
         return Optional.ofNullable(data.get(uuid));
     }
 
     @Override
     public Optional<TestDocRefEntity> createDocument(final ServiceUser user,
                                                      final String uuid,
-                                                     final String name) throws Exception {
+                                                     final String name) {
         final Long now = System.currentTimeMillis();
         data.put(uuid, new TestDocRefEntity.Builder()
                 .uuid(uuid)
@@ -51,7 +51,7 @@ public class TestDocRefServiceImpl implements DocRefService<TestDocRefEntity> {
     @Override
     public Optional<TestDocRefEntity> update(final ServiceUser user,
                                              final String uuid,
-                                             final TestDocRefEntity updatedConfig) throws Exception {
+                                             final TestDocRefEntity updatedConfig) {
         return get(user, uuid)
                 .map(d -> new TestDocRefEntity.Builder(d)
                         .updateTime(System.currentTimeMillis())
@@ -63,7 +63,7 @@ public class TestDocRefServiceImpl implements DocRefService<TestDocRefEntity> {
     @Override
     public Optional<TestDocRefEntity> copyDocument(final ServiceUser user,
                                                    final String originalUuid,
-                                                   final String copyUuid) throws Exception {
+                                                   final String copyUuid) {
         final TestDocRefEntity existing = data.get(originalUuid);
         if (null != existing) {
             createDocument(user, copyUuid, existing.getName());
@@ -75,14 +75,14 @@ public class TestDocRefServiceImpl implements DocRefService<TestDocRefEntity> {
 
     @Override
     public Optional<TestDocRefEntity> moveDocument(final ServiceUser user,
-                                                   final String uuid) throws Exception {
+                                                   final String uuid) {
         return get(user, uuid);
     }
 
     @Override
     public Optional<TestDocRefEntity> renameDocument(final ServiceUser user,
                                                      final String uuid,
-                                                     final String name) throws Exception {
+                                                     final String name) {
         return get(user, uuid)
                 .map(d -> new TestDocRefEntity.Builder(d)
                         .updateTime(System.currentTimeMillis())
@@ -93,7 +93,7 @@ public class TestDocRefServiceImpl implements DocRefService<TestDocRefEntity> {
 
     @Override
     public Optional<Boolean> deleteDocument(final ServiceUser user,
-                                            final String uuid) throws Exception {
+                                            final String uuid) {
         if (data.containsKey(uuid)) {
             data.remove(uuid);
             return Optional.of(Boolean.TRUE);
@@ -104,7 +104,7 @@ public class TestDocRefServiceImpl implements DocRefService<TestDocRefEntity> {
 
     @Override
     public ExportDTO exportDocument(final ServiceUser user,
-                                    final String uuid) throws Exception {
+                                    final String uuid) {
         return get(user, uuid)
                 .map(d -> new ExportDTO.Builder()
                         .value(DocRefEntity.NAME, d.getName())
@@ -120,7 +120,7 @@ public class TestDocRefServiceImpl implements DocRefService<TestDocRefEntity> {
                                                      final String uuid,
                                                      final String name,
                                                      final Boolean confirmed,
-                                                     final Map<String, String> dataMap) throws Exception {
+                                                     final Map<String, String> dataMap) {
         if (confirmed) {
             final Optional<TestDocRefEntity> index = createDocument(user, uuid, name);
 

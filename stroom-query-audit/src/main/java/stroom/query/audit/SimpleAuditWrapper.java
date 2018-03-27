@@ -20,12 +20,12 @@ public class SimpleAuditWrapper extends BaseAuditWrapper<SimpleAuditWrapper> {
 
     @FunctionalInterface
     public interface AuthorisationSupplier {
-        Boolean isAuthorised() throws Exception;
+        Boolean isAuthorised() ;
     }
 
     @FunctionalInterface
     public interface ResponseSupplier {
-        Response getResponse() throws Exception;
+        Response getResponse() ;
     }
 
     private AuthorisationSupplier authorisationSupplier;
@@ -67,7 +67,7 @@ public class SimpleAuditWrapper extends BaseAuditWrapper<SimpleAuditWrapper> {
     @Override
     protected Response audit(EventLoggingService eventLoggingService) {
         Response response = null;
-        Exception exception = null;
+        RuntimeException exception = null;
 
         try {
             final Boolean isAuthorised = authorisationSupplier.isAuthorised();
@@ -78,7 +78,7 @@ public class SimpleAuditWrapper extends BaseAuditWrapper<SimpleAuditWrapper> {
                 response = Response.status(HttpStatus.FORBIDDEN_403).build();
             }
 
-        } catch (Exception e) {
+        } catch (final RuntimeException e) {
             LOGGER.error("Failed to execute operation: " + e.getLocalizedMessage(), e);
             exception = e;
             response = Response.serverError().build();

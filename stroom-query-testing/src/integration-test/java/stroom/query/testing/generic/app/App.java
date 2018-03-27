@@ -25,11 +25,11 @@ public class App extends Application<Config> {
 
     @Override
     public void run(final Config configuration,
-                    final Environment environment) throws Exception {
+                    final Environment environment) {
 
         environment.healthChecks().register("Something", new HealthCheck() {
             @Override
-            protected Result check() throws Exception {
+            protected Result check() {
                 return Result.healthy("Keeps Dropwizard Happy");
             }
         });

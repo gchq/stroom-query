@@ -61,7 +61,7 @@ public class StroomAuthenticationRule extends WireMockClassRule {
             String jwkId = UUID.randomUUID().toString();
             jwk = RsaJwkGenerator.generateJwk(2048);
             jwk.setKeyId(jwkId);
-        } catch (Exception e) {
+        } catch (final JoseException e) {
             fail(e.getLocalizedMessage());
             return;
         }
@@ -73,7 +73,7 @@ public class StroomAuthenticationRule extends WireMockClassRule {
             String jwkId = UUID.randomUUID().toString();
             invalidJwk = RsaJwkGenerator.generateJwk(2048);
             invalidJwk.setKeyId(jwkId);
-        } catch (Exception e) {
+        } catch (final JoseException e) {
             fail(e.getLocalizedMessage());
             return;
         }
@@ -176,7 +176,7 @@ public class StroomAuthenticationRule extends WireMockClassRule {
                         .jwt(jws.getCompactSerialization())
                         .name(u)
                         .build();
-            } catch (JoseException e) {
+            } catch (final JoseException e) {
                 fail(e.getLocalizedMessage());
             }
 

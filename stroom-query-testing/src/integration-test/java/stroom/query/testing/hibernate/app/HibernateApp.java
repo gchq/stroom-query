@@ -9,8 +9,6 @@ import io.dropwizard.setup.Environment;
 import stroom.query.hibernate.AuditedCriteriaQueryBundle;
 
 public class HibernateApp extends Application<HibernateConfig> {
-
-
     private final AuditedCriteriaQueryBundle<HibernateConfig,
             TestDocRefServiceCriteriaImpl,
             TestDocRefHibernateEntity,

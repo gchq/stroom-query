@@ -17,10 +17,10 @@ public interface QueryService {
      * @param user The authenticated user
      * @param docRef The Doc Ref of the DataSource to fetch
      * @return The DataSource definition for the given doc ref
-     * @throws Exception If something goes wrong
+     * @If something goes wrong
      */
     Optional<DataSource> getDataSource(ServiceUser user,
-                                       DocRef docRef) throws Exception;
+                                       DocRef docRef) ;
 
     /**
      * Conduct a search on the data, it may be a successive call for long running searches.
@@ -28,10 +28,10 @@ public interface QueryService {
      * @param user The authenticated user
      * @param request The details of the search
      * @return The search results
-     * @throws Exception If something goes wrong
+     * @If something goes wrong
      */
     Optional<SearchResponse> search(ServiceUser user,
-                                    SearchRequest request) throws Exception;
+                                    SearchRequest request) ;
 
     /**
      * Destroy any existing query being conducted under the given key.
@@ -39,10 +39,10 @@ public interface QueryService {
      * @param user The authenticated user
      * @param queryKey The query key that was given with the search request.
      * @return Success indicator
-     * @throws Exception If something goes wrong
+     * @If something goes wrong
      */
     Boolean destroy(ServiceUser user,
-                    QueryKey queryKey) throws Exception;
+                    QueryKey queryKey) ;
 
     /**
      * Used by REST layer to retrieve the doc ref for a given query key.
@@ -51,8 +51,8 @@ public interface QueryService {
      * @param user The authenticated user
      * @param queryKey The query key, it should match a current query
      * @return The DocRef of the query, if found, if not found the result will be empty.
-     * @throws Exception If something goes wrong
+     * @If something goes wrong
      */
     Optional<DocRef> getDocRefForQueryKey(ServiceUser user,
-                                          QueryKey queryKey) throws Exception;
+                                          QueryKey queryKey) ;
 }

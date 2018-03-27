@@ -52,7 +52,7 @@ public abstract class QueryResourceNoAuthIT<
     protected abstract DOC_REF_ENTITY getValidEntity(final DocRef docRef);
 
     @Test
-    public void testGetDataSource() throws Exception {
+    public void testGetDataSource() {
         final DocRef docRef = createDocument();
 
         final Response response = queryClient.getDataSource(NoAuthValueFactoryProvider.ADMIN_USER, docRef);

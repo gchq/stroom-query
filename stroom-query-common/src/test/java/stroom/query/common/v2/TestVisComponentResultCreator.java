@@ -35,7 +35,7 @@ public class TestVisComponentResultCreator {
 //    final Path TEST_DIR = TestFileUtil.getTestResourcesDir().resolve("TestVisComponentResultCreator");
 //
 //    @Test
-//    public void testValues() throws Exception {
+//    public void testValues() {
 //        final TableSettings parentTableSettings = getParentTableSettings();
 //        final Data parentData = createData();
 //
@@ -61,7 +61,7 @@ public class TestVisComponentResultCreator {
 //    }
 //
 //    @Test
-//    public void testNest() throws Exception {
+//    public void testNest() {
 //        final TableSettings parentTableSettings = getParentTableSettings();
 //        final Data parentData = createData();
 //
@@ -91,7 +91,7 @@ public class TestVisComponentResultCreator {
 //    }
 //
 ////    @Test
-////    public void testDeepNest() throws Exception {
+////    public void testDeepNest() {
 ////        final Items<Item> items = createData();
 ////
 ////        final CompiledStructure.Field xField = new CompiledStructure.Field(new FieldRef(Type.NUMBER, 0), null);
@@ -201,7 +201,7 @@ public class TestVisComponentResultCreator {
     }
 
 //    @Test
-//    public void testNest() throws Exception {
+//    public void testNest() {
 //        final Items<Item> items = createData();
 //
 //        final CompiledStructure.Field xField = new CompiledStructure.Field(new FieldRef(Type.NUMBER, 0), null);
@@ -221,7 +221,7 @@ public class TestVisComponentResultCreator {
 //    }
 //
 //    @Test
-//    public void testDeepNest() throws Exception {
+//    public void testDeepNest() {
 //        final Items<Item> items = createData();
 //
 //        final CompiledStructure.Field xField = new CompiledStructure.Field(new FieldRef(Type.NUMBER, 0), null);

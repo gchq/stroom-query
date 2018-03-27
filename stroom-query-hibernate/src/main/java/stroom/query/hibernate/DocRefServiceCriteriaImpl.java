@@ -107,7 +107,7 @@ public class DocRefServiceCriteriaImpl<
     }
 
     @Override
-    public List<DOC_REF_ENTITY> getAll(final ServiceUser user) throws Exception {
+    public List<DOC_REF_ENTITY> getAll(final ServiceUser user) {
         try (final Session session = database.openSession()){
             final CriteriaBuilder cb = session.getCriteriaBuilder();
             final CriteriaQuery<DOC_REF_ENTITY> cq = cb.createQuery(docRefEntityClass);
@@ -124,7 +124,7 @@ public class DocRefServiceCriteriaImpl<
     }
 
     @Override
-    public Optional<DOC_REF_ENTITY> get(final ServiceUser user, final String uuid) throws Exception {
+    public Optional<DOC_REF_ENTITY> get(final ServiceUser user, final String uuid) {
         try (final Session session = database.openSession()){
             final CriteriaBuilder cb = session.getCriteriaBuilder();
             final CriteriaQuery<DOC_REF_ENTITY> cq = cb.createQuery(docRefEntityClass);
@@ -147,7 +147,7 @@ public class DocRefServiceCriteriaImpl<
     @Override
     public Optional<DOC_REF_ENTITY> createDocument(final ServiceUser user,
                                                    final String uuid,
-                                                   final String name) throws Exception {
+                                                   final String name) {
         Transaction tx;
 
         try (final Session session = database.openSession()) {
@@ -181,7 +181,7 @@ public class DocRefServiceCriteriaImpl<
     @Override
     public Optional<DOC_REF_ENTITY> update(final ServiceUser user,
                                            final String uuid,
-                                           final DOC_REF_ENTITY updatedConfig) throws Exception {
+                                           final DOC_REF_ENTITY updatedConfig) {
         Transaction tx;
 
         try (final Session session = database.openSession()) {
@@ -205,7 +205,7 @@ public class DocRefServiceCriteriaImpl<
             int rowsAffected = session.createQuery(cq).executeUpdate();
 
             if (rowsAffected == 0) {
-                throw new Exception("Zero rows affected by the update");
+                throw new RuntimeException("Zero rows affected by the update");
             }
 
             tx.commit();
@@ -223,7 +223,7 @@ public class DocRefServiceCriteriaImpl<
     @Override
     public Optional<DOC_REF_ENTITY> copyDocument(final ServiceUser user,
                                                  final String originalUuid,
-                                                 final String copyUuid) throws Exception {
+                                                 final String copyUuid) {
         Transaction tx;
 
         try (final Session session = database.openSession()) {
@@ -266,7 +266,7 @@ public class DocRefServiceCriteriaImpl<
 
     @Override
     public Optional<DOC_REF_ENTITY> moveDocument(final ServiceUser user,
-                                                 final String uuid) throws Exception {
+                                                 final String uuid) {
 
         // Nothing to worry about here
         return get(user, uuid);
@@ -275,7 +275,7 @@ public class DocRefServiceCriteriaImpl<
     @Override
     public Optional<DOC_REF_ENTITY> renameDocument(final ServiceUser user,
                                                    final String uuid,
-                                                   final String name) throws Exception {
+                                                   final String name) {
         Transaction tx;
 
         try (final Session session = database.openSession()) {
@@ -296,7 +296,7 @@ public class DocRefServiceCriteriaImpl<
             int rowsAffected = session.createQuery(cq).executeUpdate();
 
             if (rowsAffected == 0) {
-                throw new Exception("Zero rows affected by the update");
+                throw new RuntimeException("Zero rows affected by the update");
             }
 
             tx.commit();
@@ -313,7 +313,7 @@ public class DocRefServiceCriteriaImpl<
 
     @Override
     public Optional<Boolean> deleteDocument(final ServiceUser user,
-                                            final String uuid) throws Exception {
+                                            final String uuid) {
         Transaction tx;
 
         try (final Session session = database.openSession()) {
@@ -327,7 +327,7 @@ public class DocRefServiceCriteriaImpl<
 
             int rowsAffected = session.createQuery(cq).executeUpdate();
             if (rowsAffected == 0) {
-                throw new Exception("Zero rows affected by the update");
+                throw new RuntimeException("Zero rows affected by the update");
             }
 
             tx.commit();
@@ -343,7 +343,7 @@ public class DocRefServiceCriteriaImpl<
 
     @Override
     public ExportDTO exportDocument(final ServiceUser user,
-                                    final String uuid) throws Exception {
+                                    final String uuid) {
         final Optional<DOC_REF_ENTITY> optionalIndex = get(user, uuid);
 
         return optionalIndex.map(index -> new ExportDTO.Builder()
@@ -360,7 +360,7 @@ public class DocRefServiceCriteriaImpl<
                                                    final String uuid,
                                                    final String name,
                                                    final Boolean confirmed,
-                                                   final Map<String, String> dataMap) throws Exception {
+                                                   final Map<String, String> dataMap) {
 
         Transaction tx;
 

@@ -23,22 +23,22 @@ public class DocRefAuditWrapper<DOC_REF_ENTITY extends DocRefEntity>
 
     @FunctionalInterface
     public interface DocRefSupplier {
-        Optional<DocRef> getDocRef() throws Exception;
+        Optional<DocRef> getDocRef() ;
     }
 
     @FunctionalInterface
     public interface DocRefEntitySupplier<T extends DocRefEntity> {
-        Optional<T> getDocRefEntity(DocRef docRef) throws Exception;
+        Optional<T> getDocRefEntity(DocRef docRef) ;
     }
 
     @FunctionalInterface
     public interface DocRefAuthorisationSupplier {
-        Boolean isAuthorised(DocRef docRef) throws Exception;
+        Boolean isAuthorised(DocRef docRef) ;
     }
 
     @FunctionalInterface
     public interface ResponseSupplier<T extends DocRefEntity> {
-        Response getResponse(T docRefEntity) throws Exception;
+        Response getResponse(T docRefEntity) ;
     }
 
     private DocRefSupplier docRefSupplier;
@@ -104,7 +104,7 @@ public class DocRefAuditWrapper<DOC_REF_ENTITY extends DocRefEntity>
     @Override
     protected Response audit(EventLoggingService eventLoggingService) {
         Response response = null;
-        Exception exception = null;
+        RuntimeException exception = null;
 
         try {
             final DocRef docRef;
@@ -130,7 +130,7 @@ public class DocRefAuditWrapper<DOC_REF_ENTITY extends DocRefEntity>
             } else {
                 response = Response.status(HttpStatus.NOT_FOUND_404).build();
             }
-        } catch (Exception e) {
+        } catch (final RuntimeException e) {
             LOGGER.error("Failed to execute operation: " + e.getLocalizedMessage(), e);
             exception = e;
             response = Response.serverError().build();

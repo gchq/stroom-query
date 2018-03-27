@@ -18,6 +18,7 @@ import stroom.query.audit.service.DocRefService;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.util.Map;
 
 public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRefResource {
@@ -151,10 +152,14 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                                 .build(),
                         DocumentPermission.UPDATE))
                 .withResponse(() -> {
-                    final T updatedConfig = objectMapper.readValue(updatedConfigJson, docRefEntityClass);
-                    return service.update(user, uuid, updatedConfig)
-                            .map(d -> Response.ok(d).build())
-                            .orElse(Response.noContent().build());
+                    try {
+                        final T updatedConfig = objectMapper.readValue(updatedConfigJson, docRefEntityClass);
+                        return service.update(user, uuid, updatedConfig)
+                                .map(d -> Response.ok(d).build())
+                                .orElse(Response.noContent().build());
+                    } catch (final IOException e) {
+                        throw new RuntimeException(e.getMessage(), e);
+                    }
                 })
                 .withPopulateAudit((eventDetail, response, exception) -> {
                     eventDetail.setTypeId(UPDATE_DOC_REF);

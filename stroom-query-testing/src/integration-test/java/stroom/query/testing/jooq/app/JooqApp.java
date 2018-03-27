@@ -9,7 +9,6 @@ import io.dropwizard.setup.Environment;
 import stroom.query.jooq.AuditedJooqQueryBundle;
 
 public class JooqApp extends Application<JooqConfig> {
-
     private final AuditedJooqQueryBundle<JooqConfig,
             TestDocRefServiceJooqImpl,
             TestDocRefJooqEntity,

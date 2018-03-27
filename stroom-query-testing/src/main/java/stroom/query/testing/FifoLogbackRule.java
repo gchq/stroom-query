@@ -28,7 +28,7 @@ public class FifoLogbackRule extends ExternalResource {
     private final List<Predicate<String>> predicates = new ArrayList<>();
 
     @Override
-    protected void before() throws Throwable {
+    protected void before() {
         FifoLogbackAppender.popLogs();
         logsThisTest.clear();
         predicates.clear();

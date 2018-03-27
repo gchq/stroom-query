@@ -137,7 +137,7 @@ public class SearchResponseCreator {
 
             return new SearchResponse(store.getHighlights(), results, store.getErrors(), complete);
 
-        } catch (Exception e) {
+        } catch (final RuntimeException e) {
             LOGGER.error("Error getting search results for query {}", searchRequest.getKey().toString(), e);
 
             return createErrorResponse(

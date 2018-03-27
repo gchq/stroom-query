@@ -89,7 +89,7 @@ public class DocRefServiceJooqImpl<DOC_REF_ENTITY extends DocRefJooqEntity>
     }
 
     @Override
-    public List<DOC_REF_ENTITY> getAll(final ServiceUser user) throws Exception {
+    public List<DOC_REF_ENTITY> getAll(final ServiceUser user) {
         return database.transactionResult(configuration -> DSL.using(configuration)
                 .select()
                 .from(table)
@@ -110,7 +110,7 @@ public class DocRefServiceJooqImpl<DOC_REF_ENTITY extends DocRefJooqEntity>
 
     @Override
     public Optional<DOC_REF_ENTITY> get(final ServiceUser user,
-                                        final String uuid) throws Exception {
+                                        final String uuid) {
 
         return database.transactionResult(configuration -> {
             final Record record = DSL.using(configuration)
@@ -126,7 +126,7 @@ public class DocRefServiceJooqImpl<DOC_REF_ENTITY extends DocRefJooqEntity>
     @Override
     public Optional<DOC_REF_ENTITY> createDocument(final ServiceUser user,
                                                    final String uuid,
-                                                   final String name) throws Exception {
+                                                   final String name) {
 
         return database.transactionResult(configuration -> {
             final ULong now = ULong.valueOf(System.currentTimeMillis());
@@ -155,7 +155,7 @@ public class DocRefServiceJooqImpl<DOC_REF_ENTITY extends DocRefJooqEntity>
     @Override
     public Optional<DOC_REF_ENTITY> update(final ServiceUser user,
                                            final String uuid,
-                                           final DOC_REF_ENTITY updated) throws Exception {
+                                           final DOC_REF_ENTITY updated) {
         final ULong now = ULong.valueOf(System.currentTimeMillis());
 
         return database.transactionResult(configuration -> {
@@ -184,7 +184,7 @@ public class DocRefServiceJooqImpl<DOC_REF_ENTITY extends DocRefJooqEntity>
     @Override
     public Optional<DOC_REF_ENTITY> copyDocument(final ServiceUser user,
                                                  final String originalUuid,
-                                                 final String copyUuid) throws Exception {
+                                                 final String copyUuid) {
         return database.transactionResult(configuration -> {
             DSL.using(configuration)
                     .insertInto(table, DocRefJooqEntity.UUID_FIELD,
@@ -217,7 +217,7 @@ public class DocRefServiceJooqImpl<DOC_REF_ENTITY extends DocRefJooqEntity>
 
     @Override
     public Optional<DOC_REF_ENTITY> moveDocument(final ServiceUser user,
-                                                 final String uuid) throws Exception {
+                                                 final String uuid) {
         // Nothing to worry about here
         return get(user, uuid);
     }
@@ -225,7 +225,7 @@ public class DocRefServiceJooqImpl<DOC_REF_ENTITY extends DocRefJooqEntity>
     @Override
     public Optional<DOC_REF_ENTITY> renameDocument(final ServiceUser user,
                                                    final String uuid,
-                                                   final String name) throws Exception {
+                                                   final String name) {
         final ULong now = ULong.valueOf(System.currentTimeMillis());
 
         return database.transactionResult(configuration -> {
@@ -249,7 +249,7 @@ public class DocRefServiceJooqImpl<DOC_REF_ENTITY extends DocRefJooqEntity>
 
     @Override
     public Optional<Boolean> deleteDocument(final ServiceUser user,
-                                            final String uuid) throws Exception {
+                                            final String uuid) {
         return database.transactionResult(configuration -> {
 
             final int rowsDeleted = DSL.using(configuration)
@@ -263,7 +263,7 @@ public class DocRefServiceJooqImpl<DOC_REF_ENTITY extends DocRefJooqEntity>
 
     @Override
     public ExportDTO exportDocument(final ServiceUser user,
-                                    final String uuid) throws Exception {
+                                    final String uuid) {
         return database.transactionResult(configuration -> {
 
             final Record record = DSL.using(configuration)
@@ -300,7 +300,7 @@ public class DocRefServiceJooqImpl<DOC_REF_ENTITY extends DocRefJooqEntity>
                                                    final String uuid,
                                                    final String name,
                                                    final Boolean confirmed,
-                                                   final Map<String, String> dataMap) throws Exception {
+                                                   final Map<String, String> dataMap) {
 
         return database.transactionResult(configuration -> {
 

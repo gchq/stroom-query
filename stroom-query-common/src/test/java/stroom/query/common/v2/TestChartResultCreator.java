@@ -22,14 +22,14 @@ public class TestChartResultCreator {
     private static final String[] SERIES_CHOICE = new String[]{"", "Test1", "Test2"};
 
     @Test
-    public void testSeriesGen() throws Exception {
+    public void testSeriesGen() {
         for (int i = 0; i < 10; i++) {
             System.out.println(getSeries());
         }
     }
 
 //    @Test
-//    public void test() throws Exception {
+//    public void test() {
 //        final Items<Item> items = new ItemsArrayList<Item>();
 //        for (int i = 0; i < 100; i++) {
 //            final Object[] values = new Object[3];

@@ -24,28 +24,28 @@ public interface DocRefService <T extends DocRefEntity> {
     /**
      * Retrieve all of the index entities currently registered
      * @param user The logged in user
-     * @throws Exception if anything goes wrong
+     * @if anything goes wrong
      * @return The list of all known index entities
      */
-    List<T> getAll(ServiceUser user) throws Exception;
+    List<T> getAll(ServiceUser user) ;
 
     /**
      * Retrieve the full config for the given DocRef
      * @param user The logged in user
      * @param uuid              The UUID of the docRef to return
-     * @throws Exception if anything goes wrong
+     * @if anything goes wrong
      * @return                  The full implementation specific config for this docRef.
      */
-    Optional<T> get(ServiceUser user, String uuid) throws Exception;
+    Optional<T> get(ServiceUser user, String uuid) ;
 
     /**
      * Retrieve the info about a doc ref
      * @param user The logged in user
      * @param uuid The UUID of the doc ref to find
-     * @throws Exception if anything goes wrong
+     * @if anything goes wrong
      * @return The DocRefInfo for the UUID
      */
-    default Optional<DocRefInfo> getInfo(ServiceUser user, String uuid) throws Exception {
+    default Optional<DocRefInfo> getInfo(ServiceUser user, String uuid) {
         return get(user, uuid).map(d -> new DocRefInfo.Builder()
                 .docRef(new DocRef.Builder()
                         .uuid(d.getUuid())
@@ -65,10 +65,10 @@ public interface DocRefService <T extends DocRefEntity> {
      * @param user The logged in user
      * @param uuid              The UUID of the document as created by stroom
      * @param name              The name of the document to be created.
-     * @throws Exception if anything goes wrong
+     * @if anything goes wrong
      * @return The new index entity
      */
-    Optional<T> createDocument(ServiceUser user, String uuid, String name) throws Exception;
+    Optional<T> createDocument(ServiceUser user, String uuid, String name) ;
 
     /**
      * Used to update a specific document.
@@ -76,10 +76,10 @@ public interface DocRefService <T extends DocRefEntity> {
      * @param user The logged in user
      * @param uuid The UUID of DocRef used to store the index configuration
      * @param updatedConfig The updated configuration
-     * @throws Exception if anything goes wrong
+     * @if anything goes wrong
      * @return The updated config
      */
-    Optional<T> update(ServiceUser user, String uuid, T updatedConfig) throws Exception;
+    Optional<T> update(ServiceUser user, String uuid, T updatedConfig) ;
 
     /**
      * A notification from Stroom that a document is being copied. The external system should
@@ -88,10 +88,10 @@ public interface DocRefService <T extends DocRefEntity> {
      * @param user The logged in user
      * @param originalUuid      The uuid of the document being copied
      * @param copyUuid          The uuid of the copy
-     * @throws Exception if anything goes wrong
+     * @if anything goes wrong
      * @return The new index entity
      */
-    Optional<T> copyDocument(ServiceUser user, String originalUuid, String copyUuid) throws Exception;
+    Optional<T> copyDocument(ServiceUser user, String originalUuid, String copyUuid) ;
 
     /**
      * A Notification from Stroom that the document has been 'moved'. In most cases the external system
@@ -99,10 +99,10 @@ public interface DocRefService <T extends DocRefEntity> {
      *
      * @param user The logged in user
      * @param uuid             The uuid of the document that was moved
-     * @throws Exception if anything goes wrong
+     * @if anything goes wrong
      * @return The updated index entity
      */
-    Optional<T> moveDocument(ServiceUser user, String uuid) throws Exception;
+    Optional<T> moveDocument(ServiceUser user, String uuid) ;
 
     /**
      * A notifiation from Stroom that the name of a document has been changed. Whilst the name belongs to stroom
@@ -112,29 +112,29 @@ public interface DocRefService <T extends DocRefEntity> {
      * @param user The logged in user
      * @param uuid The uuid of the document you want to rename.
      * @param name The new name of the document.
-     * @throws Exception if anything goes wrong
+     * @if anything goes wrong
      * @return The updated index entity
      */
-    Optional<T> renameDocument(ServiceUser user, String uuid, String name) throws Exception;
+    Optional<T> renameDocument(ServiceUser user, String uuid, String name) ;
 
     /**
      * The document with this UUID is being deleted in Stroom.
      *
      * @param user The logged in user
      * @param uuid The uuid of the document you want to delete.
-     * @throws Exception if anything goes wrong
+     * @if anything goes wrong
      * @return Optional boolean, if missing, the document could not be found, if false, it could not be deleted
      */
-    Optional<Boolean> deleteDocument(ServiceUser user, String uuid) throws Exception;
+    Optional<Boolean> deleteDocument(ServiceUser user, String uuid) ;
 
     /**
      * Used to export the full details of a document for transfer.
      * @param user The logged in user
      * @param uuid The UUID of the document to export
-     * @throws Exception if anything goes wrong
+     * @if anything goes wrong
      * @return The exported data
      */
-    ExportDTO exportDocument(ServiceUser user, String uuid) throws Exception;
+    ExportDTO exportDocument(ServiceUser user, String uuid) ;
 
     /**
      * Used to import a document into the system
@@ -143,12 +143,12 @@ public interface DocRefService <T extends DocRefEntity> {
      * @param name The Name of the document to import
      * @param confirmed Used to indicate if this is a dry run
      * @param dataMap The data that gives all the implementation specific details
-     * @throws Exception if anything goes wrong
+     * @if anything goes wrong
      * @return The imported document
      */
     Optional<T> importDocument(ServiceUser user,
                                String uuid,
                                String name,
                                Boolean confirmed,
-                               Map<String, String> dataMap) throws Exception;
+                               Map<String, String> dataMap) ;
 }

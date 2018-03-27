@@ -176,7 +176,7 @@ public class TestJooqQueryResourceIT extends QueryResourceIT<TestDocRefJooqEntit
                             .map(Object::toString)
                             .forEach(resultsSet::add);
                 }
-            } catch (Exception e) {
+            } catch (final RuntimeException e) {
                 fail(e.getLocalizedMessage());
             }
         });

@@ -93,7 +93,7 @@ public class QueryServiceJooqImpl<
 
     @Override
     public Optional<DataSource> getDataSource(final ServiceUser user,
-                                              final DocRef docRef) throws Exception {
+                                              final DocRef docRef) {
         final Optional<DOC_REF_ENTITY> docRefEntity = docRefService.get(user, docRef.getUuid());
 
         if (!docRefEntity.isPresent()) {
@@ -105,7 +105,7 @@ public class QueryServiceJooqImpl<
 
     @Override
     public Optional<SearchResponse> search(final ServiceUser user,
-                                           final SearchRequest request) throws Exception {
+                                           final SearchRequest request) {
         final String dataSourceUuid = request.getQuery().getDataSource().getUuid();
 
         final Optional<DOC_REF_ENTITY> docRefEntity = docRefService.get(user, dataSourceUuid);
@@ -132,13 +132,13 @@ public class QueryServiceJooqImpl<
 
     @Override
     public Boolean destroy(final ServiceUser user,
-                           final QueryKey queryKey) throws Exception {
+                           final QueryKey queryKey) {
         return Boolean.TRUE;
     }
 
     @Override
     public Optional<DocRef> getDocRefForQueryKey(final ServiceUser user,
-                                                 final QueryKey queryKey) throws Exception {
+                                                 final QueryKey queryKey) {
         return Optional.empty();
     }
 

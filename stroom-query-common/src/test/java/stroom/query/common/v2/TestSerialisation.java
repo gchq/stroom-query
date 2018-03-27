@@ -182,7 +182,7 @@ public class TestSerialisation {
 //        testXML(objIn, type, testName);
     }
 
-    private <T> void testJSON(final T objIn, final Class<T> type, final String testName) throws IOException, JAXBException {
+    private <T> void testJSON(final T objIn, final Class<T> type, final String testName) throws IOException {
         ObjectMapper mapper = createMapper(true);
 
         final Path dir = TestFileUtil.getTestResourcesDir().resolve("SerialisationTest");

@@ -60,7 +60,7 @@ public class AuditedCriteriaQueryBundle<CONFIG extends Configuration & HasTokenC
         };
 
         @Override
-        public void run(final CONFIG configuration, final Environment environment) throws Exception {
+        public void run(final CONFIG configuration, final Environment environment) {
 
             // We need the database before we need most other things
             migrate(configuration, environment);
