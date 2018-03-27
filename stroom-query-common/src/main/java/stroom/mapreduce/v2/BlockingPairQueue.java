@@ -16,101 +16,34 @@
 
 package stroom.mapreduce.v2;
 
-import stroom.util.shared.HasTerminate;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class BlockingPairQueue<K, V> implements PairQueue<K, V> {
     private static final long serialVersionUID = 3205692727588879153L;
 
     private static final int MAX_SIZE = 1000000;
 
-    private final HasTerminate monitor;
-    private final AtomicInteger size = new AtomicInteger();
-    private final ReentrantLock lock = new ReentrantLock();
-    private volatile List<Pair<K, V>> queue;
-    private transient Iterator<Pair<K, V>> emptyIter;
-
-    public BlockingPairQueue(final HasTerminate monitor) {
-        this.monitor = monitor;
-    }
+    private final LinkedBlockingQueue<Pair<K, V>> queue = new LinkedBlockingQueue<>(MAX_SIZE);
 
     @Override
     public void collect(final K key, final V value) {
         final Pair<K, V> pair = new Pair<>(key, value);
-        while (!offer(pair) && (monitor == null || !monitor.isTerminated())) {
-            try {
-                Thread.sleep(100);
-            } catch (final InterruptedException e) {
-                // Ignore.
-            }
-        }
-    }
 
-    private boolean offer(final Pair<K, V> pair) {
-        boolean success;
-        lock.lock();
         try {
-            // We won't allow more than max results to go into the queue.
-            if (size.get() >= MAX_SIZE) {
-                success = false;
-
-            } else {
-                if (queue == null) {
-                    queue = new ArrayList<>();
-                }
-
-                queue.add(pair);
-                size.incrementAndGet();
-                success = true;
-            }
-        } finally {
-            lock.unlock();
+            queue.put(pair);
+        } catch (final InterruptedException e) {
+            // Continue to interrupt this thread.
+            Thread.currentThread().interrupt();
         }
-        return success;
     }
 
     @Override
     public Iterator<Pair<K, V>> iterator() {
-        List<Pair<K, V>> local;
-        lock.lock();
-        try {
-            local = queue;
-            queue = null;
-            size.set(0);
-        } finally {
-            lock.unlock();
-        }
-
-        if (local != null) {
-            return local.iterator();
-        } else {
-            return getEmptyIter();
-        }
-    }
-
-    private Iterator<Pair<K, V>> getEmptyIter() {
-        if (emptyIter == null) {
-            emptyIter = new Iterator<Pair<K, V>>() {
-                @Override
-                public boolean hasNext() {
-                    return false;
-                }
-
-                @Override
-                public Pair<K, V> next() {
-                    return null;
-                }
-
-                @Override
-                public void remove() {
-                }
-            };
-        }
-        return emptyIter;
+        final List<Pair<K, V>> local = new ArrayList<>(queue.size());
+        queue.drainTo(local);
+        return local.iterator();
     }
 }

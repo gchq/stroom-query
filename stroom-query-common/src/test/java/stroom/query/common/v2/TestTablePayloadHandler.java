@@ -31,7 +31,6 @@ import stroom.query.api.v2.TableSettings;
 import stroom.query.common.v2.format.FieldFormatter;
 import stroom.query.common.v2.format.FormatterFactory;
 import stroom.query.shared.v2.ParamUtil;
-import stroom.util.shared.HasTerminate;
 
 import java.util.Collections;
 import java.util.List;
@@ -46,17 +45,12 @@ public class TestTablePayloadHandler {
         final FormatterFactory formatterFactory = new FormatterFactory(null);
         final FieldFormatter fieldFormatter = new FieldFormatter(formatterFactory);
 
-//        final DataSourceFieldsMap dataSourceFieldsMap = new DataSourceFieldsMap();
-
-//        final DataSourceField indexField = new DataSourceField(DataSourceFieldType.FIELD, "Text");
-//        dataSourceFieldsMap.put(indexField);
-
         final TableSettings tableSettings = new TableSettings.Builder()
                 .addFields(new Field.Builder()
-                    .name("Text")
-                    .expression(ParamUtil.makeParam("Text"))
-                    .format(Format.Type.TEXT)
-                    .build())
+                        .name("Text")
+                        .expression(ParamUtil.makeParam("Text"))
+                        .format(Format.Type.TEXT)
+                        .build())
                 .build();
 
         final CompiledDepths compiledDepths = new CompiledDepths(tableSettings.getFields(), tableSettings.showDetail());
@@ -79,7 +73,7 @@ public class TestTablePayloadHandler {
                 tableSettings.showDetail(),
                 maxResults,
                 storeSize);
-        payloadHandler.addQueue(queue, new Terminatable());
+        payloadHandler.addQueue(queue);
         final Data data = payloadHandler.getData();
 
         // Make sure we only get 50 results.
@@ -108,10 +102,10 @@ public class TestTablePayloadHandler {
 
         final TableSettings tableSettings = new TableSettings.Builder()
                 .addFields(new Field.Builder()
-                    .name("Text")
-                    .expression(ParamUtil.makeParam("Text"))
-                    .sort(sort)
-                    .build())
+                        .name("Text")
+                        .expression(ParamUtil.makeParam("Text"))
+                        .sort(sort)
+                        .build())
                 .build();
 
         final CompiledDepths compiledDepths = new CompiledDepths(tableSettings.getFields(), tableSettings.showDetail());
@@ -131,7 +125,7 @@ public class TestTablePayloadHandler {
 
         final TablePayloadHandler payloadHandler = new TablePayloadHandler(tableSettings.getFields(),
                 tableSettings.showDetail(), maxResults, storeSize);
-        payloadHandler.addQueue(queue, new Terminatable());
+        payloadHandler.addQueue(queue);
         final Data data = payloadHandler.getData();
 
         final ResultRequest tableResultRequest = new ResultRequest("componentX", tableSettings, new OffsetRange(0, 3000));
@@ -151,12 +145,12 @@ public class TestTablePayloadHandler {
 
 
         final TableSettings tableSettings = new TableSettings.Builder()
-            .addFields(new Field.Builder()
-                .name("Number")
-                .expression(ParamUtil.makeParam("Number"))
-                .sort(sort)
-                .build())
-            .build();
+                .addFields(new Field.Builder()
+                        .name("Number")
+                        .expression(ParamUtil.makeParam("Number"))
+                        .sort(sort)
+                        .build())
+                .build();
 
         final CompiledDepths compiledDepths = new CompiledDepths(tableSettings.getFields(), tableSettings.showDetail());
         final CompiledFields compiledFields = new CompiledFields(tableSettings.getFields(), null, Collections.emptyMap());
@@ -175,7 +169,7 @@ public class TestTablePayloadHandler {
 
         final TablePayloadHandler payloadHandler = new TablePayloadHandler(tableSettings.getFields(),
                 tableSettings.showDetail(), maxResults, storeSize);
-        payloadHandler.addQueue(queue, new Terminatable());
+        payloadHandler.addQueue(queue);
         final Data data = payloadHandler.getData();
 
         final ResultRequest tableResultRequest = new ResultRequest("componentX", tableSettings, new OffsetRange(0, 3000));
@@ -201,10 +195,10 @@ public class TestTablePayloadHandler {
 
         final TableSettings tableSettings = new TableSettings.Builder()
                 .addFields(new Field.Builder()
-                    .name("Text")
-                    .expression(ParamUtil.makeParam("Text"))
-                    .group(0)
-                    .build())
+                        .name("Text")
+                        .expression(ParamUtil.makeParam("Text"))
+                        .group(0)
+                        .build())
                 .build();
 
         final CompiledDepths compiledDepths = new CompiledDepths(tableSettings.getFields(), tableSettings.showDetail());
@@ -224,7 +218,7 @@ public class TestTablePayloadHandler {
 
         final TablePayloadHandler payloadHandler = new TablePayloadHandler(tableSettings.getFields(),
                 tableSettings.showDetail(), maxResults, storeSize);
-        payloadHandler.addQueue(queue, new Terminatable());
+        payloadHandler.addQueue(queue);
         final Data data = payloadHandler.getData();
 
         final ResultRequest tableResultRequest = new ResultRequest("componentX", tableSettings, new OffsetRange(0, 3000));
@@ -245,15 +239,15 @@ public class TestTablePayloadHandler {
 
         final TableSettings tableSettings = new TableSettings.Builder()
                 .addFields(new Field.Builder()
-                    .name("Count")
-                    .expression("count()")
-                    .build())
+                        .name("Count")
+                        .expression("count()")
+                        .build())
                 .addFields(new Field.Builder()
-                    .name("Text")
-                    .expression(ParamUtil.makeParam("Text"))
-                    .sort(sort)
-                    .group(0)
-                    .build())
+                        .name("Text")
+                        .expression(ParamUtil.makeParam("Text"))
+                        .sort(sort)
+                        .group(0)
+                        .build())
                 .build();
 
         final CompiledDepths compiledDepths = new CompiledDepths(tableSettings.getFields(), tableSettings.showDetail());
@@ -273,7 +267,7 @@ public class TestTablePayloadHandler {
 
         final TablePayloadHandler payloadHandler = new TablePayloadHandler(tableSettings.getFields(),
                 tableSettings.showDetail(), maxResults, storeSize);
-        payloadHandler.addQueue(queue, new Terminatable());
+        payloadHandler.addQueue(queue);
         final Data data = payloadHandler.getData();
 
         final ResultRequest tableResultRequest = new ResultRequest("componentX", tableSettings, new OffsetRange(0, 3000));
@@ -293,15 +287,15 @@ public class TestTablePayloadHandler {
 
         final TableSettings tableSettings = new TableSettings.Builder()
                 .addFields(new Field.Builder()
-                    .name("Count")
-                    .expression("count()")
-                    .build())
+                        .name("Count")
+                        .expression("count()")
+                        .build())
                 .addFields(new Field.Builder()
-                    .name("Text")
-                    .expression(ParamUtil.makeParam("Text"))
-                    .sort(sort)
-                    .group(1)
-                    .build())
+                        .name("Text")
+                        .expression(ParamUtil.makeParam("Text"))
+                        .sort(sort)
+                        .group(1)
+                        .build())
                 .build();
 
         final CompiledDepths compiledDepths = new CompiledDepths(tableSettings.getFields(), tableSettings.showDetail());
@@ -321,7 +315,7 @@ public class TestTablePayloadHandler {
 
         final TablePayloadHandler payloadHandler = new TablePayloadHandler(tableSettings.getFields(),
                 tableSettings.showDetail(), maxResults, storeSize);
-        payloadHandler.addQueue(queue, new Terminatable());
+        payloadHandler.addQueue(queue);
         final Data data = payloadHandler.getData();
 
         final ResultRequest tableResultRequest = new ResultRequest(
@@ -355,18 +349,6 @@ public class TestTablePayloadHandler {
                 Assert.assertTrue(diff <= 0);
             }
             lastValue = value;
-        }
-    }
-
-    private static class Terminatable implements HasTerminate {
-        @Override
-        public void terminate() {
-
-        }
-
-        @Override
-        public boolean isTerminated() {
-            return false;
         }
     }
 }

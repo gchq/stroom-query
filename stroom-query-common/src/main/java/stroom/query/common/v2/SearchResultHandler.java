@@ -19,7 +19,6 @@ package stroom.query.common.v2;
 import stroom.mapreduce.v2.UnsafePairQueue;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.common.v2.CoprocessorSettingsMap.CoprocessorKey;
-import stroom.util.shared.HasTerminate;
 
 import java.util.List;
 import java.util.Map;
@@ -49,7 +48,7 @@ public class SearchResultHandler implements ResultHandler {
     }
 
     @Override
-    public void handle(final Map<CoprocessorKey, Payload> payloadMap, final HasTerminate hasTerminate) {
+    public void handle(final Map<CoprocessorKey, Payload> payloadMap) {
         if (payloadMap != null) {
             for (final Entry<CoprocessorKey, Payload> entry : payloadMap.entrySet()) {
                 final Payload payload = entry.getValue();
@@ -59,7 +58,7 @@ public class SearchResultHandler implements ResultHandler {
                     final TablePayloadHandler payloadHandler = handlerMap.get(entry.getKey());
                     final UnsafePairQueue<Key, Item> newQueue = tablePayload.getQueue();
                     if (newQueue != null) {
-                        payloadHandler.addQueue(newQueue, hasTerminate);
+                        payloadHandler.addQueue(newQueue);
                     }
                 }
             }

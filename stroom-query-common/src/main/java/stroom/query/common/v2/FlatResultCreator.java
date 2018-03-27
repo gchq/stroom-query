@@ -27,7 +27,6 @@ import stroom.query.api.v2.Result;
 import stroom.query.api.v2.ResultRequest;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.common.v2.format.FieldFormatter;
-import stroom.util.shared.HasTerminate;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class FlatResultCreator implements ResultCreator, HasTerminate {
+public class FlatResultCreator implements ResultCreator {
     private final FieldFormatter fieldFormatter;
     private final List<Mapper> mappers;
     private final List<Field> fields;
@@ -309,15 +308,6 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
         return type;
     }
 
-    @Override
-    public void terminate() {
-    }
-
-    @Override
-    public boolean isTerminated() {
-        return false;
-    }
-
     @FunctionalInterface
     private interface RangeChecker {
         boolean check(long count);
@@ -328,16 +318,16 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
         boolean isOpen(Key group);
     }
 
-    private static class Mapper implements HasTerminate {
+    private static class Mapper {
         private final String[] parentFields;
         private final FieldIndexMap fieldIndexMap;
         private final TableCoprocessor tableCoprocessor;
         private final TablePayloadHandler tablePayloadHandler;
 
-        public Mapper(final TableSettings parent,
-                      final TableSettings child,
-                      final Map<String, String> paramMap,
-                      final StoreSize storeSize) {
+        Mapper(final TableSettings parent,
+               final TableSettings child,
+               final Map<String, String> paramMap,
+               final StoreSize storeSize) {
 
             parentFields = new String[parent.getFields().size()];
             int i = 0;
@@ -348,7 +338,7 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
             fieldIndexMap = new FieldIndexMap(true);
 
             final TableCoprocessorSettings tableCoprocessorSettings = new TableCoprocessorSettings(child);
-            tableCoprocessor = new TableCoprocessor(tableCoprocessorSettings, fieldIndexMap, this, paramMap);
+            tableCoprocessor = new TableCoprocessor(tableCoprocessorSettings, fieldIndexMap, paramMap);
 
             final MaxResults maxResults = new MaxResults(child.getMaxResults(), Collections.singletonList(Integer.MAX_VALUE));
             tablePayloadHandler = new TablePayloadHandler(child.getFields(), true, maxResults, storeSize);
@@ -385,17 +375,8 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
             final TablePayload payload = (TablePayload) tableCoprocessor.createPayload();
 
             tablePayloadHandler.clear();
-            tablePayloadHandler.addQueue(payload.getQueue(), this);
+            tablePayloadHandler.addQueue(payload.getQueue());
             return tablePayloadHandler.getData();
-        }
-
-        @Override
-        public void terminate() {
-        }
-
-        @Override
-        public boolean isTerminated() {
-            return false;
         }
     }
 

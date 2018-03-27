@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import stroom.mapreduce.v2.PairQueue;
 import stroom.mapreduce.v2.UnsafePairQueue;
 import stroom.query.api.v2.Field;
-import stroom.util.shared.HasTerminate;
 
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -60,9 +59,9 @@ public class TablePayloadHandler implements PayloadHandler {
         data = null;
     }
 
-    void addQueue(final UnsafePairQueue<Key, Item> newQueue, final HasTerminate hasTerminate) {
+    void addQueue(final UnsafePairQueue<Key, Item> newQueue) {
         if (newQueue != null) {
-            if (hasTerminate.isTerminated()) {
+            if (Thread.currentThread().isInterrupted()) {
                 // Clear the queue if we should terminate.
                 pendingMerges.clear();
 
@@ -76,16 +75,16 @@ public class TablePayloadHandler implements PayloadHandler {
                 }
 
                 // Try and merge all of the items on the pending merge queue.
-                mergePending(hasTerminate);
+                mergePending();
             }
         }
     }
 
-    private void mergePending(final HasTerminate hasTerminate) {
+    private void mergePending() {
         // Only 1 thread will get to do a merge.
         if (merging.compareAndSet(false, true)) {
             try {
-                if (hasTerminate.isTerminated()) {
+                if (Thread.currentThread().isInterrupted()) {
                     // Clear the queue if we should terminate.
                     pendingMerges.clear();
 
@@ -99,7 +98,7 @@ public class TablePayloadHandler implements PayloadHandler {
                             throw e;
                         }
 
-                        if (hasTerminate.isTerminated()) {
+                        if (Thread.currentThread().isInterrupted()) {
                             // Clear the queue if we should terminate.
                             pendingMerges.clear();
                         }
@@ -111,7 +110,7 @@ public class TablePayloadHandler implements PayloadHandler {
                 merging.set(false);
             }
 
-            if (hasTerminate.isTerminated()) {
+            if (Thread.currentThread().isInterrupted()) {
                 // Clear the queue if we should terminate.
                 pendingMerges.clear();
             }
@@ -120,7 +119,7 @@ public class TablePayloadHandler implements PayloadHandler {
             // just been added by another thread that didn't get to do the
             // merge.
             if (pendingMerges.peek() != null) {
-                mergePending(hasTerminate);
+                mergePending();
             }
         }
     }
@@ -188,11 +187,9 @@ public class TablePayloadHandler implements PayloadHandler {
         if (!compiledSorter.hasSort() && !compiledDepths.hasGroupBy()) {
             //No sorting or grouping so we can stop the search as soon as we have the number
             //of results requested by the client
-            if (data != null &&
+            return data != null &&
                     maxResults != null &&
-                    data.getTotalSize() >= maxResults.size(0)) {
-                return true;
-            }
+                    data.getTotalSize() >= maxResults.size(0);
         }
         return false;
     }

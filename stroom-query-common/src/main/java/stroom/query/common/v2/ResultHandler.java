@@ -17,12 +17,11 @@
 package stroom.query.common.v2;
 
 import stroom.query.common.v2.CoprocessorSettingsMap.CoprocessorKey;
-import stroom.util.shared.HasTerminate;
 
 import java.util.Map;
 
 public interface ResultHandler {
-    void handle(Map<CoprocessorKey, Payload> payloadMap, HasTerminate hasTerminate);
+    void handle(Map<CoprocessorKey, Payload> payloadMap);
 
     Data getResultStore(String componentId);
 }

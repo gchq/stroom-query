@@ -29,7 +29,6 @@ import stroom.query.common.v2.SearchResponseCreator;
 import stroom.query.common.v2.StoreSize;
 import stroom.query.common.v2.TableCoprocessor;
 import stroom.query.common.v2.TableCoprocessorSettings;
-import stroom.util.shared.HasTerminate;
 
 import javax.inject.Inject;
 import javax.persistence.Tuple;
@@ -144,7 +143,7 @@ public class QueryServiceCriteriaImpl<
 
     @Override
     public Optional<DocRef> getDocRefForQueryKey(final ServiceUser user,
-                                                 final QueryKey queryKey) throws Exception {
+                                                 final QueryKey queryKey) {
         return Optional.empty();
     }
 
@@ -256,20 +255,8 @@ public class QueryServiceCriteriaImpl<
 
                 if (coprocessorSettings instanceof TableCoprocessorSettings) {
                     final TableCoprocessorSettings tableCoprocessorSettings = (TableCoprocessorSettings) coprocessorSettings;
-                    final HasTerminate taskMonitor = new HasTerminate() {
-                        //TODO do something about this
-                        @Override
-                        public void terminate() {
-                            System.out.println("terminating");
-                        }
-
-                        @Override
-                        public boolean isTerminated() {
-                            return false;
-                        }
-                    };
                     final Coprocessor coprocessor = new TableCoprocessor(
-                            tableCoprocessorSettings, fieldIndexMap, taskMonitor, paramMap);
+                            tableCoprocessorSettings, fieldIndexMap, paramMap);
 
                     coprocessorMap.put(coprocessorId, coprocessor);
                 }
@@ -294,16 +281,14 @@ public class QueryServiceCriteriaImpl<
                 }
             }
 
-            coprocessorMap.entrySet().forEach(coprocessor -> {
-                coprocessor.getValue().receive(dataArray);
-            });
+            coprocessorMap.forEach((key, value) -> value.receive(dataArray));
         }
 
         // TODO putting things into a payload and taking them out again is a waste of time in this case. We could use a queue instead and that'd be fine.
         //TODO: 'Payload' is a cluster specific name - what lucene ships back from a node.
         // Produce payloads for each coprocessor.
         Map<CoprocessorSettingsMap.CoprocessorKey, Payload> payloadMap = null;
-        if (coprocessorMap != null && coprocessorMap.size() > 0) {
+        if (coprocessorMap.size() > 0) {
             for (final Map.Entry<CoprocessorSettingsMap.CoprocessorKey, Coprocessor> entry : coprocessorMap.entrySet()) {
                 final Payload payload = entry.getValue().createPayload();
                 if (payload != null) {

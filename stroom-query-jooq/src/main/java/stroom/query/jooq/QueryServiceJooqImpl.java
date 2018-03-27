@@ -34,7 +34,6 @@ import stroom.query.common.v2.SearchResponseCreator;
 import stroom.query.common.v2.StoreSize;
 import stroom.query.common.v2.TableCoprocessor;
 import stroom.query.common.v2.TableCoprocessorSettings;
-import stroom.util.shared.HasTerminate;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -249,20 +248,8 @@ public class QueryServiceJooqImpl<
 
                 if (coprocessorSettings instanceof TableCoprocessorSettings) {
                     final TableCoprocessorSettings tableCoprocessorSettings = (TableCoprocessorSettings) coprocessorSettings;
-                    final HasTerminate taskMonitor = new HasTerminate() {
-                        //TODO do something about this
-                        @Override
-                        public void terminate() {
-                            System.out.println("terminating");
-                        }
-
-                        @Override
-                        public boolean isTerminated() {
-                            return false;
-                        }
-                    };
                     final Coprocessor coprocessor = new TableCoprocessor(
-                            tableCoprocessorSettings, fieldIndexMap, taskMonitor, paramMap);
+                            tableCoprocessorSettings, fieldIndexMap, paramMap);
 
                     coprocessorMap.put(coprocessorId, coprocessor);
                 }

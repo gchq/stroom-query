@@ -22,7 +22,6 @@ import stroom.mapreduce.v2.PairQueue;
 import stroom.mapreduce.v2.UnsafePairQueue;
 import stroom.query.api.v2.Field;
 import stroom.query.api.v2.TableSettings;
-import stroom.util.shared.HasTerminate;
 
 import java.util.List;
 import java.util.Map;
@@ -31,18 +30,18 @@ public class TableCoprocessor implements Coprocessor {
     private final PairQueue<Key, Item> queue;
     private final ItemMapper mapper;
 
-    private final CompiledFields compiledFields;
     private final CompiledDepths compiledDepths;
 
     public TableCoprocessor(final TableCoprocessorSettings settings,
-                            final FieldIndexMap fieldIndexMap, final HasTerminate taskMonitor, final Map<String, String> paramMap) {
+                            final FieldIndexMap fieldIndexMap,
+                            final Map<String, String> paramMap) {
         final TableSettings tableSettings = settings.getTableSettings();
 
         final List<Field> fields = tableSettings.getFields();
         compiledDepths = new CompiledDepths(fields, tableSettings.showDetail());
-        compiledFields = new CompiledFields(fields, fieldIndexMap, paramMap);
+        final CompiledFields compiledFields = new CompiledFields(fields, fieldIndexMap, paramMap);
 
-        queue = new BlockingPairQueue<>(taskMonitor);
+        queue = new BlockingPairQueue<>();
         mapper = new ItemMapper(queue, compiledFields, compiledDepths.getMaxDepth(), compiledDepths.getMaxGroupDepth());
     }
 
