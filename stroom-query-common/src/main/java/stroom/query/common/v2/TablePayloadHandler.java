@@ -71,12 +71,17 @@ public class TablePayloadHandler implements PayloadHandler {
                 // merging.
                 try {
                     pendingMerges.put(newQueue);
-                } catch (final InterruptedException | RuntimeException e) {
+                } catch (final InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    LOGGER.warn("Thread interrupted while trying to put an item onto pendingMerges queue");
+                } catch (final RuntimeException e) {
                     LOGGER.error(e.getMessage(), e);
                 }
 
-                // Try and merge all of the items on the pending merge queue.
-                mergePending(hasTerminate);
+                if (!Thread.currentThread().isInterrupted()) {
+                    // Try and merge all of the items on the pending merge queue.
+                    mergePending(hasTerminate);
+                }
             }
         }
     }
