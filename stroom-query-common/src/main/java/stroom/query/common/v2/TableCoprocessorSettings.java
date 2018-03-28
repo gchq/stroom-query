@@ -22,6 +22,9 @@ import stroom.query.api.v2.TableSettings;
 public class TableCoprocessorSettings implements CoprocessorSettings {
     private final TableSettings tableSettings;
 
+    private static final int DEFAULT_QUEUE_CAPACITY = 1000000;
+    private volatile int queueCapacity = DEFAULT_QUEUE_CAPACITY;
+
     public TableCoprocessorSettings(final TableSettings tableSettings) {
         this.tableSettings = tableSettings;
     }
@@ -38,5 +41,13 @@ public class TableCoprocessorSettings implements CoprocessorSettings {
     @Override
     public DocRef getExtractionPipeline() {
         return tableSettings.getExtractionPipeline();
+    }
+
+    public int getQueueCapacity() {
+        return queueCapacity;
+    }
+
+    public void setQueueCapacity(final int queueCapacity) {
+        this.queueCapacity = queueCapacity;
     }
 }

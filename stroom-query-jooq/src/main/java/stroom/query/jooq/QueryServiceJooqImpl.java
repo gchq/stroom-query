@@ -1,7 +1,6 @@
 package stroom.query.jooq;
 
 import org.jooq.Condition;
-import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
@@ -46,17 +45,12 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static org.jooq.impl.DSL.and;
-import static org.jooq.impl.DSL.field;
-import static org.jooq.impl.DSL.not;
-import static org.jooq.impl.DSL.or;
+import static org.jooq.impl.DSL.*;
 
 public class QueryServiceJooqImpl<
         DOC_REF_ENTITY extends DocRefJooqEntity,
         QUERYABLE_ENTITY extends QueryableJooqEntity> implements QueryService {
     private static final Logger LOGGER = LoggerFactory.getLogger(QueryServiceJooqImpl.class);
-
-    private final Class<QUERYABLE_ENTITY> dtoClass;
 
     private final List<DataSourceField> fields;
 
@@ -72,8 +66,9 @@ public class QueryServiceJooqImpl<
                                 final DocRefService docRefService,
                                 final DSLContext database) {
         this.docRefService = (DocRefService<DOC_REF_ENTITY>) docRefService;
-        this.dtoClass = dtoClassProvider.get();
         this.database = database;
+
+        final Class<QUERYABLE_ENTITY> dtoClass = dtoClassProvider.get();
 
         this.table = Optional.ofNullable(dtoClass.getAnnotation(JooqEntity.class))
                 .map(JooqEntity::tableName)
@@ -252,8 +247,9 @@ public class QueryServiceJooqImpl<
 
                 if (coprocessorSettings instanceof TableCoprocessorSettings) {
                     final TableCoprocessorSettings tableCoprocessorSettings = (TableCoprocessorSettings) coprocessorSettings;
-                    final Coprocessor coprocessor = new TableCoprocessor(
-                            tableCoprocessorSettings, fieldIndexMap, paramMap);
+                    final Coprocessor coprocessor = new TableCoprocessor(tableCoprocessorSettings,
+                            fieldIndexMap,
+                            paramMap);
 
                     coprocessorMap.put(coprocessorId, coprocessor);
                 }
@@ -278,16 +274,14 @@ public class QueryServiceJooqImpl<
                 }
             }
 
-            coprocessorMap.entrySet().forEach(coprocessor -> {
-                coprocessor.getValue().receive(dataArray);
-            });
+            coprocessorMap.forEach((key, value) -> value.receive(dataArray));
         }
 
         // TODO putting things into a payload and taking them out again is a waste of time in this case. We could use a queue instead and that'd be fine.
         //TODO: 'Payload' is a cluster specific name - what lucene ships back from a node.
         // Produce payloads for each coprocessor.
         Map<CoprocessorSettingsMap.CoprocessorKey, Payload> payloadMap = null;
-        if (coprocessorMap != null && coprocessorMap.size() > 0) {
+        if (coprocessorMap.size() > 0) {
             for (final Map.Entry<CoprocessorSettingsMap.CoprocessorKey, Coprocessor> entry : coprocessorMap.entrySet()) {
                 final Payload payload = entry.getValue().createPayload();
                 if (payload != null) {

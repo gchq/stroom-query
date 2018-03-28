@@ -24,9 +24,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class BlockingPairQueue<K, V> implements PairQueue<K, V> {
     private static final long serialVersionUID = 3205692727588879153L;
 
-    private static final int MAX_SIZE = 1000000;
+    private final LinkedBlockingQueue<Pair<K, V>> queue;
 
-    private final LinkedBlockingQueue<Pair<K, V>> queue = new LinkedBlockingQueue<>(MAX_SIZE);
+    public BlockingPairQueue(final int capacity) {
+        queue = new LinkedBlockingQueue<>(capacity);
+    }
 
     @Override
     public void collect(final K key, final V value) {

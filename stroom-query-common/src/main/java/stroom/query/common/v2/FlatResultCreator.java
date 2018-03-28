@@ -338,7 +338,9 @@ public class FlatResultCreator implements ResultCreator {
             fieldIndexMap = new FieldIndexMap(true);
 
             final TableCoprocessorSettings tableCoprocessorSettings = new TableCoprocessorSettings(child);
-            tableCoprocessor = new TableCoprocessor(tableCoprocessorSettings, fieldIndexMap, paramMap);
+            tableCoprocessor = new TableCoprocessor(tableCoprocessorSettings,
+                    fieldIndexMap,
+                    paramMap);
 
             final MaxResults maxResults = new MaxResults(child.getMaxResults(), Collections.singletonList(Integer.MAX_VALUE));
             tablePayloadHandler = new TablePayloadHandler(child.getFields(), true, maxResults, storeSize);

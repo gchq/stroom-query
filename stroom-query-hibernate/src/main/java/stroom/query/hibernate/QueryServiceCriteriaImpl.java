@@ -74,7 +74,7 @@ public class QueryServiceCriteriaImpl<
                                     final DocRefService docRefService,
                                     final SessionFactory database) {
         this.database = database;
-        this.docRefService =  docRefService;
+        this.docRefService = docRefService;
         this.dtoClass = dtoClassProvider.get();
 
         this.fields = QueryableEntity.getFields(dtoClass)
@@ -256,8 +256,9 @@ public class QueryServiceCriteriaImpl<
 
                 if (coprocessorSettings instanceof TableCoprocessorSettings) {
                     final TableCoprocessorSettings tableCoprocessorSettings = (TableCoprocessorSettings) coprocessorSettings;
-                    final Coprocessor coprocessor = new TableCoprocessor(
-                            tableCoprocessorSettings, fieldIndexMap, paramMap);
+                    final Coprocessor coprocessor = new TableCoprocessor(tableCoprocessorSettings,
+                            fieldIndexMap,
+                            paramMap);
 
                     coprocessorMap.put(coprocessorId, coprocessor);
                 }

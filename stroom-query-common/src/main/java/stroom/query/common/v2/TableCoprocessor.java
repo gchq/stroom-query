@@ -41,7 +41,7 @@ public class TableCoprocessor implements Coprocessor {
         compiledDepths = new CompiledDepths(fields, tableSettings.showDetail());
         final CompiledFields compiledFields = new CompiledFields(fields, fieldIndexMap, paramMap);
 
-        queue = new BlockingPairQueue<>();
+        queue = new BlockingPairQueue<>(settings.getQueueCapacity());
         mapper = new ItemMapper(queue, compiledFields, compiledDepths.getMaxDepth(), compiledDepths.getMaxGroupDepth());
     }
 
