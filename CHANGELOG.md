@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Fix handling of InterruptedException in TablePayloadHandler
+
 ### Added
 
 ### Changed
