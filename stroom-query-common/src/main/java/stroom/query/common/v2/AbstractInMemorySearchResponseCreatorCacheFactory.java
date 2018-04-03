@@ -57,12 +57,14 @@ public abstract class AbstractInMemorySearchResponseCreatorCacheFactory implemen
     /**
      * Allows for additional implementation specific build options to be added to cacheBuilder
      */
-    abstract void buildCache(final CacheBuilder<SearchResponseCreatorCache.Key, SearchResponseCreator> cacheBuilder);
+    protected abstract void buildCache(
+            final CacheBuilder<SearchResponseCreatorCache.Key, SearchResponseCreator> cacheBuilder);
 
     /**
      * Allows for the cache and its builder to be registered with a cache manager
      */
-    abstract void registerCache(final CacheBuilder<SearchResponseCreatorCache.Key, SearchResponseCreator> cacheBuilder,
-                                final Cache<SearchResponseCreatorCache.Key, SearchResponseCreator> cache);
+    protected abstract void registerCache(
+            final CacheBuilder<SearchResponseCreatorCache.Key, SearchResponseCreator> cacheBuilder,
+            final Cache<SearchResponseCreatorCache.Key, SearchResponseCreator> cache);
 
 }
