@@ -6,21 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.0.0] - 2018-04-03
+
 * Fix handling of InterruptedException in TablePayloadHandler
 
-### Added
-
-### Changed
-
 ## [v2.0.0-alpha.28] - 2018-02-16
-
-### Changed
 
 * Issue **#8** : Fix handling of non-incremental queries on the query API. Adds timeout option in request and blocking code to wait for the query to complete.
 
 ## [v2.0.0-alpha.27] - 2018-01-31
-
-### Changed
 
 * Tune the hibernate data source pool
 
@@ -30,15 +24,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [v2.0.0-alpha.26] - 2018-01-26
 
-### Changed
-
 * Common integration tests now force sub classes to create their app and wiremock rules.
 
 * Using TestRules instead of inherited behaviour as much as possible
 
 ## [v2.0.0-alpha.24] - 2018-01-25
-
-### Changed
 
 * Removed custom test implementations of auth service and http client, use Wiremock and javax.ws.rs.Client
 
@@ -48,45 +38,31 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [v2.0.0-alpha.22] - 2018-01-15
 
-### Changed
-
 * Added Authentication to DocRef and Query resources.
 
 * Implementations now need to create Service implementations, REST layers are now entirely common.
 
 ## [v2.0.0-alpha.21] - 2018-01-09
 
-### Changed
-
 * Added misc info field for Doc Refs
 
 ## [v2.0.0-alpha.20] - 2018-01-08
-
-### Changed
 
 * Added resource definitions for external doc ref management
 
 ## [v2.0.0-alpha.19] - 2017-12-12
 
-### Changed
-
 * Added missing fields to result builder
 
 ## [v2.0.0-alpha.14] - 2017-12-11
-
-### Changed
 
 * Added Import and Export endpoints
 
 ## [v2.0.0-alpha.13] - 2017-12-06
 
-### Changed
-
 * Fixed minor bug in QueryableEntityBuilder that returned the specific builder class instead of the CHILD_CLASS
 
 ## [v2.0.0-alpha.12] - 2017-12-06
-
-### Changed
 
 * Now using openjdk instead of oraclejdk
 
@@ -94,19 +70,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [v2.0.0-alpha.11] - 2017-12-01
 
-### Changed
-
 * Added DocRef Resource, added client implementations for DocRef and Query Resource
 
 ## [v2.0.0-alpha.10] - 2017-11-29
 
-### Changed
-
 * Change build to use Bintray dependencies and push to Bintray
 
 ## [v2.0.0-alpha.9] - 2017-11-27
-
-### Changed
 
 * Merge changes up from stroom v5
 
@@ -114,19 +84,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [v2.0.0-alpha.8] - 2017-11-14
 
-### Changed
-
 * Uplift to latest event-logging release
 
 ## [v2.0.0-alpha.7] - 2017-11-03
 
-### Added
-
 * Actually releasing audit and hibernate
 
 ## [v2.0.0-alpha.6] - 2017-11-03
-
-### Changed
 
 * Added standard implementations of Query Resource, with auditing
 
@@ -134,25 +98,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [v2.0.0-alpha.5] - 2017-24-16
 
-### Changed
-
 * Pojo Builders for all classes in the API project
 
 ## [v2.0.0-alpha.4] - 2017-10-16
-
-### Changed
 
 * Added null check to cope with empty field list when running queries
 
 ## [v2.0.0-alpha.3] - 2017-09-04
 
-### Changed
-
 * Remove redundant arg from SearchResponseCreator constructor
 
 ## [v2.0.0-alpha.2] - 2017-09-01
-
-### Added
 
 * Add ExpressionBuilder.end() method for better chaining of methods.
 
@@ -160,10 +116,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Add stroom-query-sample module for testing swagger generation
 
-
 ## [v2.0.0-alpha.1] - 2017-08-22
-
-### Changed
 
 * Enhanced component result fetch options to allow for a full fetch on request, no fetch or just data changes.
 
@@ -181,8 +134,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [v1.0.1] - 2017-07-11
 
-### Changed
-
 * Improved toString() and toMultiLineString() methods.
 
 * Removed null from fields and values in toString()
@@ -191,7 +142,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.28...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0...HEAD
+[v2.0.0]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.28...v2.0.0
 [v2.0.0-alpha.28]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.27...v2.0.0-alpha.28
 [v2.0.0-alpha.27]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.26...v2.0.0-alpha.27
 [v2.0.0-alpha.26]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.24...v2.0.0-alpha.26
