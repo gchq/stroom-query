@@ -37,8 +37,7 @@ public class TestQueryResourceIT extends QueryResourceIT<TestDocRefEntity, Confi
             new StroomAuthenticationRule(WireMockConfiguration.options().port(10080));
 
     public TestQueryResourceIT() {
-        super(TestDocRefEntity.class,
-                TestDocRefEntity.TYPE,
+        super(TestDocRefEntity.TYPE,
                 appRule,
                 authRule);
     }

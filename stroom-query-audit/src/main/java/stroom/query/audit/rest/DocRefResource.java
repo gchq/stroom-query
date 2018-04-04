@@ -64,15 +64,13 @@ public interface DocRefResource {
      * @param user Authenticated user passed in from web framework
      * @param uuid              The UUID of the document as created by stroom
      * @param name              The name of the document to be created.
-     * @param parentFolderUUID  The destination parent folder
      * @return A doc ref for the newly created document.
      */
     @POST
-    @Path("/create/{uuid}/{name}/{parentFolderUUID}")
+    @Path("/create/{uuid}/{name}")
     Response createDocument(@Auth @NotNull ServiceUser user,
                             @PathParam("uuid") String uuid,
-                            @PathParam("name") String name,
-                            @PathParam("parentFolderUUID") final String parentFolderUUID);
+                            @PathParam("name") String name);
 
     /**
      * Update the document
@@ -95,15 +93,13 @@ public interface DocRefResource {
      * @param user Authenticated user passed in from web framework
      * @param originalUuid      The uuid of the document being copied
      * @param copyUuid          The uuid of the copy
-     * @param parentFolderUUID  The destination parent folder
      * @return A doc ref for the new document copy.
      */
     @POST
-    @Path("/copy/{originalUuid}/{copyUuid}/{parentFolderUUID}")
+    @Path("/copy/{originalUuid}/{copyUuid}")
     Response copyDocument(@Auth @NotNull ServiceUser user,
                           @PathParam("originalUuid") String originalUuid,
-                          @PathParam("copyUuid") String copyUuid,
-                          @PathParam("parentFolderUUID") final String parentFolderUUID);
+                          @PathParam("copyUuid") String copyUuid);
 
     /**
      * A Notification from Stroom that the document has been 'moved'. In most cases the external system
@@ -111,14 +107,12 @@ public interface DocRefResource {
      *
      * @param user Authenticated user passed in from web framework
      * @param uuid             The uuid of the document that was moved
-     * @param parentFolderUUID The destination parent folder
      * @return A doc ref for the moved document.
      */
     @PUT
-    @Path("/move/{uuid}/{parentFolderUUID}")
+    @Path("/move/{uuid}")
     Response moveDocument(@Auth @NotNull ServiceUser user,
-                          @PathParam("uuid") String uuid,
-                          @PathParam("parentFolderUUID") final String parentFolderUUID);
+                          @PathParam("uuid") String uuid);
 
     /**
      * A notifiation from Stroom that the name of a document has been changed. Whilst the name belongs to stroom

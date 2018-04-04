@@ -26,7 +26,6 @@ public abstract class QueryResourceIT<
         DOC_REF_ENTITY extends DocRefEntity,
         CONFIG_CLASS extends Configuration> {
 
-    private final Class<DOC_REF_ENTITY> docRefEntityClass;
     private final String docRefType;
     protected DocRefResourceHttpClient<DOC_REF_ENTITY> docRefClient;
     protected QueryResourceHttpClient queryClient;
@@ -35,11 +34,9 @@ public abstract class QueryResourceIT<
     @Rule
     public FifoLogbackRule auditLogRule = new FifoLogbackRule();
 
-    protected QueryResourceIT(final Class<DOC_REF_ENTITY> docRefEntityClass,
-                              final String docRefType,
+    protected QueryResourceIT(final String docRefType,
                               final DropwizardAppWithClientsRule<CONFIG_CLASS> appRule,
                               final StroomAuthenticationRule authRule) {
-        this.docRefEntityClass = docRefEntityClass;
         this.docRefType = docRefType;
         this.authRule = authRule;
         this.queryClient = appRule.getClient(QueryResourceHttpClient::new);
@@ -145,12 +142,11 @@ public abstract class QueryResourceIT<
      * It assumes that the creation of documents works, the detail of that is tested in another suite of tests.
      * Once the document is created, the passed in doc ref entity is then used to flesh out the implementation
      * specific details.
+     *
      * @param docRefEntity The implementation specific entity, used to update the doc ref so it can be used.
      * @return The DocRef of the newly created annotations index.
      */
-    protected DocRef createDocument(final DOC_REF_ENTITY docRefEntity) {
-        // Generate UUID's for the doc ref and it's parent folder
-        final String parentFolderUuid = UUID.randomUUID().toString();
+    private DocRef createDocument(final DOC_REF_ENTITY docRefEntity) {
         final DocRef docRef = new DocRef.Builder()
                 .uuid(UUID.randomUUID().toString())
                 .type(docRefType)
@@ -159,16 +155,13 @@ public abstract class QueryResourceIT<
 
         // Ensure admin user can create the document in the folder
         authRule.permitAdminUser()
-                .createInFolder(parentFolderUuid)
-                .docRefType(docRefType)
                 .done();
 
         // Create a doc ref to hang the search from
         final Response createResponse = docRefClient.createDocument(
                 authRule.adminUser(),
                 docRef.getUuid(),
-                docRef.getName(),
-                parentFolderUuid);
+                docRef.getName());
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
         createResponse.close();
 
@@ -192,9 +185,10 @@ public abstract class QueryResourceIT<
 
     /**
      * Create document, use the 'valid' doc ref entity for this test class.
+     *
      * @return The Doc Ref of the created document.
      */
-    protected DocRef createDocument() {
+    private DocRef createDocument() {
         return createDocument(null);
     }
 }

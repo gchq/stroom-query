@@ -66,8 +66,6 @@ public enum DocumentPermission {
      * Users with export permission can export documents.
      */
     EXPORT("Export");
-
-    public static final String FOLDER = "Folder";
     
     private final String name;
     

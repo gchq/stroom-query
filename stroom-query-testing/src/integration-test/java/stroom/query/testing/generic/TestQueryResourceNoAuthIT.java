@@ -31,8 +31,7 @@ public class TestQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDocRefE
             new DropwizardAppWithClientsRule<>(App.class, resourceFilePath("generic_noauth/config.yml"));
 
     public TestQueryResourceNoAuthIT() {
-        super(TestDocRefEntity.class,
-                TestDocRefEntity.TYPE,
+        super(TestDocRefEntity.TYPE,
                 appRule);
     }
 

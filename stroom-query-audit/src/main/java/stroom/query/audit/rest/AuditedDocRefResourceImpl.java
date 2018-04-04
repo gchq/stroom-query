@@ -45,7 +45,7 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
     public static final String GET_ALL_DOC_REFS = "GET_ALL_DOC_REFS";
 
     @Override
-    public Response getAll(final ServiceUser user){
+    public Response getAll(final ServiceUser user) {
         return SimpleAuditWrapper.withUser(user)
                 .withDefaultAuthSupplier()
                 .withResponse(() -> Response.ok(service.getAll(user)).build())
@@ -59,7 +59,7 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
 
     @Override
     public Response get(final ServiceUser user,
-                        final String uuid){
+                        final String uuid) {
         return SimpleAuditWrapper.withUser(user)
                 .withAuthSupplier(() -> authorisationService.isAuthorised(user,
                         new DocRef.Builder()
@@ -85,7 +85,7 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
 
     @Override
     public Response getInfo(final ServiceUser user,
-                            final String uuid){
+                            final String uuid) {
         return SimpleAuditWrapper.withUser(user)
                 .withAuthSupplier(() -> authorisationService.isAuthorised(user,
                         new DocRef.Builder()
@@ -112,15 +112,9 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
     @Override
     public Response createDocument(final ServiceUser user,
                                    final String uuid,
-                                   final String name,
-                                   final String parentFolderUUID){
+                                   final String name) {
         return SimpleAuditWrapper.withUser(user)
-                .withAuthSupplier(() -> authorisationService.isAuthorised(user,
-                        new DocRef.Builder()
-                                .type(DocumentPermission.FOLDER)
-                                .uuid(parentFolderUUID)
-                                .build(),
-                        DocumentPermission.CREATE.getTypedPermission(service.getType())))
+                .withAuthSupplier(() -> true)
                 .withResponse(() -> service.createDocument(user, uuid, name)
                         .map(d -> Response.ok(d).build())
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
@@ -132,7 +126,7 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                     final ObjectOutcome createObj = new ObjectOutcome();
                     final Outcome create = new Outcome();
                     createObj.setOutcome(create);
-                    create.setDescription(String.format("Create document %s with name %s in folder %s", uuid, name, parentFolderUUID));
+                    create.setDescription(String.format("Create document %s with name %s", uuid, name));
                     eventDetail.setCreate(createObj);
                 }).callAndAudit(eventLoggingService);
     }
@@ -179,21 +173,14 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
     @Override
     public Response copyDocument(final ServiceUser user,
                                  final String originalUuid,
-                                 final String copyUuid,
-                                 final String parentFolderUUID){
+                                 final String copyUuid) {
         return SimpleAuditWrapper.withUser(user)
                 .withAuthSupplier(() -> authorisationService.isAuthorised(user,
-                            new DocRef.Builder()
-                                    .type(this.service.getType())
-                                    .uuid(originalUuid)
-                                    .build(),
-                            DocumentPermission.READ) &&
-                        authorisationService.isAuthorised(user,
-                                new DocRef.Builder()
-                                    .type(DocumentPermission.FOLDER)
-                                    .uuid(parentFolderUUID)
-                                    .build(),
-                            DocumentPermission.CREATE.getTypedPermission(service.getType())))
+                        new DocRef.Builder()
+                                .type(this.service.getType())
+                                .uuid(originalUuid)
+                                .build(),
+                        DocumentPermission.READ))
                 .withResponse(() -> service.copyDocument(user, originalUuid, copyUuid)
                         .map(d -> Response.ok(d).build())
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
@@ -205,7 +192,7 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                     final ObjectOutcome createObj = new ObjectOutcome();
                     final Outcome create = new Outcome();
                     createObj.setOutcome(create);
-                    create.setDescription(String.format("Create copy of %s to %s in folder %s", originalUuid, copyUuid, parentFolderUUID));
+                    create.setDescription(String.format("Create copy of %s to %s", originalUuid, copyUuid));
                     eventDetail.setCreate(createObj);
                 }).callAndAudit(eventLoggingService);
     }
@@ -214,21 +201,14 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
 
     @Override
     public Response moveDocument(final ServiceUser user,
-                                 final String uuid,
-                                 final String parentFolderUUID){
+                                 final String uuid) {
         return SimpleAuditWrapper.withUser(user)
-                .withAuthSupplier(() ->   authorisationService.isAuthorised(user,
-                            new DocRef.Builder()
-                                    .type(this.service.getType())
-                                    .uuid(uuid)
-                                    .build(),
-                            DocumentPermission.READ) &&
-                        authorisationService.isAuthorised(user,
-                                new DocRef.Builder()
-                                        .type(DocumentPermission.FOLDER)
-                                        .uuid(parentFolderUUID)
-                                        .build(),
-                                DocumentPermission.CREATE.getTypedPermission(service.getType())))
+                .withAuthSupplier(() -> authorisationService.isAuthorised(user,
+                        new DocRef.Builder()
+                                .type(this.service.getType())
+                                .uuid(uuid)
+                                .build(),
+                        DocumentPermission.READ))
                 .withResponse(() -> service.moveDocument(user, uuid)
                         .map(d -> Response.ok(d).build())
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
@@ -240,7 +220,7 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                     final Event.EventDetail.Update updateObj = new Event.EventDetail.Update();
                     final Outcome update = new Outcome();
                     updateObj.setOutcome(update);
-                    update.setDescription(String.format("Move document %s to %s", uuid, parentFolderUUID));
+                    update.setDescription(String.format("Move document %s", uuid));
                     eventDetail.setUpdate(updateObj);
                 }).callAndAudit(eventLoggingService);
     }
@@ -250,7 +230,7 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
     @Override
     public Response renameDocument(final ServiceUser user,
                                    final String uuid,
-                                   final String name){
+                                   final String name) {
         return SimpleAuditWrapper.withUser(user)
                 .withDefaultAuthSupplier()
                 .withResponse(() -> service.renameDocument(user, uuid, name)
@@ -273,7 +253,7 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
 
     @Override
     public Response deleteDocument(final ServiceUser user,
-                                   final String uuid){
+                                   final String uuid) {
         return SimpleAuditWrapper.withUser(user)
                 .withAuthSupplier(() -> authorisationService.isAuthorised(user,
                         new DocRef.Builder()
@@ -303,7 +283,7 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
                                    final String uuid,
                                    final String name,
                                    final Boolean confirmed,
-                                   final Map<String, String> dataMap){
+                                   final Map<String, String> dataMap) {
         return SimpleAuditWrapper.withUser(user)
                 .withDefaultAuthSupplier()
                 .withResponse(() -> service.importDocument(user, uuid, name, confirmed, dataMap)
@@ -326,7 +306,7 @@ public class AuditedDocRefResourceImpl<T extends DocRefEntity> implements DocRef
 
     @Override
     public Response exportDocument(final ServiceUser user,
-                                   final String uuid){
+                                   final String uuid) {
 
         return SimpleAuditWrapper.withUser(user)
                 .withAuthSupplier(() -> authorisationService.isAuthorised(user,

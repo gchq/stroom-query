@@ -4,8 +4,6 @@ import io.dropwizard.Configuration;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Rule;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import stroom.query.api.v2.DocRefInfo;
 import stroom.query.audit.ExportDTO;
 import stroom.query.audit.client.DocRefResourceHttpClient;
@@ -26,13 +24,11 @@ public abstract class DocRefResourceNoAuthIT<
         DOC_REF_ENTITY extends DocRefEntity,
         CONFIG_CLASS extends Configuration> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DocRefResourceIT.class);
-    
     private final Class<DOC_REF_ENTITY> docRefEntityClass;
-    protected DocRefResourceHttpClient<DOC_REF_ENTITY> docRefClient;
+    private DocRefResourceHttpClient<DOC_REF_ENTITY> docRefClient;
 
     protected DocRefResourceNoAuthIT(final Class<DOC_REF_ENTITY> docRefEntityClass,
-                               final DropwizardAppWithClientsRule<CONFIG_CLASS> appRule) {
+                                     final DropwizardAppWithClientsRule<CONFIG_CLASS> appRule) {
         this.docRefEntityClass = docRefEntityClass;
         this.docRefClient = appRule.getClient(DocRefResourceHttpClient::new);
     }
@@ -42,12 +38,11 @@ public abstract class DocRefResourceNoAuthIT<
 
     @Test
     public void testCreate() {
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
 
         // Create the document
-        final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid, name, parentFolderUuid);
+        final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid, name);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
 
         final DOC_REF_ENTITY createdEntity = createResponse.readEntity(docRefEntityClass);
@@ -70,12 +65,11 @@ public abstract class DocRefResourceNoAuthIT<
 
     @Test
     public void testUpdate() {
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
 
         // Create a document
-        final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid, name, parentFolderUuid);
+        final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid, name);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
 
         // Update it as authorised user
@@ -102,12 +96,11 @@ public abstract class DocRefResourceNoAuthIT<
     public void testGetInfo() {
         final Long testStartTime = System.currentTimeMillis();
 
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
 
         // Create a document
-        final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid, name, parentFolderUuid);
+        final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid, name);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
 
         // Update it as authorised user
@@ -136,15 +129,13 @@ public abstract class DocRefResourceNoAuthIT<
 
     @Test
     public void testGet() {
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
 
         final Response createReponse = docRefClient.createDocument(
                 NoAuthValueFactoryProvider.ADMIN_USER,
                 uuid,
-                name,
-                parentFolderUuid);
+                name);
         assertEquals(HttpStatus.OK_200, createReponse.getStatus());
         createReponse.close();
 
@@ -159,7 +150,6 @@ public abstract class DocRefResourceNoAuthIT<
 
     @Test
     public void testRename() {
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid = UUID.randomUUID().toString();
         final String name1 = UUID.randomUUID().toString();
         final String name2 = UUID.randomUUID().toString();
@@ -167,8 +157,7 @@ public abstract class DocRefResourceNoAuthIT<
         final Response createResponse = docRefClient.createDocument(
                 NoAuthValueFactoryProvider.ADMIN_USER,
                 uuid,
-                name1,
-                parentFolderUuid);
+                name1);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
         createResponse.close();
 
@@ -200,17 +189,16 @@ public abstract class DocRefResourceNoAuthIT<
 
     @Test
     public void testCopy() {
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid1 = UUID.randomUUID().toString();
         final String uuid2 = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
 
-        final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid1, name, parentFolderUuid);
+        final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid1, name);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
         createResponse.close();
 
         // Attempt copy as authorised user
-        final Response copyResponse = docRefClient.copyDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid1, uuid2, parentFolderUuid);
+        final Response copyResponse = docRefClient.copyDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid1, uuid2);
         assertEquals(HttpStatus.OK_200, copyResponse.getStatus());
 
         final DOC_REF_ENTITY copiedEntity = copyResponse.readEntity(docRefEntityClass);
@@ -235,11 +223,10 @@ public abstract class DocRefResourceNoAuthIT<
 
     @Test
     public void testDelete() {
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
 
-        final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid, name, parentFolderUuid);
+        final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid, name);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
         createResponse.close();
 
@@ -262,12 +249,11 @@ public abstract class DocRefResourceNoAuthIT<
 
     @Test
     public void testExport() {
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
 
         // Create a document
-        final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid, name, parentFolderUuid);
+        final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid, name);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
         createResponse.close();
 

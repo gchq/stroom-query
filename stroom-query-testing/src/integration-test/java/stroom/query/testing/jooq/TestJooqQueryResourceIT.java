@@ -5,8 +5,6 @@ import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
 import stroom.query.api.v2.DocRef;
@@ -43,14 +41,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class TestJooqQueryResourceIT extends QueryResourceIT<TestDocRefJooqEntity, JooqConfig> {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(TestJooqQueryResourceIT.class);
-
     @ClassRule
     public static final DropwizardAppWithClientsRule<JooqConfig> appRule =
             new DropwizardAppWithClientsRule<>(JooqApp.class, resourceFilePath("hibernate/config.yml"));
@@ -65,8 +58,7 @@ public class TestJooqQueryResourceIT extends QueryResourceIT<TestDocRefJooqEntit
     private DocRef testDataDocRef;
 
     public TestJooqQueryResourceIT() {
-        super(TestDocRefJooqEntity.class,
-                TestDocRefJooqEntity.TYPE,
+        super(TestDocRefJooqEntity.TYPE,
                 appRule,
                 authRule);
         testDataClient = appRule.getClient(CreateTestDataClient::new);
@@ -76,22 +68,19 @@ public class TestJooqQueryResourceIT extends QueryResourceIT<TestDocRefJooqEntit
     public void beforeTest() {
         testDataSeed = UUID.randomUUID().toString();
 
-        final String parentFolderUuid = UUID.randomUUID().toString();
         testDataDocRef = new DocRef.Builder()
                 .uuid(UUID.randomUUID().toString())
                 .name(UUID.randomUUID().toString())
                 .type(TestDocRefJooqEntity.TYPE)
                 .build();
         authRule.permitAdminUser()
-                .createInFolder(parentFolderUuid)
-                .docRefType(TestDocRefJooqEntity.TYPE)
                 .done();
         authRule.permitAdminUser()
                 .docRef(testDataDocRef)
                 .permission(DocumentPermission.READ)
                 .done();
 
-        final Response createDocumentResponse = docRefClient.createDocument(authRule.adminUser(), testDataDocRef.getUuid(), testDataDocRef.getName(), parentFolderUuid);
+        final Response createDocumentResponse = docRefClient.createDocument(authRule.adminUser(), testDataDocRef.getUuid(), testDataDocRef.getName());
         assertEquals(HttpStatus.OK_200, createDocumentResponse.getStatus());
         createDocumentResponse.close();
 

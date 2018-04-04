@@ -33,8 +33,7 @@ public class TestHibernateQueryResourceNoAuthIT extends QueryResourceNoAuthIT<Te
             new DropwizardAppWithClientsRule<>(HibernateApp.class, resourceFilePath("hibernate_noauth/config.yml"));
 
     public TestHibernateQueryResourceNoAuthIT() {
-        super(TestDocRefHibernateEntity.class,
-                TestDocRefHibernateEntity.TYPE,
+        super(TestDocRefHibernateEntity.TYPE,
                 appRule);
     }
 

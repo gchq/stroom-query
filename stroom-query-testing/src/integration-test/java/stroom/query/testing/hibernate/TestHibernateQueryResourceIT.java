@@ -39,8 +39,7 @@ public class TestHibernateQueryResourceIT extends QueryResourceIT<TestDocRefHibe
             new StroomAuthenticationRule(WireMockConfiguration.options().port(10080));
 
     public TestHibernateQueryResourceIT() {
-        super(TestDocRefHibernateEntity.class,
-                TestDocRefHibernateEntity.TYPE,
+        super(TestDocRefHibernateEntity.TYPE,
                 appRule,
                 authRule);
     }

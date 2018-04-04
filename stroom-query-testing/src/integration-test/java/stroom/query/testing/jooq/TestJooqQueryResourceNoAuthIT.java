@@ -41,22 +41,18 @@ public class TestJooqQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDoc
 
     private final CreateTestDataClient testDataClient;
 
-    private String testDataSeed;
-    private DocRef testDataDocRef;
 
     public TestJooqQueryResourceNoAuthIT() {
-        super(TestDocRefJooqEntity.class,
-                TestDocRefJooqEntity.TYPE,
+        super(TestDocRefJooqEntity.TYPE,
                 appRule);
         testDataClient = appRule.getClient(CreateTestDataClient::new);
     }
 
     @Before
     public void beforeTest() {
-        testDataSeed = UUID.randomUUID().toString();
+        String testDataSeed = UUID.randomUUID().toString();
 
-        final String parentFolderUuid = UUID.randomUUID().toString();
-        testDataDocRef = new DocRef.Builder()
+        DocRef testDataDocRef = new DocRef.Builder()
                 .uuid(UUID.randomUUID().toString())
                 .name(UUID.randomUUID().toString())
                 .type(TestDocRefJooqEntity.TYPE)
@@ -65,8 +61,7 @@ public class TestJooqQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDoc
         final Response createDocumentResponse = docRefClient.createDocument(
                 NoAuthValueFactoryProvider.ADMIN_USER,
                 testDataDocRef.getUuid(),
-                testDataDocRef.getName(),
-                parentFolderUuid);
+                testDataDocRef.getName());
         assertEquals(HttpStatus.OK_200, createDocumentResponse.getStatus());
         createDocumentResponse.close();
 
