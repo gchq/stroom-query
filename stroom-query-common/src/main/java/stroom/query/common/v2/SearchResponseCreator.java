@@ -137,6 +137,10 @@ public class SearchResponseCreator {
             if (results.size() == 0) {
                 results = null;
             }
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Returning new SearchResponse with results: {}, isComplete: {}",
+                        (results == null ? "null" : results.size()), store.isComplete());
+            }
             return new SearchResponse(store.getHighlights(), results, store.getErrors(), store.isComplete());
 
         } catch (Exception e) {
