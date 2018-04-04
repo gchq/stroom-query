@@ -101,12 +101,17 @@ public class SearchResponseCreator {
 
                 final CountDownLatch storeCompletionLatch = new CountDownLatch(1);
 
-                //When the store completes/terminates the latch will be counted down to release the block
-                store.registerCompletionListener(storeCompletionLatch::countDown);
+                if (Duration.ZERO.equals(effectiveTimeout)) {
+                    // timeout is 0 so no point registering a completion listener
+                    didSearchComplete = store.isComplete();
+                } else {
+                    //When the store completes/terminates the latch will be counted down to release the block
+                    store.registerCompletionListener(storeCompletionLatch::countDown);
 
-                //block and wait for the store to notify us of its completion/termination, or
-                //if the wait is too long we will timeout
-                didSearchComplete = storeCompletionLatch.await(effectiveTimeout.toMillis(), TimeUnit.MILLISECONDS);
+                    //block and wait for the store to notify us of its completion/termination, or
+                    //if the wait is too long we will timeout
+                    didSearchComplete = storeCompletionLatch.await(effectiveTimeout.toMillis(), TimeUnit.MILLISECONDS);
+                }
 
                 if (!didSearchComplete && !searchRequest.incremental()) {
                     //search didn't complete non-incremental search in time so return a timed out error response
