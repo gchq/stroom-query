@@ -6,9 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v3.0.0-beta.1] - 2018-04-04
 
-
-## [v3.0.0] - 2018-04-03
+* Removed parent folder UUID from the explorer action handler API.
 
 * Fix handling of InterruptedException in TablePayloadHandler
 
@@ -112,8 +112,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v3.0.0...HEAD
-[v3.0.0]: https://github.com/gchq/stroom-query/compare/v2.0.0...v3.0.0
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v3.0.0-beta.1...HEAD
+[v3.0.0-beta.1]: https://github.com/gchq/stroom-query/compare/v2.0.0...v3.0.0-beta.1
 [v2.0.0]: https://github.com/gchq/stroom-query/compare/v1.0.1...v2.0.0
 [v1.0.1]: https://github.com/gchq/stroom-query/compare/v1.0.0...v1.0.1
 [v1.0.0]: https://github.com/gchq/stroom-query/releases/tag/v1.0.0
