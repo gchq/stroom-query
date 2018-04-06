@@ -23,7 +23,7 @@ public abstract class AbstractInMemorySearchResponseCreatorCacheFactory implemen
         final CacheBuilder<SearchResponseCreatorCache.Key, SearchResponseCreator> cacheBuilder = CacheBuilder.newBuilder()
                 .removalListener(AbstractInMemorySearchResponseCreatorCacheFactory::onRemove);
 
-        buildCache(cacheBuilder);
+        addAdditionalBuildOptions(cacheBuilder);
 
         final LoadingCache<SearchResponseCreatorCache.Key, SearchResponseCreator> cache = cacheBuilder.build(cacheLoader);
 
@@ -54,12 +54,8 @@ public abstract class AbstractInMemorySearchResponseCreatorCacheFactory implemen
         return CacheLoader.from(loaderFunc::apply);
     }
 
-    /**
-     * Allows for additional implementation specific build options to be added to cacheBuilder
-     */
-    protected abstract void buildCache(
+    protected abstract void addAdditionalBuildOptions(
             final CacheBuilder<SearchResponseCreatorCache.Key, SearchResponseCreator> cacheBuilder);
-
     /**
      * Allows for the cache and its builder to be registered with a cache manager
      */
