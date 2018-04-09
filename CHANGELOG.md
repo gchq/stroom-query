@@ -6,7 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [v2.0.0] - 2018-04-03
+## [v2.0-beta.1] - 2018-04-09
+
+* Issue **#12** : Add server side caching of search results to query-common.
 
 * Fix handling of InterruptedException in TablePayloadHandler
 
@@ -142,8 +144,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0...HEAD
-[v2.0.0]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.28...v2.0.0
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0-beta.1...HEAD
+[v2.0-beta.1]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.28...v2.0-beta.1
 [v2.0.0-alpha.28]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.27...v2.0.0-alpha.28
 [v2.0.0-alpha.27]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.26...v2.0.0-alpha.27
 [v2.0.0-alpha.26]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.24...v2.0.0-alpha.26
