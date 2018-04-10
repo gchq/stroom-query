@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **#12** : Add server side caching of search results to query-common.
+
+* Fix handling of InterruptedException in TablePayloadHandler
+
 ## [v3.0-beta.1] - 2018-04-04
 
 * Removed parent folder UUID from the explorer action handler API.
@@ -15,10 +19,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * jOOQ injecting DSL Context rather than configuration
 
 * gh-13 - Using Guice for common auditable query resource implementations
-
-* Issue **#12** : Add server side caching of search results to query-common.
-
-* Fix handling of InterruptedException in TablePayloadHandler
 
 * Simplification of search completion state.
 
@@ -35,8 +35,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * Tidied up the inheritable bundles for JOOQ and JPA
 
 * Issue **#10**: Added a jOOQ implementation of the audit bundle
-
-* Issue **#8** : Fix handling of non-incremental queries on the query API. Adds timeout option in request and blocking code to wait for the query to complete.
 
 * Tune the hibernate data source pool
 
