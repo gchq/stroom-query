@@ -22,12 +22,11 @@ dependencies {
     compile libs.stroomExpression
 
     //--------3rd party--------
-    compile libs.slf4j_api
-
-    // Jackson
+    compile libs.guava
     compile libs.jackson_databind
     compile libs.jackson_annotations
     compile libs.jackson_core
+    compile libs.slf4j_api
 
     //--------testing----------
     testCompile libs.assertj

@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * gh-13 - Using Guice for common auditable query resource implementations
 
+* Issue **#12** : Add server side caching of search results to query-common.
+
+* Fix handling of InterruptedException in TablePayloadHandler
+
 * Simplification of search completion state.
 
 * Simplification of search completion state.
@@ -23,6 +27,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * Fix to ensure completion listeners are always notified on completion
 
 * Fluent API for building authentication rules in the test Auth Wiremock service
+
+* Issue **#8** : Fix handling of non-incremental queries on the query API. Adds timeout option in request and blocking code to wait for the query to complete.
 
 * jOOQ based Doc Ref service that still permits any Query Service implementation
 
@@ -62,9 +68,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Fixed minor bug in QueryableEntityBuilder that returned the specific builder class instead of the CHILD_CLASS
 
+* Added misc info field for Doc Refs
+
+* Added resource definitions for external doc ref management
+
+* Added missing fields to result builder
+
+* Added Import and Export endpoints
+
+* Fixed minor bug in QueryableEntityBuilder that returned the specific builder class instead of the CHILD_CLASS
+
 * Now using openjdk instead of oraclejdk
 
 * Changed the builders to remove the parenting/templating. Now using a simpler pattern where developers will create the child builders themselves.
+
+* Added DocRef Resource, added client implementations for DocRef and Query Resource
+
+* Change build to use Bintray dependencies and push to Bintray
 
 * Added DocRef Resource, added client implementations for DocRef and Query Resource
 
@@ -78,9 +98,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Actually releasing audit and hibernate
 
+* Uplift to latest event-logging release
+
+* Actually releasing audit and hibernate
+
 * Added standard implementations of Query Resource, with auditing
 
 * Build a hibernate implementation of Query Resource
+
+* Pojo Builders for all classes in the API project
+
+* Added null check to cope with empty field list when running queries
+
+* Remove redundant arg from SearchResponseCreator constructor
 
 * Pojo Builders for all classes in the API project
 
