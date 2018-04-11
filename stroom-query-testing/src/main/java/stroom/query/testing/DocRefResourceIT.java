@@ -46,7 +46,6 @@ public abstract class DocRefResourceIT<
     public void testCreate() {
         final String uuid = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
-        final String unauthorisedUsername = UUID.randomUUID().toString();
         final String unauthenticatedUsername = UUID.randomUUID().toString();
 
         authRule.permitAdminUser()
@@ -55,13 +54,6 @@ public abstract class DocRefResourceIT<
                 .docRef(uuid, docRefType)
                 .permission(DocumentPermission.READ)
                 .done();
-
-//        final Response unauthorisedCreateResponse = docRefClient.createDocument(
-//                authRule.authenticatedUser(unauthorisedUsername),
-//                uuid,
-//                name);
-//        assertEquals(HttpStatus.FORBIDDEN_403, unauthorisedCreateResponse.getStatus());
-//        unauthorisedCreateResponse.close();
 
         final Response unauthenticatedCreateResponse = docRefClient.createDocument(
                 authRule.unauthenticatedUser(unauthenticatedUsername),

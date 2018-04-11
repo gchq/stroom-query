@@ -38,7 +38,7 @@ public class DocRefAuditWrapper<DOC_REF_ENTITY extends DocRefEntity>
 
     @FunctionalInterface
     public interface ResponseSupplier<T extends DocRefEntity> {
-        Response getResponse(T docRefEntity) ;
+        Response getResponse(T docRefEntity) throws Exception;
     }
 
     private DocRefSupplier docRefSupplier;
@@ -120,7 +120,12 @@ public class DocRefAuditWrapper<DOC_REF_ENTITY extends DocRefEntity>
                             docRefEntitySupplier.getDocRefEntity(docRef);
 
                     if (docRefEntityOpt.isPresent()) {
-                        return responseSupplier.getResponse(docRefEntityOpt.get());
+                        try {
+                            return responseSupplier.getResponse(docRefEntityOpt.get());
+                        } catch (Exception e) {
+                            LOGGER.error(e.getLocalizedMessage(), e);
+                            return Response.serverError().entity(e.getLocalizedMessage()).build();
+                        }
                     } else {
                         return Response.status(HttpStatus.NOT_FOUND_404).build();
                     }

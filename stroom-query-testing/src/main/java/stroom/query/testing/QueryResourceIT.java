@@ -51,6 +51,10 @@ public abstract class QueryResourceIT<
 
     protected abstract DOC_REF_ENTITY getValidEntity(final DocRef docRef);
 
+    protected QueryResourceHttpClient getQueryClient() {
+        return queryClient;
+    }
+
     @Test
     public void testGetDataSource() {
         final DocRef docRef = createDocument();
@@ -146,7 +150,7 @@ public abstract class QueryResourceIT<
      * @param docRefEntity The implementation specific entity, used to update the doc ref so it can be used.
      * @return The DocRef of the newly created annotations index.
      */
-    private DocRef createDocument(final DOC_REF_ENTITY docRefEntity) {
+    protected DocRef createDocument(final DOC_REF_ENTITY docRefEntity) {
         final DocRef docRef = new DocRef.Builder()
                 .uuid(UUID.randomUUID().toString())
                 .type(docRefType)
@@ -188,7 +192,7 @@ public abstract class QueryResourceIT<
      *
      * @return The Doc Ref of the created document.
      */
-    private DocRef createDocument() {
+    protected DocRef createDocument() {
         return createDocument(null);
     }
 }

@@ -5,7 +5,7 @@ import stroom.query.api.v2.DocRef;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public class    DocRefEntity {
+public class DocRefEntity {
 
 
     /**
@@ -37,6 +37,8 @@ public class    DocRefEntity {
     // This is the UUID of the DocRef within Stroom
     private String uuid;
 
+    private String type;
+
     // This is the name of the DocRef within Stroom
     private String name;
 
@@ -51,6 +53,14 @@ public class    DocRefEntity {
 
     public void setUuid(final String uuid) {
         this.uuid = uuid;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getName() {
@@ -124,12 +134,18 @@ public class    DocRefEntity {
 
         public CHILD_CLASS docRef(final DocRef docRef) {
             this.instance.setUuid(docRef.getUuid());
+            this.instance.setType(docRef.getType());
             this.instance.setName(docRef.getUuid());
             return self();
         }
 
         public CHILD_CLASS uuid(final String value) {
             this.instance.setUuid(value);
+            return self();
+        }
+
+        public CHILD_CLASS type(final String value) {
+            this.instance.setType(value);
             return self();
         }
 
@@ -160,6 +176,7 @@ public class    DocRefEntity {
 
         public CHILD_CLASS original(final T original) {
             this.instance.setUuid(original.getUuid());
+            this.instance.setType(original.getType());
             this.instance.setName(original.getName());
             this.instance.setCreateUser(original.getCreateUser());
             this.instance.setCreateTime(original.getCreateTime());
