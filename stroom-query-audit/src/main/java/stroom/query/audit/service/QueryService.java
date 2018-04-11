@@ -17,9 +17,10 @@ public interface QueryService {
      * @param user   The authenticated user
      * @param docRef The Doc Ref of the DataSource to fetch
      * @return The DataSource definition for the given doc ref
+     * @throws QueryApiException if anything goes wrong
      */
     Optional<DataSource> getDataSource(ServiceUser user,
-                                       DocRef docRef);
+                                       DocRef docRef) throws QueryApiException;
 
     /**
      * Conduct a search on the data, it may be a successive call for long running searches.
@@ -27,9 +28,10 @@ public interface QueryService {
      * @param user    The authenticated user
      * @param request The details of the search
      * @return An optional search response.
+     * @throws QueryApiException if anything goes wrong
      */
     Optional<SearchResponse> search(ServiceUser user,
-                                    SearchRequest request);
+                                    SearchRequest request) throws QueryApiException;
 
     /**
      * Destroy any existing query being conducted under the given key.
@@ -37,9 +39,10 @@ public interface QueryService {
      * @param user     The authenticated user
      * @param queryKey The query key that was given with the search request.
      * @return Success indicator
+     * @throws QueryApiException if anything goes wrong
      */
     Boolean destroy(ServiceUser user,
-                    QueryKey queryKey);
+                    QueryKey queryKey) throws QueryApiException;
 
     /**
      * Used by REST layer to retrieve the doc ref for a given query key.
@@ -48,7 +51,8 @@ public interface QueryService {
      * @param user     The authenticated user
      * @param queryKey The query key, it should match a current query
      * @return The DocRef of the query, if found, if not found the result will be empty.
+     * @throws QueryApiException if anything goes wrong
      */
     Optional<DocRef> getDocRefForQueryKey(ServiceUser user,
-                                          QueryKey queryKey);
+                                          QueryKey queryKey) throws QueryApiException;
 }

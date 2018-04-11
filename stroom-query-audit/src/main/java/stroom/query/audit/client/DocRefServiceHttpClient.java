@@ -5,11 +5,11 @@ import stroom.query.audit.ExportDTO;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
+import stroom.query.audit.service.QueryApiException;
 
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import java.io.Closeable;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,132 +39,114 @@ public class DocRefServiceHttpClient <T extends DocRefEntity> implements DocRefS
     }
 
     @Override
-    public List<T> getAll(final ServiceUser user) {
+    public List<T> getAll(final ServiceUser user) throws QueryApiException {
         final Response response = httpClient.getAll(user);
 
         if (response.getStatus() == HttpStatus.OK_200) {
             return response.readEntity(new GenericType<List<T>>(){});
         } else {
-            response.close();
+            throw QueryApiExceptionMapper.create(response);
         }
-
-        return Collections.emptyList();
     }
 
     @Override
     public Optional<T> get(final ServiceUser user,
-                           final String uuid) {
+                           final String uuid) throws QueryApiException {
         final Response response = httpClient.get(user, uuid);
 
         if (response.getStatus() == HttpStatus.OK_200) {
             return Optional.of(response.readEntity(docRefEntityClass));
         } else {
-            response.close();
+            throw QueryApiExceptionMapper.create(response);
         }
-
-        return Optional.empty();
     }
 
     @Override
     public Optional<T> createDocument(final ServiceUser user,
                                       final String uuid,
-                                      final String name) {
+                                      final String name) throws QueryApiException {
         final Response response = httpClient.createDocument(user, uuid, name);
 
         if (response.getStatus() == HttpStatus.OK_200) {
             return Optional.of(response.readEntity(docRefEntityClass));
         } else {
-            response.close();
+            throw QueryApiExceptionMapper.create(response);
         }
-
-        return Optional.empty();
     }
 
     @Override
     public Optional<T> update(final ServiceUser user,
                               final String uuid,
-                              final T updatedConfig) {
+                              final T updatedConfig) throws QueryApiException {
         final Response response = httpClient.update(user, uuid, updatedConfig);
 
         if (response.getStatus() == HttpStatus.OK_200) {
             return Optional.of(response.readEntity(docRefEntityClass));
         } else {
-            response.close();
+            throw QueryApiExceptionMapper.create(response);
         }
-
-        return Optional.empty();
     }
 
     @Override
     public Optional<T> copyDocument(final ServiceUser user,
                                     final String originalUuid,
-                                    final String copyUuid) {
+                                    final String copyUuid) throws QueryApiException {
         final Response response = httpClient.copyDocument(user, originalUuid, copyUuid);
 
         if (response.getStatus() == HttpStatus.OK_200) {
             return Optional.of(response.readEntity(docRefEntityClass));
         } else {
-            response.close();
+            throw QueryApiExceptionMapper.create(response);
         }
-
-        return Optional.empty();
     }
 
     @Override
     public Optional<T> moveDocument(final ServiceUser user,
-                                    final String uuid) {
+                                    final String uuid) throws QueryApiException {
         final Response response = httpClient.moveDocument(user, uuid);
 
         if (response.getStatus() == HttpStatus.OK_200) {
             return Optional.of(response.readEntity(docRefEntityClass));
         } else {
-            response.close();
+            throw QueryApiExceptionMapper.create(response);
         }
-
-        return Optional.empty();
     }
 
     @Override
     public Optional<T> renameDocument(final ServiceUser user,
                                       final String uuid,
-                                      final String name) {
+                                      final String name) throws QueryApiException {
         final Response response = httpClient.renameDocument(user, uuid, name);
 
         if (response.getStatus() == HttpStatus.OK_200) {
             return Optional.of(response.readEntity(docRefEntityClass));
         } else {
-            response.close();
+            throw QueryApiExceptionMapper.create(response);
         }
-
-        return Optional.empty();
     }
 
     @Override
     public Optional<Boolean> deleteDocument(final ServiceUser user,
-                                            final String uuid) {
+                                            final String uuid) throws QueryApiException {
         final Response response = httpClient.deleteDocument(user, uuid);
 
         if (response.getStatus() == HttpStatus.OK_200) {
             return Optional.of(response.readEntity(Boolean.class));
         } else {
-            response.close();
+            throw QueryApiExceptionMapper.create(response);
         }
-
-        return Optional.empty();
     }
 
     @Override
     public ExportDTO exportDocument(final ServiceUser user,
-                                    final String uuid) {
+                                    final String uuid) throws QueryApiException {
         final Response response = httpClient.exportDocument(user, uuid);
 
         if (response.getStatus() == HttpStatus.OK_200) {
             return response.readEntity(ExportDTO.class);
         } else {
-            response.close();
+            throw QueryApiExceptionMapper.create(response);
         }
-
-        return null;
     }
 
     @Override
@@ -172,15 +154,13 @@ public class DocRefServiceHttpClient <T extends DocRefEntity> implements DocRefS
                                       final String uuid,
                                       final String name,
                                       final Boolean confirmed,
-                                      final Map<String, String> dataMap) {
+                                      final Map<String, String> dataMap) throws QueryApiException {
         final Response response = httpClient.importDocument(user, uuid, name, confirmed, dataMap);
 
         if (response.getStatus() == HttpStatus.OK_200) {
             return Optional.of(response.readEntity(docRefEntityClass));
         } else {
-            response.close();
+            throw QueryApiExceptionMapper.create(response);
         }
-
-        return Optional.empty();
     }
 }

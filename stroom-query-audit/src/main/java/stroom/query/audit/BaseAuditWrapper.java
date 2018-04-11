@@ -21,7 +21,7 @@ public abstract class BaseAuditWrapper<CHILD_CLASS extends BaseAuditWrapper<?>> 
     public interface PopulateEventDetail {
         void populate(final Event.EventDetail eventDetail,
                       final Response response,
-                      final RuntimeException exception);
+                      final Exception exception);
     }
 
     public BaseAuditWrapper(final ServiceUser user) {

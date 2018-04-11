@@ -1,5 +1,9 @@
 package stroom.query.hibernate;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Injector;
+import com.google.inject.Module;
+import com.google.inject.util.Modules;
 import io.dropwizard.Configuration;
 import io.dropwizard.ConfiguredBundle;
 import io.dropwizard.db.DataSourceFactory;
@@ -11,8 +15,6 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.FlywayException;
-import org.glassfish.hk2.api.TypeLiteral;
-import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,8 @@ import stroom.query.audit.model.QueryableEntity;
 import stroom.query.audit.security.HasTokenConfig;
 import stroom.query.audit.service.DocRefService;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -37,11 +41,7 @@ import java.util.stream.Stream;
 public class AuditedCriteriaQueryBundle<CONFIG extends Configuration & HasTokenConfig & HasAuthorisationConfig & HasDataSourceFactory & HasFlywayFactory,
                 DOC_REF_SERVICE extends DocRefService<DOC_REF_POJO>,
                 DOC_REF_POJO extends DocRefHibernateEntity,
-                QUERY_POJO extends QueryableHibernateEntity>
-        extends AuditedQueryBundle<CONFIG,
-                DOC_REF_SERVICE,
-                DOC_REF_POJO,
-                QueryServiceCriteriaImpl> {
+                QUERY_POJO extends QueryableHibernateEntity> implements ConfiguredBundle<CONFIG> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuditedCriteriaQueryBundle.class);
 
@@ -61,6 +61,7 @@ public class AuditedCriteriaQueryBundle<CONFIG extends Configuration & HasTokenC
 
         @Override
         public void run(final CONFIG configuration, final Environment environment) {
+
             // We need the database before we need most other things
             migrate(configuration, environment);
         }
@@ -103,11 +104,17 @@ public class AuditedCriteriaQueryBundle<CONFIG extends Configuration & HasTokenC
 
     private final HibernateBundle<CONFIG> hibernateBundle;
 
-    public AuditedCriteriaQueryBundle(final Class<DOC_REF_SERVICE> docRefServiceClass,
+    private final AuditedQueryBundle<CONFIG,
+            DOC_REF_SERVICE,
+            DOC_REF_POJO,
+            QueryServiceCriteriaImpl> auditedQueryBundle;
+
+    public AuditedCriteriaQueryBundle(final Function<CONFIG, Injector> injectorSupplier,
+                                      final Class<DOC_REF_SERVICE> docRefServiceClass,
                                       final Class<DOC_REF_POJO> docRefEntityClass,
                                       final Class<QUERY_POJO> queryableEntityClass,
                                       final Class<?> ... additionalHibernateClasses) {
-        super(docRefServiceClass, docRefEntityClass, QueryServiceCriteriaImpl.class);
+        auditedQueryBundle = new AuditedQueryBundle<>(injectorSupplier, docRefServiceClass, docRefEntityClass, QueryServiceCriteriaImpl.class);
 
         // Put the doc ref class and additional classes into an array
         final Class<?>[] hibernateClasses = Stream.concat(
@@ -124,26 +131,25 @@ public class AuditedCriteriaQueryBundle<CONFIG extends Configuration & HasTokenC
         };
     }
 
-    @Override
-    public void run(final CONFIG configuration,
-                    final Environment environment) {
-        super.run(configuration, environment);
-
-        environment.jersey().register(new AbstractBinder() {
+    public Module getGuiceModule(CONFIG configuration) {
+        return Modules.combine(new AbstractModule() {
             @Override
             protected void configure() {
-                bind(new QueryableEntity.ClassProvider<>(queryableEntityClass)).to(QueryableHibernateEntity.ClassProvider.class);
-                bind(hibernateBundle.getSessionFactory()).to(SessionFactory.class);
+                bind(QueryableHibernateEntity.ClassProvider.class).toInstance(new QueryableEntity.ClassProvider<>(queryableEntityClass));
+                bind(SessionFactory.class).toInstance(hibernateBundle.getSessionFactory());
             }
-        });
+        }, auditedQueryBundle.getGuiceModule(configuration));
     }
 
     @Override
-    public void initialize(final Bootstrap<?> bootstrap) {
-        super.initialize(bootstrap);
+    public void run(CONFIG configuration, Environment environment) throws Exception {
 
+    }
+
+    public void initialize(final Bootstrap<?> bootstrap) {
         final Bootstrap<CONFIG> castBootstrap = (Bootstrap<CONFIG>) bootstrap; // this initialize function should have used the templated config type
         castBootstrap.addBundle(flywayBundle);
         castBootstrap.addBundle(hibernateBundle);
+        castBootstrap.addBundle(auditedQueryBundle);
     }
 }

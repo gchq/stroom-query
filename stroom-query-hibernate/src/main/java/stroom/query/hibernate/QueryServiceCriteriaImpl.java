@@ -20,6 +20,7 @@ import stroom.query.audit.model.IsDataSourceField;
 import stroom.query.audit.model.QueryableEntity;
 import stroom.query.audit.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
+import stroom.query.audit.service.QueryApiException;
 import stroom.query.audit.service.QueryService;
 import stroom.query.common.v2.Coprocessor;
 import stroom.query.common.v2.CoprocessorSettings;
@@ -94,7 +95,7 @@ public class QueryServiceCriteriaImpl<
 
     @Override
     public Optional<DataSource> getDataSource(final ServiceUser user,
-                                              final DocRef docRef) {
+                                              final DocRef docRef) throws QueryApiException {
         final Optional<DOC_REF_ENTITY> docRefEntity = docRefService.get(user, docRef.getUuid());
 
         if (!docRefEntity.isPresent()) {
@@ -106,7 +107,7 @@ public class QueryServiceCriteriaImpl<
 
     @Override
     public Optional<SearchResponse> search(final ServiceUser user,
-                                           final SearchRequest request) {
+                                           final SearchRequest request) throws QueryApiException {
         final String dataSourceUuid = request.getQuery().getDataSource().getUuid();
 
         final Optional<DOC_REF_ENTITY> docRefEntity = docRefService.get(user, dataSourceUuid);

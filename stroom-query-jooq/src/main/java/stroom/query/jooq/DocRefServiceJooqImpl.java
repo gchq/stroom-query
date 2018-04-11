@@ -1,5 +1,6 @@
 package stroom.query.jooq;
 
+import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.Record;

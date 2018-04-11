@@ -22,8 +22,9 @@ import stroom.query.api.v2.TableSettings;
 import stroom.query.audit.authorisation.DocumentPermission;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
+import stroom.query.audit.service.QueryApiException;
 import stroom.query.testing.DropwizardAppWithClientsRule;
-import stroom.query.testing.QueryResourceIT;
+import stroom.query.testing.QueryRemoteServiceIT;
 import stroom.query.testing.StroomAuthenticationRule;
 import stroom.query.testing.data.CreateTestDataClient;
 import stroom.query.testing.jooq.app.CreateTestDataJooqImpl;
@@ -45,7 +46,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class TestJooqQueryResourceIT extends QueryResourceIT<TestDocRefJooqEntity, JooqConfig> {
+public class TestJooqQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRefJooqEntity, JooqConfig> {
     @ClassRule
     public static final DropwizardAppWithClientsRule<JooqConfig> appRule =
             new DropwizardAppWithClientsRule<>(JooqApp.class, resourceFilePath("hibernate/config.yml"));
@@ -59,15 +60,16 @@ public class TestJooqQueryResourceIT extends QueryResourceIT<TestDocRefJooqEntit
     private String testDataSeed;
     private DocRef testDataDocRef;
 
-    public TestJooqQueryResourceIT() {
+    public TestJooqQueryRemoteServiceIT() {
         super(TestDocRefJooqEntity.TYPE,
+                TestDocRefJooqEntity.class,
                 appRule,
                 authRule);
         testDataClient = appRule.getClient(CreateTestDataClient::new);
     }
 
     @Before
-    public void beforeTest() {
+    public void beforeTest() throws QueryApiException {
         testDataSeed = UUID.randomUUID().toString();
 
         testDataDocRef = new DocRef.Builder()
@@ -82,9 +84,8 @@ public class TestJooqQueryResourceIT extends QueryResourceIT<TestDocRefJooqEntit
                 .permission(DocumentPermission.READ)
                 .done();
 
-        final Response createDocumentResponse = docRefClient.createDocument(authRule.adminUser(), testDataDocRef.getUuid(), testDataDocRef.getName());
-        assertEquals(HttpStatus.OK_200, createDocumentResponse.getStatus());
-        createDocumentResponse.close();
+        docRefClient.createDocument(authRule.adminUser(), testDataDocRef.getUuid(), testDataDocRef.getName())
+                .orElseThrow(() -> new AssertionError("Response body missing"));
 
         final Response createTestDataResponse = testDataClient.createTestData(authRule.adminUser(), testDataDocRef.getUuid(), testDataSeed);
         assertEquals(HttpStatus.NO_CONTENT_204, createTestDataResponse.getStatus());
@@ -170,10 +171,8 @@ public class TestJooqQueryResourceIT extends QueryResourceIT<TestDocRefJooqEntit
             try {
                 final SearchRequest request = getValidSearchRequest(testDataDocRef, expressionOperator, offsetRange);
 
-                final Response response = queryClient.search(authRule.adminUser(), request);
-                assertEquals(HttpStatus.OK_200, response.getStatus());
-
-                final SearchResponse searchResponse = response.readEntity(SearchResponse.class);
+                final SearchResponse searchResponse = queryClient.search(authRule.adminUser(), request)
+                        .orElseThrow(() -> new AssertionError("Response body missing"));
 
                 for (final Result result : searchResponse.getResults()) {
                     assertTrue(result instanceof FlatResult);
@@ -184,7 +183,7 @@ public class TestJooqQueryResourceIT extends QueryResourceIT<TestDocRefJooqEntit
                             .map(Object::toString)
                             .forEach(resultsSet::add);
                 }
-            } catch (final RuntimeException e) {
+            } catch (final RuntimeException | QueryApiException e) {
                 fail(e.getLocalizedMessage());
             }
         });

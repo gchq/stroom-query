@@ -9,6 +9,7 @@ import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.SearchResponse;
 import stroom.query.audit.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
+import stroom.query.audit.service.QueryApiException;
 import stroom.query.audit.service.QueryService;
 
 import javax.inject.Inject;
@@ -25,7 +26,7 @@ public class TestQueryServiceImpl implements QueryService {
 
     @Override
     public Optional<DataSource> getDataSource(final ServiceUser user,
-                                              final DocRef docRef) {
+                                              final DocRef docRef) throws QueryApiException {
         final Optional<TestDocRefEntity> docRefEntity = docRefService.get(user, docRef.getUuid());
 
         if (!docRefEntity.isPresent()) {
@@ -47,7 +48,7 @@ public class TestQueryServiceImpl implements QueryService {
 
     @Override
     public Optional<SearchResponse> search(final ServiceUser user,
-                                           final SearchRequest request) {
+                                           final SearchRequest request) throws QueryApiException {
         final String dataSourceUuid = request.getQuery().getDataSource().getUuid();
 
         final Optional<TestDocRefEntity> docRefEntity = docRefService.get(user, dataSourceUuid);

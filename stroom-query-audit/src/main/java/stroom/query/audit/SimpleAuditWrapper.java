@@ -6,6 +6,7 @@ import org.eclipse.jetty.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.query.audit.security.ServiceUser;
+import stroom.query.audit.service.QueryApiException;
 
 import javax.ws.rs.core.Response;
 
@@ -20,12 +21,12 @@ public class SimpleAuditWrapper extends BaseAuditWrapper<SimpleAuditWrapper> {
 
     @FunctionalInterface
     public interface AuthorisationSupplier {
-        Boolean isAuthorised() ;
+        Boolean isAuthorised() throws QueryApiException;
     }
 
     @FunctionalInterface
     public interface ResponseSupplier {
-        Response getResponse() ;
+        Response getResponse() throws QueryApiException;
     }
 
     private AuthorisationSupplier authorisationSupplier;
@@ -67,7 +68,7 @@ public class SimpleAuditWrapper extends BaseAuditWrapper<SimpleAuditWrapper> {
     @Override
     protected Response audit(EventLoggingService eventLoggingService) {
         Response response = null;
-        RuntimeException exception = null;
+        Exception exception = null;
 
         try {
             final Boolean isAuthorised = authorisationSupplier.isAuthorised();
@@ -78,7 +79,7 @@ public class SimpleAuditWrapper extends BaseAuditWrapper<SimpleAuditWrapper> {
                 response = Response.status(HttpStatus.FORBIDDEN_403).build();
             }
 
-        } catch (final RuntimeException e) {
+        } catch (final RuntimeException | QueryApiException e) {
             LOGGER.error("Failed to execute operation: " + e.getLocalizedMessage(), e);
             exception = e;
             response = Response.serverError().build();
