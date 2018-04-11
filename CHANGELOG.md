@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v3.0-beta.3] - 2018-04-11
+
 * Add clear() to SearchResponseCreatorCache
 
 ## [v3.0-beta.2] - 2018-04-10
