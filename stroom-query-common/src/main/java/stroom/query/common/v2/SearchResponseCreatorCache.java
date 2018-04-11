@@ -22,6 +22,10 @@ public interface SearchResponseCreatorCache {
 
     void evictExpiredElements();
 
+    /**
+     * Clears all items from the cache
+     */
+    void clear();
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

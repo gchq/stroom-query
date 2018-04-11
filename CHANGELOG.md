@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Add clear() to SearchResponseCreatorCache
+
 ## [v3.0-beta.2] - 2018-04-10
 
 * Issue **#12** : Add server side caching of search results to query-common.

@@ -1,8 +1,12 @@
 package stroom.query.common.v2;
 
 import com.google.common.cache.LoadingCache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class InMemorySearchResponseCreatorCache implements SearchResponseCreatorCache {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(InMemorySearchResponseCreatorCache.class);
 
     private final LoadingCache<Key, SearchResponseCreator> cache;
 
@@ -24,5 +28,17 @@ class InMemorySearchResponseCreatorCache implements SearchResponseCreatorCache {
     @Override
     public void evictExpiredElements() {
         cache.cleanUp();
+    }
+
+    @Override
+    public void clear() {
+        LOGGER.debug("Removing all items from cache {}", cache);
+
+        try {
+            cache.invalidateAll();
+            cache.cleanUp();
+        } catch (final RuntimeException e) {
+            LOGGER.error("Error clearing cache: " + e.getMessage(), e);
+        }
     }
 }
