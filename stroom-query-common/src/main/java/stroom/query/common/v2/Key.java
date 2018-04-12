@@ -22,12 +22,13 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
 @JsonPropertyOrder({"popToWhenComplete", "values"})
 @XmlType(name = "Key", propOrder = {"popToWhenComplete", "values"})
-public class Key {
+public class Key implements Serializable {
     private final int depth;
     private final Key parent;
     private final List<Object> values;
