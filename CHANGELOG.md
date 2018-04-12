@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * Reinstates Guice to jOOQ and Hibernate bundles
 * Provides service implementations which remote via HTTP
 * Added custom service exceptions for query/docref services
+* Issue **#16** : Fix for Hessian serialisation of table coprocessor settings.
 
 ## [v3.0-beta.3] - 2018-04-11
 
