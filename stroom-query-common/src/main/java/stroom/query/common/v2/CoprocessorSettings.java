@@ -18,7 +18,9 @@ package stroom.query.common.v2;
 
 import stroom.query.api.v2.DocRef;
 
-public interface CoprocessorSettings {
+import java.io.Serializable;
+
+public interface CoprocessorSettings extends Serializable {
     boolean extractValues();
 
     DocRef getExtractionPipeline();

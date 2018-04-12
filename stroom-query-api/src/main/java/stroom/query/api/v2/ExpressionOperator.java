@@ -184,8 +184,9 @@ public final class ExpressionOperator extends ExpressionItem {
 
         /**
          * Construct a builder setting enabled and op
+         *
          * @param enabled Is this Expression Operator enabled
-         * @param op The op
+         * @param op      The op
          */
         public Builder(final Boolean enabled, final Op op) {
             super(enabled);
@@ -193,44 +194,79 @@ public final class ExpressionOperator extends ExpressionItem {
         }
 
         /**
-         * Adds an {@link ExpressionTerm} to this builder
+         * Adds an {@link ExpressionOperator} to this builder
+         *
          * @param item The expression item to add as children
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder addOperator(ExpressionItem item) {
+        public Builder addOperator(ExpressionOperator item) {
             return addOperators(item);
         }
 
         /**
-         * Adds an {@link ExpressionTerm} to this builder
+         * Adds an {@link ExpressionOperator} to this builder
+         *
          * @param items The expression items to add as children
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder addOperators(ExpressionItem...items) {
+        public Builder addOperators(ExpressionOperator... items) {
             return addOperators(Arrays.asList(items));
         }
 
         /**
-         * Adds an {@link ExpressionTerm} to this builder
+         * Adds an {@link ExpressionOperator} to this builder
+         *
          * @param items The expression items to add as children
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder addOperators(Collection<ExpressionItem> items) {
+        public Builder addOperators(Collection<ExpressionOperator> items) {
+            this.children.addAll(items);
+            return this;
+        }
+
+        /**
+         * Adds an {@link ExpressionTerm} to this builder
+         *
+         * @param item The expression item to add as children
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public Builder addTerm(ExpressionTerm item) {
+            return addTerms(item);
+        }
+
+        /**
+         * Adds an {@link ExpressionTerm} to this builder
+         *
+         * @param items The expression items to add as children
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public Builder addTerms(ExpressionTerm... items) {
+            return addTerms(Arrays.asList(items));
+        }
+
+        /**
+         * Adds an {@link ExpressionTerm} to this builder
+         *
+         * @param items The expression items to add as children
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public Builder addTerms(Collection<ExpressionTerm> items) {
             this.children.addAll(items);
             return this;
         }
 
         /**
          * A convenience function for adding terms in one go, the parameters should read fairly clearly
-         * @param field The field name
+         *
+         * @param field     The field name
          * @param condition The condition to apply to the valud
-         * @param value The value
+         * @param value     The value
          * @return this builder, with the completed term added.
          */
         public Builder addTerm(final String field,
                                final ExpressionTerm.Condition condition,
                                final String value) {
-            return addOperator(
+            return addTerm(
                     new ExpressionTerm.Builder()
                             .field(field)
                             .condition(condition)
@@ -240,20 +276,20 @@ public final class ExpressionOperator extends ExpressionItem {
 
         /**
          * A convenience function for adding dictionary terms in one go, the parameters should read fairly clearly
-         * @param field The field name
-         * @param condition The condition to apply to the valud
+         *
+         * @param field      The field name
+         * @param condition  The condition to apply to the valud
          * @param dictionary The dictionary
          * @return this builder, with the completed term added.
          */
         public Builder addDictionaryTerm(final String field,
                                          final ExpressionTerm.Condition condition,
                                          final DocRef dictionary) {
-            return addOperator(
-                    new ExpressionTerm.Builder()
-                            .field(field)
-                            .condition(condition)
-                            .dictionary(dictionary)
-                            .build());
+            return addTerm(new ExpressionTerm.Builder()
+                    .field(field)
+                    .condition(condition)
+                    .dictionary(dictionary)
+                    .build());
         }
     }
 }

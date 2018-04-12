@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **#16** : Fix for Hessian serialisation of table coprocessor settings.
+
 ## [v2.0-beta.1] - 2018-04-09
 
 * Issue **#12** : Add server side caching of search results to query-common.
