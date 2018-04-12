@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v3.0-beta.4] - 2018-04-12
+
+* Reinstates Guice to jOOQ and Hibernate bundles
+* Provides service implementations which remote via HTTP
+* Added custom service exceptions for query/docref services
+
 ## [v3.0-beta.3] - 2018-04-11
 
 * Add clear() to SearchResponseCreatorCache
@@ -146,8 +152,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v3.0-beta.1...HEAD
-[v3.0-beta.1]: https://github.com/gchq/stroom-query/compare/v2.0-beta.1...v3.0-beta.1
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v3.0-beta.4...HEAD
+[v3.0-beta.3]: https://github.com/gchq/stroom-query/compare/v2.0-beta.3...v3.0-beta.4
+[v3.0-beta.3]: https://github.com/gchq/stroom-query/compare/v2.0-beta.2...v3.0-beta.3
+[v3.0-beta.2]: https://github.com/gchq/stroom-query/compare/v2.0-beta.1...v3.0-beta.2
 [v2.0-beta.1]: https://github.com/gchq/stroom-query/compare/v1.0.1...v2.0-beta.1
 [v1.0.1]: https://github.com/gchq/stroom-query/compare/v1.0.0...v1.0.1
 [v1.0.0]: https://github.com/gchq/stroom-query/releases/tag/v1.0.0
