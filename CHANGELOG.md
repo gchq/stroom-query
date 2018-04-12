@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v3.0-beta.4] - 2018-04-12
+
 * Issue **#16** : Fix for Hessian serialisation of table coprocessor settings.
 
 ## [v3.0-beta.3] - 2018-04-11
@@ -148,7 +150,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v3.0-beta.1...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v3.0-beta.4...HEAD
+[v3.0-beta.4]: https://github.com/gchq/stroom-query/compare/v3.0-beta.3...v3.0-beta.4
+[v3.0-beta.3]: https://github.com/gchq/stroom-query/compare/v3.0-beta.2...v3.0-beta.3
+[v3.0-beta.2]: https://github.com/gchq/stroom-query/compare/v3.0-beta.1...v3.0-beta.2
 [v3.0-beta.1]: https://github.com/gchq/stroom-query/compare/v2.0-beta.1...v3.0-beta.1
 [v2.0-beta.1]: https://github.com/gchq/stroom-query/compare/v1.0.1...v2.0-beta.1
 [v1.0.1]: https://github.com/gchq/stroom-query/compare/v1.0.0...v1.0.1
