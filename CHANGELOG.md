@@ -152,7 +152,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0-beta.2...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0-beta.3...HEAD
+[v2.0-beta.3]: https://github.com/gchq/stroom-query/compare/v2.0.0-beta.2...v2.0-beta.3
 [v2.0-beta.2]: https://github.com/gchq/stroom-query/compare/v2.0.0-beta.1...v2.0-beta.2
 [v2.0-beta.1]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.28...v2.0-beta.1
 [v2.0.0-alpha.28]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.27...v2.0.0-alpha.28
