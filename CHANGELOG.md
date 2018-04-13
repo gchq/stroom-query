@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Removed ConditionalWait.
+
 * Set response completion state prior to assembling results.
 
 ## [v3.0-beta.5] - 2018-04-12
