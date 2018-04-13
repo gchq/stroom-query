@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.0-beta.3] - 2018-04-13
+
+* Set response completion state prior to assembling results.
+
 ## [v2.0-beta.2] - 2018-04-12
 
 * Issue **#16** : Fix for Hessian serialisation of table coprocessor settings.
