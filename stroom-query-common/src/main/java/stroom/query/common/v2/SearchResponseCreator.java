@@ -132,16 +132,19 @@ public class SearchResponseCreator {
         //we will only get here if the search is complete or it is an incremental search in which case we don't care
         //about completion state. Therefore assemble whatever results we currently have
         try {
+            // Get completion state before we get results.
+            final boolean complete = store.isComplete();
+
             List<Result> results = getResults(searchRequest);
 
             if (results.size() == 0) {
                 results = null;
             }
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Returning new SearchResponse with results: {}, isComplete: {}",
-                        (results == null ? "null" : results.size()), store.isComplete());
+                LOGGER.debug("Returning new SearchResponse with results: {}, complete: {}, isComplete: {}",
+                        (results == null ? "null" : results.size()), complete, store.isComplete());
             }
-            return new SearchResponse(store.getHighlights(), results, store.getErrors(), store.isComplete());
+            return new SearchResponse(store.getHighlights(), results, store.getErrors(), complete);
 
         } catch (Exception e) {
             LOGGER.error("Error getting search results for query {}", searchRequest.getKey().toString(), e);
