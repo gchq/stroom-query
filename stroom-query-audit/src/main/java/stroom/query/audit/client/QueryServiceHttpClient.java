@@ -16,15 +16,23 @@ import java.util.Optional;
 
 public class QueryServiceHttpClient implements QueryService, Closeable {
 
+    private final String type;
     private final QueryResourceHttpClient httpClient;
 
-    public QueryServiceHttpClient(final String baseUrl) {
+    public QueryServiceHttpClient(final String type,
+                                  final String baseUrl) {
+        this.type = type;
         this.httpClient = new QueryResourceHttpClient(baseUrl);
     }
 
     @Override
     public void close() {
         httpClient.close();
+    }
+
+    @Override
+    public String getType() {
+        return type;
     }
 
     @Override

@@ -94,6 +94,11 @@ public class QueryServiceCriteriaImpl<
     }
 
     @Override
+    public String getType() {
+        return docRefService.getType();
+    }
+
+    @Override
     public Optional<DataSource> getDataSource(final ServiceUser user,
                                               final DocRef docRef) throws QueryApiException {
         final Optional<DOC_REF_ENTITY> docRefEntity = docRefService.get(user, docRef.getUuid());

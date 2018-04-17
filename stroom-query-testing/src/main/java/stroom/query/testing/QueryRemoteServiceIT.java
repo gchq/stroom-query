@@ -41,7 +41,7 @@ public abstract class QueryRemoteServiceIT<
                                    final StroomAuthenticationRule authRule) {
         this.docRefType = docRefType;
         this.authRule = authRule;
-        this.queryClient = appRule.getClient(QueryServiceHttpClient::new);
+        this.queryClient = appRule.getClient(url -> new QueryServiceHttpClient(docRefType, url));
         this.docRefClient = appRule.getClient(u -> new DocRefServiceHttpClient<>(docRefType, docRefEntityClass, u));
     }
 

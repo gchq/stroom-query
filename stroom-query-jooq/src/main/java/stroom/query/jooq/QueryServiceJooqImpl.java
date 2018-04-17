@@ -41,6 +41,11 @@ public class QueryServiceJooqImpl implements QueryService {
     }
 
     @Override
+    public String getType() {
+        return docRefService.getType();
+    }
+
+    @Override
     public Optional<DataSource> getDataSource(final ServiceUser user,
                                               final DocRef docRef) throws QueryApiException {
         final Optional<? extends DocRefEntity> docRefEntity = docRefService.get(user, docRef.getUuid());

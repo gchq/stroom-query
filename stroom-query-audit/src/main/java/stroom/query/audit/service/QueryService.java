@@ -11,6 +11,13 @@ import java.util.Optional;
 
 public interface QueryService {
     /**
+     * Get the doc ref type that this service wraps.
+     *
+     * @return The doc ref type name
+     */
+    String getType();
+
+    /**
      * Get the details of the DataSource given by the DocRef.
      * Used to build user interfaces for querying the specific data.
      *

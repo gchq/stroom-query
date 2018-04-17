@@ -25,6 +25,11 @@ public class TestQueryServiceImpl implements QueryService {
     }
 
     @Override
+    public String getType() {
+        return docRefService.getType();
+    }
+
+    @Override
     public Optional<DataSource> getDataSource(final ServiceUser user,
                                               final DocRef docRef) throws QueryApiException {
         final Optional<TestDocRefEntity> docRefEntity = docRefService.get(user, docRef.getUuid());

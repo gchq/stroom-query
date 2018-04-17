@@ -65,6 +65,7 @@ public class AuditedQueryBundle<CONFIG extends Configuration & HasTokenConfig & 
     /**
      * This function will be overridden by child classes that have further specific modules to register.
      * @param configuration The dropwizard application configuration
+     * @return A guice module which combines the immediate dependencies and any from underlying bundles
      */
     public Module getGuiceModule(final CONFIG configuration) {
         return new AbstractModule() {
