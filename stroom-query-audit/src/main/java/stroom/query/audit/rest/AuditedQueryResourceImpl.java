@@ -2,11 +2,7 @@ package stroom.query.audit.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import event.logging.EventLoggingService;
-import event.logging.ObjectOutcome;
-import event.logging.Outcome;
-import event.logging.Query;
-import event.logging.Search;
+import event.logging.*;
 import org.eclipse.jetty.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

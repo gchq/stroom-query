@@ -5,11 +5,7 @@ import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class TestDocRefServiceImpl implements DocRefService<TestDocRefEntity> {
 

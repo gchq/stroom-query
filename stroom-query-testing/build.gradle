@@ -70,6 +70,7 @@ dependencies {
     compile libs.assertj
     compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
     compile libs.wiremock
+    compile libs.mockito_core
 
     compile libs.dropwizard_testing
 
