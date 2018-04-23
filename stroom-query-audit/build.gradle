@@ -18,16 +18,33 @@ dependencies {
     //--------Project----------
     compile project(':stroom-query-api')
     compile project(':stroom-query-common')
+    compile project(':stroom-query-authorisation')
 
     //--------Stroom libs------
     compile libs.eventLogging
-    compile libs.stroomExpression
 
     //--------3rd party--------
-    compile libs.dropwizard_core
     compile libs.dropwizard_auth
-    compile libs.dropwizard_auth_jwt
+    compile libs.dropwizard_core
+    compile libs.dropwizard_logging
+    compile libs.dropwizard_metrics
+    compile 'io.dropwizard:dropwizard-jersey:1.2.5'
+    compile libs.guava
     compile libs.guice
+    compile libs.jackson_annotations
+    compile libs.jackson_core
+    compile libs.jackson_databind
+    compile libs.javax_annotation
+    compile libs.javax_inject
+    compile libs.javax_ws
+    compile libs.javax_servlet
+    compile libs.jersey_client
+    compile libs.jersey_server
+    compile libs.logback_classic
+    compile libs.logback_core
     compile libs.kafka
     compile libs.slf4j_api
+
+    testCompile libs.junit
+    testCompile libs.mockito_core
 }

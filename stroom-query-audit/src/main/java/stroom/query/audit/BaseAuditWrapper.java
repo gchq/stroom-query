@@ -2,7 +2,7 @@ package stroom.query.audit;
 
 import event.logging.Event;
 import event.logging.EventLoggingService;
-import stroom.query.audit.security.ServiceUser;
+import stroom.security.ServiceUser;
 
 import javax.ws.rs.core.Response;
 

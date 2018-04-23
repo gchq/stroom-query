@@ -1,4 +1,4 @@
-package stroom.query.audit.security;
+package stroom.security;
 
 
 import io.dropwizard.auth.AuthenticationException;
@@ -11,7 +11,7 @@ import java.util.Optional;
 public class UserAuthenticator implements Authenticator<JwtContext, ServiceUser> {
 
     @Override
-    public Optional<ServiceUser> authenticate(JwtContext context) throws AuthenticationException {
+    public Optional<ServiceUser> authenticate(final JwtContext context) throws AuthenticationException {
         //TODO: If we want to check anything else about the user we need to do it here.
         try {
             return Optional.of(new ServiceUser(

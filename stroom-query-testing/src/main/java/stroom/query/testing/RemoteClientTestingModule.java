@@ -34,7 +34,7 @@ public class RemoteClientTestingModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(new TypeLiteral<RemoteClientCache<QueryService>>(){})
-            .toInstance(new RemoteClientCache<>(this.urlsByType::get, (t, u) -> Mockito.spy(new QueryServiceHttpClient(t, u))));
+            .toInstance(new RemoteClientCache<>(this.urlsByType::get, this::createQueryService));
         bind(new TypeLiteral<RemoteClientCache<QueryResource>>(){})
                 .toInstance(new RemoteClientCache<>(this.urlsByType::get, (t, u) -> Mockito.spy(new QueryResourceHttpClient(u))));
         bind(new TypeLiteral<RemoteClientCache<DocRefResource>>(){})
@@ -44,5 +44,9 @@ public class RemoteClientTestingModule extends AbstractModule {
                     Optional.ofNullable(docRefServices.get(t))
                             .map(s -> Mockito.spy(s.get()))
                             .orElseThrow(() -> new RuntimeException("No explicitly typed Doc Ref service provided for " + t))));
+    }
+
+    private QueryService createQueryService(final String type, final String url) {
+        return Mockito.spy(new QueryServiceHttpClient(type, url));
     }
 }

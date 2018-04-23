@@ -30,6 +30,6 @@ dependencies {
 
     //--------testing----------
     testCompile libs.assertj
-    testCompile libs.logback_classic
-    testCompile libs.logback_core
+    testCompile libs.junit
+    testCompile libs.mockito_core
 }

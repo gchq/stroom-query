@@ -2,7 +2,7 @@ package stroom.query.audit.client;
 
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.DocRefResource;
-import stroom.query.audit.security.ServiceUser;
+import stroom.security.ServiceUser;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;

@@ -11,11 +11,11 @@ import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
-import stroom.query.audit.authorisation.*;
+import stroom.authorisation.*;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.audit.rest.AuditedQueryResourceImpl;
-import stroom.query.audit.security.*;
+import stroom.security.*;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryService;
 

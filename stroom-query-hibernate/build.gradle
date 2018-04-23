@@ -19,11 +19,22 @@ dependencies {
     compile project(':stroom-query-api')
     compile project(':stroom-query-common')
     compile project(':stroom-query-audit')
+    compile project(':stroom-query-authorisation')
+
+    // ------- Stroom ---------
+    compile libs.stroomExpression
 
     //--------3rd party--------
     compile libs.dropwizard_core
     compile libs.dropwizard_hibernate
+    compile libs.dropwizard_db
     compile libs.dropwizard_flyway
+    compile libs.flyway_core
+    compile libs.hibernate_core
+    compile libs.hibernate_jpa
     compile libs.guice
+    compile libs.javax_inject
     compile libs.slf4j_api
+
+    testCompile libs.junit
 }

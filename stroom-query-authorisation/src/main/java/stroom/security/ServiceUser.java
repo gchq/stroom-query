@@ -1,32 +1,24 @@
-package stroom.query.audit.security;
+package stroom.security;
 
-import com.google.common.base.Preconditions;
-
-import javax.validation.constraints.NotNull;
 import java.security.Principal;
+import java.util.Objects;
 
 public final class ServiceUser implements Principal {
 
-    @NotNull
     private String name;
-    @NotNull
     private final String jwt;
 
-    @NotNull
     public String getName() {
         return this.name;
     }
-
-    @NotNull
     public final String getJwt() {
         return this.jwt;
     }
 
-    public ServiceUser(@NotNull String name, @NotNull String jwt) {
-        Preconditions.checkNotNull(name);
-        Preconditions.checkNotNull(jwt);
-        this.name = name;
-        this.jwt = jwt;
+    public ServiceUser(final String name,
+                       final String jwt) {
+        this.name = Objects.requireNonNull(name);
+        this.jwt = Objects.requireNonNull(jwt);
     }
 
     public static class Builder {

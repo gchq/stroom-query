@@ -16,7 +16,7 @@
  *
  */
 
-package stroom.query.audit.authorisation;
+package stroom.authorisation;
 
 import org.eclipse.jetty.http.HttpStatus;
 import org.glassfish.jersey.client.ClientConfig;
@@ -24,7 +24,7 @@ import org.glassfish.jersey.client.ClientResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.query.api.v2.DocRef;
-import stroom.query.audit.security.ServiceUser;
+import stroom.security.ServiceUser;
 
 import javax.inject.Inject;
 import javax.ws.rs.client.Client;

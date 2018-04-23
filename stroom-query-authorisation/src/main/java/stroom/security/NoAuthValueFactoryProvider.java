@@ -1,4 +1,4 @@
-package stroom.query.audit.security;
+package stroom.security;
 
 import io.dropwizard.auth.Auth;
 import io.dropwizard.auth.AuthValueFactoryProvider;

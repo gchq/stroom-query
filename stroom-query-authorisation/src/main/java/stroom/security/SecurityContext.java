@@ -1,4 +1,4 @@
-package stroom.query.audit.security;
+package stroom.security;
 
 import java.util.ArrayDeque;
 import java.util.Deque;

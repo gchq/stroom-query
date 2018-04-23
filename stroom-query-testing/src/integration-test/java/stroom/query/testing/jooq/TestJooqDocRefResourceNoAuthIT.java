@@ -18,7 +18,7 @@ public class TestJooqDocRefResourceNoAuthIT extends DocRefResourceNoAuthIT<TestD
 
     @ClassRule
     public static final DropwizardAppWithClientsRule<JooqConfig> appRule =
-            new DropwizardAppWithClientsRule<>(JooqApp.class, resourceFilePath("hibernate_noauth/config.yml"));
+            new DropwizardAppWithClientsRule<>(JooqApp.class, resourceFilePath("jooq_noauth/config.yml"));
 
     public TestJooqDocRefResourceNoAuthIT() {
         super(TestDocRefJooqEntity.class,

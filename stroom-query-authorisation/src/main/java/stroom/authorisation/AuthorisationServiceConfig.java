@@ -16,15 +16,23 @@
  *
  */
 
-package stroom.query.audit.authorisation;
+package stroom.authorisation;
 
-import stroom.query.api.v2.DocRef;
-import stroom.query.audit.security.ServiceUser;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public interface AuthorisationService {
-    default boolean isAuthorised(ServiceUser serviceUser, DocRef docRef, DocumentPermission permission) {
-        return this.isAuthorised(serviceUser, docRef, permission.getName());
+public class AuthorisationServiceConfig {
+
+    @JsonProperty("url")
+    private String url;
+
+    @JsonProperty("isAuthorisedPath")
+    private String isAuthorisedPath;
+
+    public String getUrl() {
+        return url;
     }
 
-    boolean isAuthorised(ServiceUser serviceUser, DocRef docRef, String permissionName);
+    public String getIsAuthorisedUrl() {
+        return url + isAuthorisedPath;
+    }
 }

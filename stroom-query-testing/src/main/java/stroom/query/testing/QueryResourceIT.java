@@ -9,7 +9,7 @@ import stroom.query.api.v2.DocRef;
 import stroom.query.api.v2.ExpressionOperator;
 import stroom.query.api.v2.OffsetRange;
 import stroom.query.api.v2.SearchRequest;
-import stroom.query.audit.authorisation.DocumentPermission;
+import stroom.authorisation.DocumentPermission;
 import stroom.query.audit.client.DocRefResourceHttpClient;
 import stroom.query.audit.client.QueryResourceHttpClient;
 import stroom.query.audit.model.DocRefEntity;

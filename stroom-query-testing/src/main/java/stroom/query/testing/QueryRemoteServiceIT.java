@@ -3,12 +3,12 @@ package stroom.query.testing;
 import io.dropwizard.Configuration;
 import org.junit.Rule;
 import org.junit.Test;
+import stroom.authorisation.DocumentPermission;
 import stroom.datasource.api.v2.DataSource;
 import stroom.query.api.v2.DocRef;
 import stroom.query.api.v2.ExpressionOperator;
 import stroom.query.api.v2.OffsetRange;
 import stroom.query.api.v2.SearchRequest;
-import stroom.query.audit.authorisation.DocumentPermission;
 import stroom.query.audit.client.DocRefServiceHttpClient;
 import stroom.query.audit.client.QueryServiceHttpClient;
 import stroom.query.audit.client.UnauthenticatedException;
@@ -158,6 +158,7 @@ public abstract class QueryRemoteServiceIT<
      *
      * @param docRefEntity The implementation specific entity, used to update the doc ref so it can be used.
      * @return The DocRef of the newly created annotations index.
+     * @throws QueryApiException if anything goes wrong.
      */
     protected DocRef createDocument(final DOC_REF_ENTITY docRefEntity) throws QueryApiException {
         final DocRef docRef = new DocRef.Builder()
@@ -191,6 +192,7 @@ public abstract class QueryRemoteServiceIT<
      * Create document, use the 'valid' doc ref entity for this test class.
      *
      * @return The Doc Ref of the created document.
+     * @throws QueryApiException if anything goes wrong.
      */
     protected DocRef createDocument() throws QueryApiException {
         return createDocument(null);

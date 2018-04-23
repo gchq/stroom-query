@@ -16,7 +16,7 @@
  *
  */
 
-package stroom.query.audit.authorisation;
+package stroom.authorisation;
 
 /**
  * This known actions that require permission.

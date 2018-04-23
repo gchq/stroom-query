@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Pulled out stroom-query-authorisation
+* Fixed unused/used dependencies using the plugin
+
 * Removed ConditionalWait.
 
 * Set response completion state prior to assembling results.

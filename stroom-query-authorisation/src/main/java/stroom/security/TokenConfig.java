@@ -16,31 +16,21 @@
  *
  */
 
-package stroom.query.audit.security;
+package stroom.security;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
 public class TokenConfig {
 
-    @Valid
-    @NotNull
     @JsonProperty
     private String jwsIssuer = "stroom";
 
-    @Valid
-    @NotNull
     @JsonProperty
     private String algorithm;
 
-    @Valid
-    @NotNull
     @JsonProperty
     private String publicKeyUrl;
 
-    @Valid
     @JsonProperty
     private Boolean skipAuth;
 

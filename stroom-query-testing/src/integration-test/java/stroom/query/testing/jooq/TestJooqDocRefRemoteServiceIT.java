@@ -20,7 +20,7 @@ public class TestJooqDocRefRemoteServiceIT extends DocRefRemoteServiceIT<TestDoc
 
     @ClassRule
     public static final DropwizardAppWithClientsRule<JooqConfig> appRule =
-            new DropwizardAppWithClientsRule<>(JooqApp.class, resourceFilePath("hibernate/config.yml"));
+            new DropwizardAppWithClientsRule<>(JooqApp.class, resourceFilePath("jooq/config.yml"));
 
     @ClassRule
     public static StroomAuthenticationRule authRule =

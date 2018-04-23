@@ -13,9 +13,9 @@ import org.jose4j.jwt.JwtClaims;
 import org.jose4j.lang.JoseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import stroom.authorisation.DocumentPermission;
 import stroom.query.api.v2.DocRef;
-import stroom.query.audit.authorisation.DocumentPermission;
-import stroom.query.audit.security.ServiceUser;
+import stroom.security.ServiceUser;
 
 import javax.ws.rs.core.MediaType;
 import java.util.*;

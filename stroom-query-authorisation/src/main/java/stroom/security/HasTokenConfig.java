@@ -1,4 +1,4 @@
-package stroom.query.audit.security;
+package stroom.security;
 
 public interface HasTokenConfig {
     TokenConfig getTokenConfig();

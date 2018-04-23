@@ -1,4 +1,4 @@
-package stroom.query.audit.security;
+package stroom.security;
 
 import com.github.toastshaman.dropwizard.auth.jwt.JwtAuthFilter;
 import org.glassfish.jersey.client.ClientConfig;

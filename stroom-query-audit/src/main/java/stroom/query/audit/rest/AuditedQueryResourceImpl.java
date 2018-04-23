@@ -6,14 +6,14 @@ import event.logging.*;
 import org.eclipse.jetty.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import stroom.authorisation.AuthorisationService;
+import stroom.authorisation.DocumentPermission;
 import stroom.query.api.v2.DocRef;
 import stroom.query.api.v2.QueryKey;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.audit.DocRefAuditWrapper;
-import stroom.query.audit.authorisation.AuthorisationService;
-import stroom.query.audit.authorisation.DocumentPermission;
 import stroom.query.audit.model.DocRefEntity;
-import stroom.query.audit.security.ServiceUser;
+import stroom.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryService;
 

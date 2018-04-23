@@ -19,13 +19,12 @@ import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.query.audit.AuditedQueryBundle;
-import stroom.query.audit.authorisation.HasAuthorisationConfig;
+import stroom.authorisation.HasAuthorisationConfig;
 import stroom.query.audit.model.IsDataSourceField;
 import stroom.query.audit.model.QueryableEntity;
-import stroom.query.audit.security.HasTokenConfig;
+import stroom.security.HasTokenConfig;
 import stroom.query.audit.service.DocRefService;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 

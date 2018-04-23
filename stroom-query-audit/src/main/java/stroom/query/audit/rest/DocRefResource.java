@@ -2,9 +2,8 @@ package stroom.query.audit.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.auth.Auth;
-import stroom.query.audit.security.ServiceUser;
+import stroom.security.ServiceUser;
 
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -25,7 +24,7 @@ public interface DocRefResource {
     @GET
     @Path("/")
     @Timed
-    Response getAll(@Auth @NotNull ServiceUser user);
+    Response getAll(@Auth ServiceUser user);
 
     /**
      * Retrieve the full config for the given DocRef
@@ -36,7 +35,7 @@ public interface DocRefResource {
     @GET
     @Path("/{uuid}")
     @Timed
-    Response get(@Auth @NotNull ServiceUser user,
+    Response get(@Auth ServiceUser user,
                  @PathParam("uuid") String uuid);
 
     /**
@@ -48,7 +47,7 @@ public interface DocRefResource {
     @GET
     @Path("/{uuid}/info")
     @Timed
-    Response getInfo(@Auth @NotNull ServiceUser user,
+    Response getInfo(@Auth ServiceUser user,
                      @PathParam("uuid") String uuid);
 
     /**
@@ -61,7 +60,7 @@ public interface DocRefResource {
      */
     @POST
     @Path("/create/{uuid}/{name}")
-    Response createDocument(@Auth @NotNull ServiceUser user,
+    Response createDocument(@Auth ServiceUser user,
                             @PathParam("uuid") String uuid,
                             @PathParam("name") String name);
 
@@ -90,7 +89,7 @@ public interface DocRefResource {
      */
     @POST
     @Path("/copy/{originalUuid}/{copyUuid}")
-    Response copyDocument(@Auth @NotNull ServiceUser user,
+    Response copyDocument(@Auth ServiceUser user,
                           @PathParam("originalUuid") String originalUuid,
                           @PathParam("copyUuid") String copyUuid);
 
@@ -104,7 +103,7 @@ public interface DocRefResource {
      */
     @PUT
     @Path("/move/{uuid}")
-    Response moveDocument(@Auth @NotNull ServiceUser user,
+    Response moveDocument(@Auth ServiceUser user,
                           @PathParam("uuid") String uuid);
 
     /**
@@ -119,7 +118,7 @@ public interface DocRefResource {
      */
     @PUT
     @Path("/rename/{uuid}/{name}")
-    Response renameDocument(@Auth @NotNull ServiceUser user,
+    Response renameDocument(@Auth ServiceUser user,
                             @PathParam("uuid") String uuid,
                             @PathParam("name") String name);
 
@@ -132,7 +131,7 @@ public interface DocRefResource {
      */
     @DELETE
     @Path("/delete/{uuid}")
-    Response deleteDocument(@Auth @NotNull ServiceUser user,
+    Response deleteDocument(@Auth ServiceUser user,
                             @PathParam("uuid") String uuid);
 
     /**
@@ -146,7 +145,7 @@ public interface DocRefResource {
      */
     @POST
     @Path("/import/{uuid}/{name}/{confirmed}")
-    Response importDocument(@Auth @NotNull ServiceUser user,
+    Response importDocument(@Auth ServiceUser user,
                             @PathParam("uuid") String uuid,
                             @PathParam("name") String name,
                             @PathParam("confirmed") Boolean confirmed,
@@ -160,6 +159,6 @@ public interface DocRefResource {
      */
     @GET
     @Path("/export/{uuid}")
-    Response exportDocument(@Auth @NotNull ServiceUser user,
+    Response exportDocument(@Auth ServiceUser user,
                             @PathParam("uuid") String uuid);
 }
