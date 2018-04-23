@@ -25,7 +25,7 @@ ext.versions = [
     eventLogging: 'v3.1.2_schema-v3.1.2',
 
     //------------3rd-party------------
-    dropwizard: '1.2.5',
+    dropwizard: '1.2.0',
     dropwizard_jooq:'1.1.0-0',
     dropwizard_metrics: '3.2.5',
     flyway: '4.0.3',
@@ -61,6 +61,7 @@ ext.libs = [
     dropwizard_auth_jwt: "com.github.toastshaman:dropwizard-auth-jwt:1.0.2-0",
     dropwizard_jooq: "com.bendb.dropwizard:dropwizard-jooq:$versions.dropwizard_jooq",
     dropwizard_logging: "io.dropwizard:dropwizard-logging:$versions.dropwizard",
+    dropwizard_jersey: "io.dropwizard:dropwizard-jersey:$versions.dropwizard",
     dropwizard_flyway: 'io.dropwizard.modules:dropwizard-flyway:1.0.0-1',
     dropwizard_metrics: "io.dropwizard.metrics:metrics-annotation:$versions.dropwizard_metrics",
     dropwizard_testing: "io.dropwizard:dropwizard-testing:$versions.dropwizard",

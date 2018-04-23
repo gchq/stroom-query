@@ -28,7 +28,7 @@ dependencies {
     compile libs.dropwizard_core
     compile libs.dropwizard_logging
     compile libs.dropwizard_metrics
-    compile 'io.dropwizard:dropwizard-jersey:1.2.5'
+    compile libs.dropwizard_jersey
     compile libs.guava
     compile libs.guice
     compile libs.jackson_annotations
