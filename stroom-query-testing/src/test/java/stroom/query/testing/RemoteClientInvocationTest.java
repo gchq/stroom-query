@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import stroom.query.audit.client.RemoteClientCache;
 import stroom.query.audit.service.QueryApiException;
 import stroom.query.audit.service.QueryService;
+import stroom.query.audit.service.QueryServiceSupplier;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +30,7 @@ public class RemoteClientInvocationTest {
         urlsByType.put(UUID.randomUUID().toString(), "http://localhost:18080/");
         Injector injector = Guice.createInjector(new RemoteClientTestingModule(urlsByType));
 
-        RemoteClientCache<QueryService> remoteClientCache = injector.getInstance(Key.get(new TypeLiteral<RemoteClientCache<QueryService>>(){}));
+        QueryServiceSupplier remoteClientCache = injector.getInstance(QueryServiceSupplier.class);
 
         urlsByType.forEach((k, v) -> {
             QueryService q = remoteClientCache.apply(k)

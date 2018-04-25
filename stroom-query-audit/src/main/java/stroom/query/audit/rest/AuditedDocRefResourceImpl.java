@@ -9,8 +9,8 @@ import stroom.query.api.v2.DocRef;
 import stroom.query.audit.ExportDTO;
 import stroom.query.audit.SimpleAuditWrapper;
 import stroom.query.audit.model.DocRefEntity;
-import stroom.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
+import stroom.security.ServiceUser;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;

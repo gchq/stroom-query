@@ -6,9 +6,9 @@ import stroom.query.api.v2.DocRef;
 import stroom.query.api.v2.QueryKey;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.SearchResponse;
-import stroom.security.ServiceUser;
 import stroom.query.audit.service.QueryApiException;
 import stroom.query.audit.service.QueryService;
+import stroom.security.ServiceUser;
 
 import javax.ws.rs.core.Response;
 import java.io.Closeable;

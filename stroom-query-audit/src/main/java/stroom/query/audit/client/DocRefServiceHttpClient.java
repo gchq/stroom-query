@@ -3,9 +3,9 @@ package stroom.query.audit.client;
 import org.eclipse.jetty.http.HttpStatus;
 import stroom.query.audit.ExportDTO;
 import stroom.query.audit.model.DocRefEntity;
-import stroom.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryApiException;
+import stroom.security.ServiceUser;
 
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;

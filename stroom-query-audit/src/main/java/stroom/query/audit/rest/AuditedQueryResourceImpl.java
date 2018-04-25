@@ -13,9 +13,9 @@ import stroom.query.api.v2.QueryKey;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.audit.DocRefAuditWrapper;
 import stroom.query.audit.model.DocRefEntity;
-import stroom.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryService;
+import stroom.security.ServiceUser;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;

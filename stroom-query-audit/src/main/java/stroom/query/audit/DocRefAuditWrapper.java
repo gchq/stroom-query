@@ -7,8 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.query.api.v2.DocRef;
 import stroom.query.audit.model.DocRefEntity;
-import stroom.security.ServiceUser;
 import stroom.query.audit.service.QueryApiException;
+import stroom.security.ServiceUser;
 
 import javax.ws.rs.core.Response;
 import java.util.Optional;
