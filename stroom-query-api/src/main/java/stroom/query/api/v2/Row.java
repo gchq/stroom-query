@@ -20,15 +20,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @JsonPropertyOrder({"groupKey", "values", "depth"})
 @XmlType(name = "Row", propOrder = {"groupKey", "values", "depth"})
@@ -81,23 +78,18 @@ public final class Row implements Serializable {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
-        final Row row = (Row) o;
-
-        if (groupKey != null ? !groupKey.equals(row.groupKey) : row.groupKey != null) return false;
-        if (values != null ? !values.equals(row.values) : row.values != null) return false;
-        return depth != null ? depth.equals(row.depth) : row.depth == null;
+        Row row = (Row) o;
+        return Objects.equals(groupKey, row.groupKey) &&
+                Objects.equals(values, row.values) &&
+                Objects.equals(depth, row.depth);
     }
 
     @Override
     public int hashCode() {
-        int result = groupKey != null ? groupKey.hashCode() : 0;
-        result = 31 * result + (values != null ? values.hashCode() : 0);
-        result = 31 * result + (depth != null ? depth.hashCode() : 0);
-        return result;
+        return Objects.hash(groupKey, values, depth);
     }
 
     @Override

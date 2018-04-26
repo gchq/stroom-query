@@ -26,6 +26,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.Objects;
 
 @JsonPropertyOrder({"order", "direction"})
 @XmlType(name = "Sort", propOrder = {"order", "direction"})
@@ -66,21 +67,17 @@ public final class Sort implements Serializable {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
-        final Sort sort = (Sort) o;
-
-        if (order != null ? !order.equals(sort.order) : sort.order != null) return false;
-        return direction == sort.direction;
+        Sort sort = (Sort) o;
+        return Objects.equals(order, sort.order) &&
+                direction == sort.direction;
     }
 
     @Override
     public int hashCode() {
-        int result = order != null ? order.hashCode() : 0;
-        result = 31 * result + (direction != null ? direction.hashCode() : 0);
-        return result;
+        return Objects.hash(order, direction);
     }
 
     @Override

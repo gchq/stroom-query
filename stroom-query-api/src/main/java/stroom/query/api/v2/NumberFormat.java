@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.Objects;
 
 @JsonPropertyOrder({"decimalPlaces", "useSeparator"})
 @XmlType(name = "NumberFormat", propOrder = {"decimalPlaces", "useSeparator"})
@@ -68,22 +69,17 @@ public final class NumberFormat implements Serializable {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof NumberFormat)) return false;
-
-        final NumberFormat that = (NumberFormat) o;
-
-        if (decimalPlaces != null ? !decimalPlaces.equals(that.decimalPlaces) : that.decimalPlaces != null)
-            return false;
-        return useSeparator != null ? useSeparator.equals(that.useSeparator) : that.useSeparator == null;
+        if (o == null || getClass() != o.getClass()) return false;
+        NumberFormat that = (NumberFormat) o;
+        return Objects.equals(decimalPlaces, that.decimalPlaces) &&
+                Objects.equals(useSeparator, that.useSeparator);
     }
 
     @Override
     public int hashCode() {
-        int result = decimalPlaces != null ? decimalPlaces.hashCode() : 0;
-        result = 31 * result + (useSeparator != null ? useSeparator.hashCode() : 0);
-        return result;
+        return Objects.hash(decimalPlaces, useSeparator);
     }
 
     @Override

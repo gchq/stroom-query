@@ -26,6 +26,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.Objects;
 
 @JsonPropertyOrder({"use", "id", "offsetHours", "offsetMinutes"})
 @XmlType(name = "TimeZone", propOrder = {"use", "id", "offsetHours", "offsetMinutes"})
@@ -116,26 +117,19 @@ public final class TimeZone implements Serializable {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof TimeZone)) return false;
-
-        final TimeZone timeZone = (TimeZone) o;
-
-        if (use != timeZone.use) return false;
-        if (id != null ? !id.equals(timeZone.id) : timeZone.id != null) return false;
-        if (offsetHours != null ? !offsetHours.equals(timeZone.offsetHours) : timeZone.offsetHours != null)
-            return false;
-        return offsetMinutes != null ? offsetMinutes.equals(timeZone.offsetMinutes) : timeZone.offsetMinutes == null;
+        if (o == null || getClass() != o.getClass()) return false;
+        TimeZone timeZone = (TimeZone) o;
+        return use == timeZone.use &&
+                Objects.equals(id, timeZone.id) &&
+                Objects.equals(offsetHours, timeZone.offsetHours) &&
+                Objects.equals(offsetMinutes, timeZone.offsetMinutes);
     }
 
     @Override
     public int hashCode() {
-        int result = use != null ? use.hashCode() : 0;
-        result = 31 * result + (id != null ? id.hashCode() : 0);
-        result = 31 * result + (offsetHours != null ? offsetHours.hashCode() : 0);
-        result = 31 * result + (offsetMinutes != null ? offsetMinutes.hashCode() : 0);
-        return result;
+        return Objects.hash(use, id, offsetHours, offsetMinutes);
     }
 
     @Override

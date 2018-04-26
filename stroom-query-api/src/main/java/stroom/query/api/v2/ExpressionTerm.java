@@ -27,6 +27,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @JsonPropertyOrder({"field", "condition", "value", "dictionary"})
 @XmlType(name = "ExpressionTerm", propOrder = {"field", "condition", "value", "dictionary"})
@@ -102,27 +103,20 @@ public final class ExpressionTerm extends ExpressionItem {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-
-        final ExpressionTerm that = (ExpressionTerm) o;
-
-        if (field != null ? !field.equals(that.field) : that.field != null) return false;
-        if (condition != that.condition) return false;
-        if (value != null ? !value.equals(that.value) : that.value != null) return false;
-        return dictionary != null ? dictionary.equals(that.dictionary) : that.dictionary == null;
+        ExpressionTerm that = (ExpressionTerm) o;
+        return Objects.equals(field, that.field) &&
+                condition == that.condition &&
+                Objects.equals(value, that.value) &&
+                Objects.equals(dictionary, that.dictionary);
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (field != null ? field.hashCode() : 0);
-        result = 31 * result + (condition != null ? condition.hashCode() : 0);
-        result = 31 * result + (value != null ? value.hashCode() : 0);
-        result = 31 * result + (dictionary != null ? dictionary.hashCode() : 0);
-        return result;
+        return Objects.hash(super.hashCode(), field, condition, value, dictionary);
     }
 
     @Override

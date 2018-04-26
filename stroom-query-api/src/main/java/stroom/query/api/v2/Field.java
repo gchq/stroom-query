@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.Objects;
 
 @JsonPropertyOrder({"name", "expression", "sort", "filter", "format", "group"})
 @XmlType(name = "Field", propOrder = {"name", "expression", "sort", "filter", "format", "group"})
@@ -120,29 +121,21 @@ public final class Field implements Serializable {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Field)) return false;
-
-        final Field field = (Field) o;
-
-        if (name != null ? !name.equals(field.name) : field.name != null) return false;
-        if (expression != null ? !expression.equals(field.expression) : field.expression != null) return false;
-        if (sort != null ? !sort.equals(field.sort) : field.sort != null) return false;
-        if (filter != null ? !filter.equals(field.filter) : field.filter != null) return false;
-        if (format != null ? !format.equals(field.format) : field.format != null) return false;
-        return group != null ? group.equals(field.group) : field.group == null;
+        if (o == null || getClass() != o.getClass()) return false;
+        Field field = (Field) o;
+        return Objects.equals(name, field.name) &&
+                Objects.equals(expression, field.expression) &&
+                Objects.equals(sort, field.sort) &&
+                Objects.equals(filter, field.filter) &&
+                Objects.equals(format, field.format) &&
+                Objects.equals(group, field.group);
     }
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (expression != null ? expression.hashCode() : 0);
-        result = 31 * result + (sort != null ? sort.hashCode() : 0);
-        result = 31 * result + (filter != null ? filter.hashCode() : 0);
-        result = 31 * result + (format != null ? format.hashCode() : 0);
-        result = 31 * result + (group != null ? group.hashCode() : 0);
-        return result;
+        return Objects.hash(name, expression, sort, filter, format, group);
     }
 
     @Override

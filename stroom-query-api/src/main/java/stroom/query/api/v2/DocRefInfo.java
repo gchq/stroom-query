@@ -1,5 +1,7 @@
 package stroom.query.api.v2;
 
+import java.util.Objects;
+
 public class DocRefInfo {
     private DocRef docRef;
     private Long createTime;
@@ -58,6 +60,24 @@ public class DocRefInfo {
 
     public void setOtherInfo(String otherInfo) {
         this.otherInfo = otherInfo;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DocRefInfo that = (DocRefInfo) o;
+        return Objects.equals(docRef, that.docRef) &&
+                Objects.equals(createTime, that.createTime) &&
+                Objects.equals(updateTime, that.updateTime) &&
+                Objects.equals(createUser, that.createUser) &&
+                Objects.equals(updateUser, that.updateUser) &&
+                Objects.equals(otherInfo, that.otherInfo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(docRef, createTime, updateTime, createUser, updateUser, otherInfo);
     }
 
     public static class Builder {

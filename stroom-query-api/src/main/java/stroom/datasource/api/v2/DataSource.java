@@ -20,16 +20,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @JsonPropertyOrder({"fields"})
 @XmlType(name = "DataSource", propOrder = "fields")
@@ -56,18 +52,16 @@ public final class DataSource implements Serializable {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
-        final DataSource that = (DataSource) o;
-
-        return fields != null ? fields.equals(that.fields) : that.fields == null;
+        DataSource that = (DataSource) o;
+        return Objects.equals(fields, that.fields);
     }
 
     @Override
     public int hashCode() {
-        return fields != null ? fields.hashCode() : 0;
+        return Objects.hash(fields);
     }
 
     @Override

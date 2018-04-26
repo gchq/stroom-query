@@ -23,16 +23,12 @@ import io.swagger.annotations.ApiModelProperty;
 import stroom.query.api.v2.ExpressionTerm.Condition;
 import stroom.util.shared.HasDisplayValue;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @JsonPropertyOrder({"type", "name", "queryable", "conditions"})
 @XmlType(name = "DataSourceField", propOrder = {"type", "name", "queryable", "conditions"})
@@ -111,25 +107,19 @@ public final class DataSourceField implements Serializable, HasDisplayValue {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
-        final DataSourceField that = (DataSourceField) o;
-
-        if (type != that.type) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (queryable != null ? !queryable.equals(that.queryable) : that.queryable != null) return false;
-        return conditions != null ? conditions.equals(that.conditions) : that.conditions == null;
+        DataSourceField that = (DataSourceField) o;
+        return type == that.type &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(queryable, that.queryable) &&
+                Objects.equals(conditions, that.conditions);
     }
 
     @Override
     public int hashCode() {
-        int result = type != null ? type.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (queryable != null ? queryable.hashCode() : 0);
-        result = 31 * result + (conditions != null ? conditions.hashCode() : 0);
-        return result;
+        return Objects.hash(type, name, queryable, conditions);
     }
 
     @Override

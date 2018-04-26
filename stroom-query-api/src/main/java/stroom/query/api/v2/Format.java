@@ -26,6 +26,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.Objects;
 
 @JsonPropertyOrder({"type", "numberFormat", "dateTimeFormat"})
 @XmlType(name = "Format", propOrder = {"type", "numberFormat", "dateTimeFormat"})
@@ -87,24 +88,18 @@ public final class Format implements Serializable {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
-        final Format format = (Format) o;
-
-        if (type != format.type) return false;
-        if (numberFormat != null ? !numberFormat.equals(format.numberFormat) : format.numberFormat != null)
-            return false;
-        return dateTimeFormat != null ? dateTimeFormat.equals(format.dateTimeFormat) : format.dateTimeFormat == null;
+        Format format = (Format) o;
+        return type == format.type &&
+                Objects.equals(numberFormat, format.numberFormat) &&
+                Objects.equals(dateTimeFormat, format.dateTimeFormat);
     }
 
     @Override
     public int hashCode() {
-        int result = type != null ? type.hashCode() : 0;
-        result = 31 * result + (numberFormat != null ? numberFormat.hashCode() : 0);
-        result = 31 * result + (dateTimeFormat != null ? dateTimeFormat.hashCode() : 0);
-        return result;
+        return Objects.hash(type, numberFormat, dateTimeFormat);
     }
 
     @Override

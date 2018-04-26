@@ -21,12 +21,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -75,21 +72,17 @@ public abstract class Result implements Serializable {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Result)) return false;
-
-        final Result that = (Result) o;
-
-        if (error != null ? !error.equals(that.error) : that.error != null) return false;
-        return componentId != null ? componentId.equals(that.componentId) : that.componentId == null;
+        if (o == null || getClass() != o.getClass()) return false;
+        Result result = (Result) o;
+        return Objects.equals(componentId, result.componentId) &&
+                Objects.equals(error, result.error);
     }
 
     @Override
     public int hashCode() {
-        int result = (error != null ? error.hashCode() : 0);
-        result = 31 * result + (componentId != null ? componentId.hashCode() : 0);
-        return result;
+        return Objects.hash(componentId, error);
     }
 
     @Override

@@ -20,16 +20,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @JsonPropertyOrder({"queryId", "fields", "extractValues", "extractionPipeline", "maxResults",
         "showDetail"})
@@ -137,31 +130,21 @@ public final class TableSettings implements Serializable {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
-        final TableSettings that = (TableSettings) o;
-
-        if (queryId != null ? !queryId.equals(that.queryId) : that.queryId != null) return false;
-        if (fields != null ? !fields.equals(that.fields) : that.fields != null) return false;
-        if (extractValues != null ? !extractValues.equals(that.extractValues) : that.extractValues != null)
-            return false;
-        if (extractionPipeline != null ? !extractionPipeline.equals(that.extractionPipeline) : that.extractionPipeline != null)
-            return false;
-        if (maxResults != null ? !maxResults.equals(that.maxResults) : that.maxResults != null) return false;
-        return showDetail != null ? showDetail.equals(that.showDetail) : that.showDetail == null;
+        TableSettings that = (TableSettings) o;
+        return Objects.equals(queryId, that.queryId) &&
+                Objects.equals(fields, that.fields) &&
+                Objects.equals(extractValues, that.extractValues) &&
+                Objects.equals(extractionPipeline, that.extractionPipeline) &&
+                Objects.equals(maxResults, that.maxResults) &&
+                Objects.equals(showDetail, that.showDetail);
     }
 
     @Override
     public int hashCode() {
-        int result = queryId != null ? queryId.hashCode() : 0;
-        result = 31 * result + (fields != null ? fields.hashCode() : 0);
-        result = 31 * result + (extractValues != null ? extractValues.hashCode() : 0);
-        result = 31 * result + (extractionPipeline != null ? extractionPipeline.hashCode() : 0);
-        result = 31 * result + (maxResults != null ? maxResults.hashCode() : 0);
-        result = 31 * result + (showDetail != null ? showDetail.hashCode() : 0);
-        return result;
+        return Objects.hash(queryId, fields, extractValues, extractionPipeline, maxResults, showDetail);
     }
 
     @Override

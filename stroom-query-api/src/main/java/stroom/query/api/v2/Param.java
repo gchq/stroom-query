@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.Objects;
 
 @JsonPropertyOrder({"key", "value"})
 @XmlType(name = "Param", propOrder = {"key", "value"})
@@ -63,21 +64,17 @@ public final class Param implements Serializable {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
-        final Param param = (Param) o;
-
-        if (key != null ? !key.equals(param.key) : param.key != null) return false;
-        return value != null ? value.equals(param.value) : param.value == null;
+        Param param = (Param) o;
+        return Objects.equals(key, param.key) &&
+                Objects.equals(value, param.value);
     }
 
     @Override
     public int hashCode() {
-        int result = key != null ? key.hashCode() : 0;
-        result = 31 * result + (value != null ? value.hashCode() : 0);
-        return result;
+        return Objects.hash(key, value);
     }
 
     @Override

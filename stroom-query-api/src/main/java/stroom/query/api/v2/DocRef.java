@@ -22,13 +22,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import stroom.util.shared.HasDisplayValue;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * {@value #CLASS_DESC}
@@ -160,21 +156,18 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DocRef)) return false;
-
-        final DocRef docRef = (DocRef) o;
-
-        if (type != null ? !type.equals(docRef.type) : docRef.type != null) return false;
-        return uuid != null ? uuid.equals(docRef.uuid) : docRef.uuid == null;
+        if (o == null || getClass() != o.getClass()) return false;
+        DocRef docRef = (DocRef) o;
+        return Objects.equals(type, docRef.type) &&
+                Objects.equals(uuid, docRef.uuid) &&
+                Objects.equals(name, docRef.name);
     }
 
     @Override
     public int hashCode() {
-        int result = type != null ? type.hashCode() : 0;
-        result = 31 * result + (uuid != null ? uuid.hashCode() : 0);
-        return result;
+        return Objects.hash(type, uuid, name);
     }
 
     @Override

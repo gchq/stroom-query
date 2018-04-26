@@ -21,12 +21,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -69,18 +66,16 @@ public abstract class ExpressionItem implements Serializable {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ExpressionItem)) return false;
-
-        final ExpressionItem that = (ExpressionItem) o;
-
-        return enabled != null ? enabled.equals(that.enabled) : that.enabled == null;
+        if (o == null || getClass() != o.getClass()) return false;
+        ExpressionItem that = (ExpressionItem) o;
+        return Objects.equals(enabled, that.enabled);
     }
 
     @Override
     public int hashCode() {
-        return enabled != null ? enabled.hashCode() : 0;
+        return Objects.hash(enabled);
     }
 
     abstract void append(final StringBuilder sb, final String pad, final boolean singleLine);

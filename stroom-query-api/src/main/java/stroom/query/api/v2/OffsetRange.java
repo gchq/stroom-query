@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.Objects;
 
 @JsonPropertyOrder({"offset", "length"})
 @XmlType(name = "OffsetRange", propOrder = {"offset", "length"})
@@ -70,23 +71,18 @@ public final class OffsetRange implements Serializable {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof OffsetRange)) return false;
-
-        final OffsetRange that = (OffsetRange) o;
-
-        if (offset != null ? !offset.equals(that.offset) : that.offset != null) return false;
-        return length != null ? length.equals(that.length) : that.length == null;
+        if (o == null || getClass() != o.getClass()) return false;
+        OffsetRange that = (OffsetRange) o;
+        return Objects.equals(offset, that.offset) &&
+                Objects.equals(length, that.length);
     }
 
     @Override
     public int hashCode() {
-        int result = offset != null ? offset.hashCode() : 0;
-        result = 31 * result + (length != null ? length.hashCode() : 0);
-        return result;
+        return Objects.hash(offset, length);
     }
-
 
     @Override
     public String toString() {
