@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Fixed equals and hash codes for query api classes.
 
 ## [v3.0-beta.6] - 2018-04-25
 
