@@ -135,7 +135,7 @@ public class DocRefEntity implements Serializable {
         public CHILD_CLASS docRef(final DocRef docRef) {
             this.instance.setUuid(docRef.getUuid());
             this.instance.setType(docRef.getType());
-            this.instance.setName(docRef.getUuid());
+            this.instance.setName(docRef.getName());
             return self();
         }
 

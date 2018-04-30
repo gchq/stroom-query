@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [v3.0-beta.7] - 2018-04-30
+## [v3.0-beta.8] - 2018-04-30
 
 * Fixed equals and hash codes for query api classes.
 
@@ -171,8 +171,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v3.0-beta.7...HEAD
-[v3.0-beta.7]: https://github.com/gchq/stroom-query/compare/v3.0-beta.6...v3.0-beta.7
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v3.0-beta.8...HEAD
+[v3.0-beta.8]: https://github.com/gchq/stroom-query/compare/v3.0-beta.6...v3.0-beta.8
 [v3.0-beta.6]: https://github.com/gchq/stroom-query/compare/v3.0-beta.5...v3.0-beta.6
 [v3.0-beta.5]: https://github.com/gchq/stroom-query/compare/v3.0-beta.4...v3.0-beta.5
 [v3.0-beta.4]: https://github.com/gchq/stroom-query/compare/v3.0-beta.3...v3.0-beta.4
