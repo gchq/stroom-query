@@ -6,11 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [v2.1-beta.2] - 2018-05-02
+## [v3.1-beta.1] - 2018-05-02
 
 * Fix DocRef equality.
-
-## [v2.1-beta.1] - 2018-05-02
 
 * Migrated to stroom-expression v1.3.1
 
@@ -179,7 +177,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v3.0-beta.8...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v3.1-beta.1...HEAD
+[v3.1-beta.1]: https://github.com/gchq/stroom-query/compare/v3.1-beta.8...v3.1-beta.1
 [v3.0-beta.8]: https://github.com/gchq/stroom-query/compare/v3.0-beta.6...v3.0-beta.8
 [v3.0-beta.6]: https://github.com/gchq/stroom-query/compare/v3.0-beta.5...v3.0-beta.6
 [v3.0-beta.5]: https://github.com/gchq/stroom-query/compare/v3.0-beta.4...v3.0-beta.5
