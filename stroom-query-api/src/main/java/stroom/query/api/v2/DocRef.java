@@ -163,7 +163,7 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof DocRef)) return false;
         final DocRef docRef = (DocRef) o;
         return Objects.equals(type, docRef.type) &&
                 Objects.equals(uuid, docRef.uuid);
