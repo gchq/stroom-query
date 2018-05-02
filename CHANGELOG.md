@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.1-beta.2] - 2018-05-02
+
+* Fix DocRef equality.
+
+## [v2.1-beta.1] - 2018-05-02
+
 * Migrated to stroom-expression v1.3.1
 
 ## [v3.0-beta.8] - 2018-04-30
