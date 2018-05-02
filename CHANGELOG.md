@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.1-beta.1] - 2018-05-02
+
+* Migrated to stroom-expression v1.3.1
+
 * Removed ConditionalWait.
 
 ## [v2.0-beta.3] - 2018-04-13
@@ -154,7 +158,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0-beta.3...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.1-beta.1...HEAD
+[v2.1-beta.1]: https://github.com/gchq/stroom-query/compare/v2.0.0-beta.3...v2.1-beta.1
 [v2.0-beta.3]: https://github.com/gchq/stroom-query/compare/v2.0.0-beta.2...v2.0-beta.3
 [v2.0-beta.2]: https://github.com/gchq/stroom-query/compare/v2.0.0-beta.1...v2.0-beta.2
 [v2.0-beta.1]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.28...v2.0-beta.1
