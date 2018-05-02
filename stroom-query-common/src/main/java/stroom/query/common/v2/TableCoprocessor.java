@@ -17,6 +17,7 @@
 package stroom.query.common.v2;
 
 import stroom.dashboard.expression.v1.FieldIndexMap;
+import stroom.dashboard.expression.v1.Val;
 import stroom.mapreduce.v2.BlockingPairQueue;
 import stroom.mapreduce.v2.PairQueue;
 import stroom.mapreduce.v2.UnsafePairQueue;
@@ -28,14 +29,16 @@ import java.util.List;
 import java.util.Map;
 
 public class TableCoprocessor implements Coprocessor {
-    private final PairQueue<Key, Item> queue;
+    private final PairQueue<GroupKey, Item> queue;
     private final ItemMapper mapper;
 
     private final CompiledFields compiledFields;
     private final CompiledDepths compiledDepths;
 
     public TableCoprocessor(final TableCoprocessorSettings settings,
-                            final FieldIndexMap fieldIndexMap, final HasTerminate taskMonitor, final Map<String, String> paramMap) {
+                            final FieldIndexMap fieldIndexMap,
+                            final HasTerminate taskMonitor,
+                            final Map<String, String> paramMap) {
         final TableSettings tableSettings = settings.getTableSettings();
 
         final List<Field> fields = tableSettings.getFields();
@@ -47,13 +50,13 @@ public class TableCoprocessor implements Coprocessor {
     }
 
     @Override
-    public void receive(final String[] values) {
+    public void receive(final Val[] values) {
         mapper.collect(null, values);
     }
 
     @Override
     public Payload createPayload() {
-        final UnsafePairQueue<Key, Item> outputQueue = new UnsafePairQueue<>();
+        final UnsafePairQueue<GroupKey, Item> outputQueue = new UnsafePairQueue<>();
 
         // Create a partitioner to perform result reduction if needed.
         final ItemPartitioner partitioner = new ItemPartitioner(compiledDepths.getDepths(),

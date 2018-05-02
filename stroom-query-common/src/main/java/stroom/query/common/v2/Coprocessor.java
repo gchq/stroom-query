@@ -16,6 +16,8 @@
 
 package stroom.query.common.v2;
 
+import stroom.dashboard.expression.v1.Val;
+
 public interface Coprocessor extends PayloadFactory {
-    void receive(String[] values);
+    void receive(Val[] values);
 }

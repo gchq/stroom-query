@@ -18,6 +18,8 @@ package stroom.query.common.v2;
 
 import org.junit.Assert;
 import org.junit.Test;
+import stroom.dashboard.expression.v1.Val;
+import stroom.dashboard.expression.v1.ValString;
 import stroom.mapreduce.v2.UnsafePairQueue;
 import stroom.query.api.v2.Field;
 import stroom.query.api.v2.Format;
@@ -62,14 +64,14 @@ public class TestTablePayloadHandler {
         final CompiledDepths compiledDepths = new CompiledDepths(tableSettings.getFields(), tableSettings.showDetail());
         final CompiledFields compiledFields = new CompiledFields(tableSettings.getFields(), null, Collections.emptyMap());
 
-        final UnsafePairQueue<Key, Item> queue = new UnsafePairQueue<>();
+        final UnsafePairQueue<GroupKey, Item> queue = new UnsafePairQueue<>();
         final ItemMapper itemMapper = new ItemMapper(queue, compiledFields, compiledDepths.getMaxDepth(),
                 compiledDepths.getMaxGroupDepth());
 
         for (int i = 0; i < 3000; i++) {
             final String text = "Text " + i;
-            final String[] values = new String[1];
-            values[0] = text;
+            final Val[] values = new Val[1];
+            values[0] = ValString.create(text);
 
             itemMapper.collect(null, values);
         }
@@ -117,14 +119,14 @@ public class TestTablePayloadHandler {
         final CompiledDepths compiledDepths = new CompiledDepths(tableSettings.getFields(), tableSettings.showDetail());
         final CompiledFields compiledFields = new CompiledFields(tableSettings.getFields(), null, Collections.emptyMap());
 
-        final UnsafePairQueue<Key, Item> queue = new UnsafePairQueue<>();
+        final UnsafePairQueue<GroupKey, Item> queue = new UnsafePairQueue<>();
         final ItemMapper itemMapper = new ItemMapper(queue, compiledFields, compiledDepths.getMaxDepth(),
                 compiledDepths.getMaxGroupDepth());
 
         for (int i = 0; i < 3000; i++) {
             final String text = "Text " + (int) (Math.random() * 100);
-            final String[] values = new String[1];
-            values[0] = text;
+            final Val[] values = new Val[1];
+            values[0] = ValString.create(text);
 
             itemMapper.collect(null, values);
         }
@@ -161,14 +163,14 @@ public class TestTablePayloadHandler {
         final CompiledDepths compiledDepths = new CompiledDepths(tableSettings.getFields(), tableSettings.showDetail());
         final CompiledFields compiledFields = new CompiledFields(tableSettings.getFields(), null, Collections.emptyMap());
 
-        final UnsafePairQueue<Key, Item> queue = new UnsafePairQueue<>();
+        final UnsafePairQueue<GroupKey, Item> queue = new UnsafePairQueue<>();
         final ItemMapper itemMapper = new ItemMapper(queue, compiledFields, compiledDepths.getMaxDepth(),
                 compiledDepths.getMaxGroupDepth());
 
         for (int i = 0; i < 3000; i++) {
             final String text = String.valueOf((int) (Math.random() * 100));
-            final String[] values = new String[1];
-            values[0] = text;
+            final Val[] values = new Val[1];
+            values[0] = ValString.create(text);
 
             itemMapper.collect(null, values);
         }
@@ -210,14 +212,14 @@ public class TestTablePayloadHandler {
         final CompiledDepths compiledDepths = new CompiledDepths(tableSettings.getFields(), tableSettings.showDetail());
         final CompiledFields compiledFields = new CompiledFields(tableSettings.getFields(), null, Collections.emptyMap());
 
-        final UnsafePairQueue<Key, Item> queue = new UnsafePairQueue<>();
+        final UnsafePairQueue<GroupKey, Item> queue = new UnsafePairQueue<>();
         final ItemMapper itemMapper = new ItemMapper(queue, compiledFields, compiledDepths.getMaxDepth(),
                 compiledDepths.getMaxGroupDepth());
 
         for (int i = 0; i < 3000; i++) {
             final String text = "Text " + (int) (Math.random() * 100);
-            final String[] values = new String[2];
-            values[1] = text;
+            final Val[] values = new Val[2];
+            values[1] = ValString.create(text);
 
             itemMapper.collect(null, values);
         }
@@ -259,14 +261,14 @@ public class TestTablePayloadHandler {
         final CompiledDepths compiledDepths = new CompiledDepths(tableSettings.getFields(), tableSettings.showDetail());
         final CompiledFields compiledFields = new CompiledFields(tableSettings.getFields(), null, Collections.emptyMap());
 
-        final UnsafePairQueue<Key, Item> queue = new UnsafePairQueue<>();
+        final UnsafePairQueue<GroupKey, Item> queue = new UnsafePairQueue<>();
         final ItemMapper itemMapper = new ItemMapper(queue, compiledFields, compiledDepths.getMaxDepth(),
                 compiledDepths.getMaxGroupDepth());
 
         for (int i = 0; i < 3000; i++) {
             final String text = "Text " + (int) (Math.random() * 100);
-            final String[] values = new String[2];
-            values[1] = text;
+            final Val[] values = new Val[2];
+            values[1] = ValString.create(text);
 
             itemMapper.collect(null, values);
         }
@@ -307,14 +309,14 @@ public class TestTablePayloadHandler {
         final CompiledDepths compiledDepths = new CompiledDepths(tableSettings.getFields(), tableSettings.showDetail());
         final CompiledFields compiledFields = new CompiledFields(tableSettings.getFields(), null, Collections.emptyMap());
 
-        final UnsafePairQueue<Key, Item> queue = new UnsafePairQueue<>();
+        final UnsafePairQueue<GroupKey, Item> queue = new UnsafePairQueue<>();
         final ItemMapper itemMapper = new ItemMapper(queue, compiledFields, compiledDepths.getMaxDepth(),
                 compiledDepths.getMaxGroupDepth());
 
         for (int i = 0; i < 3000; i++) {
             final String text = "Text " + (int) (Math.random() * 100);
-            final String[] values = new String[2];
-            values[1] = text;
+            final Val[] values = new Val[2];
+            values[1] = ValString.create(text);
 
             itemMapper.collect(null, values);
         }

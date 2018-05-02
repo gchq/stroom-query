@@ -5,6 +5,8 @@ import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.dashboard.expression.v1.FieldIndexMap;
+import stroom.dashboard.expression.v1.Val;
+import stroom.dashboard.expression.v1.ValString;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
 import stroom.query.api.v2.DocRef;
@@ -276,7 +278,7 @@ public class QueryServiceCriteriaImpl<
         //TODO TableCoprocessor is doing a lot of work to pre-process and aggregate the datas
 
         for (Tuple criteriaDataPoint : tuples) {
-            String[] dataArray = new String[fieldIndexMap.size()];
+            Val[] dataArray = new Val[fieldIndexMap.size()];
 
             //TODO should probably drive this off a new fieldIndexMap.getEntries() method or similar
             //then we only loop round fields we car about
@@ -287,7 +289,7 @@ public class QueryServiceCriteriaImpl<
                 int posInDataArray = fieldIndexMap.get(fieldName);
                 //if the fieldIndexMap returns -1 the field has not been requested
                 if (posInDataArray != -1) {
-                    dataArray[posInDataArray] = value.toString();
+                    dataArray[posInDataArray] = ValString.create(value.toString());
                 }
             }
 

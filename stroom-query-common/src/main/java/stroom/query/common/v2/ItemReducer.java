@@ -20,7 +20,7 @@ import stroom.dashboard.expression.v1.Generator;
 import stroom.mapreduce.v2.OutputCollector;
 import stroom.mapreduce.v2.Reducer;
 
-public class ItemReducer implements Reducer<Key, Item, Key, Item> {
+public class ItemReducer implements Reducer<GroupKey, Item, GroupKey, Item> {
     private final int[] depths;
     private final int maxDepth;
 
@@ -30,7 +30,7 @@ public class ItemReducer implements Reducer<Key, Item, Key, Item> {
     }
 
     @Override
-    public void reduce(final Key key, final Iterable<Item> values, final OutputCollector<Key, Item> output) {
+    public void reduce(final GroupKey key, final Iterable<Item> values, final OutputCollector<GroupKey, Item> output) {
         Item dest = null;
         for (final Item item : values) {
             if (dest == null) {
@@ -39,7 +39,7 @@ public class ItemReducer implements Reducer<Key, Item, Key, Item> {
             } else {
                 // Combine new list into original item list.
                 for (int i = 0; i < depths.length; i++) {
-                    dest.values[i] = combine(depths[i], maxDepth, dest.values[i], item.values[i], item.depth);
+                    dest.generators[i] = combine(depths[i], maxDepth, dest.generators[i], item.generators[i], item.depth);
                 }
             }
         }
@@ -47,17 +47,14 @@ public class ItemReducer implements Reducer<Key, Item, Key, Item> {
         output.collect(key, dest);
     }
 
-    private Object combine(final int groupDepth, final int maxDepth, final Object existingValue,
-                           final Object addedValue, final int depth) {
-        Object output = null;
+    private Generator combine(final int groupDepth, final int maxDepth, final Generator existingValue,
+                              final Generator addedValue, final int depth) {
+        Generator output = null;
 
         if (maxDepth >= depth) {
-            if (existingValue != null && addedValue != null && existingValue instanceof Generator
-                    && addedValue instanceof Generator) {
-                final Generator existingGenerator = (Generator) existingValue;
-                final Generator addedGenerator = (Generator) addedValue;
-                existingGenerator.merge(addedGenerator);
-                output = existingGenerator;
+            if (existingValue != null && addedValue != null) {
+                existingValue.merge(addedValue);
+                output = existingValue;
             } else if (groupDepth >= 0 && groupDepth <= depth) {
                 // This field is grouped so output existing as it must match the
                 // added value.

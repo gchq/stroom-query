@@ -73,7 +73,7 @@ public class SearchResultHandler implements ResultHandler {
                     final TablePayload tablePayload = (TablePayload) payload;
 
                     final TablePayloadHandler payloadHandler = handlerMap.get(entry.getKey());
-                    final UnsafePairQueue<Key, Item> newQueue = tablePayload.getQueue();
+                    final UnsafePairQueue<GroupKey, Item> newQueue = tablePayload.getQueue();
                     if (newQueue != null) {
                         payloadHandler.addQueue(newQueue, hasTerminate);
                     }
@@ -119,7 +119,7 @@ public class SearchResultHandler implements ResultHandler {
 
         //notify the listeners
         if (complete && (complete != previousValue)) {
-            for (CompletionListener listener; (listener = completionListeners.poll()) != null;){
+            for (CompletionListener listener; (listener = completionListeners.poll()) != null; ) {
                 //when notified they will check isComplete
                 LOGGER.debug("Notifying {} {} that we are complete", listener.getClass().getName(), listener);
                 listener.onCompletion();

@@ -8,7 +8,7 @@ import stroom.query.common.v2.Coprocessor;
 import stroom.query.common.v2.CoprocessorSettingsMap;
 import stroom.query.common.v2.Data;
 import stroom.query.common.v2.Item;
-import stroom.query.common.v2.Key;
+import stroom.query.common.v2.GroupKey;
 import stroom.query.common.v2.Payload;
 import stroom.query.common.v2.ResultStoreCreator;
 import stroom.query.common.v2.Store;
@@ -41,10 +41,10 @@ public class CriteriaStore implements Store {
     private final AtomicBoolean isComplete = new AtomicBoolean(true);
 
     public CriteriaStore(final List<Integer> defaultMaxResultsSizes,
-                              final StoreSize storeSize,
-                              final CoprocessorSettingsMap coprocessorSettingsMap,
-                              final Map<CoprocessorSettingsMap.CoprocessorKey, Coprocessor> coprocessorMap,
-                              final Map<CoprocessorSettingsMap.CoprocessorKey, Payload> payloadMap) {
+                         final StoreSize storeSize,
+                         final CoprocessorSettingsMap coprocessorSettingsMap,
+                         final Map<CoprocessorSettingsMap.CoprocessorKey, Coprocessor> coprocessorMap,
+                         final Map<CoprocessorSettingsMap.CoprocessorKey, Payload> payloadMap) {
 
         this.defaultMaxResultsSizes = defaultMaxResultsSizes;
         this.storeSize = storeSize;
@@ -79,7 +79,7 @@ public class CriteriaStore implements Store {
 
         Payload payload = payloadMap.get(coprocessorKey);
         TablePayload tablePayload = (TablePayload) payload;
-        UnsafePairQueue<Key, Item> queue = tablePayload.getQueue();
+        UnsafePairQueue<GroupKey, Item> queue = tablePayload.getQueue();
 
         CompiledSorter compiledSorter = new CompiledSorter(tableSettings.getFields());
         final ResultStoreCreator resultStoreCreator = new ResultStoreCreator(compiledSorter);
