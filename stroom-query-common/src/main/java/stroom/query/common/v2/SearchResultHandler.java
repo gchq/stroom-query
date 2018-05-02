@@ -56,7 +56,7 @@ public class SearchResultHandler implements ResultHandler {
                     final TablePayload tablePayload = (TablePayload) payload;
 
                     final TablePayloadHandler payloadHandler = handlerMap.get(entry.getKey());
-                    final UnsafePairQueue<Key, Item> newQueue = tablePayload.getQueue();
+                    final UnsafePairQueue<GroupKey, Item> newQueue = tablePayload.getQueue();
                     if (newQueue != null) {
                         payloadHandler.addQueue(newQueue);
                     }

@@ -20,9 +20,9 @@ import stroom.mapreduce.v2.OutputCollector;
 import stroom.mapreduce.v2.Reducer;
 import stroom.mapreduce.v2.SimplePartitioner;
 
-public class ItemPartitioner extends SimplePartitioner<Key, Item, Key, Item> {
+public class ItemPartitioner extends SimplePartitioner<GroupKey, Item, GroupKey, Item> {
     private final ItemReducer itemReducer;
-    private OutputCollector<Key, Item> outputCollector;
+    private OutputCollector<GroupKey, Item> outputCollector;
 
     public ItemPartitioner(final int[] depths, final int maxDepth) {
         // Create a reusable reducer as it doesn't hold state.
@@ -30,13 +30,13 @@ public class ItemPartitioner extends SimplePartitioner<Key, Item, Key, Item> {
     }
 
     @Override
-    protected Reducer<Key, Item, Key, Item> createReducer() {
+    protected Reducer<GroupKey, Item, GroupKey, Item> createReducer() {
         // Reuse the same reducer as there is no state.
         return itemReducer;
     }
 
     @Override
-    protected void collect(final Key key, final Item value) {
+    protected void collect(final GroupKey key, final Item value) {
         // The standard collect method is overridden so that items with a null
         // key are passed straight to the output collector and will not undergo
         // partitioning and reduction as we don't want to group items with null
@@ -49,7 +49,7 @@ public class ItemPartitioner extends SimplePartitioner<Key, Item, Key, Item> {
     }
 
     @Override
-    public void setOutputCollector(final OutputCollector<Key, Item> outputCollector) {
+    public void setOutputCollector(final OutputCollector<GroupKey, Item> outputCollector) {
         super.setOutputCollector(outputCollector);
         this.outputCollector = outputCollector;
     }

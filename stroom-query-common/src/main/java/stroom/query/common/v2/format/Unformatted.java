@@ -17,7 +17,7 @@
 package stroom.query.common.v2.format;
 
 
-import stroom.dashboard.expression.v1.TypeConverter;
+import stroom.dashboard.expression.v1.Val;
 
 public class Unformatted implements Formatter {
     private Unformatted() {
@@ -28,20 +28,10 @@ public class Unformatted implements Formatter {
     }
 
     @Override
-    public String format(final Object value) {
+    public String format(final Val value) {
         if (value == null) {
             return null;
         }
-
-        final Double dbl = TypeConverter.getDouble(value);
-        if (dbl != null) {
-            if (Double.valueOf(dbl.longValue()).equals(dbl)) {
-                return String.valueOf(dbl.longValue());
-            } else {
-                return dbl.toString();
-            }
-        }
-
         return value.toString();
     }
 }

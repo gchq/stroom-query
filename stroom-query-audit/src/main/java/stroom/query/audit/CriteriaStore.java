@@ -2,7 +2,17 @@ package stroom.query.audit;
 
 import stroom.mapreduce.v2.UnsafePairQueue;
 import stroom.query.api.v2.TableSettings;
-import stroom.query.common.v2.*;
+import stroom.query.common.v2.CompiledSorter;
+import stroom.query.common.v2.CoprocessorSettingsMap;
+import stroom.query.common.v2.Data;
+import stroom.query.common.v2.Item;
+import stroom.query.common.v2.GroupKey;
+import stroom.query.common.v2.Payload;
+import stroom.query.common.v2.ResultStoreCreator;
+import stroom.query.common.v2.Store;
+import stroom.query.common.v2.StoreSize;
+import stroom.query.common.v2.TableCoprocessorSettings;
+import stroom.query.common.v2.TablePayload;
 
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +77,7 @@ public class CriteriaStore implements Store {
 
         Payload payload = payloadMap.get(coprocessorKey);
         TablePayload tablePayload = (TablePayload) payload;
-        UnsafePairQueue<Key, Item> queue = tablePayload.getQueue();
+        UnsafePairQueue<GroupKey, Item> queue = tablePayload.getQueue();
 
         CompiledSorter compiledSorter = new CompiledSorter(tableSettings.getFields());
         final ResultStoreCreator resultStoreCreator = new ResultStoreCreator(compiledSorter);

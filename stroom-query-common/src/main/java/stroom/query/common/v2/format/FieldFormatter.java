@@ -16,6 +16,7 @@
 
 package stroom.query.common.v2.format;
 
+import stroom.dashboard.expression.v1.Val;
 import stroom.query.api.v2.Field;
 
 import java.util.HashMap;
@@ -29,7 +30,7 @@ public class FieldFormatter {
         this.formatterFactory = formatterFactory;
     }
 
-    public String format(final Field field, final Object value) {
+    public String format(final Field field, final Val value) {
         return formatterCache.computeIfAbsent(field, k -> formatterFactory.create(field)).format(value);
     }
 }

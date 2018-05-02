@@ -17,6 +17,7 @@
 package stroom.query.common.v2;
 
 import stroom.dashboard.expression.v1.Generator;
+import stroom.dashboard.expression.v1.Val;
 import stroom.query.api.v2.Field;
 import stroom.query.api.v2.OffsetRange;
 import stroom.query.api.v2.Result;
@@ -92,7 +93,7 @@ public class TableResultCreator implements ResultCreator {
     private int addTableResults(final Data data, final List<Field> fields,
                                 final MaxResults maxResults, final int offset,
                                 final int length, final Set<String> openGroups,
-                                final List<Row> resultList, final Key parentKey,
+                                final List<Row> resultList, final GroupKey parentKey,
                                 final int depth, final int position) {
         int maxResultsAtThisDepth = maxResults.size(depth);
         int pos = position;
@@ -105,31 +106,23 @@ public class TableResultCreator implements ResultCreator {
                         resultList.size() < length) {
                     // Convert all list into fully resolved objects evaluating
                     // functions where necessary.
-                    final List<String> values = new ArrayList<>(item.getValues().length);
+                    final List<String> values = new ArrayList<>(item.getGenerators().length);
                     int i = 0;
 
                     for (final Field field : fields) {
                         String string = null;
 
-                        if (item.getValues().length > i) {
-                            final Object o = item.getValues()[i];
-                            if (o != null) {
+                        if (item.getGenerators().length > i) {
+                            final Generator generator = item.getGenerators()[i];
+                            if (generator != null) {
                                 // Convert all list into fully resolved
                                 // objects evaluating functions where necessary.
-                                Object val = o;
-                                if (o instanceof Generator) {
-                                    final Generator generator = (Generator) o;
-                                    val = generator.eval();
-                                }
-
-                                if (val != null) {
-                                    string = fieldFormatter.format(field, val);
-                                }
+                                final Val val = generator.eval();
+                                string = fieldFormatter.format(field, val);
                             }
                         }
 
                         values.add(string);
-
                         i++;
                     }
 
