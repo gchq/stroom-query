@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v3.1-beta.4] - 2018-05-10
+
+* Made Wiremock based tests use dynamically allocated ports.
+
+## [v3.1-beta.3] - 2018-05-10
+
+* Fix dependencies.
+
 ## [v3.1-beta.2] - 2018-05-10
 
 * Updated to stroom-expression v1.3.2.
@@ -185,7 +193,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v3.1-beta.2...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v3.1-beta.4...HEAD
+[v3.1-beta.4]: https://github.com/gchq/stroom-query/compare/v3.1-beta.3...v3.1-beta.4
+[v3.1-beta.3]: https://github.com/gchq/stroom-query/compare/v3.1-beta.2...v3.1-beta.3
 [v3.1-beta.2]: https://github.com/gchq/stroom-query/compare/v3.1-beta.1...v3.1-beta.2
 [v3.1-beta.1]: https://github.com/gchq/stroom-query/compare/v3.0-beta.8...v3.1-beta.1
 [v3.0-beta.8]: https://github.com/gchq/stroom-query/compare/v3.0-beta.6...v3.0-beta.8
