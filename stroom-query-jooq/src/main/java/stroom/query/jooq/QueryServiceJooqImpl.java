@@ -8,7 +8,7 @@ import stroom.query.api.v2.QueryKey;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.SearchResponse;
 import stroom.query.audit.model.DocRefEntity;
-import stroom.query.security.SecurityContext;
+import stroom.query.security.CurrentServiceUser;
 import stroom.query.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryApiException;
@@ -61,7 +61,7 @@ public class QueryServiceJooqImpl implements QueryService {
     public Optional<SearchResponse> search(final ServiceUser user,
                                            final SearchRequest request) throws QueryApiException {
 
-        SecurityContext.pushServiceUser(user);
+        CurrentServiceUser.pushServiceUser(user);
 
         //if this is the first call for this query key then it will create a searchResponseCreator (& store) that have
         //a lifespan beyond the scope of this request and then begin the search for the data
@@ -72,7 +72,7 @@ public class QueryServiceJooqImpl implements QueryService {
         //create a response from the data found so far, this could be complete/incomplete
         final SearchResponse response = searchResponseCreator.create(request);
 
-        SecurityContext.popServiceUser();
+        CurrentServiceUser.popServiceUser();
 
         return Optional.of(response);
     }

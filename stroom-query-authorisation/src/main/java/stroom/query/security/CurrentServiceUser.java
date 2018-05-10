@@ -19,7 +19,7 @@ package stroom.query.security;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-public class SecurityContext {
+public class CurrentServiceUser {
     private static final ThreadLocal<Deque<ServiceUser>> THREAD_LOCAL = ThreadLocal.withInitial(ArrayDeque::new);
 
     public static void pushServiceUser(final ServiceUser userRef) {

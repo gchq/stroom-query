@@ -17,7 +17,7 @@ import stroom.query.api.v2.Param;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.audit.CriteriaStore;
 import stroom.query.audit.model.QueryableEntity;
-import stroom.query.security.SecurityContext;
+import stroom.query.security.CurrentServiceUser;
 import stroom.query.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryApiException;
@@ -79,7 +79,7 @@ public class JooqStoreFactory implements StoreFactory {
         final String dataSourceUuid = searchRequest.getQuery().getDataSource().getUuid();
 
         try {
-            final ServiceUser user = SecurityContext.currentServiceUser();
+            final ServiceUser user = CurrentServiceUser.currentServiceUser();
             docRefService.get(user, dataSourceUuid)
                     .orElseThrow(() -> new RuntimeException(String.format("Could not find doc ref entity for data source %s", dataSourceUuid)));
         } catch (QueryApiException e) {
