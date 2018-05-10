@@ -34,7 +34,6 @@ dependencies {
     compile libs.jackson_annotations
     compile libs.jackson_core
     compile libs.jackson_databind
-    compile libs.javax_annotation
     compile libs.javax_inject
     compile libs.javax_ws
     compile libs.javax_servlet
