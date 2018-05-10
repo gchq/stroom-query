@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Updated libs to keep in line with dropwizard 1.2.5.
+
 ## [v3.1-beta.1] - 2018-05-02
 
 * Fix DocRef equality.
