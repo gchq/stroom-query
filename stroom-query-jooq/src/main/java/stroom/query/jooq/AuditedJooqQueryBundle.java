@@ -8,10 +8,10 @@ import io.dropwizard.Configuration;
 import io.dropwizard.ConfiguredBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import stroom.authorisation.HasAuthorisationConfig;
+import stroom.query.authorisation.HasAuthorisationConfig;
 import stroom.query.audit.model.IsDataSourceField;
 import stroom.query.audit.model.QueryableEntity;
-import stroom.security.HasTokenConfig;
+import stroom.query.security.HasTokenConfig;
 import stroom.query.audit.service.DocRefService;
 
 import java.util.function.Function;

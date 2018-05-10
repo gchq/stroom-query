@@ -11,12 +11,20 @@ import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
-import stroom.authorisation.*;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.audit.rest.AuditedQueryResourceImpl;
 import stroom.query.audit.service.DocRefService;
-import stroom.security.*;
+import stroom.query.authorisation.AuthorisationService;
+import stroom.query.authorisation.AuthorisationServiceConfig;
+import stroom.query.authorisation.AuthorisationServiceImpl;
+import stroom.query.authorisation.HasAuthorisationConfig;
+import stroom.query.authorisation.NoAuthAuthorisationServiceImpl;
+import stroom.query.security.HasTokenConfig;
+import stroom.query.security.NoAuthValueFactoryProvider;
+import stroom.query.security.RobustJwtAuthFilter;
+import stroom.query.security.ServiceUser;
+import stroom.query.security.TokenConfig;
 
 import java.util.function.Function;
 

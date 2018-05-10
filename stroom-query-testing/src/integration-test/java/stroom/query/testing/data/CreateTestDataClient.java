@@ -1,6 +1,6 @@
 package stroom.query.testing.data;
 
-import stroom.security.ServiceUser;
+import stroom.query.security.ServiceUser;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;

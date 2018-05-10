@@ -9,7 +9,7 @@ import org.jooq.impl.DSL;
 import org.jooq.types.ULong;
 import stroom.query.audit.ExportDTO;
 import stroom.query.audit.model.DocRefEntity;
-import stroom.security.ServiceUser;
+import stroom.query.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
 
 import javax.inject.Inject;

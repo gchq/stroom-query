@@ -4,7 +4,7 @@ import stroom.query.api.v2.DocRef;
 import stroom.query.api.v2.DocRefInfo;
 import stroom.query.audit.ExportDTO;
 import stroom.query.audit.model.DocRefEntity;
-import stroom.security.ServiceUser;
+import stroom.query.security.ServiceUser;
 
 import java.util.List;
 import java.util.Map;

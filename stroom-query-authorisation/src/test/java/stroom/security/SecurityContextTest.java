@@ -1,6 +1,8 @@
 package stroom.security;
 
 import org.junit.Test;
+import stroom.query.security.SecurityContext;
+import stroom.query.security.ServiceUser;
 
 import java.util.*;
 import java.util.concurrent.*;

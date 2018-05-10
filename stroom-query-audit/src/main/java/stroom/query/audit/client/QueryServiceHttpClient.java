@@ -8,7 +8,7 @@ import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.SearchResponse;
 import stroom.query.audit.service.QueryApiException;
 import stroom.query.audit.service.QueryService;
-import stroom.security.ServiceUser;
+import stroom.query.security.ServiceUser;
 
 import javax.ws.rs.core.Response;
 import java.io.Closeable;

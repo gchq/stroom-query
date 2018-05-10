@@ -6,7 +6,7 @@ import stroom.query.api.v2.DocRef;
 import stroom.query.api.v2.QueryKey;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.audit.rest.QueryResource;
-import stroom.security.ServiceUser;
+import stroom.query.security.ServiceUser;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;

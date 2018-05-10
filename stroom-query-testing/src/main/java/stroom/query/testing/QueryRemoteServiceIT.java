@@ -3,7 +3,7 @@ package stroom.query.testing;
 import io.dropwizard.Configuration;
 import org.junit.Rule;
 import org.junit.Test;
-import stroom.authorisation.DocumentPermission;
+import stroom.query.authorisation.DocumentPermission;
 import stroom.datasource.api.v2.DataSource;
 import stroom.query.api.v2.DocRef;
 import stroom.query.api.v2.ExpressionOperator;

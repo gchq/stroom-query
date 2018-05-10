@@ -2,7 +2,7 @@ package stroom.query.audit.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.auth.Auth;
-import stroom.security.ServiceUser;
+import stroom.query.security.ServiceUser;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

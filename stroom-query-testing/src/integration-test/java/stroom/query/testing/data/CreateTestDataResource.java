@@ -1,7 +1,7 @@
 package stroom.query.testing.data;
 
 import io.dropwizard.auth.Auth;
-import stroom.security.ServiceUser;
+import stroom.query.security.ServiceUser;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.POST;

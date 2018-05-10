@@ -9,7 +9,7 @@ import stroom.query.audit.ExportDTO;
 import stroom.query.audit.client.DocRefResourceHttpClient;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
-import stroom.security.NoAuthValueFactoryProvider;
+import stroom.query.security.NoAuthValueFactoryProvider;
 
 import javax.ws.rs.core.Response;
 import java.util.Map;

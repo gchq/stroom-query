@@ -21,9 +21,9 @@ import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.query.audit.AuditedQueryBundle;
-import stroom.authorisation.HasAuthorisationConfig;
+import stroom.query.authorisation.HasAuthorisationConfig;
 import stroom.query.audit.model.IsDataSourceField;
-import stroom.security.HasTokenConfig;
+import stroom.query.security.HasTokenConfig;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryService;
 

@@ -5,7 +5,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import stroom.query.api.v2.DocRefInfo;
 import stroom.query.audit.ExportDTO;
-import stroom.authorisation.DocumentPermission;
+import stroom.query.authorisation.DocumentPermission;
 import stroom.query.audit.client.DocRefServiceHttpClient;
 import stroom.query.audit.client.NotFoundException;
 import stroom.query.audit.client.UnauthenticatedException;

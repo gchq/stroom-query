@@ -8,7 +8,7 @@ import stroom.datasource.api.v2.DataSourceField;
 import stroom.query.api.v2.*;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
-import stroom.security.NoAuthValueFactoryProvider;
+import stroom.query.security.NoAuthValueFactoryProvider;
 import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.QueryResourceNoAuthIT;
 import stroom.query.testing.data.CreateTestDataClient;

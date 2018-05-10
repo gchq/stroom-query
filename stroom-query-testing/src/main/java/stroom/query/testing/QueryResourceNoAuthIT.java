@@ -14,7 +14,7 @@ import stroom.query.audit.client.QueryResourceHttpClient;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.audit.rest.AuditedQueryResourceImpl;
-import stroom.security.NoAuthValueFactoryProvider;
+import stroom.query.security.NoAuthValueFactoryProvider;
 
 import javax.ws.rs.core.Response;
 import java.util.UUID;

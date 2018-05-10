@@ -20,7 +20,7 @@ import stroom.query.api.v2.SearchResponse;
 import stroom.query.audit.CriteriaStore;
 import stroom.query.audit.model.IsDataSourceField;
 import stroom.query.audit.model.QueryableEntity;
-import stroom.security.ServiceUser;
+import stroom.query.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryApiException;
 import stroom.query.audit.service.QueryService;

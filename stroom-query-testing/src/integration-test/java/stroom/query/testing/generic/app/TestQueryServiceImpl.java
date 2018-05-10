@@ -3,7 +3,7 @@ package stroom.query.testing.generic.app;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
 import stroom.query.api.v2.*;
-import stroom.security.ServiceUser;
+import stroom.query.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryApiException;
 import stroom.query.audit.service.QueryService;

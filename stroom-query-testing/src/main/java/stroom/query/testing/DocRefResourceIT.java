@@ -6,7 +6,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import stroom.query.api.v2.DocRefInfo;
 import stroom.query.audit.ExportDTO;
-import stroom.authorisation.DocumentPermission;
+import stroom.query.authorisation.DocumentPermission;
 import stroom.query.audit.client.DocRefResourceHttpClient;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;

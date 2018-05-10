@@ -2,10 +2,10 @@ package stroom.query.testing.generic.app;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
-import stroom.authorisation.AuthorisationServiceConfig;
-import stroom.authorisation.HasAuthorisationConfig;
-import stroom.security.HasTokenConfig;
-import stroom.security.TokenConfig;
+import stroom.query.authorisation.AuthorisationServiceConfig;
+import stroom.query.authorisation.HasAuthorisationConfig;
+import stroom.query.security.HasTokenConfig;
+import stroom.query.security.TokenConfig;
 
 import javax.validation.constraints.NotNull;
 

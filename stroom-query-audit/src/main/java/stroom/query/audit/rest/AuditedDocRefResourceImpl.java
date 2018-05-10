@@ -3,14 +3,14 @@ package stroom.query.audit.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import event.logging.*;
 import org.eclipse.jetty.http.HttpStatus;
-import stroom.authorisation.AuthorisationService;
-import stroom.authorisation.DocumentPermission;
+import stroom.query.authorisation.AuthorisationService;
+import stroom.query.authorisation.DocumentPermission;
 import stroom.query.api.v2.DocRef;
 import stroom.query.audit.ExportDTO;
 import stroom.query.audit.SimpleAuditWrapper;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.service.DocRefService;
-import stroom.security.ServiceUser;
+import stroom.query.security.ServiceUser;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;

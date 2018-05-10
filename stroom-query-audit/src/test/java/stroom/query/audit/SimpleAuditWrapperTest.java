@@ -5,7 +5,7 @@ import event.logging.ObjectOutcome;
 import event.logging.Outcome;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Test;
-import stroom.security.ServiceUser;
+import stroom.query.security.ServiceUser;
 
 import javax.ws.rs.core.Response;
 import java.util.UUID;
