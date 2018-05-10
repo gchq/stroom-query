@@ -6,6 +6,7 @@ import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
 import stroom.query.api.v2.*;
 import stroom.query.audit.model.DocRefEntity;
+import stroom.query.security.UrlTokenReplacer;
 import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.QueryResourceIT;
 import stroom.query.testing.StroomAuthenticationRule;
@@ -29,12 +30,13 @@ public class TestHibernateQueryResourceIT extends QueryResourceIT<TestDocRefHibe
 
     @ClassRule
     public static StroomAuthenticationRule authRule =
-            new StroomAuthenticationRule(WireMockConfiguration.options().port(10080));
+            new StroomAuthenticationRule(WireMockConfiguration.options().dynamicPort());
 
     public TestHibernateQueryResourceIT() {
         super(TestDocRefHibernateEntity.TYPE,
                 appRule,
                 authRule);
+        UrlTokenReplacer.setPort(authRule.port());
     }
 
     @Override

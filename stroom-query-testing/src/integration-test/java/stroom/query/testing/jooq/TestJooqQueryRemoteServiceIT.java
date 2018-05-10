@@ -12,6 +12,7 @@ import stroom.query.authorisation.DocumentPermission;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.audit.service.QueryApiException;
+import stroom.query.security.UrlTokenReplacer;
 import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.QueryRemoteServiceIT;
 import stroom.query.testing.StroomAuthenticationRule;
@@ -36,7 +37,7 @@ public class TestJooqQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRe
 
     @ClassRule
     public static StroomAuthenticationRule authRule =
-            new StroomAuthenticationRule(WireMockConfiguration.options().port(10080));
+            new StroomAuthenticationRule(WireMockConfiguration.options().dynamicPort());
 
     private final CreateTestDataClient testDataClient;
 
@@ -49,6 +50,7 @@ public class TestJooqQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRe
                 appRule,
                 authRule);
         testDataClient = appRule.getClient(CreateTestDataClient::new);
+        UrlTokenReplacer.setPort(authRule.port());
     }
 
     @Before

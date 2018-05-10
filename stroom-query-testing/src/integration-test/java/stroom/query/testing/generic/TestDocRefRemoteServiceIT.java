@@ -3,6 +3,7 @@ package stroom.query.testing.generic;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.Before;
 import org.junit.ClassRule;
+import stroom.query.security.UrlTokenReplacer;
 import stroom.query.testing.DocRefRemoteServiceIT;
 import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.StroomAuthenticationRule;
@@ -25,13 +26,14 @@ public class TestDocRefRemoteServiceIT extends DocRefRemoteServiceIT<TestDocRefE
 
     @ClassRule
     public static StroomAuthenticationRule authRule =
-            new StroomAuthenticationRule(WireMockConfiguration.options().port(10080));
+            new StroomAuthenticationRule(WireMockConfiguration.options().dynamicPort());
 
     public TestDocRefRemoteServiceIT() {
         super(TestDocRefEntity.TYPE,
                 TestDocRefEntity.class,
                 appRule,
                 authRule);
+        UrlTokenReplacer.setPort(authRule.port());
     }
 
     @Override

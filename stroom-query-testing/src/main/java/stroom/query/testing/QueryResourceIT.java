@@ -62,6 +62,7 @@ public abstract class QueryResourceIT<
         final Response response = queryClient.getDataSource(authRule.adminUser(), docRef);
         assertEquals(HttpStatus.OK_200, response.getStatus());
         final DataSource result = response.readEntity(DataSource.class);
+        response.close();
 
         assertValidDataSource(result);
 

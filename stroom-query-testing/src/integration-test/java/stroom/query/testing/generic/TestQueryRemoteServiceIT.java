@@ -5,6 +5,7 @@ import org.junit.ClassRule;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
 import stroom.query.api.v2.*;
+import stroom.query.security.UrlTokenReplacer;
 import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.QueryRemoteServiceIT;
 import stroom.query.testing.StroomAuthenticationRule;
@@ -27,13 +28,14 @@ public class TestQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRefEnt
 
     @ClassRule
     public static StroomAuthenticationRule authRule =
-            new StroomAuthenticationRule(WireMockConfiguration.options().port(10080));
+            new StroomAuthenticationRule(WireMockConfiguration.options().dynamicPort());
 
     public TestQueryRemoteServiceIT() {
         super(TestDocRefEntity.TYPE,
                 TestDocRefEntity.class,
                 appRule,
                 authRule);
+        UrlTokenReplacer.setPort(authRule.port());
     }
 
     @Override

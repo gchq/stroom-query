@@ -11,6 +11,7 @@ import stroom.query.api.v2.*;
 import stroom.query.authorisation.DocumentPermission;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
+import stroom.query.security.UrlTokenReplacer;
 import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.QueryResourceIT;
 import stroom.query.testing.StroomAuthenticationRule;
@@ -35,7 +36,7 @@ public class TestJooqQueryResourceIT extends QueryResourceIT<TestDocRefJooqEntit
 
     @ClassRule
     public static StroomAuthenticationRule authRule =
-            new StroomAuthenticationRule(WireMockConfiguration.options().port(10080));
+            new StroomAuthenticationRule(WireMockConfiguration.options().dynamicPort());
 
     private final CreateTestDataClient testDataClient;
 
@@ -47,6 +48,7 @@ public class TestJooqQueryResourceIT extends QueryResourceIT<TestDocRefJooqEntit
                 appRule,
                 authRule);
         testDataClient = appRule.getClient(CreateTestDataClient::new);
+        UrlTokenReplacer.setPort(authRule.port());
     }
 
     @Before

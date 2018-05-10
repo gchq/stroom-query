@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.query.api.v2.DocRef;
 import stroom.query.security.ServiceUser;
+import stroom.query.security.UrlTokenReplacer;
 
 import javax.inject.Inject;
 import javax.ws.rs.client.Client;
@@ -52,6 +53,8 @@ public class AuthorisationServiceImpl implements AuthorisationService {
 
         Response response = null;
         try {
+            final String url = UrlTokenReplacer.replace(this.isAuthorisedUrl);
+
             final Map<String, Object> request = new HashMap<>();
             request.put("docRef", new DocRef.Builder()
                     .uuid(docRef.getUuid())
@@ -60,7 +63,7 @@ public class AuthorisationServiceImpl implements AuthorisationService {
             request.put("permission", permissionName);
 
             response = httpClient
-                    .target(this.isAuthorisedUrl)
+                    .target(url)
                     .request()
                     .header("Authorization", "Bearer " + serviceUser.getJwt())
                     .post(Entity.json(request));
@@ -74,7 +77,7 @@ public class AuthorisationServiceImpl implements AuthorisationService {
                     break;
                 case HttpStatus.NOT_FOUND_404:
                     isUserAuthorised = false;
-                    LOGGER.error("Received a 404 when trying to access the authorisation service! I am unable to check authorisation so all requests will be rejected until this is fixed. Is the service location correctly configured? Is the service running? The URL I tried was: {}", this.isAuthorisedUrl);
+                    LOGGER.error("Received a 404 when trying to access the authorisation service! I am unable to check authorisation so all requests will be rejected until this is fixed. Is the service location correctly configured? Is the service running? The URL I tried was: {}", url);
                     break;
                 default:
                     isUserAuthorised = false;

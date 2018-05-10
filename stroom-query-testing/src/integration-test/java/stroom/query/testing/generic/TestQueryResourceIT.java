@@ -5,6 +5,7 @@ import org.junit.ClassRule;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
 import stroom.query.api.v2.*;
+import stroom.query.security.UrlTokenReplacer;
 import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.QueryResourceIT;
 import stroom.query.testing.StroomAuthenticationRule;
@@ -27,12 +28,13 @@ public class TestQueryResourceIT extends QueryResourceIT<TestDocRefEntity, Confi
 
     @ClassRule
     public static StroomAuthenticationRule authRule =
-            new StroomAuthenticationRule(WireMockConfiguration.options().port(10080));
+            new StroomAuthenticationRule(WireMockConfiguration.options().dynamicPort());
 
     public TestQueryResourceIT() {
         super(TestDocRefEntity.TYPE,
                 appRule,
                 authRule);
+        UrlTokenReplacer.setPort(authRule.port());
     }
 
     @Override

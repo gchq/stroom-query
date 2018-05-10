@@ -69,6 +69,7 @@ public abstract class DocRefResourceIT<
         assertNotNull(createdEntity);
         assertEquals(uuid, createdEntity.getUuid());
         assertEquals(name, createdEntity.getName());
+        createResponse.close();
 
         final Response getResponse = docRefClient.get(authRule.adminUser(), uuid);
         assertEquals(HttpStatus.OK_200, getResponse.getStatus());
@@ -76,6 +77,7 @@ public abstract class DocRefResourceIT<
         final DOC_REF_ENTITY foundEntity = getResponse.readEntity(docRefEntityClass);
         assertNotNull(foundEntity);
         assertEquals(name, foundEntity.getName());
+        getResponse.close();
 
         // Create (forbidden), Create (ok), get
         auditLogRule.check()
@@ -114,6 +116,7 @@ public abstract class DocRefResourceIT<
         assertEquals(HttpStatus.OK_200, updateResponse.getStatus());
         final DOC_REF_ENTITY updateResponseBody = updateResponse.readEntity(docRefEntityClass);
         assertEquals(authorisedEntityUpdate, updateResponseBody);
+        updateResponse.close();
 
         // Try updating it as an unauthorised user
         final DOC_REF_ENTITY unauthorisedEntityUpdate = createPopulatedEntity(uuid, name);
@@ -138,6 +141,7 @@ public abstract class DocRefResourceIT<
         assertEquals(HttpStatus.OK_200, getCheckResponse.getStatus());
         final DOC_REF_ENTITY checkEntity = getCheckResponse.readEntity(docRefEntityClass);
         assertEquals(authorisedEntityUpdate, checkEntity);
+        getCheckResponse.close();
 
         // Create, update (ok), update (forbidden), get (check)
         auditLogRule.check()
@@ -188,6 +192,7 @@ public abstract class DocRefResourceIT<
         assertTrue(info.getUpdateTime() > info.getCreateTime());
         assertEquals(info.getCreateUser(), authRule.adminUser().getName());
         assertEquals(info.getUpdateUser(), authRule.authenticatedUser(authorisedUsername).getName());
+        authorisedGetInfoResponse.close();
 
         // Try to get info as unauthorised user
         final Response unauthorisedGetInfoResponse = docRefClient.getInfo(authRule.authenticatedUser(unauthorisedUsername), uuid);

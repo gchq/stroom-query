@@ -60,6 +60,7 @@ public abstract class QueryResourceNoAuthIT<
         assertEquals(HttpStatus.OK_200, response.getStatus());
 
         final DataSource result = response.readEntity(DataSource.class);
+        response.close();
 
         assertValidDataSource(result);
 

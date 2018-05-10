@@ -53,11 +53,11 @@ logging:
       timeZone: UTC
 
 token:
-  publicKeyUrl: http://localhost:10080/testAuthService/publicKey
+  publicKeyUrl: http://localhost:${port}/testAuthService/publicKey
   jwsIssuer: stroom
   algorithm: RS256
 
 
 authorisationService:
-  url: http://localhost:10080/api/authorisation/v1
+  url: http://localhost:${port}/api/authorisation/v1
   isAuthorisedPath: /isAuthorised

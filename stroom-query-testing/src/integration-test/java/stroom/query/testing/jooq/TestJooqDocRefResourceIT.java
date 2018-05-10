@@ -3,6 +3,7 @@ package stroom.query.testing.jooq;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.Before;
 import org.junit.ClassRule;
+import stroom.query.security.UrlTokenReplacer;
 import stroom.query.testing.DocRefResourceIT;
 import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.StroomAuthenticationRule;
@@ -24,13 +25,14 @@ public class TestJooqDocRefResourceIT extends DocRefResourceIT<TestDocRefJooqEnt
 
     @ClassRule
     public static StroomAuthenticationRule authRule =
-            new StroomAuthenticationRule(WireMockConfiguration.options().port(10080));
+            new StroomAuthenticationRule(WireMockConfiguration.options().dynamicPort());
 
     public TestJooqDocRefResourceIT() {
         super(TestDocRefJooqEntity.TYPE,
                 TestDocRefJooqEntity.class,
                 appRule,
                 authRule);
+        UrlTokenReplacer.setPort(authRule.port());
     }
 
     @Override
