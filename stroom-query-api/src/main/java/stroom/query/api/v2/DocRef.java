@@ -67,6 +67,10 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
             required = true)
     private String name;
 
+    @XmlTransient
+    @JsonIgnore
+    private transient int hashCode = -1;
+
     /**
      * JAXB requires a no-arg constructor.
      */
@@ -171,7 +175,10 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, uuid);
+        if (hashCode == -1) {
+            hashCode = Objects.hash(type, uuid);
+        }
+        return hashCode;
     }
 
     @Override
