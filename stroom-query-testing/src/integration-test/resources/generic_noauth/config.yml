@@ -28,12 +28,12 @@ logging:
       timeZone: UTC
 
 token:
-  publicKeyUrl: http://localhost:${port}/testAuthService/publicKey
+  publicKeyUrl: NOT_EXPECTED_TO_BE_USED
   jwsIssuer: stroomJOE
   algorithm: RS256
   skipAuth: true
 
 
 authorisationService:
-  url: http://localhost:${port}/api/authorisation/v1
+  url: NOT_EXPECTED_TO_BE_USED
   isAuthorisedPath: /isAuthorised

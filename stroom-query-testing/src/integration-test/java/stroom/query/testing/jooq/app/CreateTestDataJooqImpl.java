@@ -5,10 +5,10 @@ import org.jooq.Record;
 import org.jooq.Table;
 import org.jooq.impl.DSL;
 import org.jooq.types.ULong;
-import stroom.query.security.ServiceUser;
 import stroom.query.jooq.DocRefJooqEntity;
 import stroom.query.jooq.JooqEntity;
 import stroom.query.jooq.QueryableJooqEntity;
+import stroom.query.security.ServiceUser;
 import stroom.query.testing.data.CreateTestDataResource;
 
 import javax.inject.Inject;

@@ -1,18 +1,14 @@
 package stroom.query.testing.jooq;
 
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 import stroom.datasource.api.v2.DataSource;
-import stroom.datasource.api.v2.DataSourceField;
 import stroom.query.api.v2.*;
-import stroom.query.authorisation.DocumentPermission;
-import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.audit.service.QueryApiException;
-import stroom.query.security.UrlTokenReplacer;
+import stroom.query.authorisation.DocumentPermission;
 import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.QueryRemoteServiceIT;
 import stroom.query.testing.StroomAuthenticationRule;
@@ -31,13 +27,17 @@ import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 import static org.junit.Assert.*;
 
 public class TestJooqQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRefJooqEntity, JooqConfig> {
-    @ClassRule
-    public static final DropwizardAppWithClientsRule<JooqConfig> appRule =
-            new DropwizardAppWithClientsRule<>(JooqApp.class, resourceFilePath("jooq/config.yml"));
 
     @ClassRule
     public static StroomAuthenticationRule authRule =
-            new StroomAuthenticationRule(WireMockConfiguration.options().dynamicPort());
+            new StroomAuthenticationRule();
+
+    @ClassRule
+    public static final DropwizardAppWithClientsRule<JooqConfig> appRule =
+            new DropwizardAppWithClientsRule<>(JooqApp.class,
+                    resourceFilePath("jooq/config.yml"),
+                    authRule.authToken(),
+                    authRule.authService());
 
     private final CreateTestDataClient testDataClient;
 
@@ -50,7 +50,6 @@ public class TestJooqQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRe
                 appRule,
                 authRule);
         testDataClient = appRule.getClient(CreateTestDataClient::new);
-        UrlTokenReplacer.setPort(authRule.port());
     }
 
     @Before

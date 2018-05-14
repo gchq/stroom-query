@@ -1,9 +1,7 @@
 package stroom.query.testing.jooq;
 
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.Before;
 import org.junit.ClassRule;
-import stroom.query.security.UrlTokenReplacer;
 import stroom.query.testing.DocRefRemoteServiceIT;
 import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.StroomAuthenticationRule;
@@ -11,28 +9,28 @@ import stroom.query.testing.jooq.app.JooqApp;
 import stroom.query.testing.jooq.app.JooqConfig;
 import stroom.query.testing.jooq.app.TestDocRefJooqEntity;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 
 public class TestJooqDocRefRemoteServiceIT extends DocRefRemoteServiceIT<TestDocRefJooqEntity, JooqConfig> {
 
     @ClassRule
-    public static final DropwizardAppWithClientsRule<JooqConfig> appRule =
-            new DropwizardAppWithClientsRule<>(JooqApp.class, resourceFilePath("jooq/config.yml"));
+    public static StroomAuthenticationRule authRule =
+            new StroomAuthenticationRule();
 
     @ClassRule
-    public static StroomAuthenticationRule authRule =
-            new StroomAuthenticationRule(WireMockConfiguration.options().dynamicPort());
+    public static final DropwizardAppWithClientsRule<JooqConfig> appRule =
+            new DropwizardAppWithClientsRule<>(JooqApp.class,
+                    resourceFilePath("jooq/config.yml"),
+                    authRule.authToken(),
+                    authRule.authService());
 
     public TestJooqDocRefRemoteServiceIT() {
         super(TestDocRefJooqEntity.TYPE,
                 TestDocRefJooqEntity.class,
                 appRule,
                 authRule);
-        UrlTokenReplacer.setPort(authRule.port());
     }
 
     @Override

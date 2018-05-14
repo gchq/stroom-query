@@ -1,9 +1,7 @@
 package stroom.query.testing.generic;
 
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.Before;
 import org.junit.ClassRule;
-import stroom.query.security.UrlTokenReplacer;
 import stroom.query.testing.DocRefRemoteServiceIT;
 import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.StroomAuthenticationRule;
@@ -21,19 +19,20 @@ import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 public class TestDocRefRemoteServiceIT extends DocRefRemoteServiceIT<TestDocRefEntity, Config> {
 
     @ClassRule
-    public static final DropwizardAppWithClientsRule<Config> appRule =
-            new DropwizardAppWithClientsRule<>(App.class, resourceFilePath("generic/config.yml"));
+    public static StroomAuthenticationRule authRule = new StroomAuthenticationRule();
 
     @ClassRule
-    public static StroomAuthenticationRule authRule =
-            new StroomAuthenticationRule(WireMockConfiguration.options().dynamicPort());
+    public static final DropwizardAppWithClientsRule<Config> appRule =
+            new DropwizardAppWithClientsRule<>(App.class,
+                    resourceFilePath("generic/config.yml"),
+                    authRule.authService(),
+                    authRule.authToken());
 
     public TestDocRefRemoteServiceIT() {
         super(TestDocRefEntity.TYPE,
                 TestDocRefEntity.class,
                 appRule,
                 authRule);
-        UrlTokenReplacer.setPort(authRule.port());
     }
 
     @Override

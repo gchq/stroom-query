@@ -1,11 +1,10 @@
 package stroom.query.testing.generic;
 
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.ClassRule;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
 import stroom.query.api.v2.*;
-import stroom.query.security.UrlTokenReplacer;
+
 import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.QueryResourceIT;
 import stroom.query.testing.StroomAuthenticationRule;
@@ -23,18 +22,21 @@ import static org.junit.Assert.assertTrue;
 public class TestQueryResourceIT extends QueryResourceIT<TestDocRefEntity, Config> {
 
     @ClassRule
-    public static final DropwizardAppWithClientsRule<Config> appRule =
-            new DropwizardAppWithClientsRule<>(App.class, resourceFilePath("generic/config.yml"));
+    public static StroomAuthenticationRule authRule =
+            new StroomAuthenticationRule();
 
     @ClassRule
-    public static StroomAuthenticationRule authRule =
-            new StroomAuthenticationRule(WireMockConfiguration.options().dynamicPort());
+    public static final DropwizardAppWithClientsRule<Config> appRule =
+            new DropwizardAppWithClientsRule<>(App.class,
+                    resourceFilePath("generic/config.yml"),
+                    authRule.authToken(),
+                    authRule.authService());
 
     public TestQueryResourceIT() {
         super(TestDocRefEntity.TYPE,
                 appRule,
                 authRule);
-        UrlTokenReplacer.setPort(authRule.port());
+
     }
 
     @Override

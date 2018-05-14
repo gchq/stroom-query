@@ -2,8 +2,8 @@ package stroom.query.testing.generic.app;
 
 import stroom.query.audit.ExportDTO;
 import stroom.query.audit.model.DocRefEntity;
-import stroom.query.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
+import stroom.query.security.ServiceUser;
 
 import java.util.*;
 

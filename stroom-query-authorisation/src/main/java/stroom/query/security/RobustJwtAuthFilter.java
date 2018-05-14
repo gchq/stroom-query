@@ -61,10 +61,8 @@ public class RobustJwtAuthFilter implements ContainerRequestFilter {
     }
 
     private void init() {
-        final String url = UrlTokenReplacer.replace(this.tokenConfig.getPublicKeyUrl());
-
         final Response response = httpClient
-                .target(url)
+                .target(this.tokenConfig.getPublicKeyUrl())
                 .request()
                 .header("accept", MediaType.APPLICATION_JSON)
                 .header("Content-Type", MediaType.APPLICATION_JSON)

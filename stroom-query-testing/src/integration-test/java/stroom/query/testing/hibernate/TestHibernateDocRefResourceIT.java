@@ -1,9 +1,7 @@
 package stroom.query.testing.hibernate;
 
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.Before;
 import org.junit.ClassRule;
-import stroom.query.security.UrlTokenReplacer;
 import stroom.query.testing.DocRefResourceIT;
 import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.StroomAuthenticationRule;
@@ -20,19 +18,20 @@ import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 public class TestHibernateDocRefResourceIT extends DocRefResourceIT<TestDocRefHibernateEntity, HibernateConfig> {
 
     @ClassRule
-    public static final DropwizardAppWithClientsRule<HibernateConfig> appRule =
-            new DropwizardAppWithClientsRule<>(HibernateApp.class, resourceFilePath("hibernate/config.yml"));
+    public static StroomAuthenticationRule authRule = new StroomAuthenticationRule();
 
     @ClassRule
-    public static StroomAuthenticationRule authRule =
-            new StroomAuthenticationRule(WireMockConfiguration.options().dynamicPort());
+    public static final DropwizardAppWithClientsRule<HibernateConfig> appRule =
+            new DropwizardAppWithClientsRule<>(HibernateApp.class,
+                    resourceFilePath("hibernate/config.yml"),
+                    authRule.authToken(),
+                    authRule.authService());
 
     public TestHibernateDocRefResourceIT() {
         super(TestDocRefHibernateEntity.TYPE,
                 TestDocRefHibernateEntity.class,
                 appRule,
                 authRule);
-        UrlTokenReplacer.setPort(authRule.port());
     }
 
     @Override

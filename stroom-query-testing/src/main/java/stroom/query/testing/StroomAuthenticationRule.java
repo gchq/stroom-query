@@ -2,7 +2,9 @@ package stroom.query.testing;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.tomakehurst.wiremock.core.Options;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
+import io.dropwizard.testing.ConfigOverride;
 import org.eclipse.jetty.http.HttpStatus;
 import org.jose4j.jwk.JsonWebKey;
 import org.jose4j.jwk.RsaJsonWebKey;
@@ -44,8 +46,26 @@ public class StroomAuthenticationRule extends WireMockClassRule {
     private static final com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper
             = new com.fasterxml.jackson.databind.ObjectMapper();
 
-    public StroomAuthenticationRule(final Options options) {
-        super(options);
+    public StroomAuthenticationRule() {
+        super(WireMockConfiguration.options().dynamicPort());
+    }
+
+    /**
+     * Create a Dropwizard config override that can inject the dynamic port into the test auth service URL
+     * @return The Config Override for the Auth Service Token URL
+     */
+    public ConfigOverride authToken() {
+        return ConfigOverride.config("token.publicKeyUrl",
+                () -> String.format("http://localhost:%d/testAuthService/publicKey", this.port()));
+    }
+
+    /**
+     * Creates a Dropwizard config override that can inject the dynamic port into the test authorisation service URL
+     * @return The Config override for the authorisation service URL.
+     */
+    public ConfigOverride authService() {
+        return ConfigOverride.config("authorisationService.url",
+                () -> String.format("http://localhost:%d/api/authorisation/v1", this.port()));
     }
 
     @Override
