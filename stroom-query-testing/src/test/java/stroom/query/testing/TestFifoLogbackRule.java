@@ -1,14 +1,14 @@
 package stroom.query.testing;
 
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.query.audit.logback.FifoLogbackAppender;
 
 import java.util.function.Predicate;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static stroom.query.testing.FifoLogbackRule.containsAllOf;
 
 public class TestFifoLogbackRule {

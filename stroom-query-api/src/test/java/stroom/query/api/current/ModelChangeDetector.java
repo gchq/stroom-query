@@ -1,20 +1,19 @@
 package stroom.query.api.current;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import stroom.query.api.v2.SearchRequest;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * If a model is part of an API it should often not be changed without re-versioning, - otherwise anything that depends
  * on it could fail. But it is easy, in the heat of a big change, to forget one has changed a model. This test is meant
  * to catch these cases and alert the developer.
- *
+ * <p>
  * After being alerted of the model change a developer will probably want to follow some model-change process. After doing
  * that the test that fails here could be resolved by temporarily uncommenting the line in the test that writes out the
  * model's portrait. Don't commit this test with the line uncommented! If you do the test will always pass.
@@ -30,7 +29,6 @@ public class ModelChangeDetector {
 
         // Uncomment this line to update the model portrait
 //        Files.write(Paths.get(SEARCH_REQUEST_PORTRAIT_FILE_CURRENT), newPortrait.getBytes());
-
 
 
         //write the new portrait to a file ignored by git so you can diff the old and new if the
@@ -49,6 +47,6 @@ public class ModelChangeDetector {
         System.out.println("CURRENT\n" + currentPortrait);
         System.out.println("NEW\n" + newPortrait);
 
-        assertThat(currentPortrait, equalTo(newPortrait));
+        assertThat(currentPortrait).isEqualTo(newPortrait);
     }
 }

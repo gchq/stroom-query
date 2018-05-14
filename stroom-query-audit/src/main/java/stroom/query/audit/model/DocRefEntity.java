@@ -199,7 +199,7 @@ public class DocRefEntity implements Serializable {
         }
 
         @Override
-        protected Builder self() {
+        protected Builder<T> self() {
             return this;
         }
     }

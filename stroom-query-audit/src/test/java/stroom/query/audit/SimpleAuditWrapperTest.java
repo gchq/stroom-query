@@ -4,14 +4,14 @@ import event.logging.EventLoggingService;
 import event.logging.ObjectOutcome;
 import event.logging.Outcome;
 import org.eclipse.jetty.http.HttpStatus;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import stroom.query.security.ServiceUser;
 
 import javax.ws.rs.core.Response;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 

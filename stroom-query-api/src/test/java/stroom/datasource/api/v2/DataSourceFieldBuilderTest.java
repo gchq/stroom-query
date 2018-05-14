@@ -1,9 +1,9 @@
 package stroom.datasource.api.v2;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import stroom.query.api.v2.ExpressionTerm;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DataSourceFieldBuilderTest {
     @Test

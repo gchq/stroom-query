@@ -16,8 +16,8 @@
 
 package stroom.query.common.v2;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import stroom.dashboard.expression.v1.Val;
 import stroom.dashboard.expression.v1.ValString;
 import stroom.mapreduce.v2.UnsafePairQueue;
@@ -88,7 +88,7 @@ public class TestTablePayloadHandler {
         final TableResult searchResult = (TableResult) tableComponentResultCreator.create(
                 data,
                 tableResultRequest);
-        Assert.assertEquals(50, searchResult.getTotalResults().intValue());
+        Assertions.assertEquals(50, searchResult.getTotalResults().intValue());
     }
 
     @Test
@@ -340,7 +340,7 @@ public class TestTablePayloadHandler {
         final TableResult searchResult = (TableResult) tableComponentResultCreator.create(data,
                 tableResultRequest);
 
-        Assert.assertTrue(searchResult.getTotalResults() <= 50);
+        Assertions.assertTrue(searchResult.getTotalResults() <= 50);
 
         String lastValue = null;
         for (final Row result : searchResult.getRows()) {
@@ -348,7 +348,7 @@ public class TestTablePayloadHandler {
 
             if (lastValue != null) {
                 final int diff = lastValue.compareTo(value);
-                Assert.assertTrue(diff <= 0);
+                Assertions.assertTrue(diff <= 0);
             }
             lastValue = value;
         }

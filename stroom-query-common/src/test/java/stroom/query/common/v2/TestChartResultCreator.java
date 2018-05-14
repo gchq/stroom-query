@@ -16,7 +16,7 @@
 
 package stroom.query.common.v2;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestChartResultCreator {
     private static final String[] SERIES_CHOICE = new String[]{"", "Test1", "Test2"};
@@ -61,7 +61,7 @@ public class TestChartResultCreator {
 //
 //        System.out.println(res.getJSON());
 //
-//        Assert.assertNotNull(res.getJSON());
+//        Assertions.assertNotNull(res.getJSON());
 //    }
 //
 //    private Field getField(final String name, final Type type) {

@@ -16,7 +16,7 @@
 
 package stroom.query.security;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import stroom.query.security.CurrentServiceUser;
 import stroom.query.security.ServiceUser;
 
@@ -25,8 +25,8 @@ import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class CurrentServiceUserTest {
     @Test

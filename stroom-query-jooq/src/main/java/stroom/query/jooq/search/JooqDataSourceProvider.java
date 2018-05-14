@@ -8,6 +8,7 @@ import stroom.query.audit.model.QueryableEntity;
 import stroom.query.jooq.QueryableJooqEntity;
 
 import javax.inject.Inject;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -18,17 +19,17 @@ public class JooqDataSourceProvider {
 
     private final List<DataSourceField> fields;
 
+    @SuppressWarnings("unchecked")
     @Inject
     public JooqDataSourceProvider(final QueryableEntity.ClassProvider dtoClassProvider) {
-
         final Class<? extends QueryableJooqEntity> dtoClass = dtoClassProvider.get();
 
         this.fields = QueryableEntity.getFields(dtoClass)
                 .map(IsDataSourceField::fieldSupplier)
                 .map(aClass -> {
                     try {
-                        return aClass.newInstance();
-                    } catch (InstantiationException | IllegalAccessException e) {
+                        return aClass.getDeclaredConstructor(new Class[0]).newInstance();
+                    } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                         LOGGER.warn("Could not create instance of DataSourceField supplier with " + aClass.getName());
                     }
                     return null;

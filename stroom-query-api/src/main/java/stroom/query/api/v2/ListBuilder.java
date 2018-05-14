@@ -16,7 +16,8 @@ public class ListBuilder<ListedPojo> {
      * @param values The values to add to our list
      * @return this builder, allowing method chaining
      */
-    public ListBuilder<ListedPojo> value(final ListedPojo...values) {
+    @SafeVarargs
+    public final ListBuilder<ListedPojo> value(final ListedPojo...values) {
         this.childValues.addAll(Arrays.asList(values));
         return this;
     }

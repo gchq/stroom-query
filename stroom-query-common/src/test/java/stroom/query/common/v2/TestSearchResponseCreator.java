@@ -1,18 +1,17 @@
 package stroom.query.common.v2;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 import stroom.dashboard.expression.v1.Generator;
 import stroom.dashboard.expression.v1.StaticValueFunction;
 import stroom.dashboard.expression.v1.ValString;
-import org.mockito.stubbing.Answer;
 import stroom.query.api.v2.Field;
 import stroom.query.api.v2.OffsetRange;
 import stroom.query.api.v2.ResultRequest;
@@ -20,6 +19,7 @@ import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.SearchResponse;
 import stroom.query.api.v2.TableResult;
 import stroom.query.api.v2.TableSettings;
+import stroom.query.test.util.MockitoExtension;
 import stroom.query.test.util.TimingUtils;
 
 import java.time.Duration;
@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class TestSearchResponseCreator {
 
     private static Duration TOLLERANCE = Duration.ofMillis(100);
@@ -41,7 +41,7 @@ public class TestSearchResponseCreator {
     @Captor
     private ArgumentCaptor<CompletionListener> completionListenerCaptor;
 
-    @Before
+    @BeforeAll
     public void setup() {
         //default mock behaviour
         Mockito.when(mockStore.getErrors()).thenReturn(Collections.emptyList());

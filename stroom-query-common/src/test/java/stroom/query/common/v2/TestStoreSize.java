@@ -1,7 +1,7 @@
 package stroom.query.common.v2;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,7 +33,7 @@ public class TestStoreSize {
 
     private void doTest(List<Integer> storeSizes, int depth, int expectedSize) {
         StoreSize storeSize = new StoreSize(storeSizes);
-        Assert.assertEquals(expectedSize, storeSize.size(depth));
+        Assertions.assertEquals(expectedSize, storeSize.size(depth));
     }
 
 }

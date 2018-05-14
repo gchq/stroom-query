@@ -22,9 +22,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
 import stroom.datasource.api.v2.DataSourceField.DataSourceFieldType;
@@ -49,9 +49,7 @@ import stroom.query.api.v2.TableResult;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.api.v2.TimeZone;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -67,7 +65,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-@Ignore("TODO: fails intermittently")
+@Disabled("TODO: fails intermittently")
 public class TestSerialisation {
     private static DataSource getDataSource() {
         return new DataSource.Builder()
@@ -205,13 +203,13 @@ public class TestSerialisation {
         System.out.println(serialisedOut);
 
         assertEqualsIgnoreWhitespace(serialisedIn, serialisedOut);
-        Assert.assertEquals(objIn, objOut);
+        Assertions.assertEquals(objIn, objOut);
     }
 
     private void assertEqualsIgnoreWhitespace(final String expected, final String actual) {
         final String str1 = removeWhitespace(expected);
         final String str2 = removeWhitespace(actual);
-        Assert.assertEquals(str1, str2);
+        Assertions.assertEquals(str1, str2);
     }
 
     private String removeWhitespace(final String in) {
@@ -281,7 +279,6 @@ public class TestSerialisation {
         final ObjectMapper mapper = new ObjectMapper();
 //        mapper.registerModule(module);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        mapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
         mapper.configure(SerializationFeature.INDENT_OUTPUT, indent);
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 

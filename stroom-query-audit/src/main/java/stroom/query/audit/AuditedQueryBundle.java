@@ -71,6 +71,7 @@ public class AuditedQueryBundle<CONFIG extends Configuration & HasTokenConfig & 
         }, auditedDocRefBundle.getGuiceModule(configuration));
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void initialize(final Bootstrap<?> bootstrap) {
         final Bootstrap<CONFIG> castBootstrap = (Bootstrap<CONFIG>) bootstrap; // this initialize function should have used the templated config type

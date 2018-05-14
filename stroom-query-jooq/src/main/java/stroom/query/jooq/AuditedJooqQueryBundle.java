@@ -8,11 +8,11 @@ import io.dropwizard.Configuration;
 import io.dropwizard.ConfiguredBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import stroom.query.authorisation.HasAuthorisationConfig;
 import stroom.query.audit.model.IsDataSourceField;
 import stroom.query.audit.model.QueryableEntity;
-import stroom.query.security.HasTokenConfig;
 import stroom.query.audit.service.DocRefService;
+import stroom.query.authorisation.HasAuthorisationConfig;
+import stroom.query.security.HasTokenConfig;
 
 import java.util.function.Function;
 
@@ -20,15 +20,16 @@ import java.util.function.Function;
  * This Dropwizard bundle can be used to build the entire Query Resource implementation stack when the data source is
  * an SQL database, storing one annotated data type. The annotated data type will need to also annotate it's fields with
  * {@link IsDataSourceField}
- * @param <CONFIG> The configuration class
- * @param <QUERY_POJO> The annotated class.
- * @param <DOC_REF_POJO> POJO class for the Document
+ *
+ * @param <CONFIG>          The configuration class
+ * @param <QUERY_POJO>      The annotated class.
+ * @param <DOC_REF_POJO>    POJO class for the Document
  * @param <DOC_REF_SERVICE> Implementation class for the DocRef Service
  */
 public class AuditedJooqQueryBundle<CONFIG extends Configuration & HasTokenConfig & HasAuthorisationConfig & HasDataSourceFactory & HasFlywayFactory & HasJooqFactory,
-                DOC_REF_SERVICE extends DocRefService<DOC_REF_POJO>,
-                DOC_REF_POJO extends DocRefJooqEntity,
-                QUERY_POJO extends QueryableJooqEntity> implements ConfiguredBundle<CONFIG> {
+        DOC_REF_SERVICE extends DocRefService<DOC_REF_POJO>,
+        DOC_REF_POJO extends DocRefJooqEntity,
+        QUERY_POJO extends QueryableJooqEntity> implements ConfiguredBundle<CONFIG> {
     private final Class<QUERY_POJO> queryableEntityClass;
 
     private final AuditedJooqDocRefBundle<CONFIG,
@@ -58,6 +59,7 @@ public class AuditedJooqQueryBundle<CONFIG extends Configuration & HasTokenConfi
                     final Environment environment) {
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void initialize(Bootstrap<?> bootstrap) {
         final Bootstrap<CONFIG> castBootstrap = (Bootstrap<CONFIG>) bootstrap; // this initialize function should have used the templated config type

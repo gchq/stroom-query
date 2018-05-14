@@ -1,6 +1,6 @@
 package stroom.query.hibernate;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.query.audit.model.IsDataSourceField;
@@ -9,7 +9,7 @@ import stroom.query.audit.model.QueryableEntity;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DataSourceFieldTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataSourceFieldTest.class);

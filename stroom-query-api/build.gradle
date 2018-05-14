@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
+ext.moduleName = 'stroom.query.api'
 
 dependencies {
     compile libs.jackson_annotations
     compile libs.swagger_annotations
+    compile libs.jaxb_api
 
+    testCompile libs.assertj
     testCompile libs.junit
-    testCompile libs.hamcrest_core
 }
 

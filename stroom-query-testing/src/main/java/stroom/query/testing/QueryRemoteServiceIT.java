@@ -2,7 +2,7 @@ package stroom.query.testing;
 
 import io.dropwizard.Configuration;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import stroom.query.authorisation.DocumentPermission;
 import stroom.datasource.api.v2.DataSource;
 import stroom.query.api.v2.DocRef;
@@ -20,7 +20,7 @@ import stroom.query.audit.service.QueryApiException;
 
 import java.util.UUID;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static stroom.query.testing.FifoLogbackRule.containsAllOf;
 
 public abstract class QueryRemoteServiceIT<

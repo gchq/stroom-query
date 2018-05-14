@@ -3,7 +3,7 @@ package stroom.query.testing;
 import io.dropwizard.Configuration;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import stroom.datasource.api.v2.DataSource;
 import stroom.query.api.v2.DocRef;
 import stroom.query.api.v2.ExpressionOperator;
@@ -19,7 +19,7 @@ import stroom.query.security.NoAuthValueFactoryProvider;
 import javax.ws.rs.core.Response;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static stroom.query.testing.FifoLogbackRule.containsAllOf;
 
 public abstract class QueryResourceNoAuthIT<

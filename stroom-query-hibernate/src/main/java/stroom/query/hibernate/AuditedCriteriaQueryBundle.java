@@ -122,7 +122,7 @@ public class AuditedCriteriaQueryBundle<CONFIG extends Configuration & HasTokenC
         ).toArray(Class<?>[]::new);
 
         this.queryableEntityClass = queryableEntityClass;
-        this.hibernateBundle = new HibernateBundle<CONFIG>(queryableEntityClass, hibernateClasses) {
+        this.hibernateBundle = new HibernateBundle<>(queryableEntityClass, hibernateClasses) {
             @Override
             public DataSourceFactory getDataSourceFactory(CONFIG configuration) {
                 return configuration.getDataSourceFactory();
@@ -141,10 +141,11 @@ public class AuditedCriteriaQueryBundle<CONFIG extends Configuration & HasTokenC
     }
 
     @Override
-    public void run(CONFIG configuration, Environment environment) throws Exception {
+    public void run(CONFIG configuration, Environment environment) {
 
     }
 
+    @SuppressWarnings("unchecked")
     public void initialize(final Bootstrap<?> bootstrap) {
         final Bootstrap<CONFIG> castBootstrap = (Bootstrap<CONFIG>) bootstrap; // this initialize function should have used the templated config type
         castBootstrap.addBundle(flywayBundle);

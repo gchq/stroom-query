@@ -4,7 +4,7 @@ task wrapper(type: Wrapper) {
 
 //if the project has a value for the passed property (i.e from the cmd line via -PpropName=xxx)
 //use that, else use a default value
-ext.getPropertyOrDefault = { propName, defaultValue -> 
+ext.getPropertyOrDefault = { propName, defaultValue ->
     def val;
     if (project.hasProperty(propName) && project.getProperty(propName) != "unspecified" && project.getProperty(propName) != "") {
         val = project.getProperty(propName)
@@ -17,84 +17,83 @@ ext.getPropertyOrDefault = { propName, defaultValue ->
 }
 
 ext.versions = [
-    //----------Stroom-----------------
-    stroomQuery: getPropertyOrDefault('version', 'SNAPSHOT'),
+        //----------Stroom-----------------
+        stroomQuery       : getPropertyOrDefault('version', 'SNAPSHOT'),
 
-    //------Stroom-libs---------------
-    stroomExpression: 'v1.3.2',
-    eventLogging: 'v3.1.2_schema-v3.1.2',
+        //------Stroom-libs---------------
+        stroomExpression  : 'SNAPSHOT',
+        eventLogging      : 'SNAPSHOT_schema-v3.2.4',
 
-    //------------3rd-party------------
-    dropwizard: '1.2.5',
-    dropwizard_jooq:'1.1.0-0',
-    dropwizard_metrics: '3.2.5',
-    flyway: '4.0.3',
-    glassfish: '2.5.0-b32',
-    hamcrest: '1.3',
-    jackson: '2.9.0',
-    javax_inject: '1',
-    javax_annotation: '1.2',
-    javax_ws: '2.0.1',
-    javax_servlet: '3.1.0',
-    jersey: '2.25.1',
-    jooq: '3.9.3',
-    jose4j: '0.5.2',
-    logback: '1.2.3', //in line with dropwizard 1.2.5
-    kafka: '0.10.0.1',
-    slf4j: '1.7.25', //in line with dropwizard 1.2.5
-    swagger: '1.5.16',
-    zzDUMMYzz: 'makes sorting this list easier'
+        //------------3rd-party------------
+        dropwizard        : '1.2.2',
+        dropwizard_jooq   : '1.1.0-0',
+        dropwizard_metrics: '3.2.5',
+        flyway            : '4.0.3',
+        glassfish         : '2.5.0-b32',
+        guava             : '21.0',
+        jackson           : '2.9.1',
+        javax_inject      : '1',
+        javax_ws          : '2.0.1',
+        javax_servlet     : '3.1.0',
+        jersey            : '2.25.1',
+        jooq              : '3.9.3',
+        jose4j            : '0.5.2',
+        junit             : '5.2.0',
+        logback           : '1.2.3', //in line with dropwizard 1.2.2
+        kafka             : '0.10.0.1',
+        slf4j             : '1.7.25', //in line with dropwizard 1.2.2
+        swagger           : '1.5.16',
+        zzDUMMYzz         : 'makes sorting this list easier'
 ]
 
 //dependency strings for use in sub projects
 ext.libs = [
-    //------Stroom-libs---------------
-    eventLogging: "event-logging:event-logging:$versions.eventLogging",
-    stroomExpression: "stroom:stroom-expression:$versions.stroomExpression",
+        //------Stroom-libs---------------
+        eventLogging        : "event-logging:event-logging:$versions.eventLogging",
+        stroomExpression    : "stroom:stroom-expression:$versions.stroomExpression",
 
-    //------------3rd-party------------
-    assertj: 'org.assertj:assertj-core:3.8.0',
-    dropwizard_core: "io.dropwizard:dropwizard-core:$versions.dropwizard",
-    dropwizard_hibernate: "io.dropwizard:dropwizard-hibernate:$versions.dropwizard",
-    dropwizard_db: "io.dropwizard:dropwizard-db:$versions.dropwizard",
-    dropwizard_auth: "io.dropwizard:dropwizard-auth:$versions.dropwizard",
-    dropwizard_auth_jwt: "com.github.toastshaman:dropwizard-auth-jwt:1.0.2-0",
-    dropwizard_jooq: "com.bendb.dropwizard:dropwizard-jooq:$versions.dropwizard_jooq",
-    dropwizard_logging: "io.dropwizard:dropwizard-logging:$versions.dropwizard",
-    dropwizard_jersey: "io.dropwizard:dropwizard-jersey:$versions.dropwizard",
-    dropwizard_flyway: 'io.dropwizard.modules:dropwizard-flyway:1.0.0-1',
-    dropwizard_metrics: "io.dropwizard.metrics:metrics-annotation:$versions.dropwizard_metrics",
-    dropwizard_testing: "io.dropwizard:dropwizard-testing:$versions.dropwizard",
-    flyway_core : "org.flywaydb:flyway-core:$versions.flyway",
-    glassfish_hk2: "org.glassfish.hk2:hk2-api:$versions.glassfish",
-    guava: "com.google.guava:guava:21.0", //>=v21 removes MoreExecutors.sameThreadExecutor() which is needed by curator 2.11
-    guice: "com.google.inject:guice:4.2.0",
-    google_findbugs: "com.google.code.findbugs:jsr305:3.0.2",
-    hamcrest_core: "org.hamcrest:hamcrest-core:$versions.hamcrest",
-    hibernate_core: "org.hibernate:hibernate-core:5.2.12.Final",
-    hibernate_jpa: "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final",
-    jackson_annotations: "com.fasterxml.jackson.core:jackson-annotations:$versions.jackson",
-    jackson_core: "com.fasterxml.jackson.core:jackson-core:$versions.jackson",
-    jackson_databind: "com.fasterxml.jackson.core:jackson-databind:$versions.jackson",
-    javax_inject: "javax.inject:javax.inject:$versions.javax_inject",
-    javax_annotation: "javax.annotation:javax.annotation-api:$versions.javax_annotation",
-    javax_ws: "javax.ws.rs:javax.ws.rs-api:$versions.javax_ws",
-    javax_servlet: "javax.servlet:javax.servlet-api:$versions.javax_servlet",
-    jersey_client: "org.glassfish.jersey.core:jersey-client:$versions.jersey",
-    jersey_server: "org.glassfish.jersey.core:jersey-server:$versions.jersey",
-    junit: "junit:junit:4.12",
-    jose4j: "org.bitbucket.b_c:jose4j:$versions.jose4j",
-    jooq: "org.jooq:jooq:$versions.jooq",
-    logback_classic: "ch.qos.logback:logback-classic:$versions.logback",
-    logback_core: "ch.qos.logback:logback-core:$versions.logback",
-    kafka: "org.apache.kafka:kafka-clients:$versions.kafka", //CDH5.10 uses kafka 10.0, Kafka <10.2 is picky about client and server versions.
-    mariadb_connector: 'org.mariadb.jdbc:mariadb-java-client:2.0.2',
-    mockito_core: "org.mockito:mockito-core:2.0.2-beta",
-    slf4j_api: "org.slf4j:slf4j-api:$versions.slf4j",
-    swagger_annotations: "io.swagger:swagger-annotations:$versions.swagger",
-    ws_rs_api: "javax.ws.rs:javax.ws.rs-api:2.0.1",
-    wiremock: 'com.github.tomakehurst:wiremock:2.14.0',
-    zzDUMMYzz: "makes sorting easier"
+        //------------3rd-party------------
+        assertj             : 'org.assertj:assertj-core:3.10.0',
+        dropwizard_core     : "io.dropwizard:dropwizard-core:$versions.dropwizard",
+        dropwizard_hibernate: "io.dropwizard:dropwizard-hibernate:$versions.dropwizard",
+        dropwizard_db       : "io.dropwizard:dropwizard-db:$versions.dropwizard",
+        dropwizard_auth     : "io.dropwizard:dropwizard-auth:$versions.dropwizard",
+        dropwizard_auth_jwt : "com.github.toastshaman:dropwizard-auth-jwt:1.0.2-0",
+        dropwizard_jooq     : "com.bendb.dropwizard:dropwizard-jooq:$versions.dropwizard_jooq",
+        dropwizard_logging  : "io.dropwizard:dropwizard-logging:$versions.dropwizard",
+        dropwizard_jersey   : "io.dropwizard:dropwizard-jersey:$versions.dropwizard",
+        dropwizard_flyway   : 'io.dropwizard.modules:dropwizard-flyway:1.0.0-1',
+        dropwizard_metrics  : "io.dropwizard.metrics:metrics-annotation:$versions.dropwizard_metrics",
+        dropwizard_testing  : "io.dropwizard:dropwizard-testing:$versions.dropwizard",
+        flyway_core         : "org.flywaydb:flyway-core:$versions.flyway",
+        glassfish_hk2       : "org.glassfish.hk2:hk2-api:$versions.glassfish",
+        guava               : "com.google.guava:guava:$versions.guava", //>=v21 removes MoreExecutors.sameThreadExecutor() which is needed by curator 2.11
+        guice               : "com.google.inject:guice:4.2.0",
+        google_findbugs     : "com.google.code.findbugs:jsr305:3.0.2",
+        hibernate_core      : "org.hibernate:hibernate-core:5.2.12.Final",
+        hibernate_jpa       : "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final",
+        jackson_annotations : "com.fasterxml.jackson.core:jackson-annotations:$versions.jackson",
+        jackson_core        : "com.fasterxml.jackson.core:jackson-core:$versions.jackson",
+        jackson_databind    : "com.fasterxml.jackson.core:jackson-databind:$versions.jackson",
+        javax_inject        : "javax.inject:javax.inject:$versions.javax_inject",
+        javax_ws            : "javax.ws.rs:javax.ws.rs-api:$versions.javax_ws",
+        javax_servlet       : "javax.servlet:javax.servlet-api:$versions.javax_servlet",
+        jaxb_api            : "javax.xml.bind:jaxb-api:2.3.0",
+        jersey_client       : "org.glassfish.jersey.core:jersey-client:$versions.jersey",
+        jersey_server       : "org.glassfish.jersey.core:jersey-server:$versions.jersey",
+        junit               : "org.junit.jupiter:junit-jupiter-api:${versions.junit}",
+        jose4j              : "org.bitbucket.b_c:jose4j:$versions.jose4j",
+        jooq                : "org.jooq:jooq:$versions.jooq",
+        logback_classic     : "ch.qos.logback:logback-classic:$versions.logback",
+        logback_core        : "ch.qos.logback:logback-core:$versions.logback",
+        kafka               : "org.apache.kafka:kafka-clients:$versions.kafka", //CDH5.10 uses kafka 10.0, Kafka <10.2 is picky about client and server versions.
+        mariadb_connector   : 'org.mariadb.jdbc:mariadb-java-client:2.0.2',
+        mockito_core        : "org.mockito:mockito-core:2.11.0",
+        slf4j_api           : "org.slf4j:slf4j-api:$versions.slf4j",
+        swagger_annotations : "io.swagger:swagger-annotations:$versions.swagger",
+        ws_rs_api           : "javax.ws.rs:javax.ws.rs-api:2.0.1",
+        wiremock            : 'com.github.tomakehurst:wiremock:2.14.0',
+        zzDUMMYzz           : "makes sorting easier"
 ]
 
 buildscript {
@@ -103,8 +102,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'ca.cutterslade.gradle:gradle-dependency-analyze:1.1.0'
-        classpath 'com.benjaminsproule:swagger-gradle-plugin:0.1.2'
+//        classpath 'ca.cutterslade.gradle:gradle-dependency-analyze:1.1.0'
+        classpath 'com.benjaminsproule:swagger-gradle-plugin:1.0.2'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
     }
 }
@@ -128,16 +127,92 @@ def pomConfig = {
         }
     }
     scm {
-       url "https://github.com/stroom/stroom-query"
+        url "https://github.com/stroom/stroom-query"
     }
 }
 
 subprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
-    apply plugin: 'ca.cutterslade.analyze'
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+//    apply plugin: 'ca.cutterslade.analyze'
+    sourceCompatibility = 1.10
+    targetCompatibility = 1.10
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    configurations {
+
+        // ensure deps don't bring any logging implementations with them as this will
+        // conflict with logback. Also replace any log4j deps with log4j-over-slf4j
+        // so dependency jars work with slf4j
+        all {
+            exclude group: "javax.annotation", module: "javax.annotation-api"
+            exclude group: "org.glassfish.hk2.external", module: "aopalliance-repackaged"
+            exclude group: "commons-logging", module: "commons-logging"
+            exclude group: "org.jboss.logging", module: "jboss-logging"
+            exclude group: "org.jboss.spec.javax.transaction", module: "jboss-transaction-api_1.2_spec"
+//            exclude group: "com.google.guava", module: "guava"
+
+
+//            exclude group: "ch.qos.logback", module: "logback-core"
+//            exclude group: "log4j", module: "log4j"
+//            exclude group: "commons-logging", module: "commons-logging"
+//            exclude module: 'xercesImpl'
+//
+            resolutionStrategy {
+                dependencySubstitution {
+//                    substitute module('log4j:log4j') with module("org.slf4j:log4j-over-slf4j:$versions.slf4j")
+                    substitute module('com.google.guava:guava') with module("com.google.guava:guava:$versions.guava")
+                }
+//
+//                // Stop libs from dragging in a different version of dropwizard
+//                eachDependency { DependencyResolveDetails details ->
+//                    if (details.requested.group == 'io.dropwizard') {
+//                        details.useVersion versions.dropwizard
+//                    }
+//                    if (details.requested.group == 'io.dropwizard.metrics') {
+//                        details.useVersion versions.dropwizard_metrics
+//                    }
+//                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     repositories {
         mavenLocal()
@@ -198,7 +273,7 @@ subprojects {
             version {
                 name = "${versions.stroomQuery}"
                 desc = "stroom-query-${versions.stroomQuery}"
-                released  = new Date()
+                released = new Date()
                 vcsTag = "${versions.stroomQuery}"
                 gpg {
                     //Bintray will self-sign the files
@@ -207,6 +282,83 @@ subprojects {
             }
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    afterEvaluate {
+        repositories {
+            jcenter()
+        }
+
+        compileJava {
+            inputs.property("moduleName", moduleName)
+            doFirst {
+                options.compilerArgs = [
+                        '--module-path', classpath.asPath,
+                ]
+                classpath = files()
+            }
+        }
+
+        compileTestJava {
+            inputs.property("moduleName", moduleName)
+            doFirst {
+                options.compilerArgs = [
+                        '--module-path', classpath.asPath,
+//                        '--add-modules', 'junit',
+//                        '--add-reads', "$moduleName=junit",
+                        '--patch-module', "$moduleName=" + files(sourceSets.test.java.srcDirs).asPath,
+                ]
+                classpath = files()
+            }
+        }
+
+        test {
+            inputs.property("moduleName", moduleName)
+            doFirst {
+                jvmArgs = [
+                        '--module-path', classpath.asPath,
+                        '--add-modules', 'ALL-MODULE-PATH',
+//                        '--add-reads', "$moduleName=junit",
+                        '--patch-module', "$moduleName=" + files(sourceSets.test.java.outputDir).asPath,
+                ]
+                classpath = files()
+            }
+        }
+
+        javadoc {
+            options.addStringOption('-module-path', classpath.asPath)
+            options.addStringOption('Xdoclint:all,-missing', '-html5')
+        }
+    }
+
+
+
+
+
+
+
+
+
+
 }
 
 project(':stroom-query-api') {
@@ -279,25 +431,43 @@ project(':stroom-query-testing') {
     }
 }
 
-task aggregatedJavadocs(
-    type: Javadoc, 
-    description: 'Generate javadocs from all child projects as if it was a single project', 
-    group: 'Documentation') {
-
-	destinationDir = file("$buildDir/docs/javadoc")
-	title = "$project.name $version API"
-	options.author true
-	options.links 'http://docs.oracle.com/javase/8/docs/api/'
-	options.addStringOption 'Xdoclint:none', '-quiet'
-	
-	subprojects.each { proj ->
-		proj.tasks.withType(Javadoc).each { javadocTask ->
-			source += javadocTask.source
-			classpath += javadocTask.classpath
-			excludes += javadocTask.excludes
-			includes += javadocTask.includes
-		}
-	}
-}
-
-tasks.build.dependsOn aggregatedJavadocs
+//task aggregatedJavadocs(
+//        type: Javadoc,
+//        description: 'Generate javadocs from all child projects as if it was a single project',
+//        group: 'Documentation') {
+//
+//    inputs.property("moduleName", 'aggregatedJavadocs')
+//    doFirst {
+//        options.addStringOption('-module-path', classpath.asPath)
+//    }
+//
+//    destinationDir = file("$buildDir/docs/javadoc")
+//    title = "$project.name $version API"
+//    options.author true
+//    options.links 'http://docs.oracle.com/javase/8/docs/api/'
+//    options.addStringOption 'Xdoclint:none', '-quiet'
+//    options.addStringOption '-module-path', classpath.asPath
+////    options.addStringOption '-add-modules', 'ALL-MODULE-PATH'
+//
+//
+////    doFirst {
+////        jvmArgs = [
+////                '--module-path', classpath.asPath,
+////                '--add-modules', 'ALL-MODULE-PATH',
+//////                        '--add-reads', "$moduleName=junit",
+//////                '--patch-module', "$moduleName=" + files(sourceSets.test.java.outputDir).asPath,
+////        ]
+////        classpath = files()
+////    }
+//
+//    subprojects.each { proj ->
+//        proj.tasks.withType(Javadoc).each { javadocTask ->
+//            source += javadocTask.source
+//            classpath += javadocTask.classpath
+//            excludes += javadocTask.excludes
+//            includes += javadocTask.includes
+//        }
+//    }
+//}
+//
+//tasks.build.dependsOn aggregatedJavadocs

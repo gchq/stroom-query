@@ -9,7 +9,6 @@ import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public class QueryableHibernateEntity extends QueryableEntity {
-
     @Id
     @Column(name=DATA_SOURCE_UUID)
     public String getDataSourceUuid() {
@@ -36,15 +35,13 @@ public class QueryableHibernateEntity extends QueryableEntity {
         return super.getUpdateUser();
     }
 
-
     public static class Builder<T extends QueryableHibernateEntity> extends QueryableEntity.BaseBuilder<T, Builder<T>> {
-
         public Builder(final T instance) {
             super(instance);
         }
 
         @Override
-        protected Builder self() {
+        protected Builder<T> self() {
             return this;
         }
     }

@@ -1,7 +1,7 @@
 package stroom.query.common.v2;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -65,7 +65,7 @@ public class TestMaxResults {
 
     private void doTest(List<Integer> userSizes, List<Integer> defaultSizes, int depth, int expectedSize) {
         MaxResults maxResults = new MaxResults(userSizes, defaultSizes);
-        Assert.assertEquals(expectedSize, maxResults.size(depth));
+        Assertions.assertEquals(expectedSize, maxResults.size(depth));
     }
 
 }

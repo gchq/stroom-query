@@ -16,7 +16,7 @@
 
 package stroom.query.common.v2;
 
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import stroom.dashboard.expression.v1.Generator;
 import stroom.dashboard.expression.v1.StaticValueFunction;
 import stroom.dashboard.expression.v1.ValInteger;
@@ -27,7 +27,7 @@ import stroom.query.api.v2.TableSettings;
 import java.util.HashMap;
 import java.util.Map;
 
-@Ignore
+@Disabled
 public class TestVisComponentResultCreator {
 //    final Path TEST_DIR = TestFileUtil.getTestResourcesDir().resolve("TestVisComponentResultCreator");
 //

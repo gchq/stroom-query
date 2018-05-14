@@ -1,10 +1,10 @@
 package stroom.query.api.v2;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DocRefBuilderTest {
     @Test
@@ -19,8 +19,8 @@ public class DocRefBuilderTest {
                 .uuid(uuid)
                 .build();
 
-        assertEquals(name, docRef.getName());
-        assertEquals(type, docRef.getType());
-        assertEquals(uuid, docRef.getUuid());
+        assertThat(docRef.getName()).isEqualTo(name);
+        assertThat(docRef.getType()).isEqualTo(type);
+        assertThat(docRef.getUuid()).isEqualTo(uuid);
     }
 }

@@ -16,8 +16,8 @@
 
 package stroom.query.common.v2;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
@@ -25,8 +25,8 @@ public class TestKVMapUtil {
     @Test
     public void testSimpleParse() {
         final Map<String, String> map = KVMapUtil.parse("param1=value1");
-        Assert.assertEquals("param1", map.keySet().iterator().next());
-        Assert.assertEquals("value1", map.get("param1"));
+        Assertions.assertEquals("param1", map.keySet().iterator().next());
+        Assertions.assertEquals("value1", map.get("param1"));
     }
 
     @Test
@@ -43,40 +43,40 @@ public class TestKVMapUtil {
     public void testReplacement() {
         Map<String, String> map = KVMapUtil.parse("key1=value1");
         String result = KVMapUtil.replaceParameters("this is ${key1}", map);
-        Assert.assertEquals("this is value1", result);
+        Assertions.assertEquals("this is value1", result);
 
         map = KVMapUtil.parse("key1=value1 key2=value2");
         result = KVMapUtil.replaceParameters("this is $${key1} ${key2}", map);
-        Assert.assertEquals("this is ${key1} value2", result);
+        Assertions.assertEquals("this is ${key1} value2", result);
 
         result = KVMapUtil.replaceParameters("this is $$${key1} ${key2}", map);
-        Assert.assertEquals("this is $value1 value2", result);
+        Assertions.assertEquals("this is $value1 value2", result);
 
         result = KVMapUtil.replaceParameters("this is $$$${key1} ${key2}", map);
-        Assert.assertEquals("this is $${key1} value2", result);
+        Assertions.assertEquals("this is $${key1} value2", result);
 
         result = KVMapUtil.replaceParameters("this is $$$$${key1} ${key2}", map);
-        Assert.assertEquals("this is $$value1 value2", result);
+        Assertions.assertEquals("this is $$value1 value2", result);
 
         result = KVMapUtil.replaceParameters("$this is $$$$${key1} ${key2}", map);
-        Assert.assertEquals("$this is $$value1 value2", result);
+        Assertions.assertEquals("$this is $$value1 value2", result);
 
         map = KVMapUtil.parse("user=user1 user2");
         result = KVMapUtil.replaceParameters("${user}", map);
-        Assert.assertEquals("user1 user2", result);
+        Assertions.assertEquals("user1 user2", result);
     }
 
     private void testKV(String text, String... expectedParams) {
         final Map<String, String> map = KVMapUtil.parse(text);
 
-        Assert.assertTrue(expectedParams.length > 0);
-        Assert.assertTrue(expectedParams.length % 2 == 0);
-        Assert.assertEquals(expectedParams.length / 2, map.size());
+        Assertions.assertTrue(expectedParams.length > 0);
+        Assertions.assertTrue(expectedParams.length % 2 == 0);
+        Assertions.assertEquals(expectedParams.length / 2, map.size());
 
         for (int i = 0; i < expectedParams.length; i += 2) {
             String key = expectedParams[i];
             String value = expectedParams[i + 1];
-            Assert.assertEquals(value, map.get(key));
+            Assertions.assertEquals(value, map.get(key));
         }
     }
 }
