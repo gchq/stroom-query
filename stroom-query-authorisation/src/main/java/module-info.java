@@ -1,6 +1,7 @@
 module stroom.query.authorisation {
     exports stroom.query.authorisation;
     exports stroom.query.security;
+    requires stroom.docref;
     requires stroom.query.api;
     requires jetty.http;
     requires javax.ws.rs.api;

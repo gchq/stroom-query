@@ -18,6 +18,7 @@ ext.moduleName = 'stroom.query.common'
 
 dependencies {
     //--------Project----------
+    compile project(':stroom-docref')
     compile project(':stroom-query-api')
 
     //--------Stroom libs------

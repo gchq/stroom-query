@@ -19,7 +19,8 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.HasDisplayValue;
+import stroom.docref.DocRef;
+import stroom.docref.HasDisplayValue;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -193,7 +194,6 @@ public final class ExpressionTerm extends ExpressionItem {
 
         /**
          * @param value The name of the field that is being evaluated in this predicate term"
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder field(final String value) {
@@ -203,7 +203,6 @@ public final class ExpressionTerm extends ExpressionItem {
 
         /**
          * @param value The condition of the predicate term
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder condition(final Condition value) {
@@ -213,7 +212,6 @@ public final class ExpressionTerm extends ExpressionItem {
 
         /**
          * @param value The value that the field value is being evaluated against. Not required if a dictionary is supplied
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder value(final String value) {
@@ -227,7 +225,6 @@ public final class ExpressionTerm extends ExpressionItem {
          * conditions are supported for a dictionary term.
          *
          * @param value The DocRef for the dictionary that this predicate is using for its evaluation
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder dictionary(final DocRef value) {
@@ -237,6 +234,7 @@ public final class ExpressionTerm extends ExpressionItem {
 
         /**
          * A shortcut method for specifying the dictionary DocRef inline
+         *
          * @param type The element type
          * @param uuid The UUID of the dictionary
          * @param name The name of the dictionary

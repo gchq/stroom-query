@@ -1,4 +1,5 @@
 module stroom.query.audit {
+    requires stroom.docref;
     requires stroom.query.api;
     requires stroom.query.authorisation;
     requires javax.ws.rs.api;

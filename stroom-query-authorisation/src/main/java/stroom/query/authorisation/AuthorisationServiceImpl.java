@@ -21,7 +21,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import stroom.query.api.v2.DocRef;
+import stroom.docref.DocRef;
 import stroom.query.security.ServiceUser;
 import stroom.query.security.UrlTokenReplacer;
 

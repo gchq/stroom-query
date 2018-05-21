@@ -1,5 +1,7 @@
 package stroom.query.api.v2;
 
+import stroom.docref.DocRef;
+
 import java.util.Objects;
 
 public class DocRefInfo {

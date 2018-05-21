@@ -1,7 +1,7 @@
 package stroom.query.audit.rest;
 
 import io.dropwizard.auth.Auth;
-import stroom.query.api.v2.DocRef;
+import stroom.docref.DocRef;
 import stroom.query.api.v2.QueryKey;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.security.ServiceUser;

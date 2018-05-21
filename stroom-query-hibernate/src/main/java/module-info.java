@@ -7,6 +7,7 @@ module stroom.query.hibernate {
     requires flyway.core;
     requires hibernate.core;
     requires slf4j.api;
+    requires stroom.docref;
     requires stroom.query.audit;
     requires stroom.query.authorisation;
     requires stroom.expression;

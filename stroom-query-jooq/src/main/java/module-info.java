@@ -2,6 +2,7 @@ module stroom.query.jooq {
     requires dropwizard.db;
     requires com.google.guice;
     requires dropwizard.core;
+    requires stroom.docref;
     requires stroom.query.audit;
     requires stroom.query.authorisation;
     requires stroom.query.api;

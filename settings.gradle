@@ -1,4 +1,5 @@
 rootProject.name = 'stroom-query'
+include 'stroom-docref'
 include 'stroom-query-api'
 include 'stroom-query-common'
 include 'stroom-query-sample'

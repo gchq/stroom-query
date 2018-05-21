@@ -5,16 +5,16 @@ import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 import stroom.datasource.api.v2.DataSource;
-import stroom.query.api.v2.DocRef;
+import stroom.docref.DocRef;
 import stroom.query.api.v2.ExpressionOperator;
 import stroom.query.api.v2.OffsetRange;
 import stroom.query.api.v2.SearchRequest;
-import stroom.query.authorisation.DocumentPermission;
 import stroom.query.audit.client.DocRefResourceHttpClient;
 import stroom.query.audit.client.QueryResourceHttpClient;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.audit.rest.AuditedQueryResourceImpl;
+import stroom.query.authorisation.DocumentPermission;
 
 import javax.ws.rs.core.Response;
 import java.util.UUID;

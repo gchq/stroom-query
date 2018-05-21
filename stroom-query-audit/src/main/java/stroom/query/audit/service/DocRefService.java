@@ -1,6 +1,6 @@
 package stroom.query.audit.service;
 
-import stroom.query.api.v2.DocRef;
+import stroom.docref.DocRef;
 import stroom.query.api.v2.DocRefInfo;
 import stroom.query.audit.ExportDTO;
 import stroom.query.audit.model.DocRefEntity;

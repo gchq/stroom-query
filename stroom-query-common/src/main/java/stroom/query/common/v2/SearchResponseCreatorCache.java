@@ -16,7 +16,6 @@ public interface SearchResponseCreatorCache {
 
     /**
      * Remove an entry from the cache for {@link Key} key
-     * @param key
      */
     void remove(final Key key);
 

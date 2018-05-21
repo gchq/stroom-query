@@ -1,4 +1,5 @@
 module stroom.query.api {
+    requires stroom.docref;
     requires java.xml.bind;
     requires swagger.annotations;
     requires com.fasterxml.jackson.annotation;

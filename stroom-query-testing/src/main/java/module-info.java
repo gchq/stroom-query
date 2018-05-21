@@ -1,5 +1,6 @@
 module stroom.query.testing {
     requires com.google.guice;
+    requires stroom.docref;
     requires stroom.query.audit;
     requires junit;
     requires dropwizard.core;
@@ -14,4 +15,5 @@ module stroom.query.testing {
     requires jose4j;
     requires slf4j.api;
     requires com.fasterxml.jackson.databind;
+    requires org.junit.jupiter.api;
 }

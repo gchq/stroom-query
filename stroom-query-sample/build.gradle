@@ -20,6 +20,7 @@ apply plugin: 'com.benjaminsproule.swagger'
 
 dependencies {
     //--------Project----------
+    compile project(':stroom-docref')
     compile project(':stroom-query-api')
 
     //--------3rd party--------

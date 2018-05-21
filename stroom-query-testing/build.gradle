@@ -54,6 +54,7 @@ tasks.withType(Test) {
 
 dependencies {
     //--------Project----------
+    compile project(':stroom-docref')
     compile project(':stroom-query-api')
     compile project(':stroom-query-authorisation')
     compile project(':stroom-query-audit')

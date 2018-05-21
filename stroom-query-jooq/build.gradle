@@ -17,7 +17,8 @@
 ext.moduleName = 'stroom.query.jooq'
 
 dependencies {
-//--------Project----------
+    //--------Project----------
+    compile project(':stroom-docref')
     compile project(':stroom-query-api')
     compile project(':stroom-query-common')
     compile project(':stroom-query-audit')

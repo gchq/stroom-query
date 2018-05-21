@@ -19,7 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.HasDisplayValue;
+import stroom.docref.HasDisplayValue;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -180,7 +180,6 @@ public final class TimeZone implements Serializable {
 
         /**
          * @param value The required type of time zone
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder use(final Use value) {
@@ -190,7 +189,6 @@ public final class TimeZone implements Serializable {
 
         /**
          * @param value The id of the time zone, conforming to java.time.ZoneId
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder id(final String value) {
@@ -200,7 +198,6 @@ public final class TimeZone implements Serializable {
 
         /**
          * @param value The number of hours this timezone is offset from UTC
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder offsetHours(final Integer value) {
@@ -210,7 +207,6 @@ public final class TimeZone implements Serializable {
 
         /**
          * @param value The number of minutes this timezone is offset from UTC
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder offsetMinutes(final Integer value) {

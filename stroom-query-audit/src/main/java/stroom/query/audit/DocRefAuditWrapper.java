@@ -5,7 +5,7 @@ import event.logging.EventLoggingService;
 import org.eclipse.jetty.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import stroom.query.api.v2.DocRef;
+import stroom.docref.DocRef;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.service.QueryApiException;
 import stroom.query.security.ServiceUser;

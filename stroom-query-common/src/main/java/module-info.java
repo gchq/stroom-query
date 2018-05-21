@@ -5,5 +5,6 @@ module stroom.query.common {
     requires slf4j.api;
     requires guava;
     requires stroom.expression;
+    requires stroom.docref;
     requires stroom.query.api;
 }

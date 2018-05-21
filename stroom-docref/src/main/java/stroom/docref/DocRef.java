@@ -1,11 +1,11 @@
 /*
- * Copyright 2017 Crown Copyright
+ * Copyright 2018 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package stroom.query.api.v2;
+package stroom.docref;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.HasDisplayValue;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -39,8 +38,7 @@ import java.util.Objects;
 @XmlRootElement(name = "doc")
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = DocRef.CLASS_DESC)
-public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable {
-
+public class DocRef implements Comparable<DocRef>, HasDisplayValue, SharedObject, Serializable {
     public static final String CLASS_DESC = "A class for describing a unique reference to a 'document' in stroom.  " +
             "A 'document' is an entity in stroom such as a data source dictionary or pipeline.";
 
