@@ -21,8 +21,8 @@ ext.versions = [
         stroomQuery       : getPropertyOrDefault('version', 'SNAPSHOT'),
 
         //------Stroom-libs---------------
-        stroomExpression  : 'SNAPSHOT',
-        eventLogging      : 'SNAPSHOT_schema-v3.2.4',
+        stroomExpression  : 'v2.0.0-beta.1',
+        eventLogging      : 'v4.0.1_schema-v3.2.4',
 
         //------------3rd-party------------
         dropwizard        : '1.2.2',
