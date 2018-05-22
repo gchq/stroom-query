@@ -19,7 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.HasDisplayValue;
+import stroom.docref.HasDisplayValue;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -141,7 +141,6 @@ public final class Format implements Serializable {
 
         /**
          * @param value XXXXXXXXXXXXXXXX
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder type(final Type value) {

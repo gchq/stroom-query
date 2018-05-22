@@ -1,7 +1,7 @@
 package stroom.query.audit.service;
 
 import stroom.datasource.api.v2.DataSource;
-import stroom.query.api.v2.DocRef;
+import stroom.docref.DocRef;
 import stroom.query.api.v2.QueryKey;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.SearchResponse;

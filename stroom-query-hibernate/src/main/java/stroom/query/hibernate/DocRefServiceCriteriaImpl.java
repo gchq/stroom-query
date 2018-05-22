@@ -7,8 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.query.audit.ExportDTO;
 import stroom.query.audit.model.DocRefEntity;
-import stroom.query.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
+import stroom.query.security.ServiceUser;
 
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
@@ -40,6 +40,7 @@ public class DocRefServiceCriteriaImpl<
             };
         }
 
+        @SuppressWarnings("unchecked")
         static ImportValue fromMap(final Map<String, ?> map) {
 
             return new ImportValue() {
@@ -61,6 +62,7 @@ public class DocRefServiceCriteriaImpl<
             B extends DocRefHibernateEntity.BaseBuilder<E, ?>> {
         B importValues(ImportValue dataMap);
     }
+
     @FunctionalInterface
     protected interface ExportValue {
         void setValue(final String fieldName, final Object fieldValue);
@@ -108,7 +110,7 @@ public class DocRefServiceCriteriaImpl<
 
     @Override
     public List<DOC_REF_ENTITY> getAll(final ServiceUser user) {
-        try (final Session session = database.openSession()){
+        try (final Session session = database.openSession()) {
             final CriteriaBuilder cb = session.getCriteriaBuilder();
             final CriteriaQuery<DOC_REF_ENTITY> cq = cb.createQuery(docRefEntityClass);
             final Root<DOC_REF_ENTITY> root = cq.from(docRefEntityClass);
@@ -125,7 +127,7 @@ public class DocRefServiceCriteriaImpl<
 
     @Override
     public Optional<DOC_REF_ENTITY> get(final ServiceUser user, final String uuid) {
-        try (final Session session = database.openSession()){
+        try (final Session session = database.openSession()) {
             final CriteriaBuilder cb = session.getCriteriaBuilder();
             final CriteriaQuery<DOC_REF_ENTITY> cq = cb.createQuery(docRefEntityClass);
             final Root<DOC_REF_ENTITY> root = cq.from(docRefEntityClass);
@@ -348,9 +350,9 @@ public class DocRefServiceCriteriaImpl<
         final Optional<DOC_REF_ENTITY> optionalIndex = get(user, uuid);
 
         return optionalIndex.map(index -> new ExportDTO.Builder()
-                    .value(DocRefEntity.NAME, index.getName())
-                    .values(exportValuesToMap(index))
-                    .build())
+                .value(DocRefEntity.NAME, index.getName())
+                .values(exportValuesToMap(index))
+                .build())
                 .orElse(new ExportDTO.Builder()
                         .message("could not find document")
                         .build());

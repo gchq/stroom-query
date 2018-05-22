@@ -1,11 +1,12 @@
 package stroom.query.api.v2;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import stroom.docref.DocRef;
 
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class QueryBuilderTest {
     @Test

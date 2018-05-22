@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * This rule allows tests to create client classes that requires the local app URL.

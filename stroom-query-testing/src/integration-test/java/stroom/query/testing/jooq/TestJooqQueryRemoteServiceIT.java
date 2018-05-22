@@ -3,19 +3,35 @@ package stroom.query.testing.jooq;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
-import stroom.query.api.v2.*;
+import stroom.docref.DocRef;
+import stroom.query.api.v2.ExpressionOperator;
+import stroom.query.api.v2.ExpressionTerm;
+import stroom.query.api.v2.Field;
+import stroom.query.api.v2.FlatResult;
+import stroom.query.api.v2.OffsetRange;
+import stroom.query.api.v2.Query;
+import stroom.query.api.v2.Result;
+import stroom.query.api.v2.ResultRequest;
+import stroom.query.api.v2.SearchRequest;
+import stroom.query.api.v2.SearchResponse;
+import stroom.query.api.v2.TableSettings;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.audit.service.QueryApiException;
 import stroom.query.authorisation.DocumentPermission;
+import stroom.query.security.UrlTokenReplacer;
 import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.QueryRemoteServiceIT;
 import stroom.query.testing.StroomAuthenticationRule;
 import stroom.query.testing.data.CreateTestDataClient;
-import stroom.query.testing.jooq.app.*;
+import stroom.query.testing.jooq.app.CreateTestDataJooqImpl;
+import stroom.query.testing.jooq.app.JooqApp;
+import stroom.query.testing.jooq.app.JooqConfig;
+import stroom.query.testing.jooq.app.TestDocRefJooqEntity;
+import stroom.query.testing.jooq.app.TestQueryableJooqEntity;
 
 import javax.ws.rs.core.Response;
 import java.util.Collection;
@@ -26,7 +42,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class TestJooqQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRefJooqEntity, JooqConfig> {
 

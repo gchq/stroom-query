@@ -20,6 +20,7 @@ import java.util.Optional;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.inline;
 
+@SuppressWarnings("unchecked")
 public class DocRefServiceJooqImpl<DOC_REF_ENTITY extends DocRefJooqEntity>
         implements DocRefService<DOC_REF_ENTITY> {
 

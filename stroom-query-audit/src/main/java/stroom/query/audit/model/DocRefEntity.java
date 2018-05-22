@@ -1,6 +1,6 @@
 package stroom.query.audit.model;
 
-import stroom.query.api.v2.DocRef;
+import stroom.docref.DocRef;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -199,7 +199,7 @@ public class DocRefEntity implements Serializable {
         }
 
         @Override
-        protected Builder self() {
+        protected Builder<T> self() {
             return this;
         }
     }

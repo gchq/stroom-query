@@ -16,8 +16,8 @@
 
 package stroom.query.api.v2;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import stroom.query.api.v2.ExpressionOperator.Op;
 import stroom.query.api.v2.ExpressionTerm.Condition;
 
@@ -127,12 +127,12 @@ public class TestExpressionToString {
     private void single(final String expected, final ExpressionItem.Builder builder) {
         final String actual = builder.build().toString();
         System.out.println(actual);
-        Assert.assertEquals(expected, actual);
+        Assertions.assertEquals(expected, actual);
     }
 
     private void multi(final String expected, final ExpressionItem.Builder builder) {
         final String actual = builder.build().toMultiLineString();
         System.out.println(actual);
-        Assert.assertEquals(expected, actual);
+        Assertions.assertEquals(expected, actual);
     }
 }

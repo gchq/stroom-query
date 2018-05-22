@@ -16,7 +16,7 @@ import org.jose4j.lang.JoseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.query.authorisation.DocumentPermission;
-import stroom.query.api.v2.DocRef;
+import stroom.docref.DocRef;
 import stroom.query.security.ServiceUser;
 
 import javax.ws.rs.core.MediaType;
@@ -24,7 +24,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * This rule effectively builds an Authentication and Authorisation service for use in integration tests.

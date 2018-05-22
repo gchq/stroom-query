@@ -241,7 +241,7 @@ public class QueryableEntity implements Serializable {
         }
 
         @Override
-        protected Builder self() {
+        protected Builder<T> self() {
             return this;
         }
     }

@@ -19,7 +19,7 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import stroom.util.shared.HasDisplayValue;
+import stroom.docref.HasDisplayValue;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -114,7 +114,6 @@ public final class Sort implements Serializable {
         /**
          * @param value Where multiple fields are sorted this value describes the sort order,
          *              with 0 being the first field to sort on
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder order(final Integer value) {
@@ -124,7 +123,6 @@ public final class Sort implements Serializable {
 
         /**
          * @param value The direction to sort in, ASCENDING or DESCENDING
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder direction(final SortDirection value) {

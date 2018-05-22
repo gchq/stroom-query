@@ -57,14 +57,12 @@ public final class SearchResponse implements Serializable {
     @XmlElementWrapper(name = "errors")
     @XmlElement(name = "error")
     @ApiModelProperty(
-            value = "A list of errors that occurred in running the query",
-            required = false)
+            value = "A list of errors that occurred in running the query")
     private List<String> errors;
 
     @XmlElement
     @ApiModelProperty(
-            value = "True if the query has returned all known results",
-            required = false)
+            value = "True if the query has returned all known results")
     private Boolean complete;
 
     private SearchResponse() {
@@ -203,7 +201,7 @@ public final class SearchResponse implements Serializable {
          *
          * @return The {@link Builder}, enabling method chaining
          */
-        public CHILD_CLASS complete(final Boolean value) {
+        public final CHILD_CLASS complete(final Boolean value) {
             this.complete = value;
             return self();
         }
@@ -214,7 +212,7 @@ public final class SearchResponse implements Serializable {
          * @param highlights A set of strings to highlight in the UI that should correlate with the search query.
          * @return this builder instance
          */
-        public CHILD_CLASS addHighlights(String... highlights) {
+        public final CHILD_CLASS addHighlights(String... highlights) {
             this.highlights.addAll(Arrays.asList(highlights));
             return self();
         }
@@ -225,7 +223,8 @@ public final class SearchResponse implements Serializable {
          * @param results The results that where found
          * @return this builder instance
          */
-        public CHILD_CLASS addResults(ResultClass... results) {
+        @SafeVarargs
+        public final CHILD_CLASS addResults(ResultClass... results) {
             this.results.addAll(Arrays.asList(results));
             return self();
         }
@@ -236,7 +235,7 @@ public final class SearchResponse implements Serializable {
          * @param errors The errors that have occurred
          * @return this builder instance
          */
-        public CHILD_CLASS addErrors(String... errors) {
+        public final CHILD_CLASS addErrors(String... errors) {
             this.errors.addAll(Arrays.asList(errors));
             return self();
         }

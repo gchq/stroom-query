@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
+ext.moduleName = 'stroom.query.common'
+
 dependencies {
     //--------Project----------
+    compile project(':stroom-docref')
     compile project(':stroom-query-api')
 
     //--------Stroom libs------
@@ -27,6 +30,7 @@ dependencies {
     compile libs.jackson_annotations
     compile libs.jackson_core
     compile libs.slf4j_api
+    compile libs.jaxb_api
 
     //--------testing----------
     testCompile libs.assertj

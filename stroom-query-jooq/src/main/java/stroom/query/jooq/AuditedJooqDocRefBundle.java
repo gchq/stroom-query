@@ -124,6 +124,7 @@ public class AuditedJooqDocRefBundle<CONFIG extends Configuration & HasTokenConf
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void initialize(final Bootstrap<?> bootstrap) {
         final Bootstrap<CONFIG> castBootstrap = (Bootstrap<CONFIG>) bootstrap; // this initialize function should have used the templated config type

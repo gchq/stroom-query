@@ -9,7 +9,7 @@ import stroom.dashboard.expression.v1.Val;
 import stroom.dashboard.expression.v1.ValString;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
-import stroom.query.api.v2.DocRef;
+import stroom.docref.DocRef;
 import stroom.query.api.v2.ExpressionItem;
 import stroom.query.api.v2.ExpressionOperator;
 import stroom.query.api.v2.ExpressionTerm;
@@ -39,6 +39,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -84,8 +85,8 @@ public class QueryServiceCriteriaImpl<
                 .map(IsDataSourceField::fieldSupplier)
                 .map(aClass -> {
                     try {
-                        return aClass.newInstance();
-                    } catch (InstantiationException | IllegalAccessException e) {
+                        return aClass.getDeclaredConstructor(new Class[0]).newInstance();
+                    } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                         LOGGER.warn("Could not create instance of DataSourceField supplier with " + aClass.getName());
                     }
                     return null;

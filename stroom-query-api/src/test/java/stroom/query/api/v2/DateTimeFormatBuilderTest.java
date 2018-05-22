@@ -1,8 +1,8 @@
 package stroom.query.api.v2;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DateTimeFormatBuilderTest {
     @Test
@@ -17,18 +17,18 @@ public class DateTimeFormatBuilderTest {
         final DateTimeFormat dateTimeFormat = new DateTimeFormat.Builder()
                 .pattern(pattern)
                 .timeZone(new TimeZone.Builder()
-                    .id(timeZoneId)
-                    .use(use)
-                    .offsetHours(offsetHours)
-                    .offsetMinutes(offsetMinutes)
-                    .build())
+                        .id(timeZoneId)
+                        .use(use)
+                        .offsetHours(offsetHours)
+                        .offsetMinutes(offsetMinutes)
+                        .build())
                 .build();
 
-        assertEquals(pattern, dateTimeFormat.getPattern());
+        assertThat(dateTimeFormat.getPattern()).isEqualTo(pattern);
 
-        assertEquals(timeZoneId, dateTimeFormat.getTimeZone().getId());
-        assertEquals(use, dateTimeFormat.getTimeZone().getUse());
-        assertEquals(offsetHours, dateTimeFormat.getTimeZone().getOffsetHours());
-        assertEquals(offsetMinutes, dateTimeFormat.getTimeZone().getOffsetMinutes());
+        assertThat(dateTimeFormat.getTimeZone().getId()).isEqualTo(timeZoneId);
+        assertThat(dateTimeFormat.getTimeZone().getUse()).isEqualTo(use);
+        assertThat(dateTimeFormat.getTimeZone().getOffsetHours()).isEqualTo(offsetHours);
+        assertThat(dateTimeFormat.getTimeZone().getOffsetMinutes()).isEqualTo(offsetMinutes);
     }
 }

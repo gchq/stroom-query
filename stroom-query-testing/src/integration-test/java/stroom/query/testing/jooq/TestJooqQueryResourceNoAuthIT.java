@@ -5,7 +5,14 @@ import org.junit.Before;
 import org.junit.ClassRule;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
-import stroom.query.api.v2.*;
+import stroom.docref.DocRef;
+import stroom.query.api.v2.ExpressionOperator;
+import stroom.query.api.v2.Field;
+import stroom.query.api.v2.OffsetRange;
+import stroom.query.api.v2.Query;
+import stroom.query.api.v2.ResultRequest;
+import stroom.query.api.v2.SearchRequest;
+import stroom.query.api.v2.TableSettings;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.security.NoAuthValueFactoryProvider;
@@ -23,8 +30,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestJooqQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDocRefJooqEntity, JooqConfig> {
 

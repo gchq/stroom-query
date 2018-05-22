@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
+ext.moduleName = 'stroom.query.sample'
+
 apply plugin: 'com.benjaminsproule.swagger'
 
 dependencies {
     //--------Project----------
+    compile project(':stroom-docref')
     compile project(':stroom-query-api')
 
     //--------3rd party--------
@@ -25,13 +28,12 @@ dependencies {
     compile libs.ws_rs_api
 }
 
-//Generate swagger specs for the ExamplEndpoint
-//This is to allow easier checking of the generated spec files when making changes to
-//the model's swagger annotations
+// Generate swagger specs for the ExampleEndpoint
+// This is to allow easier checking of the generated spec files when making changes to the model's swagger annotations
 swagger {
     apiSource {
         springmvc = false //makes it search for jersey annotations
-        outputFormats = 'json,yaml'
+        outputFormats = [ 'json', 'yaml' ]
         locations = [ 'stroom.query.api.v2.sample.ExampleEndpoint' ]
         schemes = [ 'http', 'https' ]
         host = 'localhost:8080'
@@ -39,7 +41,7 @@ swagger {
         info {
             title = 'stroom-query'
             version = 'v2'
-            description = 'An API for querying data sources including the ability to requset multiple result definitions'
+            description = 'An API for querying data sources including the ability to request multiple result definitions'
             contact {
                 name = 'GCHQ'
                 url = 'https://github.com/gchq/stroom-query'

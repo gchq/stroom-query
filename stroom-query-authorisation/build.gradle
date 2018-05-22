@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
+ext.moduleName = 'stroom.query.authorisation'
+
 dependencies {
     //--------Project----------
+    compile project(':stroom-docref')
     compile project(':stroom-query-api')
 
     //--------3rd party--------

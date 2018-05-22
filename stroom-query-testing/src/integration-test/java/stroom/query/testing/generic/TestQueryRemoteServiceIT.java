@@ -3,7 +3,15 @@ package stroom.query.testing.generic;
 import org.junit.ClassRule;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
-import stroom.query.api.v2.*;
+import stroom.docref.DocRef;
+import stroom.query.api.v2.ExpressionOperator;
+import stroom.query.api.v2.Field;
+import stroom.query.api.v2.OffsetRange;
+import stroom.query.api.v2.Query;
+import stroom.query.api.v2.ResultRequest;
+import stroom.query.api.v2.SearchRequest;
+import stroom.query.api.v2.TableSettings;
+import stroom.query.security.UrlTokenReplacer;
 import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.QueryRemoteServiceIT;
 import stroom.query.testing.StroomAuthenticationRule;
@@ -16,7 +24,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRefEntity, Config> {
 

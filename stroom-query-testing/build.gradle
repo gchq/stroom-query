@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+ext.moduleName = 'stroom.query.testing'
+
 sourceSets {
     // This lets us use different directories for our integration tests.
     integrationTest {
@@ -51,6 +54,7 @@ tasks.withType(Test) {
 
 dependencies {
     //--------Project----------
+    compile project(':stroom-docref')
     compile project(':stroom-query-api')
     compile project(':stroom-query-authorisation')
     compile project(':stroom-query-audit')

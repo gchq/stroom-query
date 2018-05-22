@@ -2,7 +2,11 @@ package stroom.query.testing.generic.app;
 
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
-import stroom.query.api.v2.*;
+import stroom.docref.DocRef;
+import stroom.query.api.v2.ExpressionTerm;
+import stroom.query.api.v2.QueryKey;
+import stroom.query.api.v2.SearchRequest;
+import stroom.query.api.v2.SearchResponse;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryApiException;
 import stroom.query.audit.service.QueryService;
@@ -12,9 +16,9 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 public class TestQueryServiceImpl implements QueryService {
-
     private final DocRefService<TestDocRefEntity> docRefService;
 
+    @SuppressWarnings("unchecked")
     @Inject
     public TestQueryServiceImpl(final DocRefService docRefService) {
         this.docRefService = (DocRefService<TestDocRefEntity>) docRefService;

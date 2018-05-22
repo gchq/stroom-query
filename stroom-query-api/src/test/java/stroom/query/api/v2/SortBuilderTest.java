@@ -1,8 +1,8 @@
 package stroom.query.api.v2;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class SortBuilderTest {
     @Test
@@ -15,7 +15,7 @@ public class SortBuilderTest {
                 .order(order)
                 .build();
 
-        assertEquals(direction, sort.getDirection());
-        assertEquals(order, sort.getOrder());
+        assertThat(sort.getDirection()).isEqualTo(direction);
+        assertThat(sort.getOrder()).isEqualTo(order);
     }
 }

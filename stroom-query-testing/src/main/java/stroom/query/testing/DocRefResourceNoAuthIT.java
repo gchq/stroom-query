@@ -3,7 +3,7 @@ package stroom.query.testing;
 import io.dropwizard.Configuration;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import stroom.query.api.v2.DocRefInfo;
 import stroom.query.audit.ExportDTO;
 import stroom.query.audit.client.DocRefResourceHttpClient;
@@ -16,8 +16,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static stroom.query.testing.FifoLogbackRule.containsAllOf;
 
 public abstract class DocRefResourceNoAuthIT<
