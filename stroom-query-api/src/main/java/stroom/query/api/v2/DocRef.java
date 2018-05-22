@@ -67,8 +67,6 @@ public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable
             required = true)
     private String name;
 
-    @XmlTransient
-    @JsonIgnore
     private transient int hashCode = -1;
 
     /**

@@ -19,11 +19,16 @@ package stroom.query.common.v2;
 import stroom.query.api.v2.DocRef;
 import stroom.query.api.v2.TableSettings;
 
+import java.util.Objects;
+
 public class TableCoprocessorSettings implements CoprocessorSettings {
-    private final TableSettings tableSettings;
+    private TableSettings tableSettings;
 
     private static final int DEFAULT_QUEUE_CAPACITY = 1000000;
     private volatile int queueCapacity = DEFAULT_QUEUE_CAPACITY;
+
+    TableCoprocessorSettings() {
+    }
 
     public TableCoprocessorSettings(final TableSettings tableSettings) {
         this.tableSettings = tableSettings;
@@ -49,5 +54,19 @@ public class TableCoprocessorSettings implements CoprocessorSettings {
 
     public void setQueueCapacity(final int queueCapacity) {
         this.queueCapacity = queueCapacity;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final TableCoprocessorSettings that = (TableCoprocessorSettings) o;
+        return queueCapacity == that.queueCapacity &&
+                Objects.equals(tableSettings, that.tableSettings);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tableSettings, queueCapacity);
     }
 }

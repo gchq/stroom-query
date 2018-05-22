@@ -20,9 +20,17 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 @JsonPropertyOrder({"queryId", "fields", "extractValues", "extractionPipeline", "maxResults",
         "showDetail"})
@@ -37,8 +45,8 @@ public final class TableSettings implements Serializable {
 
     @XmlElement
     @ApiModelProperty(
-        value = "TODO",
-        required = true)
+            value = "TODO",
+            required = true)
     private String queryId;
 
     @XmlElementWrapper(name = "fields")
@@ -74,7 +82,7 @@ public final class TableSettings implements Serializable {
             required = false)
     private Boolean showDetail;
 
-    private TableSettings() {
+    TableSettings() {
     }
 
     public TableSettings(final String queryId,
@@ -173,7 +181,6 @@ public final class TableSettings implements Serializable {
 
         /**
          * @param value The ID for the query that wants these results
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder queryId(final String value) {
@@ -183,15 +190,15 @@ public final class TableSettings implements Serializable {
 
         /**
          * @param values Add expected fields to the output table
-         *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder addFields(final Field...values) {
+        public Builder addFields(final Field... values) {
             return addFields(Arrays.asList(values));
         }
 
         /**
          * Convenience function for adding multiple fields that are already in a collection.
+         *
          * @param values The fields to add
          * @return this builder, with the fields added.
          */
@@ -202,15 +209,15 @@ public final class TableSettings implements Serializable {
 
         /**
          * @param values The max result value
-         *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder addMaxResults(final Integer...values) {
+        public Builder addMaxResults(final Integer... values) {
             return addMaxResults(Arrays.asList(values));
         }
 
         /**
          * Add a collection of max result values
+         *
          * @param values The list of max result values
          * @return this builder
          */
@@ -221,7 +228,6 @@ public final class TableSettings implements Serializable {
 
         /**
          * @param value TODO - unknown purpose
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder extractValues(final Boolean value) {
@@ -231,7 +237,6 @@ public final class TableSettings implements Serializable {
 
         /**
          * @param value The reference to the extraction pipeline that will be used on the results
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder extractionPipeline(final DocRef value) {
@@ -241,14 +246,15 @@ public final class TableSettings implements Serializable {
 
         /**
          * Shortcut function for creating the extractionPipeline {@link DocRef} in one go
+         *
          * @param type The type of the extractionPipeline
          * @param uuid The UUID of the extractionPipeline
          * @param name The name of the extractionPipeline
          * @return this builder, with the completed extractionPipeline added.
          */
         public Builder extractionPipeline(final String type,
-                                                         final String uuid,
-                                                         final String name) {
+                                          final String uuid,
+                                          final String name) {
             return this.extractionPipeline(new DocRef.Builder().type(type).uuid(uuid).name(name).build());
         }
 
@@ -256,7 +262,6 @@ public final class TableSettings implements Serializable {
          * @param value When grouping is used a value of true indicates that the results will include
          *              the full detail of any results aggregated into a group as well as their aggregates.
          *              A value of false will only include the aggregated values for each group. Defaults to false.
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder showDetail(final Boolean value) {
@@ -267,6 +272,5 @@ public final class TableSettings implements Serializable {
         public TableSettings build() {
             return new TableSettings(queryId, fields, extractValues, extractionPipeline, maxResults, showDetail);
         }
-
     }
 }

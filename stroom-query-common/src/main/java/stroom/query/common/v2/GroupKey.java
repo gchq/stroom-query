@@ -35,9 +35,12 @@ import java.util.Objects;
 @JsonPropertyOrder({"popToWhenComplete", "values"})
 @XmlType(name = "Key", propOrder = {"popToWhenComplete", "values"})
 public class GroupKey implements Key {
-    private final int depth;
-    private final GroupKey parent;
-    private final List<Val> values;
+    private int depth;
+    private GroupKey parent;
+    private List<Val> values;
+
+    GroupKey() {
+    }
 
     public GroupKey(final Val value) {
         this(Collections.singletonList(value));

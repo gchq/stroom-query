@@ -18,6 +18,8 @@ package stroom.query.common.v2;
 
 import stroom.mapreduce.v2.UnsafePairQueue;
 
+import java.util.Objects;
+
 public class TablePayload implements Payload {
     private static final long serialVersionUID = 5271438218782010968L;
 
@@ -32,5 +34,18 @@ public class TablePayload implements Payload {
 
     public UnsafePairQueue<GroupKey, Item> getQueue() {
         return queue;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final TablePayload that = (TablePayload) o;
+        return Objects.equals(queue, that.queue);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(queue);
     }
 }

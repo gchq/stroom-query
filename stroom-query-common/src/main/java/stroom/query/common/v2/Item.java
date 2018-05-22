@@ -23,9 +23,12 @@ import java.io.Serializable;
 public class Item implements Serializable {
     private static final long serialVersionUID = 4371018450667741005L;
 
-    final GroupKey key;
-    final Generator[] generators;
-    final int depth;
+    GroupKey key;
+    Generator[] generators;
+    int depth;
+
+    Item() {
+    }
 
     public Item(final GroupKey key,
                 final Generator[] generators,

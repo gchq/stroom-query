@@ -19,6 +19,7 @@ package stroom.mapreduce.v2;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class BlockingPairQueue<K, V> implements PairQueue<K, V> {
@@ -47,5 +48,18 @@ public class BlockingPairQueue<K, V> implements PairQueue<K, V> {
         final List<Pair<K, V>> local = new ArrayList<>(queue.size());
         queue.drainTo(local);
         return local.iterator();
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final BlockingPairQueue<?, ?> that = (BlockingPairQueue<?, ?>) o;
+        return Objects.equals(queue, that.queue);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(queue);
     }
 }

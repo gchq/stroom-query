@@ -19,6 +19,7 @@ package stroom.mapreduce.v2;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 public class UnsafePairQueue<K, V> implements PairQueue<K, V> {
     private static final long serialVersionUID = 3205692727588879153L;
@@ -41,5 +42,18 @@ public class UnsafePairQueue<K, V> implements PairQueue<K, V> {
 
     public int size() {
         return queue.size();
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final UnsafePairQueue<?, ?> that = (UnsafePairQueue<?, ?>) o;
+        return Objects.equals(queue, that.queue);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(queue);
     }
 }
