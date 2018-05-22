@@ -21,8 +21,6 @@ import stroom.query.api.v2.TableSettings;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.authorisation.DocumentPermission;
-import stroom.query.authorisation.DocumentPermission;
-import stroom.query.security.UrlTokenReplacer;
 import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.QueryResourceIT;
 import stroom.query.testing.StroomAuthenticationRule;
