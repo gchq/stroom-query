@@ -23,6 +23,6 @@ dependencies {
     compile libs.jaxb_api
 
     testCompile libs.assertj
-    testCompile libs.junit
+    testCompile libs.junit_jupiter_api
 }
 

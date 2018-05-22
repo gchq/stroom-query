@@ -122,7 +122,7 @@ public class AuditedCriteriaQueryBundle<CONFIG extends Configuration & HasTokenC
         ).toArray(Class<?>[]::new);
 
         this.queryableEntityClass = queryableEntityClass;
-        this.hibernateBundle = new HibernateBundle<>(queryableEntityClass, hibernateClasses) {
+        this.hibernateBundle = new HibernateBundle<CONFIG>(queryableEntityClass, hibernateClasses) {
             @Override
             public DataSourceFactory getDataSourceFactory(CONFIG configuration) {
                 return configuration.getDataSourceFactory();

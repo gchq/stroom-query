@@ -25,7 +25,6 @@ dependencies {
 
     //--------Stroom libs------
     compile libs.eventLogging
-    compile libs.stroomExpression
 
     //--------3rd party--------
     compile libs.dropwizard_auth
@@ -48,6 +47,6 @@ dependencies {
     compile libs.kafka
     compile libs.slf4j_api
 
-    testCompile libs.junit
+    testCompile libs.junit_jupiter_api
     testCompile libs.mockito_core
 }
