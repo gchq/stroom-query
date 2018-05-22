@@ -5,17 +5,10 @@ import org.junit.Before;
 import org.junit.ClassRule;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
-import stroom.query.api.v2.DocRef;
-import stroom.query.api.v2.ExpressionOperator;
-import stroom.query.api.v2.Field;
-import stroom.query.api.v2.OffsetRange;
-import stroom.query.api.v2.Query;
-import stroom.query.api.v2.ResultRequest;
-import stroom.query.api.v2.SearchRequest;
-import stroom.query.api.v2.TableSettings;
+import stroom.query.api.v2.*;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
-import stroom.query.audit.security.NoAuthValueFactoryProvider;
+import stroom.query.security.NoAuthValueFactoryProvider;
 import stroom.query.testing.DropwizardAppWithClientsRule;
 import stroom.query.testing.QueryResourceNoAuthIT;
 import stroom.query.testing.data.CreateTestDataClient;
@@ -37,26 +30,22 @@ public class TestJooqQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDoc
 
     @ClassRule
     public static final DropwizardAppWithClientsRule<JooqConfig> appRule =
-            new DropwizardAppWithClientsRule<>(JooqApp.class, resourceFilePath("hibernate_noauth/config.yml"));
+            new DropwizardAppWithClientsRule<>(JooqApp.class, resourceFilePath("jooq_noauth/config.yml"));
 
     private final CreateTestDataClient testDataClient;
 
-    private String testDataSeed;
-    private DocRef testDataDocRef;
 
     public TestJooqQueryResourceNoAuthIT() {
-        super(TestDocRefJooqEntity.class,
-                TestDocRefJooqEntity.TYPE,
+        super(TestDocRefJooqEntity.TYPE,
                 appRule);
         testDataClient = appRule.getClient(CreateTestDataClient::new);
     }
 
     @Before
     public void beforeTest() {
-        testDataSeed = UUID.randomUUID().toString();
+        String testDataSeed = UUID.randomUUID().toString();
 
-        final String parentFolderUuid = UUID.randomUUID().toString();
-        testDataDocRef = new DocRef.Builder()
+        DocRef testDataDocRef = new DocRef.Builder()
                 .uuid(UUID.randomUUID().toString())
                 .name(UUID.randomUUID().toString())
                 .type(TestDocRefJooqEntity.TYPE)
@@ -65,8 +54,7 @@ public class TestJooqQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDoc
         final Response createDocumentResponse = docRefClient.createDocument(
                 NoAuthValueFactoryProvider.ADMIN_USER,
                 testDataDocRef.getUuid(),
-                testDataDocRef.getName(),
-                parentFolderUuid);
+                testDataDocRef.getName());
         assertEquals(HttpStatus.OK_200, createDocumentResponse.getStatus());
         createDocumentResponse.close();
 

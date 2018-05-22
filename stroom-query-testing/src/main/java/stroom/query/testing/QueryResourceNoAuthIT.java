@@ -14,7 +14,7 @@ import stroom.query.audit.client.QueryResourceHttpClient;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.audit.rest.AuditedQueryResourceImpl;
-import stroom.query.audit.security.NoAuthValueFactoryProvider;
+import stroom.query.security.NoAuthValueFactoryProvider;
 
 import javax.ws.rs.core.Response;
 import java.util.UUID;
@@ -26,21 +26,22 @@ public abstract class QueryResourceNoAuthIT<
         DOC_REF_ENTITY extends DocRefEntity,
         CONFIG_CLASS extends Configuration> {
 
-    private final Class<DOC_REF_ENTITY> docRefEntityClass;
     private final String docRefType;
     protected DocRefResourceHttpClient<DOC_REF_ENTITY> docRefClient;
-    protected QueryResourceHttpClient queryClient;
+    private QueryResourceHttpClient queryClient;
 
     @Rule
     public FifoLogbackRule auditLogRule = new FifoLogbackRule();
 
-    protected QueryResourceNoAuthIT(final Class<DOC_REF_ENTITY> docRefEntityClass,
-                                    final String docRefType,
+    protected QueryResourceNoAuthIT(final String docRefType,
                                     final DropwizardAppWithClientsRule<CONFIG_CLASS> appRule) {
-        this.docRefEntityClass = docRefEntityClass;
         this.docRefType = docRefType;
         this.queryClient = appRule.getClient(QueryResourceHttpClient::new);
         this.docRefClient = appRule.getClient(DocRefResourceHttpClient::new);
+    }
+
+    protected QueryResourceHttpClient getQueryClient() {
+        return queryClient;
     }
 
     protected abstract SearchRequest getValidSearchRequest(final DocRef docRef,
@@ -59,6 +60,7 @@ public abstract class QueryResourceNoAuthIT<
         assertEquals(HttpStatus.OK_200, response.getStatus());
 
         final DataSource result = response.readEntity(DataSource.class);
+        response.close();
 
         assertValidDataSource(result);
 
@@ -91,12 +93,11 @@ public abstract class QueryResourceNoAuthIT<
      * It assumes that the creation of documents works, the detail of that is tested in another suite of tests.
      * Once the document is created, the passed in doc ref entity is then used to flesh out the implementation
      * specific details.
+     *
      * @param docRefEntity The implementation specific entity, used to update the doc ref so it can be used.
      * @return The DocRef of the newly created annotations index.
      */
     protected DocRef createDocument(final DOC_REF_ENTITY docRefEntity) {
-        // Generate UUID's for the doc ref and it's parent folder
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final DocRef docRef = new DocRef.Builder()
                 .uuid(UUID.randomUUID().toString())
                 .type(docRefType)
@@ -107,8 +108,7 @@ public abstract class QueryResourceNoAuthIT<
         final Response createResponse = docRefClient.createDocument(
                 NoAuthValueFactoryProvider.ADMIN_USER,
                 docRef.getUuid(),
-                docRef.getName(),
-                parentFolderUuid);
+                docRef.getName());
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
         createResponse.close();
 
@@ -125,6 +125,7 @@ public abstract class QueryResourceNoAuthIT<
 
     /**
      * Create document, use the 'valid' doc ref entity for this test class.
+     *
      * @return The Doc Ref of the created document.
      */
     protected DocRef createDocument() {

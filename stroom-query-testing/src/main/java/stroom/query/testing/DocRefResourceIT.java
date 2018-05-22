@@ -4,11 +4,9 @@ import io.dropwizard.Configuration;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Rule;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import stroom.query.api.v2.DocRefInfo;
 import stroom.query.audit.ExportDTO;
-import stroom.query.audit.authorisation.DocumentPermission;
+import stroom.query.authorisation.DocumentPermission;
 import stroom.query.audit.client.DocRefResourceHttpClient;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
@@ -26,11 +24,9 @@ public abstract class DocRefResourceIT<
         DOC_REF_ENTITY extends DocRefEntity,
         CONFIG_CLASS extends Configuration> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DocRefResourceIT.class);
-
     private final String docRefType;
     private final Class<DOC_REF_ENTITY> docRefEntityClass;
-    protected DocRefResourceHttpClient<DOC_REF_ENTITY> docRefClient;
+    private DocRefResourceHttpClient<DOC_REF_ENTITY> docRefClient;
     private final StroomAuthenticationRule authRule;
 
     protected DocRefResourceIT(final String docRefType,
@@ -48,44 +44,32 @@ public abstract class DocRefResourceIT<
 
     @Test
     public void testCreate() {
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
-        final String unauthorisedUsername = UUID.randomUUID().toString();
         final String unauthenticatedUsername = UUID.randomUUID().toString();
 
         authRule.permitAdminUser()
-                .createInFolder(parentFolderUuid)
-                .docRefType(docRefType)
                 .done();
         authRule.permitAdminUser()
                 .docRef(uuid, docRefType)
                 .permission(DocumentPermission.READ)
                 .done();
 
-        final Response unauthorisedCreateResponse = docRefClient.createDocument(
-                authRule.authenticatedUser(unauthorisedUsername),
-                uuid,
-                name,
-                parentFolderUuid);
-        assertEquals(HttpStatus.FORBIDDEN_403, unauthorisedCreateResponse.getStatus());
-        unauthorisedCreateResponse.close();
-
         final Response unauthenticatedCreateResponse = docRefClient.createDocument(
                 authRule.unauthenticatedUser(unauthenticatedUsername),
                 uuid,
-                name,
-                parentFolderUuid);
+                name);
         assertEquals(HttpStatus.UNAUTHORIZED_401, unauthenticatedCreateResponse.getStatus());
         unauthenticatedCreateResponse.close();
 
-        final Response createResponse = docRefClient.createDocument(authRule.adminUser(), uuid, name, parentFolderUuid);
+        final Response createResponse = docRefClient.createDocument(authRule.adminUser(), uuid, name);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
 
         final DOC_REF_ENTITY createdEntity = createResponse.readEntity(docRefEntityClass);
         assertNotNull(createdEntity);
         assertEquals(uuid, createdEntity.getUuid());
         assertEquals(name, createdEntity.getName());
+        createResponse.close();
 
         final Response getResponse = docRefClient.get(authRule.adminUser(), uuid);
         assertEquals(HttpStatus.OK_200, getResponse.getStatus());
@@ -93,18 +77,17 @@ public abstract class DocRefResourceIT<
         final DOC_REF_ENTITY foundEntity = getResponse.readEntity(docRefEntityClass);
         assertNotNull(foundEntity);
         assertEquals(name, foundEntity.getName());
+        getResponse.close();
 
         // Create (forbidden), Create (ok), get
         auditLogRule.check()
-                .thereAreAtLeast(3)
-                .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.CREATE_DOC_REF, uuid))
+                .thereAreAtLeast(2)
                 .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.CREATE_DOC_REF, uuid))
                 .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.GET_DOC_REF, uuid));
     }
 
     @Test
     public void testUpdate() {
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
         final String authorisedUsername = UUID.randomUUID().toString();
@@ -112,8 +95,6 @@ public abstract class DocRefResourceIT<
         final String unauthenticatedUsername = UUID.randomUUID().toString();
 
         authRule.permitAdminUser()
-                .createInFolder(parentFolderUuid)
-                .docRefType(docRefType)
                 .done();
         authRule.permitAuthenticatedUser(authorisedUsername)
                 .docRef(uuid, docRefType)
@@ -122,7 +103,7 @@ public abstract class DocRefResourceIT<
                 .done();
 
         // Create a document
-        final Response createResponse = docRefClient.createDocument(authRule.adminUser(), uuid, name, parentFolderUuid);
+        final Response createResponse = docRefClient.createDocument(authRule.adminUser(), uuid, name);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
         createResponse.close();
 
@@ -135,10 +116,11 @@ public abstract class DocRefResourceIT<
         assertEquals(HttpStatus.OK_200, updateResponse.getStatus());
         final DOC_REF_ENTITY updateResponseBody = updateResponse.readEntity(docRefEntityClass);
         assertEquals(authorisedEntityUpdate, updateResponseBody);
+        updateResponse.close();
 
         // Try updating it as an unauthorised user
         final DOC_REF_ENTITY unauthorisedEntityUpdate = createPopulatedEntity(uuid, name);
-        final Response unauthorisedUpdateResponse =  docRefClient.update(
+        final Response unauthorisedUpdateResponse = docRefClient.update(
                 authRule.authenticatedUser(unauthorisedUsername),
                 uuid,
                 unauthorisedEntityUpdate);
@@ -147,7 +129,7 @@ public abstract class DocRefResourceIT<
 
         // Try updating it as an unauthenticated user
         final DOC_REF_ENTITY unauthenticatedEntityUpdate = createPopulatedEntity(uuid, name);
-        final Response unauthenticatedUpdateResponse =  docRefClient.update(
+        final Response unauthenticatedUpdateResponse = docRefClient.update(
                 authRule.unauthenticatedUser(unauthenticatedUsername),
                 uuid,
                 unauthenticatedEntityUpdate);
@@ -159,6 +141,7 @@ public abstract class DocRefResourceIT<
         assertEquals(HttpStatus.OK_200, getCheckResponse.getStatus());
         final DOC_REF_ENTITY checkEntity = getCheckResponse.readEntity(docRefEntityClass);
         assertEquals(authorisedEntityUpdate, checkEntity);
+        getCheckResponse.close();
 
         // Create, update (ok), update (forbidden), get (check)
         auditLogRule.check()
@@ -173,7 +156,6 @@ public abstract class DocRefResourceIT<
     public void testGetInfo() {
         final Long testStartTime = System.currentTimeMillis();
 
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
         final String authorisedUsername = UUID.randomUUID().toString();
@@ -181,8 +163,6 @@ public abstract class DocRefResourceIT<
         final String unauthenticatedUsername = UUID.randomUUID().toString();
 
         authRule.permitAdminUser()
-                .createInFolder(parentFolderUuid)
-                .docRefType(docRefType)
                 .done();
         authRule.permitAuthenticatedUser(authorisedUsername)
                 .docRef(uuid, docRefType)
@@ -191,7 +171,7 @@ public abstract class DocRefResourceIT<
                 .done();
 
         // Create a document
-        final Response createResponse = docRefClient.createDocument(authRule.adminUser(), uuid, name, parentFolderUuid);
+        final Response createResponse = docRefClient.createDocument(authRule.adminUser(), uuid, name);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
         createResponse.close();
 
@@ -212,6 +192,7 @@ public abstract class DocRefResourceIT<
         assertTrue(info.getUpdateTime() > info.getCreateTime());
         assertEquals(info.getCreateUser(), authRule.adminUser().getName());
         assertEquals(info.getUpdateUser(), authRule.authenticatedUser(authorisedUsername).getName());
+        authorisedGetInfoResponse.close();
 
         // Try to get info as unauthorised user
         final Response unauthorisedGetInfoResponse = docRefClient.getInfo(authRule.authenticatedUser(unauthorisedUsername), uuid);
@@ -238,13 +219,10 @@ public abstract class DocRefResourceIT<
         final String unauthorisedUsername = UUID.randomUUID().toString();
         final String unauthenticatedUsername = UUID.randomUUID().toString();
 
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
 
         authRule.permitAdminUser()
-                .createInFolder(parentFolderUuid)
-                .docRefType(docRefType)
                 .done();
 
         authRule.permitAdminUser()
@@ -256,8 +234,7 @@ public abstract class DocRefResourceIT<
         final Response createResponse = docRefClient.createDocument(
                 authRule.adminUser(),
                 uuid,
-                name,
-                parentFolderUuid);
+                name);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
         createResponse.close();
 
@@ -294,7 +271,6 @@ public abstract class DocRefResourceIT<
 
     @Test
     public void testRename() {
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid = UUID.randomUUID().toString();
         final String name1 = UUID.randomUUID().toString();
         final String name2 = UUID.randomUUID().toString();
@@ -304,8 +280,6 @@ public abstract class DocRefResourceIT<
         // No specific permissions required for rename (is this right?)
 
         authRule.permitAdminUser()
-                .createInFolder(parentFolderUuid)
-                .docRefType(docRefType)
                 .done();
         authRule.permitAdminUser()
                 .docRef(uuid, docRefType)
@@ -315,8 +289,7 @@ public abstract class DocRefResourceIT<
         final Response createResponse = docRefClient.createDocument(
                 authRule.adminUser(),
                 uuid,
-                name1,
-                parentFolderUuid);
+                name1);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
         createResponse.close();
 
@@ -364,7 +337,6 @@ public abstract class DocRefResourceIT<
 
     @Test
     public void testCopy() {
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid1 = UUID.randomUUID().toString();
         final String uuid2 = UUID.randomUUID().toString();
         final String uuid3 = UUID.randomUUID().toString();
@@ -375,12 +347,8 @@ public abstract class DocRefResourceIT<
         final String unauthenticatedUsername = UUID.randomUUID().toString();
 
         authRule.permitAdminUser()
-                .createInFolder(parentFolderUuid)
-                .docRefType(docRefType)
                 .done();
         authRule.permitAuthenticatedUser(authorisedUsername)
-                .createInFolder(parentFolderUuid)
-                .docRefType(docRefType)
                 .done();
         authRule.permitAuthenticatedUser(authorisedUsername)
                 .permission(DocumentPermission.READ)
@@ -390,12 +358,12 @@ public abstract class DocRefResourceIT<
                 .docRef(uuid4, docRefType)
                 .done();
 
-        final Response createResponse = docRefClient.createDocument(authRule.adminUser(), uuid1, name, parentFolderUuid);
+        final Response createResponse = docRefClient.createDocument(authRule.adminUser(), uuid1, name);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
         createResponse.close();
 
         // Attempt copy as authorised user
-        final Response copyResponse = docRefClient.copyDocument(authRule.authenticatedUser(authorisedUsername), uuid1, uuid2, parentFolderUuid);
+        final Response copyResponse = docRefClient.copyDocument(authRule.authenticatedUser(authorisedUsername), uuid1, uuid2);
         assertEquals(HttpStatus.OK_200, copyResponse.getStatus());
 
         final DOC_REF_ENTITY copiedEntity = copyResponse.readEntity(docRefEntityClass);
@@ -415,8 +383,7 @@ public abstract class DocRefResourceIT<
         final Response unauthorisedCopyResponse = docRefClient.copyDocument(
                 authRule.authenticatedUser(unauthorisedUsername),
                 uuid1,
-                uuid3,
-                parentFolderUuid);
+                uuid3);
         assertEquals(HttpStatus.FORBIDDEN_403, unauthorisedCopyResponse.getStatus());
         unauthorisedCopyResponse.close();
 
@@ -428,8 +395,7 @@ public abstract class DocRefResourceIT<
         final Response unauthenticatedCopyResponse = docRefClient.copyDocument(
                 authRule.unauthenticatedUser(unauthenticatedUsername),
                 uuid1,
-                uuid4,
-                parentFolderUuid);
+                uuid4);
         assertEquals(HttpStatus.UNAUTHORIZED_401, unauthenticatedCopyResponse.getStatus());
         unauthenticatedCopyResponse.close();
 
@@ -450,7 +416,6 @@ public abstract class DocRefResourceIT<
 
     @Test
     public void testDelete() {
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
 
@@ -459,8 +424,6 @@ public abstract class DocRefResourceIT<
         final String unauthenticatedUsername = UUID.randomUUID().toString();
 
         authRule.permitAdminUser()
-                .createInFolder(parentFolderUuid)
-                .docRefType(docRefType)
                 .done();
         authRule.permitAuthenticatedUser(authorisedUsername)
                 .andAuthenticatedUser(unauthorisedUsername)
@@ -472,7 +435,7 @@ public abstract class DocRefResourceIT<
                 .permission(DocumentPermission.DELETE)
                 .done();
 
-        final Response createResponse = docRefClient.createDocument(authRule.adminUser(), uuid, name, parentFolderUuid);
+        final Response createResponse = docRefClient.createDocument(authRule.adminUser(), uuid, name);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
         createResponse.close();
 
@@ -517,7 +480,6 @@ public abstract class DocRefResourceIT<
 
     @Test
     public void testExport() {
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
         final String authorisedUsername = UUID.randomUUID().toString();
@@ -525,8 +487,6 @@ public abstract class DocRefResourceIT<
         final String unauthenticatedUsername = UUID.randomUUID().toString();
 
         authRule.permitAdminUser()
-                .createInFolder(parentFolderUuid)
-                .docRefType(docRefType)
                 .done();
         authRule.permitAdminUser()
                 .docRef(uuid, docRefType)
@@ -538,7 +498,7 @@ public abstract class DocRefResourceIT<
                 .done();
 
         // Create a document
-        final Response createResponse = docRefClient.createDocument(authRule.adminUser(), uuid, name, parentFolderUuid);
+        final Response createResponse = docRefClient.createDocument(authRule.adminUser(), uuid, name);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
         createResponse.close();
 
@@ -580,14 +540,11 @@ public abstract class DocRefResourceIT<
 
     @Test
     public void testImport() {
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
         final String authorisedUsername = UUID.randomUUID().toString();
 
         authRule.permitAdminUser()
-                .createInFolder(parentFolderUuid)
-                .docRefType(docRefType)
                 .done();
         authRule.permitAuthenticatedUser(authorisedUsername)
                 .docRef(uuid, docRefType)

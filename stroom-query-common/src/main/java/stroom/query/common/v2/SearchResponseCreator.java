@@ -38,9 +38,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-//TODO copy SearchResultCreatorManager from stroom into here for a common solution to
-//caching the response creators. Will require an abstraction of a cache and a cache manager
-
 public class SearchResponseCreator {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchResponseCreator.class);
 
@@ -133,6 +130,11 @@ public class SearchResponseCreator {
             List<Result> results = getResults(searchRequest);
             if (results.size() == 0) {
                 results = null;
+            }
+
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Returning new SearchResponse with results: {}, complete: {}, isComplete: {}",
+                        (results == null ? "null" : results.size()), complete, store.isComplete());
             }
 
             return new SearchResponse(store.getHighlights(), results, store.getErrors(), complete);

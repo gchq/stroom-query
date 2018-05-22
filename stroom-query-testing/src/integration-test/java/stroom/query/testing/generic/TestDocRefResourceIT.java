@@ -1,6 +1,5 @@
 package stroom.query.testing.generic;
 
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.Before;
 import org.junit.ClassRule;
 import stroom.query.testing.DocRefResourceIT;
@@ -20,12 +19,14 @@ import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 public class TestDocRefResourceIT extends DocRefResourceIT<TestDocRefEntity, Config> {
 
     @ClassRule
-    public static final DropwizardAppWithClientsRule<Config> appRule =
-            new DropwizardAppWithClientsRule<>(App.class, resourceFilePath("generic/config.yml"));
+    public static StroomAuthenticationRule authRule = new StroomAuthenticationRule();
 
     @ClassRule
-    public static StroomAuthenticationRule authRule =
-            new StroomAuthenticationRule(WireMockConfiguration.options().port(10080));
+    public static final DropwizardAppWithClientsRule<Config> appRule =
+            new DropwizardAppWithClientsRule<>(App.class,
+                    resourceFilePath("generic/config.yml"),
+                    authRule.authService(),
+                    authRule.authToken());
 
     public TestDocRefResourceIT() {
         super(TestDocRefEntity.TYPE,

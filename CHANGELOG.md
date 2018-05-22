@@ -6,62 +6,88 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v3.1-beta.4] - 2018-05-10
+
+* Made Wiremock based tests use dynamically allocated ports.
+
+## [v3.1-beta.3] - 2018-05-10
+
+* Fix dependencies.
+
+## [v3.1-beta.2] - 2018-05-10
+
+* Updated to stroom-expression v1.3.2.
+
+* Renamed SecurityContext to CurrentServiceUser.
+
+* Updated libs to keep in line with dropwizard 1.2.5.
+
+## [v3.1-beta.1] - 2018-05-02
+
+* Fix DocRef equality.
+
+* Migrated to stroom-expression v1.3.1
+
+## [v3.0-beta.8] - 2018-04-30
+
+* Fixed equals and hash codes for query api classes.
+
+## [v3.0-beta.6] - 2018-04-25
+
+* Pulled out stroom-query-authorisation
+* Fixed unused/used dependencies using the plugin
+
+* Removed ConditionalWait.
+
+* Set response completion state prior to assembling results.
+
+## [v3.0-beta.5] - 2018-04-12
+
+* Issue **#16** : Fix for Hessian serialisation of table coprocessor settings.
+
+## [v3.0-beta.4] - 2018-04-12
+
+* Reinstates Guice to jOOQ and Hibernate bundles
+
+* Provides service implementations which remote via HTTP
+
+* Added custom service exceptions for query/docref services
+
+## [v3.0-beta.3] - 2018-04-11
+
+* Add clear() to SearchResponseCreatorCache
+
+## [v3.0-beta.2] - 2018-04-10
+
+* Issue **#12** : Add server side caching of search results to query-common.
+
 * Fix handling of InterruptedException in TablePayloadHandler
 
-### Added
+## [v3.0-beta.1] - 2018-04-04
 
-### Changed
+* Removed parent folder UUID from the explorer action handler API.
 
-## [v2.0.0-alpha.36] - 2018-03-26
-
-### Changed
+* Fix handling of InterruptedException in TablePayloadHandler
 
 * jOOQ injecting DSL Context rather than configuration
 
-## [v2.0.0-alpha.35] - 2018-03-23
-
-### Changed
-
 * gh-13 - Using Guice for common auditable query resource implementations
 
-## [v2.0.0-alpha.34] - 2018-03-23
-
-### Changed
-
 * Simplification of search completion state.
 
-## [v2.0.0-alpha.33] - 2018-03-21
-
 * Simplification of search completion state.
-
-## [v2.0.0-alpha.32] - 2018-03-21
 
 * Fix to ensure completion listeners are always notified on completion
 
-## [v2.0.0-alpha.31] - 2018-03-20
-
-### Changed
 * Fluent API for building authentication rules in the test Auth Wiremock service
-* jOOQ based Doc Ref service that still permits any Query Service implementation
 
-## [v2.0.0-alpha.30] - 2018-02-20
-
-### Changed
-* Tidied up the inheritable bundles for JOOQ and JPA
-
-## [v2.0.0-alpha.29] - 2018-02-20
-
-### Added
-* Issue **#10**: Added a jOOQ implementation of the audit bundle
-
-## [v2.0.0-alpha.28] - 2018-02-16
-
-### Changed
 * Issue **#8** : Fix handling of non-incremental queries on the query API. Adds timeout option in request and blocking code to wait for the query to complete.
 
-## [v2.0.0-alpha.27] - 2018-01-31
+* jOOQ based Doc Ref service that still permits any Query Service implementation
 
-### Changed
+* Tidied up the inheritable bundles for JOOQ and JPA
+
+* Issue **#10**: Added a jOOQ implementation of the audit bundle
 
 * Tune the hibernate data source pool
 
@@ -69,17 +95,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Making the audit fifo log rule more sophisticated to allow more detailed assertions about audit logs
 
-## [v2.0.0-alpha.26] - 2018-01-26
-
-### Changed
-
 * Common integration tests now force sub classes to create their app and wiremock rules.
 
 * Using TestRules instead of inherited behaviour as much as possible
-
-## [v2.0.0-alpha.24] - 2018-01-25
-
-### Changed
 
 * Removed custom test implementations of auth service and http client, use Wiremock and javax.ws.rs.Client
 
@@ -87,124 +105,75 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Providing standard implementations of integration tests, plus demonstration apps for hibernate and generic query apps
 
-## [v2.0.0-alpha.22] - 2018-01-15
-
-### Changed
-
 * Added Authentication to DocRef and Query resources.
 
 * Implementations now need to create Service implementations, REST layers are now entirely common.
 
-## [v2.0.0-alpha.21] - 2018-01-09
-
-### Changed
-
 * Added misc info field for Doc Refs
-
-## [v2.0.0-alpha.20] - 2018-01-08
-
-### Changed
 
 * Added resource definitions for external doc ref management
 
-## [v2.0.0-alpha.19] - 2017-12-12
-
-### Changed
-
 * Added missing fields to result builder
-
-## [v2.0.0-alpha.14] - 2017-12-11
-
-### Changed
 
 * Added Import and Export endpoints
 
-## [v2.0.0-alpha.13] - 2017-12-06
-
-### Changed
-
 * Fixed minor bug in QueryableEntityBuilder that returned the specific builder class instead of the CHILD_CLASS
 
-## [v2.0.0-alpha.12] - 2017-12-06
+* Added misc info field for Doc Refs
 
-### Changed
+* Added resource definitions for external doc ref management
+
+* Added missing fields to result builder
+
+* Added Import and Export endpoints
+
+* Fixed minor bug in QueryableEntityBuilder that returned the specific builder class instead of the CHILD_CLASS
 
 * Now using openjdk instead of oraclejdk
 
 * Changed the builders to remove the parenting/templating. Now using a simpler pattern where developers will create the child builders themselves.
 
-## [v2.0.0-alpha.11] - 2017-12-01
-
-### Changed
-
 * Added DocRef Resource, added client implementations for DocRef and Query Resource
-
-## [v2.0.0-alpha.10] - 2017-11-29
-
-### Changed
 
 * Change build to use Bintray dependencies and push to Bintray
 
-## [v2.0.0-alpha.9] - 2017-11-27
+* Added DocRef Resource, added client implementations for DocRef and Query Resource
 
-### Changed
+* Change build to use Bintray dependencies and push to Bintray
 
 * Merge changes up from stroom v5
 
 * Add DropWizard resource bundles
 
-## [v2.0.0-alpha.8] - 2017-11-14
-
-### Changed
-
 * Uplift to latest event-logging release
-
-## [v2.0.0-alpha.7] - 2017-11-03
-
-### Added
 
 * Actually releasing audit and hibernate
 
-## [v2.0.0-alpha.6] - 2017-11-03
+* Uplift to latest event-logging release
 
-### Changed
+* Actually releasing audit and hibernate
 
 * Added standard implementations of Query Resource, with auditing
 
 * Build a hibernate implementation of Query Resource
 
-## [v2.0.0-alpha.5] - 2017-24-16
-
-### Changed
-
 * Pojo Builders for all classes in the API project
-
-## [v2.0.0-alpha.4] - 2017-10-16
-
-### Changed
 
 * Added null check to cope with empty field list when running queries
 
-## [v2.0.0-alpha.3] - 2017-09-04
-
-### Changed
-
 * Remove redundant arg from SearchResponseCreator constructor
 
-## [v2.0.0-alpha.2] - 2017-09-01
+* Pojo Builders for all classes in the API project
 
-### Added
+* Added null check to cope with empty field list when running queries
+
+* Remove redundant arg from SearchResponseCreator constructor
 
 * Add ExpressionBuilder.end() method for better chaining of methods.
 
 * Add Swagger annotations to API model classes
 
 * Add stroom-query-sample module for testing swagger generation
-
-
-## [v2.0.0-alpha.1] - 2017-08-22
-
-### Changed
 
 * Enhanced component result fetch options to allow for a full fetch on request, no fetch or just data changes.
 
@@ -220,49 +189,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Move common code into stroom.query.common.v2 so it is versioned
 
-## [v1.0.1] - 2017-07-11
-
-### Changed
-
 * Improved toString() and toMultiLineString() methods.
 
 * Removed null from fields and values in toString()
 
-## [v1.0.0] - 2017-05-19
-
-* Initial release
-
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.36...HEAD
-[v2.0.0-alpha.36]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.35...v2.0.0-alpha.36
-[v2.0.0-alpha.35]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.34...v2.0.0-alpha.35
-[v2.0.0-alpha.34]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.33...v2.0.0-alpha.34
-[v2.0.0-alpha.33]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.32...v2.0.0-alpha.33
-[v2.0.0-alpha.32]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.31...v2.0.0-alpha.32
-[v2.0.0-alpha.31]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.30...v2.0.0-alpha.31
-[v2.0.0-alpha.30]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.29...v2.0.0-alpha.30
-[v2.0.0-alpha.29]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.28...v2.0.0-alpha.29
-[v2.0.0-alpha.28]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.27...v2.0.0-alpha.28
-[v2.0.0-alpha.27]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.26...v2.0.0-alpha.27
-[v2.0.0-alpha.26]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.24...v2.0.0-alpha.26
-[v2.0.0-alpha.24]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.23...v2.0.0-alpha.24
-[v2.0.0-alpha.23]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.22...v2.0.0-alpha.23
-[v2.0.0-alpha.22]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.21...v2.0.0-alpha.22
-[v2.0.0-alpha.21]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.20...v2.0.0-alpha.21
-[v2.0.0-alpha.20]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.19...v2.0.0-alpha.20
-[v2.0.0-alpha.19]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.14...v2.0.0-alpha.19
-[v2.0.0-alpha.14]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.13...v2.0.0-alpha.14
-[v2.0.0-alpha.13]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.12...v2.0.0-alpha.13
-[v2.0.0-alpha.12]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.11...v2.0.0-alpha.12
-[v2.0.0-alpha.11]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.10...v2.0.0-alpha.11
-[v2.0.0-alpha.10]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.9...v2.0.0-alpha.10
-[v2.0.0-alpha.9]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.8...v2.0.0-alpha.9
-[v2.0.0-alpha.8]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.7...v2.0.0-alpha.8
-[v2.0.0-alpha.7]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.6...v2.0.0-alpha.7
-[v2.0.0-alpha.6]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.5...v2.0.0-alpha.6
-[v2.0.0-alpha.5]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.4...v2.0.0-alpha.5
-[v2.0.0-alpha.4]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.3...v2.0.0-alpha.4
-[v2.0.0-alpha.3]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.2...v2.0.0-alpha.3
-[v2.0.0-alpha.2]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.1...v2.0.0-alpha.2
-[v2.0.0-alpha.1]: https://github.com/gchq/stroom-query/compare/v1.0.1...v2.0.0-alpha.1
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v3.1-beta.4...HEAD
+[v3.1-beta.4]: https://github.com/gchq/stroom-query/compare/v3.1-beta.3...v3.1-beta.4
+[v3.1-beta.3]: https://github.com/gchq/stroom-query/compare/v3.1-beta.2...v3.1-beta.3
+[v3.1-beta.2]: https://github.com/gchq/stroom-query/compare/v3.1-beta.1...v3.1-beta.2
+[v3.1-beta.1]: https://github.com/gchq/stroom-query/compare/v3.0-beta.8...v3.1-beta.1
+[v3.0-beta.8]: https://github.com/gchq/stroom-query/compare/v3.0-beta.6...v3.0-beta.8
+[v3.0-beta.6]: https://github.com/gchq/stroom-query/compare/v3.0-beta.5...v3.0-beta.6
+[v3.0-beta.5]: https://github.com/gchq/stroom-query/compare/v3.0-beta.4...v3.0-beta.5
+[v3.0-beta.4]: https://github.com/gchq/stroom-query/compare/v3.0-beta.3...v3.0-beta.4
+[v3.0-beta.3]: https://github.com/gchq/stroom-query/compare/v3.0-beta.2...v3.0-beta.3
+[v3.0-beta.2]: https://github.com/gchq/stroom-query/compare/v3.0-beta.1...v3.0-beta.2
+[v3.0-beta.1]: https://github.com/gchq/stroom-query/compare/v2.0-beta.1...v3.0-beta.1
+[v2.0-beta.1]: https://github.com/gchq/stroom-query/compare/v1.0.1...v2.0-beta.1
 [v1.0.1]: https://github.com/gchq/stroom-query/compare/v1.0.0...v1.0.1
 [v1.0.0]: https://github.com/gchq/stroom-query/releases/tag/v1.0.0

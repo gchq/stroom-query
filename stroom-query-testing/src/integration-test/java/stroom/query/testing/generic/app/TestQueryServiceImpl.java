@@ -2,14 +2,11 @@ package stroom.query.testing.generic.app;
 
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
-import stroom.query.api.v2.DocRef;
-import stroom.query.api.v2.ExpressionTerm;
-import stroom.query.api.v2.QueryKey;
-import stroom.query.api.v2.SearchRequest;
-import stroom.query.api.v2.SearchResponse;
-import stroom.query.audit.security.ServiceUser;
+import stroom.query.api.v2.*;
 import stroom.query.audit.service.DocRefService;
+import stroom.query.audit.service.QueryApiException;
 import stroom.query.audit.service.QueryService;
+import stroom.query.security.ServiceUser;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -24,8 +21,13 @@ public class TestQueryServiceImpl implements QueryService {
     }
 
     @Override
+    public String getType() {
+        return docRefService.getType();
+    }
+
+    @Override
     public Optional<DataSource> getDataSource(final ServiceUser user,
-                                              final DocRef docRef) {
+                                              final DocRef docRef) throws QueryApiException {
         final Optional<TestDocRefEntity> docRefEntity = docRefService.get(user, docRef.getUuid());
 
         if (!docRefEntity.isPresent()) {
@@ -47,7 +49,7 @@ public class TestQueryServiceImpl implements QueryService {
 
     @Override
     public Optional<SearchResponse> search(final ServiceUser user,
-                                           final SearchRequest request) {
+                                           final SearchRequest request) throws QueryApiException {
         final String dataSourceUuid = request.getQuery().getDataSource().getUuid();
 
         final Optional<TestDocRefEntity> docRefEntity = docRefService.get(user, dataSourceUuid);

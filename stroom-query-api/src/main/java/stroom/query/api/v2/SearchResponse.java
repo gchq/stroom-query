@@ -20,17 +20,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlElements;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Object describing the response to a {@link SearchRequest searchRequest} which may or may not contains results
@@ -130,25 +125,19 @@ public final class SearchResponse implements Serializable {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
-        final SearchResponse that = (SearchResponse) o;
-
-        if (highlights != null ? !highlights.equals(that.highlights) : that.highlights != null) return false;
-        if (results != null ? !results.equals(that.results) : that.results != null) return false;
-        if (errors != null ? !errors.equals(that.errors) : that.errors != null) return false;
-        return complete != null ? complete.equals(that.complete) : that.complete == null;
+        SearchResponse that = (SearchResponse) o;
+        return Objects.equals(highlights, that.highlights) &&
+                Objects.equals(results, that.results) &&
+                Objects.equals(errors, that.errors) &&
+                Objects.equals(complete, that.complete);
     }
 
     @Override
     public int hashCode() {
-        int result = highlights != null ? highlights.hashCode() : 0;
-        result = 31 * result + (results != null ? results.hashCode() : 0);
-        result = 31 * result + (errors != null ? errors.hashCode() : 0);
-        result = 31 * result + (complete != null ? complete.hashCode() : 0);
-        return result;
+        return Objects.hash(highlights, results, errors, complete);
     }
 
     @Override

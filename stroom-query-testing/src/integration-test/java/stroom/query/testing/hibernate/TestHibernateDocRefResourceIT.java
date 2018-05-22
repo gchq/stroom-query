@@ -1,6 +1,5 @@
 package stroom.query.testing.hibernate;
 
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.Before;
 import org.junit.ClassRule;
 import stroom.query.testing.DocRefResourceIT;
@@ -19,12 +18,14 @@ import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 public class TestHibernateDocRefResourceIT extends DocRefResourceIT<TestDocRefHibernateEntity, HibernateConfig> {
 
     @ClassRule
-    public static final DropwizardAppWithClientsRule<HibernateConfig> appRule =
-            new DropwizardAppWithClientsRule<>(HibernateApp.class, resourceFilePath("hibernate/config.yml"));
+    public static StroomAuthenticationRule authRule = new StroomAuthenticationRule();
 
     @ClassRule
-    public static StroomAuthenticationRule authRule =
-            new StroomAuthenticationRule(WireMockConfiguration.options().port(10080));
+    public static final DropwizardAppWithClientsRule<HibernateConfig> appRule =
+            new DropwizardAppWithClientsRule<>(HibernateApp.class,
+                    resourceFilePath("hibernate/config.yml"),
+                    authRule.authToken(),
+                    authRule.authService());
 
     public TestHibernateDocRefResourceIT() {
         super(TestDocRefHibernateEntity.TYPE,

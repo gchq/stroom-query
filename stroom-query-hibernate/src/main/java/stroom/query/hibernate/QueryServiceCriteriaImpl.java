@@ -5,6 +5,8 @@ import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.dashboard.expression.v1.FieldIndexMap;
+import stroom.dashboard.expression.v1.Val;
+import stroom.dashboard.expression.v1.ValString;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
 import stroom.query.api.v2.DocRef;
@@ -18,8 +20,9 @@ import stroom.query.api.v2.SearchResponse;
 import stroom.query.audit.CriteriaStore;
 import stroom.query.audit.model.IsDataSourceField;
 import stroom.query.audit.model.QueryableEntity;
-import stroom.query.audit.security.ServiceUser;
+import stroom.query.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
+import stroom.query.audit.service.QueryApiException;
 import stroom.query.audit.service.QueryService;
 import stroom.query.common.v2.Coprocessor;
 import stroom.query.common.v2.CoprocessorSettings;
@@ -93,8 +96,13 @@ public class QueryServiceCriteriaImpl<
     }
 
     @Override
+    public String getType() {
+        return docRefService.getType();
+    }
+
+    @Override
     public Optional<DataSource> getDataSource(final ServiceUser user,
-                                              final DocRef docRef) {
+                                              final DocRef docRef) throws QueryApiException {
         final Optional<DOC_REF_ENTITY> docRefEntity = docRefService.get(user, docRef.getUuid());
 
         if (!docRefEntity.isPresent()) {
@@ -106,7 +114,7 @@ public class QueryServiceCriteriaImpl<
 
     @Override
     public Optional<SearchResponse> search(final ServiceUser user,
-                                           final SearchRequest request) {
+                                           final SearchRequest request) throws QueryApiException {
         final String dataSourceUuid = request.getQuery().getDataSource().getUuid();
 
         final Optional<DOC_REF_ENTITY> docRefEntity = docRefService.get(user, dataSourceUuid);
@@ -268,7 +276,7 @@ public class QueryServiceCriteriaImpl<
         //TODO TableCoprocessor is doing a lot of work to pre-process and aggregate the datas
 
         for (Tuple criteriaDataPoint : tuples) {
-            String[] dataArray = new String[fieldIndexMap.size()];
+            Val[] dataArray = new Val[fieldIndexMap.size()];
 
             //TODO should probably drive this off a new fieldIndexMap.getEntries() method or similar
             //then we only loop round fields we car about
@@ -279,7 +287,7 @@ public class QueryServiceCriteriaImpl<
                 int posInDataArray = fieldIndexMap.get(fieldName);
                 //if the fieldIndexMap returns -1 the field has not been requested
                 if (posInDataArray != -1) {
-                    dataArray[posInDataArray] = value.toString();
+                    dataArray[posInDataArray] = ValString.create(value.toString());
                 }
             }
 

@@ -19,16 +19,9 @@ package stroom.query.api.v2;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @XmlType(name = "ResultRequest", propOrder = {"componentId", "mappings", "requestedRange", "openGroups", "resultStyle", "fetch"})
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -140,31 +133,21 @@ public final class ResultRequest implements Serializable {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
-        final ResultRequest that = (ResultRequest) o;
-
-        if (componentId != null ? !componentId.equals(that.componentId) : that.componentId != null) return false;
-        if (mappings != null ? !mappings.equals(that.mappings) : that.mappings != null)
-            return false;
-        if (requestedRange != null ? !requestedRange.equals(that.requestedRange) : that.requestedRange != null)
-            return false;
-        if (openGroups != null ? !openGroups.equals(that.openGroups) : that.openGroups != null) return false;
-        if (resultStyle != that.resultStyle) return false;
-        return fetch != null ? fetch.equals(that.fetch) : that.fetch == null;
+        ResultRequest that = (ResultRequest) o;
+        return Objects.equals(componentId, that.componentId) &&
+                Objects.equals(mappings, that.mappings) &&
+                Objects.equals(requestedRange, that.requestedRange) &&
+                Objects.equals(openGroups, that.openGroups) &&
+                resultStyle == that.resultStyle &&
+                fetch == that.fetch;
     }
 
     @Override
     public int hashCode() {
-        int result = componentId != null ? componentId.hashCode() : 0;
-        result = 31 * result + (mappings != null ? mappings.hashCode() : 0);
-        result = 31 * result + (requestedRange != null ? requestedRange.hashCode() : 0);
-        result = 31 * result + (openGroups != null ? openGroups.hashCode() : 0);
-        result = 31 * result + (resultStyle != null ? resultStyle.hashCode() : 0);
-        result = 31 * result + (fetch != null ? fetch.hashCode() : 0);
-        return result;
+        return Objects.hash(componentId, mappings, requestedRange, openGroups, resultStyle, fetch);
     }
 
     @Override

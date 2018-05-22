@@ -4,14 +4,12 @@ import io.dropwizard.Configuration;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Rule;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import stroom.query.api.v2.DocRefInfo;
 import stroom.query.audit.ExportDTO;
 import stroom.query.audit.client.DocRefResourceHttpClient;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
-import stroom.query.audit.security.NoAuthValueFactoryProvider;
+import stroom.query.security.NoAuthValueFactoryProvider;
 
 import javax.ws.rs.core.Response;
 import java.util.Map;
@@ -26,13 +24,11 @@ public abstract class DocRefResourceNoAuthIT<
         DOC_REF_ENTITY extends DocRefEntity,
         CONFIG_CLASS extends Configuration> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DocRefResourceIT.class);
-    
     private final Class<DOC_REF_ENTITY> docRefEntityClass;
-    protected DocRefResourceHttpClient<DOC_REF_ENTITY> docRefClient;
+    private DocRefResourceHttpClient<DOC_REF_ENTITY> docRefClient;
 
     protected DocRefResourceNoAuthIT(final Class<DOC_REF_ENTITY> docRefEntityClass,
-                               final DropwizardAppWithClientsRule<CONFIG_CLASS> appRule) {
+                                     final DropwizardAppWithClientsRule<CONFIG_CLASS> appRule) {
         this.docRefEntityClass = docRefEntityClass;
         this.docRefClient = appRule.getClient(DocRefResourceHttpClient::new);
     }
@@ -42,18 +38,18 @@ public abstract class DocRefResourceNoAuthIT<
 
     @Test
     public void testCreate() {
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
 
         // Create the document
-        final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid, name, parentFolderUuid);
+        final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid, name);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
 
         final DOC_REF_ENTITY createdEntity = createResponse.readEntity(docRefEntityClass);
         assertNotNull(createdEntity);
         assertEquals(uuid, createdEntity.getUuid());
         assertEquals(name, createdEntity.getName());
+        createResponse.close();
 
         // Get the entity
         final Response getResponse = docRefClient.get(NoAuthValueFactoryProvider.ADMIN_USER, uuid);
@@ -62,6 +58,7 @@ public abstract class DocRefResourceNoAuthIT<
         final DOC_REF_ENTITY foundEntity = getResponse.readEntity(docRefEntityClass);
         assertNotNull(foundEntity);
         assertEquals(name, foundEntity.getName());
+        getResponse.close();
 
         auditLogRule.check()
                 .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.CREATE_DOC_REF, uuid))
@@ -70,13 +67,13 @@ public abstract class DocRefResourceNoAuthIT<
 
     @Test
     public void testUpdate() {
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
 
         // Create a document
-        final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid, name, parentFolderUuid);
+        final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid, name);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
+        createResponse.close();
 
         // Update it as authorised user
         final DOC_REF_ENTITY authorisedEntityUpdate = createPopulatedEntity(uuid, name);
@@ -85,12 +82,14 @@ public abstract class DocRefResourceNoAuthIT<
                 uuid,
                 authorisedEntityUpdate);
         assertEquals(HttpStatus.OK_200, updateResponse.getStatus());
+        updateResponse.close();
 
         // Check it is still in the state from the authorised update
         final Response getCheckResponse = docRefClient.get(NoAuthValueFactoryProvider.ADMIN_USER, uuid);
         assertEquals(HttpStatus.OK_200, getCheckResponse.getStatus());
         final DOC_REF_ENTITY checkEntity = getCheckResponse.readEntity(docRefEntityClass);
         assertEquals(authorisedEntityUpdate, checkEntity);
+        getCheckResponse.close();
 
         auditLogRule.check()
                 .containsOrdered(containsAllOf(AuditedDocRefResourceImpl.CREATE_DOC_REF, uuid))
@@ -102,13 +101,13 @@ public abstract class DocRefResourceNoAuthIT<
     public void testGetInfo() {
         final Long testStartTime = System.currentTimeMillis();
 
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
 
         // Create a document
-        final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid, name, parentFolderUuid);
+        final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid, name);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
+        createResponse.close();
 
         // Update it as authorised user
         final DOC_REF_ENTITY authorisedEntityUpdate = createPopulatedEntity(uuid, name);
@@ -117,6 +116,7 @@ public abstract class DocRefResourceNoAuthIT<
                 uuid,
                 authorisedEntityUpdate);
         assertEquals(HttpStatus.OK_200, updateResponse.getStatus());
+        updateResponse.close();
 
         // Get info as authorised user
         final Response authorisedGetInfoResponse = docRefClient.getInfo(NoAuthValueFactoryProvider.ADMIN_USER, uuid);
@@ -126,6 +126,7 @@ public abstract class DocRefResourceNoAuthIT<
         assertTrue(info.getUpdateTime() > info.getCreateTime());
         assertEquals(info.getCreateUser(), NoAuthValueFactoryProvider.ADMIN_USER.getName());
         assertEquals(info.getUpdateUser(), NoAuthValueFactoryProvider.ADMIN_USER.getName());
+        authorisedGetInfoResponse.close();
 
         // Create, update (ok), get info (ok), get info (forbidden)
         auditLogRule.check()
@@ -136,15 +137,13 @@ public abstract class DocRefResourceNoAuthIT<
 
     @Test
     public void testGet() {
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
 
         final Response createReponse = docRefClient.createDocument(
                 NoAuthValueFactoryProvider.ADMIN_USER,
                 uuid,
-                name,
-                parentFolderUuid);
+                name);
         assertEquals(HttpStatus.OK_200, createReponse.getStatus());
         createReponse.close();
 
@@ -159,7 +158,6 @@ public abstract class DocRefResourceNoAuthIT<
 
     @Test
     public void testRename() {
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid = UUID.randomUUID().toString();
         final String name1 = UUID.randomUUID().toString();
         final String name2 = UUID.randomUUID().toString();
@@ -167,8 +165,7 @@ public abstract class DocRefResourceNoAuthIT<
         final Response createResponse = docRefClient.createDocument(
                 NoAuthValueFactoryProvider.ADMIN_USER,
                 uuid,
-                name1,
-                parentFolderUuid);
+                name1);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
         createResponse.close();
 
@@ -182,6 +179,7 @@ public abstract class DocRefResourceNoAuthIT<
         final DOC_REF_ENTITY renamedEntity = renameResponse.readEntity(docRefEntityClass);
         assertNotNull(renamedEntity);
         assertEquals(name2, renamedEntity.getName());
+        renameResponse.close();
 
         // Check it has the new name
         final Response getResponse = docRefClient.get(NoAuthValueFactoryProvider.ADMIN_USER, uuid);
@@ -190,6 +188,7 @@ public abstract class DocRefResourceNoAuthIT<
         final DOC_REF_ENTITY updated = getResponse.readEntity(docRefEntityClass);
         assertNotNull(updated);
         assertEquals(name2, updated.getName());
+        getResponse.close();
 
         // Create, rename, rename, get (check still got name2)
         auditLogRule.check()
@@ -200,22 +199,22 @@ public abstract class DocRefResourceNoAuthIT<
 
     @Test
     public void testCopy() {
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid1 = UUID.randomUUID().toString();
         final String uuid2 = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
 
-        final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid1, name, parentFolderUuid);
+        final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid1, name);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
         createResponse.close();
 
         // Attempt copy as authorised user
-        final Response copyResponse = docRefClient.copyDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid1, uuid2, parentFolderUuid);
+        final Response copyResponse = docRefClient.copyDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid1, uuid2);
         assertEquals(HttpStatus.OK_200, copyResponse.getStatus());
 
         final DOC_REF_ENTITY copiedEntity = copyResponse.readEntity(docRefEntityClass);
         assertNotNull(copiedEntity);
         assertEquals(uuid2, copiedEntity.getUuid());
+        copyResponse.close();
 
         // Get the copy
         final Response getResponse = docRefClient.get(NoAuthValueFactoryProvider.ADMIN_USER, uuid2);
@@ -225,6 +224,7 @@ public abstract class DocRefResourceNoAuthIT<
         assertNotNull(updatedEntity);
         assertEquals(name, updatedEntity.getName());
         assertEquals(uuid2, updatedEntity.getUuid());
+        getResponse.close();
 
         // Create, copy, get, copy (forbidden), get, get
         auditLogRule.check()
@@ -235,11 +235,10 @@ public abstract class DocRefResourceNoAuthIT<
 
     @Test
     public void testDelete() {
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
 
-        final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid, name, parentFolderUuid);
+        final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid, name);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
         createResponse.close();
 
@@ -262,12 +261,11 @@ public abstract class DocRefResourceNoAuthIT<
 
     @Test
     public void testExport() {
-        final String parentFolderUuid = UUID.randomUUID().toString();
         final String uuid = UUID.randomUUID().toString();
         final String name = UUID.randomUUID().toString();
 
         // Create a document
-        final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid, name, parentFolderUuid);
+        final Response createResponse = docRefClient.createDocument(NoAuthValueFactoryProvider.ADMIN_USER, uuid, name);
         assertEquals(HttpStatus.OK_200, createResponse.getStatus());
         createResponse.close();
 
@@ -283,6 +281,7 @@ public abstract class DocRefResourceNoAuthIT<
 
         final ExportDTO exportDTO = authorisedExportResponse.readEntity(ExportDTO.class);
         assertNotNull(exportDTO);
+        authorisedExportResponse.close();
 
         final Map<String, String> expectedExportValues = exportValues(entityUpdate);
         expectedExportValues.put(DocRefEntity.NAME, entityUpdate.getName()); // add common fields
@@ -315,6 +314,7 @@ public abstract class DocRefResourceNoAuthIT<
 
         final DOC_REF_ENTITY importedDocRefEntity = authorisedImportResponse.readEntity(docRefEntityClass);
         assertEquals(docRefEntity, importedDocRefEntity);
+        authorisedImportResponse.close();
 
         // Fetch the doc ref from the system to check it's been imported ok
         final Response getCheckResponse = docRefClient.get(NoAuthValueFactoryProvider.ADMIN_USER, uuid);
@@ -322,6 +322,7 @@ public abstract class DocRefResourceNoAuthIT<
 
         final DOC_REF_ENTITY getCheckEntity = getCheckResponse.readEntity(docRefEntityClass);
         assertEquals(docRefEntity, getCheckEntity);
+        getCheckResponse.close();
 
         // import, get
         auditLogRule.check()

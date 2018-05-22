@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.Objects;
 
 @JsonPropertyOrder({"uuid"})
 @XmlType(name = "QueryKey", propOrder = {"uuid"})
@@ -53,18 +54,16 @@ public final class QueryKey implements Serializable {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
-        final QueryKey queryKey = (QueryKey) o;
-
-        return uuid.equals(queryKey.uuid);
+        QueryKey queryKey = (QueryKey) o;
+        return Objects.equals(uuid, queryKey.uuid);
     }
 
     @Override
     public int hashCode() {
-        return uuid.hashCode();
+        return Objects.hash(uuid);
     }
 
     @Override

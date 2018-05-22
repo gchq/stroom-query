@@ -21,9 +21,6 @@ dependencies {
     compile project(':stroom-query-api')
 
     //--------3rd party--------
-    compile libs.jackson_databind
-    compile libs.jackson_annotations
-    compile libs.jackson_core
     compile libs.swagger_annotations
     compile libs.ws_rs_api
 }

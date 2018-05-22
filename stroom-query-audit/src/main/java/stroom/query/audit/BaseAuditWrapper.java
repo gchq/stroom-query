@@ -2,7 +2,7 @@ package stroom.query.audit;
 
 import event.logging.Event;
 import event.logging.EventLoggingService;
-import stroom.query.audit.security.ServiceUser;
+import stroom.query.security.ServiceUser;
 
 import javax.ws.rs.core.Response;
 
@@ -21,7 +21,7 @@ public abstract class BaseAuditWrapper<CHILD_CLASS extends BaseAuditWrapper<?>> 
     public interface PopulateEventDetail {
         void populate(final Event.EventDetail eventDetail,
                       final Response response,
-                      final RuntimeException exception);
+                      final Exception exception);
     }
 
     public BaseAuditWrapper(final ServiceUser user) {

@@ -17,7 +17,7 @@
 package stroom.query.common.v2.format;
 
 import stroom.dashboard.expression.v1.DateUtil;
-import stroom.dashboard.expression.v1.TypeConverter;
+import stroom.dashboard.expression.v1.Val;
 import stroom.query.api.v2.DateTimeFormat;
 import stroom.query.api.v2.TimeZone;
 
@@ -82,20 +82,18 @@ public class DateTimeFormatter implements Formatter {
     }
 
     @Override
-    public String format(final Object value) {
+    public String format(final Val value) {
         if (value == null) {
             return null;
         }
 
-        final Double dbl = TypeConverter.getDouble(value);
-        if (dbl != null) {
-            final long millis = dbl.longValue();
-
+        final Long millis = value.toLong();
+        if (millis != null) {
             if (format == null) {
                 return DateUtil.createNormalDateTimeString(millis);
             }
 
-            return ZonedDateTime.ofInstant(Instant.ofEpochMilli(millis), zone).format(format);
+            return format.format(Instant.ofEpochMilli(millis).atZone(ZoneOffset.UTC));
         }
         return value.toString();
     }

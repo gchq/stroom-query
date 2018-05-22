@@ -16,7 +16,7 @@
 
 package stroom.query.common.v2.format;
 
-import stroom.dashboard.expression.v1.TypeConverter;
+import stroom.dashboard.expression.v1.Val;
 import stroom.query.api.v2.NumberFormat;
 
 public class NumberFormatter implements Formatter {
@@ -31,14 +31,14 @@ public class NumberFormatter implements Formatter {
     }
 
     @Override
-    public String format(final Object value) {
+    public String format(final Val value) {
         if (value == null) {
             return null;
         }
 
-        final Double dbl = TypeConverter.getDouble(value);
+        final Double dbl = value.toDouble();
         if (dbl != null) {
-            final String string = TypeConverter.doubleToString(dbl);
+            final String string = value.toString();
 
             if (numberFormat != null) {
                 final int index = string.indexOf(".");

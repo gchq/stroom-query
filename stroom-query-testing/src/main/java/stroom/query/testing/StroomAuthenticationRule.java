@@ -2,7 +2,9 @@ package stroom.query.testing;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.tomakehurst.wiremock.core.Options;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
+import io.dropwizard.testing.ConfigOverride;
 import org.eclipse.jetty.http.HttpStatus;
 import org.jose4j.jwk.JsonWebKey;
 import org.jose4j.jwk.RsaJsonWebKey;
@@ -13,30 +15,20 @@ import org.jose4j.jwt.JwtClaims;
 import org.jose4j.lang.JoseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import stroom.query.authorisation.DocumentPermission;
 import stroom.query.api.v2.DocRef;
-import stroom.query.audit.authorisation.DocumentPermission;
-import stroom.query.audit.security.ServiceUser;
+import stroom.query.security.ServiceUser;
 
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.containing;
-import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.ok;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.fail;
 
 /**
  * This rule effectively builds an Authentication and Authorisation service for use in integration tests.
- *
+ * <p>
  * It provides methods for getting authenticated and unauthenticated users, it also gives tests the ability
  * to grant permissions to specific users.
  */
@@ -54,8 +46,26 @@ public class StroomAuthenticationRule extends WireMockClassRule {
     private static final com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper
             = new com.fasterxml.jackson.databind.ObjectMapper();
 
-    public StroomAuthenticationRule(final Options options) {
-        super(options);
+    public StroomAuthenticationRule() {
+        super(WireMockConfiguration.options().dynamicPort());
+    }
+
+    /**
+     * Create a Dropwizard config override that can inject the dynamic port into the test auth service URL
+     * @return The Config Override for the Auth Service Token URL
+     */
+    public ConfigOverride authToken() {
+        return ConfigOverride.config("token.publicKeyUrl",
+                () -> String.format("http://localhost:%d/testAuthService/publicKey", this.port()));
+    }
+
+    /**
+     * Creates a Dropwizard config override that can inject the dynamic port into the test authorisation service URL
+     * @return The Config override for the authorisation service URL.
+     */
+    public ConfigOverride authService() {
+        return ConfigOverride.config("authorisationService.url",
+                () -> String.format("http://localhost:%d/api/authorisation/v1", this.port()));
     }
 
     @Override
@@ -115,6 +125,7 @@ public class StroomAuthenticationRule extends WireMockClassRule {
 
     /**
      * Function that gets the default admin user, this user will generally have permission to do everything
+     *
      * @return The default admin ServiceUser, with an API key
      */
     public ServiceUser adminUser() {
@@ -123,6 +134,7 @@ public class StroomAuthenticationRule extends WireMockClassRule {
 
     /**
      * Utility function to generate an authenticated user.
+     *
      * @param username The usernane of the required user.
      * @return the user, with a JWK tied to the valid public key credentials
      */
@@ -132,6 +144,7 @@ public class StroomAuthenticationRule extends WireMockClassRule {
 
     /**
      * Utility function to generate an unauthenticated user.
+     *
      * @param username The usernane of the required user.
      * @return the user, with a JWK tied to the wrong public key credentials
      */
@@ -141,6 +154,7 @@ public class StroomAuthenticationRule extends WireMockClassRule {
 
     /**
      * Function that starts building permissions for the admin user
+     *
      * @return A permission builder tied to the admin user
      */
     public PermissionBuilder permitAdminUser() {
@@ -149,6 +163,7 @@ public class StroomAuthenticationRule extends WireMockClassRule {
 
     /**
      * Utility function to generate an authenticated user and start building permissions.
+     *
      * @param username The usernane of the required user.
      * @return a permission builder tied to the named authenticated user
      */
@@ -160,8 +175,9 @@ public class StroomAuthenticationRule extends WireMockClassRule {
      * Request a user with a given name, if the user does not exist, a new API key is created for that user.
      * Allows for the creation of multiple users, which may have different levels of access to doc refs for testing
      * that authorisation works.
-     * @param username The usernane of the required user.
-     * @param usersMap map of users to use, there are authenticated and unauthenticated users
+     *
+     * @param username  The usernane of the required user.
+     * @param usersMap  map of users to use, there are authenticated and unauthenticated users
      * @param publicKey The public key that is tied to the users map
      * @return A created ServiceUser, with an API Key
      */
@@ -199,31 +215,8 @@ public class StroomAuthenticationRule extends WireMockClassRule {
         private final List<DocRef> docRefs = new ArrayList<>();
         private final List<String> permissionNames = new ArrayList<>();
 
-        public class FolderBuilder {
-
-            public FolderBuilder(final String folderUuid) {
-                PermissionBuilder.this.docRef(new DocRef.Builder()
-                        .type(DocumentPermission.FOLDER)
-                        .uuid(folderUuid)
-                        .build());
-            }
-
-            public FolderBuilder docRefType(final String docRefType) {
-                PermissionBuilder.this.permissionName(DocumentPermission.CREATE.getTypedPermission(docRefType));
-                return this;
-            }
-
-            public void done() {
-                PermissionBuilder.this.done();
-            }
-        }
-
         private PermissionBuilder(final ServiceUser serviceUser) {
             this.serviceUsers.add(serviceUser);
-        }
-
-        public FolderBuilder createInFolder(final String folderUuid) {
-            return new FolderBuilder(folderUuid);
         }
 
         public PermissionBuilder andAuthenticatedUser(final String username) {
@@ -266,18 +259,18 @@ public class StroomAuthenticationRule extends WireMockClassRule {
 
         public void done() {
             serviceUsers.forEach(serviceUser ->
-                docRefs.forEach(docRef ->
-                        permissionNames.forEach(permissionName ->
-                                StroomAuthenticationRule.this.givePermission(serviceUser, docRef, permissionName)
-                        )
-                )
+                    docRefs.forEach(docRef ->
+                            permissionNames.forEach(permissionName ->
+                                    StroomAuthenticationRule.this.givePermission(serviceUser, docRef, permissionName)
+                            )
+                    )
             );
         }
     }
 
     private void givePermission(final ServiceUser serviceUser,
-                               final DocRef docRef,
-                               final String permissionName) {
+                                final DocRef docRef,
+                                final String permissionName) {
         /**
          * Setup Authorisation Service for Doc Refs, by default allow everything
          * Specific sub classes may have more specific cases to test for unauthorised actions.

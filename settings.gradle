@@ -6,4 +6,5 @@ include 'stroom-query-audit'
 include 'stroom-query-hibernate'
 include 'stroom-query-testing'
 include 'stroom-query-jooq'
+include 'stroom-query-authorisation'
 

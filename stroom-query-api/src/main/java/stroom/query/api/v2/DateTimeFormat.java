@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Class for describing the format to use for formatting a date time value
@@ -79,21 +80,17 @@ public final class DateTimeFormat implements Serializable {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DateTimeFormat)) return false;
-
-        final DateTimeFormat that = (DateTimeFormat) o;
-
-        if (pattern != null ? !pattern.equals(that.pattern) : that.pattern != null) return false;
-        return timeZone != null ? timeZone.equals(that.timeZone) : that.timeZone == null;
+        if (o == null || getClass() != o.getClass()) return false;
+        DateTimeFormat that = (DateTimeFormat) o;
+        return Objects.equals(pattern, that.pattern) &&
+                Objects.equals(timeZone, that.timeZone);
     }
 
     @Override
     public int hashCode() {
-        int result = pattern != null ? pattern.hashCode() : 0;
-        result = 31 * result + (timeZone != null ? timeZone.hashCode() : 0);
-        return result;
+        return Objects.hash(pattern, timeZone);
     }
 
     @Override

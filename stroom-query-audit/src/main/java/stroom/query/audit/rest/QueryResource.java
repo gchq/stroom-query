@@ -4,9 +4,8 @@ import io.dropwizard.auth.Auth;
 import stroom.query.api.v2.DocRef;
 import stroom.query.api.v2.QueryKey;
 import stroom.query.api.v2.SearchRequest;
-import stroom.query.audit.security.ServiceUser;
+import stroom.query.security.ServiceUser;
 
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -25,20 +24,20 @@ public interface QueryResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/dataSource")
-    Response getDataSource(@Auth @NotNull ServiceUser user,
+    Response getDataSource(@Auth ServiceUser user,
                            DocRef docRef);
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/search")
-    Response search(@Auth @NotNull ServiceUser user,
+    Response search(@Auth ServiceUser user,
                     SearchRequest request);
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/destroy")
-    Response destroy(@Auth @NotNull ServiceUser user,
+    Response destroy(@Auth ServiceUser user,
                      QueryKey queryKey);
 }

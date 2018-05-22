@@ -21,16 +21,16 @@ import stroom.mapreduce.v2.UnsafePairQueue;
 public class TablePayload implements Payload {
     private static final long serialVersionUID = 5271438218782010968L;
 
-    private UnsafePairQueue<Key, Item> queue;
+    private UnsafePairQueue<GroupKey, Item> queue;
 
     public TablePayload() {
     }
 
-    public TablePayload(final UnsafePairQueue<Key, Item> queue) {
+    public TablePayload(final UnsafePairQueue<GroupKey, Item> queue) {
         this.queue = queue;
     }
 
-    public UnsafePairQueue<Key, Item> getQueue() {
+    public UnsafePairQueue<GroupKey, Item> getQueue() {
         return queue;
     }
 }

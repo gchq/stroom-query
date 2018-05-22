@@ -6,7 +6,7 @@ import stroom.query.api.v2.DocRef;
 import stroom.query.api.v2.QueryKey;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.audit.rest.QueryResource;
-import stroom.query.audit.security.ServiceUser;
+import stroom.query.security.ServiceUser;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -17,14 +17,12 @@ import java.io.Closeable;
 public class QueryResourceHttpClient implements QueryResource, Closeable {
 
     private final Client httpClient;
-    private final String baseUrl;
 
     private final String dataSourceUrl;
     private final String searchUrl;
     private final String destroyUrl;
 
     public QueryResourceHttpClient(final String baseUrl) {
-        this.baseUrl = baseUrl;
         httpClient = ClientBuilder.newClient(new ClientConfig().register(ClientResponse.class));
 
         this.dataSourceUrl = String.format("%s/queryApi/v1/dataSource", baseUrl);

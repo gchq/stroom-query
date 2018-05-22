@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.query.audit.ExportDTO;
 import stroom.query.audit.model.DocRefEntity;
-import stroom.query.audit.security.ServiceUser;
+import stroom.query.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
 
 import javax.inject.Inject;
@@ -135,6 +135,7 @@ public class DocRefServiceCriteriaImpl<
             cq.distinct(true);
 
             final DOC_REF_ENTITY entity = session.createQuery(cq).getSingleResult();
+            entity.setType(getType());
             return Optional.of(entity);
         } catch (NoResultException e) {
             return Optional.empty();

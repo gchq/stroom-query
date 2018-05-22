@@ -52,28 +52,24 @@ tasks.withType(Test) {
 dependencies {
     //--------Project----------
     compile project(':stroom-query-api')
-    compile project(':stroom-query-common')
+    compile project(':stroom-query-authorisation')
     compile project(':stroom-query-audit')
 
-    //--------Stroom libs------
-    compile libs.eventLogging
-    compile libs.stroomExpression
-
     //--------3rd party--------
-    compile libs.kafka
-    compile libs.dropwizard_auth
-    compile libs.dropwizard_auth_jwt
+    compile libs.dropwizard_core
     compile libs.guice
-    compile libs.slf4j_api
-
+    compile libs.google_findbugs
+    compile libs.javax_ws;
+    compile libs.jackson_core
+    compile libs.jackson_databind
     compile libs.junit
-    compile libs.assertj
-    compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
+    compile libs.jose4j
+    compile libs.slf4j_api
     compile libs.wiremock
+    compile libs.mockito_core
 
     compile libs.dropwizard_testing
 
-    integrationTestCompile libs.dropwizard_core
     integrationTestCompile libs.jackson_annotations
     integrationTestCompile libs.dropwizard_flyway
     integrationTestCompile project(':stroom-query-hibernate')

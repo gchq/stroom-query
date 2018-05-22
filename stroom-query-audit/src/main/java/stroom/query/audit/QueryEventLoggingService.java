@@ -13,11 +13,9 @@ import event.logging.util.EventLoggingUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.SecurityContext;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Date;
@@ -26,7 +24,6 @@ import java.util.Date;
  * A standard implementation of the Event Logging Service that can be used across various Stroom micorservices.
  */
 public class QueryEventLoggingService extends DefaultEventLoggingService implements EventLoggingService {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(QueryEventLoggingService.class);
 
     public static final String AUDIT_LOGGER_NAME = "AUDIT";
@@ -44,12 +41,8 @@ public class QueryEventLoggingService extends DefaultEventLoggingService impleme
     @Context
     private transient HttpServletRequest request;
 
-    @Resource
-    private SecurityContext security;
-
     @Inject
     public QueryEventLoggingService() {
-
     }
 
     @Override

@@ -2,7 +2,7 @@ package stroom.query.audit.client;
 
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.DocRefResource;
-import stroom.query.audit.security.ServiceUser;
+import stroom.query.security.ServiceUser;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -21,18 +21,18 @@ public class DocRefResourceHttpClient<T extends DocRefEntity> implements DocRefR
     }
 
     @FunctionalInterface
-    private interface TriStringFunction {
-        String getUrl(final String one, final String two, final String three);
+    private interface BiStringFunction {
+        String getUrl(final String one, final String two);
     }
 
     private final Client httpClient;
     private final String getAllUrl;
     private final Function<String, String> getUrl;
     private final Function<String, String> getInfoUrl;
-    private final TriStringFunction createUrl;
+    private final BiStringFunction createUrl;
     private final Function<String, String> updateUrl;
-    private final TriStringFunction copyUrl;
-    private final BiFunction<String, String, String> moveUrl;
+    private final BiStringFunction copyUrl;
+    private final Function<String, String> moveUrl;
     private final BiFunction<String, String, String> renameUrl;
     private final Function<String, String> deleteUrl;
     private final ImportUrlFunction importUrl;
@@ -47,23 +47,20 @@ public class DocRefResourceHttpClient<T extends DocRefEntity> implements DocRefR
         this.getInfoUrl = (uuid) -> String.format("%s/docRefApi/v1/%s/info",
                 baseUrl,
                 uuid);
-        this.createUrl = (uuid, name, parentFolderUUID) -> String.format("%s/docRefApi/v1/create/%s/%s/%s",
+        this.createUrl = (uuid, name) -> String.format("%s/docRefApi/v1/create/%s/%s",
                 baseUrl,
                 uuid,
-                name,
-                parentFolderUUID);
+                name);
         this.updateUrl = (uuid) -> String.format("%s/docRefApi/v1/update/%s",
                 baseUrl,
                 uuid);
-        this.copyUrl = (originalUuid, copyUuid, parentFolderUUID) -> String.format("%s/docRefApi/v1/copy/%s/%s/%s",
+        this.copyUrl = (originalUuid, copyUuid) -> String.format("%s/docRefApi/v1/copy/%s/%s",
                 baseUrl,
                 originalUuid,
-                copyUuid,
-                parentFolderUUID);
-        this.moveUrl = (uuid, parentFolderUUID) -> String.format("%s/docRefApi/v1/move/%s/%s",
+                copyUuid);
+        this.moveUrl = (uuid) -> String.format("%s/docRefApi/v1/move/%s",
                 baseUrl,
-                uuid,
-                parentFolderUUID);
+                uuid);
         this.renameUrl = (uuid, name) -> String.format("%s/docRefApi/v1/rename/%s/%s",
                 baseUrl,
                 uuid,
@@ -120,10 +117,9 @@ public class DocRefResourceHttpClient<T extends DocRefEntity> implements DocRefR
     @Override
     public Response createDocument(final ServiceUser user,
                                    final String uuid,
-                                   final String name,
-                                   final String parentFolderUUID){
+                                   final String name){
         return httpClient
-                .target(createUrl.getUrl(uuid, name, parentFolderUUID))
+                .target(createUrl.getUrl(uuid, name))
                 .request()
                 .header("Authorization", "Bearer " + user.getJwt())
                 .post(Entity.json(""));
@@ -153,10 +149,9 @@ public class DocRefResourceHttpClient<T extends DocRefEntity> implements DocRefR
     @Override
     public Response copyDocument(final ServiceUser user,
                                  final String originalUuid,
-                                 final String copyUuid,
-                                 final String parentFolderUUID){
+                                 final String copyUuid){
         return httpClient
-                .target(copyUrl.getUrl(originalUuid, copyUuid, parentFolderUUID))
+                .target(copyUrl.getUrl(originalUuid, copyUuid))
                 .request()
                 .header("Authorization", "Bearer " + user.getJwt())
                 .post(Entity.json(""));
@@ -164,10 +159,9 @@ public class DocRefResourceHttpClient<T extends DocRefEntity> implements DocRefR
 
     @Override
     public Response moveDocument(final ServiceUser user,
-                                 final String uuid,
-                                 final String parentFolderUUID){
+                                 final String uuid){
         return httpClient
-                .target(moveUrl.apply(uuid, parentFolderUUID))
+                .target(moveUrl.apply(uuid))
                 .request()
                 .header("Authorization", "Bearer " + user.getJwt())
                 .put(Entity.json(""));

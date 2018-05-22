@@ -18,20 +18,21 @@ package stroom.query.common.v2;
 
 import stroom.dashboard.expression.v1.Expression;
 import stroom.dashboard.expression.v1.Generator;
+import stroom.dashboard.expression.v1.Val;
 import stroom.mapreduce.v2.MapperBase;
 import stroom.mapreduce.v2.OutputCollector;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemMapper extends MapperBase<Object, String[], Key, Item> {
+public class ItemMapper extends MapperBase<GroupKey, Val[], GroupKey, Item> {
     private static final Generator[] PARENT_GENERATORS = new Generator[0];
 
     private final CompiledFields fields;
     private final int maxDepth;
     private final int maxGroupDepth;
 
-    public ItemMapper(final OutputCollector<Key, Item> outputCollector,
+    public ItemMapper(final OutputCollector<GroupKey, Item> outputCollector,
                       final CompiledFields fields,
                       final int maxDepth,
                       final int maxGroupDepth) {
@@ -42,20 +43,20 @@ public class ItemMapper extends MapperBase<Object, String[], Key, Item> {
     }
 
     @Override
-    public void map(final Object key, final String[] values, final OutputCollector<Key, Item> output) {
+    public void map(final GroupKey key, final Val[] values, final OutputCollector<GroupKey, Item> output) {
         // Add the item to the output recursively up to the max depth.
         addItem(values, null, PARENT_GENERATORS, 0, maxDepth, maxGroupDepth, output);
     }
 
-    private void addItem(final String[] values, final Key parentKey, final Generator[] parentGenerators,
-                         final int depth, final int maxDepth, final int maxGroupDepth, final OutputCollector<Key, Item> output) {
+    private void addItem(final Val[] values, final GroupKey parentKey, final Generator[] parentGenerators,
+                         final int depth, final int maxDepth, final int maxGroupDepth, final OutputCollector<GroupKey, Item> output) {
         // Process list into fields.
         final Generator[] generators = new Generator[fields.size()];
 
-        List<Object> groupValues = null;
+        List<Val> groupValues = null;
         int pos = 0;
         for (final CompiledField compiledField : fields) {
-            Object value = null;
+            Val value = null;
 
             final Expression expression = compiledField.getExpression();
             if (expression != null) {
@@ -104,9 +105,9 @@ public class ItemMapper extends MapperBase<Object, String[], Key, Item> {
         }
 
         // Are we grouping this item?
-        Key key = null;
+        GroupKey key = null;
         if (parentKey != null || groupValues != null) {
-            key = new Key(parentKey, groupValues);
+            key = new GroupKey(parentKey, groupValues);
         }
 
         // If the popToWhenComplete row has child group key sets then add this child group

@@ -18,5 +18,8 @@
 dependencies {
     compile libs.jackson_annotations
     compile libs.swagger_annotations
+
+    testCompile libs.junit
+    testCompile libs.hamcrest_core
 }
 

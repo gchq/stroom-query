@@ -7,7 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.query.api.v2.DocRef;
 import stroom.query.audit.model.DocRefEntity;
-import stroom.query.audit.security.ServiceUser;
+import stroom.query.audit.service.QueryApiException;
+import stroom.query.security.ServiceUser;
 
 import javax.ws.rs.core.Response;
 import java.util.Optional;
@@ -23,22 +24,22 @@ public class DocRefAuditWrapper<DOC_REF_ENTITY extends DocRefEntity>
 
     @FunctionalInterface
     public interface DocRefSupplier {
-        Optional<DocRef> getDocRef() ;
+        Optional<DocRef> getDocRef() throws QueryApiException;
     }
 
     @FunctionalInterface
     public interface DocRefEntitySupplier<T extends DocRefEntity> {
-        Optional<T> getDocRefEntity(DocRef docRef) ;
+        Optional<T> getDocRefEntity(DocRef docRef) throws QueryApiException;
     }
 
     @FunctionalInterface
     public interface DocRefAuthorisationSupplier {
-        Boolean isAuthorised(DocRef docRef) ;
+        Boolean isAuthorised(DocRef docRef) throws QueryApiException;
     }
 
     @FunctionalInterface
     public interface ResponseSupplier<T extends DocRefEntity> {
-        Response getResponse(T docRefEntity) ;
+        Response getResponse(T docRefEntity) throws QueryApiException;
     }
 
     private DocRefSupplier docRefSupplier;
@@ -104,7 +105,7 @@ public class DocRefAuditWrapper<DOC_REF_ENTITY extends DocRefEntity>
     @Override
     protected Response audit(EventLoggingService eventLoggingService) {
         Response response = null;
-        RuntimeException exception = null;
+        Exception exception = null;
 
         try {
             final DocRef docRef;
@@ -120,7 +121,12 @@ public class DocRefAuditWrapper<DOC_REF_ENTITY extends DocRefEntity>
                             docRefEntitySupplier.getDocRefEntity(docRef);
 
                     if (docRefEntityOpt.isPresent()) {
-                        return responseSupplier.getResponse(docRefEntityOpt.get());
+                        try {
+                            return responseSupplier.getResponse(docRefEntityOpt.get());
+                        } catch (Exception e) {
+                            LOGGER.error(e.getLocalizedMessage(), e);
+                            return Response.serverError().entity(e.getLocalizedMessage()).build();
+                        }
                     } else {
                         return Response.status(HttpStatus.NOT_FOUND_404).build();
                     }
@@ -130,7 +136,7 @@ public class DocRefAuditWrapper<DOC_REF_ENTITY extends DocRefEntity>
             } else {
                 response = Response.status(HttpStatus.NOT_FOUND_404).build();
             }
-        } catch (final RuntimeException e) {
+        } catch (final RuntimeException | QueryApiException e) {
             LOGGER.error("Failed to execute operation: " + e.getLocalizedMessage(), e);
             exception = e;
             response = Response.serverError().build();

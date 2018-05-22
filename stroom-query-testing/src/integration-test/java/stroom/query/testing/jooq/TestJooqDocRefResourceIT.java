@@ -1,6 +1,5 @@
 package stroom.query.testing.jooq;
 
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.Before;
 import org.junit.ClassRule;
 import stroom.query.testing.DocRefResourceIT;
@@ -19,12 +18,15 @@ import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 public class TestJooqDocRefResourceIT extends DocRefResourceIT<TestDocRefJooqEntity, JooqConfig> {
 
     @ClassRule
-    public static final DropwizardAppWithClientsRule<JooqConfig> appRule =
-            new DropwizardAppWithClientsRule<>(JooqApp.class, resourceFilePath("hibernate/config.yml"));
+    public static StroomAuthenticationRule authRule =
+            new StroomAuthenticationRule();
 
     @ClassRule
-    public static StroomAuthenticationRule authRule =
-            new StroomAuthenticationRule(WireMockConfiguration.options().port(10080));
+    public static final DropwizardAppWithClientsRule<JooqConfig> appRule =
+            new DropwizardAppWithClientsRule<>(JooqApp.class,
+                    resourceFilePath("jooq/config.yml"),
+                    authRule.authToken(),
+                    authRule.authService());
 
     public TestJooqDocRefResourceIT() {
         super(TestDocRefJooqEntity.TYPE,

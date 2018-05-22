@@ -20,16 +20,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * {@value #CLASS_DESC}
@@ -89,23 +85,18 @@ public final class Query implements Serializable {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
-        final Query query = (Query) o;
-
-        if (dataSource != null ? !dataSource.equals(query.dataSource) : query.dataSource != null) return false;
-        if (expression != null ? !expression.equals(query.expression) : query.expression != null) return false;
-        return params != null ? params.equals(query.params) : query.params == null;
+        Query query = (Query) o;
+        return Objects.equals(dataSource, query.dataSource) &&
+                Objects.equals(expression, query.expression) &&
+                Objects.equals(params, query.params);
     }
 
     @Override
     public int hashCode() {
-        int result = dataSource != null ? dataSource.hashCode() : 0;
-        result = 31 * result + (expression != null ? expression.hashCode() : 0);
-        result = 31 * result + (params != null ? params.hashCode() : 0);
-        return result;
+        return Objects.hash(dataSource, expression, params);
     }
 
     @Override

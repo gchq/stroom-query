@@ -1,30 +1,21 @@
 package stroom.query.audit;
 
-import event.logging.EventLoggingService;
+import com.google.inject.AbstractModule;
+import com.google.inject.Injector;
+import com.google.inject.Module;
+import com.google.inject.util.Modules;
 import io.dropwizard.Configuration;
 import io.dropwizard.ConfiguredBundle;
-import io.dropwizard.auth.AuthDynamicFeature;
-import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import org.glassfish.hk2.api.TypeLiteral;
-import org.glassfish.hk2.utilities.binding.AbstractBinder;
-import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
-import stroom.query.audit.authorisation.AuthorisationService;
-import stroom.query.audit.authorisation.AuthorisationServiceConfig;
-import stroom.query.audit.authorisation.AuthorisationServiceImpl;
-import stroom.query.audit.authorisation.HasAuthorisationConfig;
-import stroom.query.audit.authorisation.NoAuthAuthorisationServiceImpl;
+import stroom.query.authorisation.HasAuthorisationConfig;
 import stroom.query.audit.model.DocRefEntity;
-import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.audit.rest.AuditedQueryResourceImpl;
-import stroom.query.audit.security.HasTokenConfig;
-import stroom.query.audit.security.NoAuthValueFactoryProvider;
-import stroom.query.audit.security.RobustJwtAuthFilter;
-import stroom.query.audit.security.ServiceUser;
-import stroom.query.audit.security.TokenConfig;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryService;
+import stroom.query.security.HasTokenConfig;
+
+import java.util.function.Function;
 
 /**
  * This Dropwizard bundle can be used to register an implementation of Query Resource implementation
@@ -44,56 +35,53 @@ public class AuditedQueryBundle<CONFIG extends Configuration & HasTokenConfig & 
         DOC_REF_POJO extends DocRefEntity,
         QUERY_SERVICE extends QueryService> implements ConfiguredBundle<CONFIG> {
 
+
+    private final AuditedDocRefBundle<CONFIG,
+            DOC_REF_SERVICE,
+            DOC_REF_POJO> auditedDocRefBundle;
+
+    private Function<CONFIG, Injector> injectorSupplier;
     protected final Class<DOC_REF_SERVICE> docRefServiceClass;
     protected final Class<DOC_REF_POJO> docRefEntityClass;
     private final Class<QUERY_SERVICE> queryServiceClass;
 
-    public AuditedQueryBundle(final Class<DOC_REF_SERVICE> docRefServiceClass,
+    public AuditedQueryBundle(final Function<CONFIG, Injector> injectorSupplier,
+                              final Class<DOC_REF_SERVICE> docRefServiceClass,
                               final Class<DOC_REF_POJO> docRefEntityClass,
                               final Class<QUERY_SERVICE> queryServiceClass) {
+        this.injectorSupplier = injectorSupplier;
         this.docRefServiceClass = docRefServiceClass;
         this.docRefEntityClass = docRefEntityClass;
         this.queryServiceClass = queryServiceClass;
+        this.auditedDocRefBundle = new AuditedDocRefBundle<>(injectorSupplier, docRefServiceClass, docRefEntityClass);
+    }
+
+    /**
+     * This function will be overridden by child classes that have further specific modules to register.
+     * @param configuration The dropwizard application configuration
+     * @return A guice module which combines the immediate dependencies and any from underlying bundles
+     */
+    public Module getGuiceModule(final CONFIG configuration) {
+        return Modules.combine(new AbstractModule() {
+            @Override
+            @SuppressWarnings("unchecked")
+            protected void configure() {
+                bind(QueryService.class).to(queryServiceClass);
+            }
+        }, auditedDocRefBundle.getGuiceModule(configuration));
     }
 
     @Override
     public void initialize(final Bootstrap<?> bootstrap) {
-
+        final Bootstrap<CONFIG> castBootstrap = (Bootstrap<CONFIG>) bootstrap; // this initialize function should have used the templated config type
+        castBootstrap.addBundle(auditedDocRefBundle);
     }
 
     @Override
     public void run(final CONFIG configuration,
                     final Environment environment) {
-        environment.jersey().register(AuditedQueryResourceImpl.class);
-        environment.jersey().register(AuditedDocRefResourceImpl.class);
-        environment.jersey().register(new AbstractBinder() {
-            @Override
-            protected void configure() {
-                bind(QueryEventLoggingService.class).to(EventLoggingService.class);
-                bind(queryServiceClass).to(QueryService.class);
-                bind(new DocRefEntity.ClassProvider<>(docRefEntityClass)).to(DocRefEntity.ClassProvider.class);
-                bind(docRefServiceClass).to(DocRefService.class);
-                bind(docRefServiceClass).to(new TypeLiteral<DocRefService<DOC_REF_POJO>>(){});
-                if (configuration.getTokenConfig().getSkipAuth()) {
-                    bind(NoAuthAuthorisationServiceImpl.class).to(AuthorisationService.class);
-                } else {
-                    bind(AuthorisationServiceImpl.class).to(AuthorisationService.class);
-                    bind(configuration.getAuthorisationServiceConfig()).to(AuthorisationServiceConfig.class);
-                    bind(configuration.getTokenConfig()).to(TokenConfig.class);
-                }
-            }
-        });
+        final Injector injector = injectorSupplier.apply(configuration);
 
-        // Configure auth
-        if (configuration.getTokenConfig().getSkipAuth()) {
-            environment.jersey().register(new NoAuthValueFactoryProvider.Binder());
-        } else {
-            environment.jersey().register(
-                    new AuthDynamicFeature(
-                            new RobustJwtAuthFilter(configuration.getTokenConfig())
-                    ));
-            environment.jersey().register(new AuthValueFactoryProvider.Binder<>(ServiceUser.class));
-            environment.jersey().register(RolesAllowedDynamicFeature.class);
-        }
+        environment.jersey().register(injector.getInstance(AuditedQueryResourceImpl.class));
     }
 }
