@@ -25,6 +25,7 @@ dependencies {
 
     //--------Stroom libs------
     compile libs.eventLogging
+    compile libs.stroomExpression
 
     //--------3rd party--------
     compile libs.dropwizard_auth
