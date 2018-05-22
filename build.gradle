@@ -286,6 +286,16 @@ subprojects {
 
 }
 
+project(':stroom-docref') {
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
+    }
+}
+
 project(':stroom-query-api') {
     publishing {
         publications {
