@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v3.1-beta.8] - 2018-06-08
+
+* Update dependencies. 
+
 ## [v3.1-beta.4] - 2018-05-10
 
 * Made Wiremock based tests use dynamically allocated ports.
