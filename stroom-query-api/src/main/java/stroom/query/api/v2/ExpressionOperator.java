@@ -99,7 +99,7 @@ public final class ExpressionOperator extends ExpressionItem {
 
     @Override
     void append(final StringBuilder sb, final String pad, final boolean singleLine) {
-        if (enabled()) {
+        if (getEnabled()) {
             if (!singleLine && sb.length() > 0) {
                 sb.append("\n");
                 sb.append(pad);
@@ -114,7 +114,7 @@ public final class ExpressionOperator extends ExpressionItem {
                 final String padding = pad + "  ";
                 boolean firstItem = true;
                 for (final ExpressionItem expressionItem : children) {
-                    if (expressionItem.enabled()) {
+                    if (expressionItem.getEnabled()) {
                         if (singleLine && !firstItem) {
                             sb.append(", ");
                         }

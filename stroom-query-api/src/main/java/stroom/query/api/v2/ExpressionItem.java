@@ -24,6 +24,7 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Optional;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -42,6 +43,7 @@ import java.util.Objects;
         subTypes = {ExpressionOperator.class, ExpressionTerm.class})
 public abstract class ExpressionItem implements Serializable {
     private static final long serialVersionUID = -8483817637655853635L;
+    private static final Boolean ENABLED_DEFAULT = Boolean.TRUE;
 
     @XmlElement
     @ApiModelProperty(
@@ -58,11 +60,7 @@ public abstract class ExpressionItem implements Serializable {
     }
 
     public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public boolean enabled() {
-        return enabled == null || enabled;
+        return Optional.of(enabled).orElse(ENABLED_DEFAULT);
     }
 
     @Override
