@@ -60,7 +60,7 @@ public abstract class ExpressionItem implements Serializable {
     }
 
     public Boolean getEnabled() {
-        return Optional.of(enabled).orElse(ENABLED_DEFAULT);
+        return Optional.ofNullable(enabled).orElse(ENABLED_DEFAULT);
     }
 
     @Override
