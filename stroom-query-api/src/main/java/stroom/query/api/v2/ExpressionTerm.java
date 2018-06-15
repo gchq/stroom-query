@@ -122,7 +122,7 @@ public final class ExpressionTerm extends ExpressionItem {
 
     @Override
     void append(final StringBuilder sb, final String pad, final boolean singleLine) {
-        if (enabled()) {
+        if (getEnabled()) {
             if (!singleLine && sb.length() > 0) {
                 sb.append("\n");
                 sb.append(pad);

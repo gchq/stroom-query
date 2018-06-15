@@ -160,7 +160,7 @@ public class QueryServiceCriteriaImpl<
     private Predicate getPredicate(final CriteriaBuilder cb,
                                    final Root<QUERYABLE_ENTITY> root,
                                    final ExpressionItem item) {
-        if (!item.enabled()) {
+        if (!item.getEnabled()) {
             return null;
         }
 
