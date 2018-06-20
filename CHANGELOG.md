@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Update dependencies. 
 
+## [v3.1-beta.10] - 2018-06-20
+
+* Fixed the enabled flag to a default, removed the redundant accessor.
+
 ## [v3.1-beta.8] - 2018-06-08
 
 * Update dependencies. 
@@ -201,10 +205,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v3.1-beta.8...HEAD
-[v3.1-beta.4]: https://github.com/gchq/stroom-query/compare/v3.1-beta.7...v3.1-beta.8
-[v3.1-beta.4]: https://github.com/gchq/stroom-query/compare/v3.1-beta.6...v3.1-beta.7
-[v3.1-beta.4]: https://github.com/gchq/stroom-query/compare/v3.1-beta.4...v3.1-beta.5
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v3.1-beta.10...HEAD
+[v3.1-beta.8]: https://github.com/gchq/stroom-query/compare/v3.1-beta.8...v3.1-beta.10
+[v3.1-beta.7]: https://github.com/gchq/stroom-query/compare/v3.1-beta.7...v3.1-beta.8
+[v3.1-beta.6]: https://github.com/gchq/stroom-query/compare/v3.1-beta.6...v3.1-beta.7
+[v3.1-beta.5]: https://github.com/gchq/stroom-query/compare/v3.1-beta.4...v3.1-beta.5
 [v3.1-beta.4]: https://github.com/gchq/stroom-query/compare/v3.1-beta.3...v3.1-beta.4
 [v3.1-beta.3]: https://github.com/gchq/stroom-query/compare/v3.1-beta.2...v3.1-beta.3
 [v3.1-beta.2]: https://github.com/gchq/stroom-query/compare/v3.1-beta.1...v3.1-beta.2
