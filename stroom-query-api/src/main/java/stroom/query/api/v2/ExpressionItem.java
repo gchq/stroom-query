@@ -68,12 +68,12 @@ public abstract class ExpressionItem implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ExpressionItem that = (ExpressionItem) o;
-        return Objects.equals(enabled, that.enabled);
+        return Objects.equals(getEnabled(), that.getEnabled());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(enabled);
+        return Objects.hash(getEnabled());
     }
 
     abstract void append(final StringBuilder sb, final String pad, final boolean singleLine);
