@@ -206,4 +206,7 @@ public class TablePayloadHandler implements PayloadHandler {
         return data;
     }
 
+    public boolean busy() {
+        return pendingMerges.size() > 0 || merging.get();
+    }
 }

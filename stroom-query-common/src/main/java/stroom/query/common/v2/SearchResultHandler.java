@@ -109,7 +109,18 @@ public class SearchResultHandler implements ResultHandler {
 
     @Override
     public boolean isComplete() {
-        return complete.get();
+        final boolean complete = this.complete.get();
+        if (!complete) {
+            return false;
+        }
+
+        for (final TablePayloadHandler handler : handlerMap.values()) {
+            if (handler.busy()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override
