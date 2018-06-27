@@ -7,9 +7,9 @@ import stroom.mapreduce.v2.Source;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ResultStoreCreator implements Reader<Key, Item> {
+public class ResultStoreCreator implements Reader<GroupKey, Item> {
     private final CompiledSorter sorter;
-    private final Map<Key, Items<Item>> childMap;
+    private final Map<GroupKey, Items<Item>> childMap;
 
     public ResultStoreCreator(final CompiledSorter sorter) {
         this.sorter = sorter;
@@ -20,14 +20,14 @@ public class ResultStoreCreator implements Reader<Key, Item> {
         return new Data(childMap, size, totalSize);
     }
 
-    public Map<Key, Items<Item>> getChildMap() {
+    public Map<GroupKey, Items<Item>> getChildMap() {
         return childMap;
     }
 
     @Override
-    public void read(final Source<Key, Item> source) {
+    public void read(final Source<GroupKey, Item> source) {
         // We should now have a reduction in the reducedQueue.
-        for (final Pair<Key, Item> pair : source) {
+        for (final Pair<GroupKey, Item> pair : source) {
             final Item item = pair.getValue();
 
             if (item.key != null) {
@@ -42,7 +42,7 @@ public class ResultStoreCreator implements Reader<Key, Item> {
         trim(storeSize, null, 0);
     }
 
-    private void trim(final StoreSize storeSize, final Key parentKey, final int depth) {
+    private void trim(final StoreSize storeSize, final GroupKey parentKey, final int depth) {
         final Items<Item> parentItems = childMap.get(parentKey);
         if (parentItems != null && storeSize != null) {
             parentItems.trim(storeSize.size(depth), sorter, item -> {
@@ -55,7 +55,7 @@ public class ResultStoreCreator implements Reader<Key, Item> {
             // Ensure remaining items children are also trimmed by cascading
             // trim operation.
 
-            // // Lower levels of results should be reduced by increasing
+            // Lower levels of results should be reduced by increasing
             // amounts so that we don't get an exponential number of
             // results.
             // int sz = size / 10;
@@ -70,7 +70,7 @@ public class ResultStoreCreator implements Reader<Key, Item> {
         }
     }
 
-    private void remove(final Key parentKey) {
+    private void remove(final GroupKey parentKey) {
         final Items<Item> items = childMap.get(parentKey);
         if (items != null) {
             childMap.remove(parentKey);

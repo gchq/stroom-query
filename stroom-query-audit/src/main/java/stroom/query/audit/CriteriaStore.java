@@ -67,7 +67,7 @@ public class CriteriaStore implements Store {
 
         Payload payload = payloadMap.get(coprocessorKey);
         TablePayload tablePayload = (TablePayload) payload;
-        UnsafePairQueue<Key, Item> queue = tablePayload.getQueue();
+        UnsafePairQueue<GroupKey, Item> queue = tablePayload.getQueue();
 
         CompiledSorter compiledSorter = new CompiledSorter(tableSettings.getFields());
         final ResultStoreCreator resultStoreCreator = new ResultStoreCreator(compiledSorter);

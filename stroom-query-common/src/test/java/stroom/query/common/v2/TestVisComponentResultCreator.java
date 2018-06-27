@@ -16,16 +16,13 @@
 
 package stroom.query.common.v2;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.junit.Ignore;
+import stroom.dashboard.expression.v1.Generator;
+import stroom.dashboard.expression.v1.StaticValueFunction;
+import stroom.dashboard.expression.v1.ValInteger;
+import stroom.dashboard.expression.v1.ValString;
 import stroom.query.api.v2.Field;
-import stroom.query.api.v2.Format;
 import stroom.query.api.v2.TableSettings;
-import stroom.query.shared.v2.ParamUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -321,42 +318,42 @@ public class TestVisComponentResultCreator {
                     seriesCount = 0;
                 }
 
-                items.add(new Item(null, createValues(i + 10, j + 10, series), 0));
-                items.add(new Item(null, createValues(i - 5, j + 11, series), 0));
-                items.add(new Item(null, createValues(i + 3, j + 3, series), 0));
-                items.add(new Item(null, createValues(i - 2, j + 8, series), 0));
+                items.add(new Item(null, createGenerators(i + 10, j + 10, series), 0));
+                items.add(new Item(null, createGenerators(i - 5, j + 11, series), 0));
+                items.add(new Item(null, createGenerators(i + 3, j + 3, series), 0));
+                items.add(new Item(null, createGenerators(i - 2, j + 8, series), 0));
             }
         }
 
-        final Map<Key, Items<Item>> map = new HashMap<>();
+        final Map<GroupKey, Items<Item>> map = new HashMap<>();
         map.put(null, items);
 
         return new Data(map, items.size(), items.size());
     }
 
-    private Object[] createValues(final int x, final int y, final String series) {
-        final Object[] values = new Object[3];
-        values[0] = x;
-        values[1] = y;
-        values[2] = series;
-        return values;
+    private Generator[] createGenerators(final int x, final int y, final String series) {
+        final Generator[] generators = new Generator[3];
+        generators[0] = new StaticValueFunction(ValInteger.create(x)).createGenerator();
+        generators[1] = new StaticValueFunction(ValInteger.create(y)).createGenerator();
+        generators[2] = new StaticValueFunction(ValString.create(series)).createGenerator();
+        return generators;
     }
 
-    private Field createField(final String fieldName, final Format.Type type) {
-        return new Field.Builder().name(fieldName).expression(ParamUtil.makeParam(fieldName)).format(type).build();
-    }
-
-    private ObjectMapper createMapper(final boolean indent) {
-        final SimpleModule module = new SimpleModule();
-        module.addSerializer(Double.class, new MyDoubleSerialiser());
-
-        final ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(module);
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        mapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
-        mapper.configure(SerializationFeature.INDENT_OUTPUT, indent);
-        mapper.setSerializationInclusion(Include.NON_NULL);
-
-        return mapper;
-    }
+//    private Field createField(final String fieldName, final Format.Type type) {
+//        return new Field.Builder().name(fieldName).expression(ParamUtil.makeParam(fieldName)).format(type).build();
+//    }
+//
+//    private ObjectMapper createMapper(final boolean indent) {
+//        final SimpleModule module = new SimpleModule();
+//        module.addSerializer(Double.class, new MyDoubleSerialiser());
+//
+//        final ObjectMapper mapper = new ObjectMapper();
+//        mapper.registerModule(module);
+//        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+//        mapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
+//        mapper.configure(SerializationFeature.INDENT_OUTPUT, indent);
+//        mapper.setSerializationInclusion(Include.NON_NULL);
+//
+//        return mapper;
+//    }
 }

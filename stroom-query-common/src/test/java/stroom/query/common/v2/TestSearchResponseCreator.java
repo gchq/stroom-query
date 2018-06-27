@@ -10,6 +10,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+import stroom.dashboard.expression.v1.Generator;
+import stroom.dashboard.expression.v1.StaticValueFunction;
+import stroom.dashboard.expression.v1.ValString;
 import stroom.query.api.v2.Field;
 import stroom.query.api.v2.OffsetRange;
 import stroom.query.api.v2.ResultRequest;
@@ -275,9 +278,13 @@ public class TestSearchResponseCreator {
 
     private Data createSingleItemDataObject() {
         final Items<Item> items = new ItemsArrayList<>();
-        items.add(new Item(null, new String[]{"A", "B", "C"}, 0));
+        final Generator[] generators = new Generator[3];
+        generators[0] = new StaticValueFunction(ValString.create("A")).createGenerator();
+        generators[1] = new StaticValueFunction(ValString.create("B")).createGenerator();
+        generators[2] = new StaticValueFunction(ValString.create("C")).createGenerator();
+        items.add(new Item(null, generators, 0));
 
-        final Map<Key, Items<Item>> map = new HashMap<>();
+        final Map<GroupKey, Items<Item>> map = new HashMap<>();
         map.put(null, items);
 
         return new Data(map, items.size(), items.size());

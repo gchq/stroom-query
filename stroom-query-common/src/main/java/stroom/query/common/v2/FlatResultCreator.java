@@ -18,7 +18,7 @@ package stroom.query.common.v2;
 
 import stroom.dashboard.expression.v1.FieldIndexMap;
 import stroom.dashboard.expression.v1.Generator;
-import stroom.dashboard.expression.v1.TypeConverter;
+import stroom.dashboard.expression.v1.Val;
 import stroom.query.api.v2.Field;
 import stroom.query.api.v2.FlatResult;
 import stroom.query.api.v2.Format.Type;
@@ -72,13 +72,13 @@ public class FlatResultCreator implements ResultCreator {
         fields = child.getFields();
     }
 
-    private List<Object> toNodeKey(final List<Field> fields, final Key key) {
+    private List<Val> toNodeKey(final List<Field> fields, final GroupKey key) {
         if (key == null) {
             return null;
         }
 
-        final List<List<Object>> list = new ArrayList<>();
-        Key k = key;
+        final List<List<Val>> list = new ArrayList<>();
+        GroupKey k = key;
         int size = 0;
         while (k != null && k.getValues() != null) {
             list.add(0, k.getValues());
@@ -86,16 +86,16 @@ public class FlatResultCreator implements ResultCreator {
             k = k.getParent();
         }
 
-        final List<Object> result = new ArrayList<>(size);
-        int i = 0;
-        for (final List<Object> values : list) {
-            if (values.size() == 1) {
-                final Field field = fields.get(i);
-                result.add(convert(field, values.get(0)));
-            } else {
-                result.addAll(values);
-            }
-            i++;
+        final List<Val> result = new ArrayList<>(size);
+//        int i = 0;
+        for (final List<Val> values : list) {
+//            if (values.size() == 1) {
+//                final Field field = fields.get(i);
+//                result.add(convert(field, values.get(0)));
+//            } else {
+            result.addAll(values);
+//            }
+//            i++;
         }
 
         return result;
@@ -226,26 +226,22 @@ public class FlatResultCreator implements ResultCreator {
                 // functions where necessary.
                 int i = 0;
                 for (final Field field : fields) {
-                    final Object o = item.getValues()[i];
-                    Object val = o;
-                    if (o != null) {
+                    final Generator generator = item.getGenerators()[i];
+                    Object value = null;
+                    if (generator != null) {
                         // Convert all list into fully resolved
                         // objects evaluating functions where necessary.
-                        if (o instanceof Generator) {
-                            final Generator generator = (Generator) o;
-                            val = generator.eval();
-                        }
-
+                        final Val val = generator.eval();
                         if (val != null) {
                             if (fieldFormatter != null) {
-                                val = fieldFormatter.format(field, val);
+                                value = fieldFormatter.format(field, val);
                             } else {
-                                val = convert(field, val);
+                                value = convert(field, val);
                             }
                         }
                     }
 
-                    values.add(val);
+                    values.add(value);
                     i++;
                 }
 
@@ -275,15 +271,15 @@ public class FlatResultCreator implements ResultCreator {
     }
 
     // TODO : Replace this with conversion at the item level.
-    private Object convert(final Field field, final Object val) {
+    private Object convert(final Field field, final Val val) {
         if (field != null && field.getFormat() != null && field.getFormat().getType() != null) {
             final Type type = field.getFormat().getType();
             if (Type.NUMBER.equals(type) || Type.DATE_TIME.equals(type)) {
-                return TypeConverter.getDouble(val);
+                return val.toDouble();
             }
         }
 
-        return val;
+        return val.toString();
     }
 
     private String[] getTypes(final Field[] fields) {
@@ -315,7 +311,7 @@ public class FlatResultCreator implements ResultCreator {
 
     @FunctionalInterface
     private interface OpenGroups {
-        boolean isOpen(Key group);
+        boolean isOpen(GroupKey group);
     }
 
     private static class Mapper {
@@ -353,25 +349,20 @@ public class FlatResultCreator implements ResultCreator {
             final Items<Item> items = data.getChildMap().get(null);
 
             for (final Item item : items) {
-                final Object[] values = item.getValues();
-                final String[] strings = new String[fieldIndexMap.size()];
-                for (int i = 0; i < values.length; i++) {
-                    final Object value = values[i];
-                    if (value != null) {
+                final Generator[] generators = item.getGenerators();
+                final Val[] values = new Val[fieldIndexMap.size()];
+                for (int i = 0; i < generators.length; i++) {
+                    final Generator generator = generators[i];
+                    if (generator != null) {
                         final int index = fieldIndexMap.get(parentFields[i]);
                         if (index >= 0) {
-                            if (value instanceof Generator) {
-                                final Generator generator = (Generator) value;
-                                strings[index] = TypeConverter.getString(generator.eval());
-                            } else {
-                                strings[index] = TypeConverter.getString(value);
-                            }
+                            values[index] = generator.eval();
                         }
                     }
                 }
 
                 // TODO : Receive Object[] for lazy + nested evaluation.
-                tableCoprocessor.receive(strings);
+                tableCoprocessor.receive(values);
             }
 
             final TablePayload payload = (TablePayload) tableCoprocessor.createPayload();

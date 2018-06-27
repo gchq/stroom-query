@@ -35,10 +35,10 @@ public class TablePayloadHandler implements PayloadHandler {
     private final MaxResults maxResults;
     private final StoreSize storeSize;
     private final AtomicLong totalResults = new AtomicLong();
-    private final LinkedBlockingQueue<UnsafePairQueue<Key, Item>> pendingMerges = new LinkedBlockingQueue<>();
+    private final LinkedBlockingQueue<UnsafePairQueue<GroupKey, Item>> pendingMerges = new LinkedBlockingQueue<>();
     private final AtomicBoolean merging = new AtomicBoolean();
 
-    private volatile PairQueue<Key, Item> currentQueue;
+    private volatile PairQueue<GroupKey, Item> currentQueue;
     private volatile Data data;
 
     public TablePayloadHandler(final List<Field> fields,
@@ -59,7 +59,7 @@ public class TablePayloadHandler implements PayloadHandler {
         data = null;
     }
 
-    void addQueue(final UnsafePairQueue<Key, Item> newQueue) {
+    void addQueue(final UnsafePairQueue<GroupKey, Item> newQueue) {
         if (newQueue != null) {
             if (Thread.currentThread().isInterrupted()) {
                 // Clear the queue if we should terminate.
@@ -94,7 +94,7 @@ public class TablePayloadHandler implements PayloadHandler {
                     pendingMerges.clear();
 
                 } else {
-                    UnsafePairQueue<Key, Item> queue = pendingMerges.poll();
+                    UnsafePairQueue<GroupKey, Item> queue = pendingMerges.poll();
                     while (queue != null) {
                         try {
                             mergeQueue(queue);
@@ -129,7 +129,7 @@ public class TablePayloadHandler implements PayloadHandler {
         }
     }
 
-    private void mergeQueue(final UnsafePairQueue<Key, Item> newQueue) {
+    private void mergeQueue(final UnsafePairQueue<GroupKey, Item> newQueue) {
         /*
          * Update the total number of results that we have received.
          */
@@ -139,7 +139,7 @@ public class TablePayloadHandler implements PayloadHandler {
             currentQueue = updateResultStore(newQueue);
 
         } else {
-            final PairQueue<Key, Item> outputQueue = new UnsafePairQueue<>();
+            final PairQueue<GroupKey, Item> outputQueue = new UnsafePairQueue<>();
 
             /*
              * Create a partitioner to perform result reduction if needed.
@@ -161,7 +161,7 @@ public class TablePayloadHandler implements PayloadHandler {
         }
     }
 
-    private PairQueue<Key, Item> updateResultStore(final PairQueue<Key, Item> queue) {
+    private PairQueue<GroupKey, Item> updateResultStore(final PairQueue<GroupKey, Item> queue) {
         // Stick the new reduced results into a new result store.
         final ResultStoreCreator resultStoreCreator = new ResultStoreCreator(compiledSorter);
         resultStoreCreator.read(queue);
@@ -171,7 +171,7 @@ public class TablePayloadHandler implements PayloadHandler {
 
         // Put the remaining items into the current queue ready for the next
         // result.
-        final PairQueue<Key, Item> remaining = new UnsafePairQueue<>();
+        final PairQueue<GroupKey, Item> remaining = new UnsafePairQueue<>();
         long size = 0;
         for (final Items<Item> items : resultStoreCreator.getChildMap().values()) {
             for (final Item item : items) {
@@ -203,4 +203,7 @@ public class TablePayloadHandler implements PayloadHandler {
         return data;
     }
 
+    public boolean busy() {
+        return pendingMerges.size() > 0 || merging.get();
+    }
 }

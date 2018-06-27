@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Fix DocRef equality.
+
+* Migrated to stroom-expression v1.3.1
+
 ## [v3.0-beta.8] - 2018-04-30
 
 * Fixed equals and hash codes for query api classes.
