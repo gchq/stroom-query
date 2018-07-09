@@ -31,7 +31,9 @@ import stroom.util.shared.HasTerminate;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -73,75 +75,49 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
         fields = child.getFields();
     }
 
-    private List<Val> toNodeKey(final List<Field> fields, final GroupKey key) {
-        if (key == null) {
+    private List<Object> toNodeKey(final Map<Integer, List<Field>> groupFields, final GroupKey key) {
+        if (key == null || key.getValues() == null) {
             return null;
         }
 
-        final List<List<Val>> list = new ArrayList<>();
+        final LinkedList<Object> result = new LinkedList<>();
         GroupKey k = key;
-        int size = 0;
         while (k != null && k.getValues() != null) {
-            list.add(0, k.getValues());
-            size += k.getValues().size();
-            k = k.getParent();
-        }
+            final List<Field> fields = groupFields.get(k.getDepth());
+            final List<Val> values = k.getValues();
 
-        final List<Val> result = new ArrayList<>(size);
-//        int i = 0;
-        for (final List<Val> values : list) {
-//            if (values.size() == 1) {
-//                final Field field = fields.get(i);
-//                result.add(convert(field, values.get(0)));
-//            } else {
-            result.addAll(values);
-//            }
-//            i++;
+            if (values.size() == 0) {
+                result.addFirst(null);
+            } else if (values.size() == 1) {
+                final Val val = values.get(0);
+                if (val == null) {
+                    result.addFirst(null);
+                } else {
+                    Field field = null;
+                    if (fields != null) {
+                        field = fields.get(0);
+                    }
+
+                    result.addFirst(convert(field, val));
+                }
+
+            } else {
+                final StringBuilder sb = new StringBuilder();
+                for (Val val : values) {
+                    if (val != null) {
+                        sb.append(val);
+                    }
+                    sb.append("|");
+                }
+                sb.setLength(sb.length() - 1);
+                result.addFirst(sb.toString());
+            }
+
+            k = k.getParent();
         }
 
         return result;
     }
-
-//    private Field[][] createFieldStructure(final Field[] fields) {
-//        int maxGroup = -1;
-//        for (final Field field : fields) {
-//            Integer group = field.getGroup();
-//            if (group != null) {
-//                maxGroup = Math.max(maxGroup, group);
-//            }
-//        }
-//        maxGroup++;
-//
-//        final Map<Integer, List<Field>> map = new HashMap<>();
-//        for (final Field field : fields) {
-//            Integer group = field.getGroup();
-//            if (group == null || group < 0) {
-//                group = maxGroup;
-//            }
-//            final List<Field> fieldList = map.computeIfAbsent(group, k -> new ArrayList<>());
-//            fieldList.add(field);
-//        }
-//
-//        final Field[][] fieldStructure = new Field[map.size()][];
-//        for (final Entry<Integer, List<Field>> entry : map.entrySet()) {
-//            final Integer depth = entry.getKey();
-//            final List<Field> fieldList = entry.getValue();
-//            fieldList.sort((f1, f2) -> {
-//                if (f1.getGroup() == f2.getGroup()) {
-//                    return 0;
-//                }
-//                if (f1.getGroup() == null) {
-//                    return -1;
-//                } else if (f2.getGroup() == null) {
-//                    return 1;
-//                }
-//                return f1.getGroup().compareTo(f2.getGroup());
-//            });
-//            fieldStructure[depth] = fieldList.toArray(new Field[fieldList.size()]);
-//        }
-//
-//        return fieldStructure;
-//    }
 
     @Override
     public Result create(final Data data, final ResultRequest resultRequest) {
@@ -153,7 +129,6 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
                     mappedData = mapper.map(mappedData);
                 }
 
-//                final NodeBuilder nodeBuilder = new NodeBuilder(valueFields.length);
                 long totalResults = 0;
 
                 // Get top level items.
@@ -209,14 +184,21 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
         int maxResultsAtThisDepth = maxResults.size(depth);
         int resultCountAtThisLevel = 0;
 
+        final Map<Integer, List<Field>> groupFields = new HashMap<>();
+        for (final Field field : fields) {
+            if (field.getGroup() != null) {
+                groupFields.computeIfAbsent(field.getGroup(), k -> new ArrayList<>()).add(field);
+            }
+        }
+
         for (final Item item : items) {
             if (rangeChecker.check(count)) {
 
                 final List<Object> values = new ArrayList<>(fields.size() + 3);
 
                 if (item.getKey() != null) {
-                    values.add(toNodeKey(fields, item.getKey().getParent()));
-                    values.add(toNodeKey(fields, item.getKey()));
+                    values.add(toNodeKey(groupFields, item.getKey().getParent()));
+                    values.add(toNodeKey(groupFields, item.getKey()));
                 } else {
                     values.add(null);
                     values.add(null);
