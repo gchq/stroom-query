@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.1-beta.4] - 2018-07-09
+
 * Issue **stroom-#803** : Fix for dashboard group keys in visualisations.
 
 ## [v2.1-beta.2] - 2018-05-02
