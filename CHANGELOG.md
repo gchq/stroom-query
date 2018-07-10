@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.1-beta.6] - 2018-07-10
+
 * Issue **stroom-#808** : Fix to clear previous dashboard search results when new results are empty.
 
 ## [v2.1-beta.5] - 2018-07-10
