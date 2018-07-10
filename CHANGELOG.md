@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **stroom-#808** : Fix to clear previous dashboard search results when new results are empty.
+
 ## [v2.1-beta.5] - 2018-07-10
 
 * Issue **stroom-#805** : Fix for dashboard date time formatting to use local time zone.
