@@ -6,9 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **stroom-#808** : Fix to clear previous dashboard search results when new results are empty.
+
+* Issue **stroom-#805** : Fix for dashboard date time formatting to use local time zone.
+
+* Issue **stroom-#803** : Fix for dashboard group keys in visualisations.
+
 ## [v4.0-beta.3] - 2018-06-08
 
-* Update dependencies. 
+* Update dependencies.
 
 ## [v3.1-beta.10] - 2018-06-20
 
@@ -16,7 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [v3.1-beta.8] - 2018-06-08
 
-* Update dependencies. 
+* Update dependencies.
 
 ## [v3.1-beta.4] - 2018-05-10
 
