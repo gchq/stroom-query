@@ -50,6 +50,7 @@ public class TablePayloadHandler implements PayloadHandler {
         this.maxResults = maxResults;
         this.storeSize = storeSize;
         this.compiledDepths = new CompiledDepths(fields, showDetails);
+        this.data = new ResultStoreCreator(compiledSorter).create(0, 0);
     }
 
     void clear() {
@@ -57,7 +58,7 @@ public class TablePayloadHandler implements PayloadHandler {
         pendingMerges.clear();
         merging.set(false);
         currentQueue = null;
-        data = null;
+        data = new ResultStoreCreator(compiledSorter).create(0, 0);
     }
 
     void addQueue(final UnsafePairQueue<GroupKey, Item> newQueue, final HasTerminate hasTerminate) {
@@ -193,11 +194,8 @@ public class TablePayloadHandler implements PayloadHandler {
         if (!compiledSorter.hasSort() && !compiledDepths.hasGroupBy()) {
             //No sorting or grouping so we can stop the search as soon as we have the number
             //of results requested by the client
-            if (data != null &&
-                    maxResults != null &&
-                    data.getTotalSize() >= maxResults.size(0)) {
-                return true;
-            }
+            return maxResults != null &&
+                    data.getTotalSize() >= maxResults.size(0);
         }
         return false;
     }
