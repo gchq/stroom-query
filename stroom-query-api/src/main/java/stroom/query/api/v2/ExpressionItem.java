@@ -16,6 +16,7 @@
 
 package stroom.query.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.annotations.ApiModel;
@@ -63,6 +64,11 @@ public abstract class ExpressionItem implements Serializable {
         return Optional.ofNullable(enabled).orElse(ENABLED_DEFAULT);
     }
 
+    @JsonIgnore
+    public boolean enabled() {
+        return enabled == null || enabled;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -96,11 +102,9 @@ public abstract class ExpressionItem implements Serializable {
      * of ExpressionItem should provide a builder that extends this one.
      */
     public static abstract class Builder<T extends ExpressionItem, CHILD_CLASS extends Builder<T, ?>> {
-
         private Boolean enabled;
 
         public Builder() {
-
         }
 
         public Builder(final boolean enabled) {
