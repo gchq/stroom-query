@@ -31,6 +31,7 @@ deploy:
       secure: jTnDLFXggrKm/Cz7aaXDTs7LBA8d247nw+65WMF6HAaTmtGqSPmD0oTwQbDdaywAtLhubP5q5fVjG1XLNvSSnugvb7fTeKH/XNQLQFauhlP8jpIT3izCqPpqbts8i6j33nbWxk93ZlKpYwGYNpuNoNSKMO9im4VlZnkcgYnErQ4YwrLyfZFmYTts/WP2LSzPq/eVCsVWA+Cw1/NhJ1pw8WF2uOk1cmIo/KdfKHMEyMNLBjpkdDHwp3tkK7uIlPYQrggUhV9jUysFrkKGyFXKQK0lTVh6UxySIlpnO4/7WQWSve3LLjGa8u7CBittX7PYPw0YC5wXf7qFw/MOx70L2Gp+9ctA4M9EyOCjGrWi6o79P8M+cWc3AweQNS9vAbDPGwhEqZPR6IgnxdDLxLiRA0eeGvbE/J6v3XC2VIeos6fbLc7ul6MnYQyY2UKaMS26bDkrr9DmS40G2G4FPddqlHhSVgbRBDFAFBhr843RmCl+nt0O84OxdYYzJavEJWb2fTVpzU3+5nZGYRMStZbiF80aIDFMiVqUMVy1Nhl8c7WI/sxGZGl0LvngM+RXItm8hB5QkeT2k3eqbnTnjZp1j+XjBTvRYZwZynlY/X8LALyfU52FbU8XzXmTVoC1jRH3/vkKY5oPZ0MTxeRUdR+IAT3aU9ZcQsprV2VgKwPaBQQ=
     file_glob: true
     file:
+      - stroom-docref/build/libs/stroom-docref-*.jar
       - stroom-query-api/build/libs/stroom-query-api-*.jar
       - stroom-query-common/build/libs/stroom-query-common-*.jar
       - stroom-query-audit/build/libs/stroom-query-audit-*.jar
