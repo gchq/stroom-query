@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **stroom-#808** : Fix to clear previous dashboard search results when new results are empty.
+
+* Issue **stroom-#805** : Fix for dashboard date time formatting to use local time zone.
+
+* Issue **stroom-#803** : Fix for dashboard group keys in visualisations.
+
 ## [v3.1-beta.4] - 2018-05-10
 
 * Made Wiremock based tests use dynamically allocated ports.

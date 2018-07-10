@@ -93,7 +93,7 @@ public class DateTimeFormatter implements Formatter {
                 return DateUtil.createNormalDateTimeString(millis);
             }
 
-            return format.format(Instant.ofEpochMilli(millis).atZone(ZoneOffset.UTC));
+            return format.format(Instant.ofEpochMilli(millis).atZone(zone));
         }
         return value.toString();
     }
