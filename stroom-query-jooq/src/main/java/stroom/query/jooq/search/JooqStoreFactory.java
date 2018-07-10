@@ -17,8 +17,6 @@ import stroom.query.api.v2.Param;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.audit.CriteriaStore;
 import stroom.query.audit.model.QueryableEntity;
-import stroom.query.security.CurrentServiceUser;
-import stroom.query.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryApiException;
 import stroom.query.common.v2.Coprocessor;
