@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.1-beta.5] - 2018-07-10
+
 * Issue **stroom-#805** : Fix for dashboard date time formatting to use local time zone.
 
 ## [v2.1-beta.4] - 2018-07-09
