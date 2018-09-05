@@ -1,5 +1,5 @@
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.7'
+    gradleVersion = '4.9'
 }
 
 //if the project has a value for the passed property (i.e from the cmd line via -PpropName=xxx)
@@ -81,7 +81,7 @@ ext.libs = [
         jaxb_api            : "javax.xml.bind:jaxb-api:2.3.0",
         jersey_client       : "org.glassfish.jersey.core:jersey-client:$versions.jersey",
         jersey_server       : "org.glassfish.jersey.core:jersey-server:$versions.jersey",
-        junit_jupiter_api              : "org.junit.jupiter:junit-jupiter-api:${versions.junit}",
+        junit_jupiter_api   : "org.junit.jupiter:junit-jupiter-api:${versions.junit}",
         junit4              : "junit:junit:4.12",
         jose4j              : "org.bitbucket.b_c:jose4j:$versions.jose4j",
         jooq                : "org.jooq:jooq:$versions.jooq",
@@ -283,7 +283,62 @@ subprojects {
         }
     }
 
+    afterEvaluate {
+        repositories {
+            jcenter()
+        }
 
+//        compileJava {
+//            inputs.property("moduleName", moduleName)
+//            doFirst {
+//                options.compilerArgs = [
+//                        '--module-path', classpath.asPath,
+//                ]
+//                classpath = files()
+//            }
+//        }
+//
+//        compileTestJava {
+//            inputs.property("moduleName", moduleName)
+//            doFirst {
+//                options.compilerArgs = [
+//                        '--module-path', classpath.asPath,
+////                        '--add-modules', 'junit',
+////                        '--add-reads', "$moduleName=junit",
+//                        '--patch-module', "$moduleName=" + files(sourceSets.test.java.srcDirs).asPath,
+//                ]
+//                classpath = files()
+//            }
+//        }
+//
+//        test {
+//            inputs.property("moduleName", moduleName)
+//            doFirst {
+//                jvmArgs = [
+//                        '--module-path', classpath.asPath,
+//                        '--add-modules', 'ALL-MODULE-PATH',
+////                        '--add-reads', "$moduleName=junit",
+//                        '--patch-module', "$moduleName=" + files(sourceSets.test.java.outputDir).asPath,
+//                ]
+//                classpath = files()
+//            }
+//        }
+//
+//        javadoc {
+//            options.addStringOption('-module-path', classpath.asPath)
+//            options.addStringOption('Xdoclint:all,-missing', '-html5')
+//        }
+
+        jar {
+            inputs.property("moduleName", moduleName)
+            manifest {
+                attributes(
+                        "Automatic-Module-Name": moduleName,
+                )
+            }
+            version versions.stroomQuery
+        }
+    }
 }
 
 project(':stroom-docref') {
