@@ -1,5 +1,5 @@
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.9'
+    gradleVersion = '4.10'
 }
 
 //if the project has a value for the passed property (i.e from the cmd line via -PpropName=xxx)
