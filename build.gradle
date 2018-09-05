@@ -109,6 +109,8 @@ buildscript {
     }
 }
 
+group = 'stroom'
+version = versions.stroomQuery
 
 allprojects {
     apply plugin: 'maven'
