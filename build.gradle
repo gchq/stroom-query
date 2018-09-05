@@ -104,18 +104,14 @@ buildscript {
     }
     dependencies {
         classpath 'ca.cutterslade.gradle:gradle-dependency-analyze:1.1.0'
-        classpath 'com.benjaminsproule:swagger-gradle-plugin:1.0.2'
+        classpath 'com.benjaminsproule:swagger-gradle-plugin:1.0.4'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
     }
 }
 
-group = 'stroom'
-version = versions.stroomQuery
-
 allprojects {
     apply plugin: 'maven'
     apply plugin: 'maven-publish'
-    apply plugin: 'com.jfrog.bintray'
 
     group = 'stroom'
     version = versions.stroomQuery
@@ -138,30 +134,9 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
     apply plugin: 'ca.cutterslade.analyze'
+    apply plugin: 'com.jfrog.bintray'
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     configurations {
 
