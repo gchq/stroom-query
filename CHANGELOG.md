@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.0-beta.7] - 2018-09-05
+
+* Added automatic module name for Java 9 builds.
+
 * Issue **stroom-#808** : Fix to clear previous dashboard search results when new results are empty.
 
 * Issue **stroom-#805** : Fix for dashboard date time formatting to use local time zone.
