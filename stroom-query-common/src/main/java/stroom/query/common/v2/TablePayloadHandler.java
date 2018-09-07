@@ -21,15 +21,22 @@ import org.slf4j.LoggerFactory;
 import stroom.mapreduce.v2.PairQueue;
 import stroom.mapreduce.v2.UnsafePairQueue;
 import stroom.query.api.v2.Field;
+import stroom.query.util.LambdaLogger;
+import stroom.query.util.LambdaLoggerFactory;
 import stroom.util.shared.HasTerminate;
 
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class TablePayloadHandler implements PayloadHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(TablePayloadHandler.class);
+    private static final LambdaLogger LAMBDA_LOGGER = LambdaLoggerFactory.getLogger(TablePayloadHandler.class);
 
     private final CompiledSorter compiledSorter;
     private final CompiledDepths compiledDepths;
@@ -41,6 +48,9 @@ public class TablePayloadHandler implements PayloadHandler {
 
     private volatile PairQueue<GroupKey, Item> currentQueue;
     private volatile Data data;
+
+    private final Lock lock = new ReentrantLock();
+    private final Condition condition = lock.newCondition();
 
     public TablePayloadHandler(final List<Field> fields,
                                final boolean showDetails,
@@ -84,6 +94,14 @@ public class TablePayloadHandler implements PayloadHandler {
                     mergePending(hasTerminate);
                 }
             }
+        }
+
+        lock.lock();
+        try {
+            // signal any thread waiting on the condition to check the busy state
+            condition.signalAll();
+        } finally {
+            lock.unlock();
         }
     }
 
@@ -206,5 +224,35 @@ public class TablePayloadHandler implements PayloadHandler {
 
     public boolean busy() {
         return pendingMerges.size() > 0 || merging.get();
+    }
+
+    public boolean waitForPendingWork(final long timeout, final TimeUnit timeUnit) {
+
+        // this assumes that when this method has been called, all calls to addQueue
+        // have been made, thus we will wait for the queue to empty and an marge activity
+        // to finish.
+
+        lock.lock();
+        try {
+
+            boolean hasPendingWorkFinished = true;
+            while (busy()) {
+                boolean result = LAMBDA_LOGGER.logDurationIfTraceEnabled(() -> {
+                    try {
+                        return condition.await(timeout, timeUnit);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        return false;
+                    }
+                }, "Waiting for TablePayloadHandler to not be busy");
+                if (!result) {
+                    hasPendingWorkFinished = false;
+                    break;
+                }
+            }
+            return hasPendingWorkFinished;
+        } finally {
+            lock.unlock();
+        }
     }
 }

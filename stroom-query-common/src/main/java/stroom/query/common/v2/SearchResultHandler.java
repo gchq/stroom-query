@@ -21,6 +21,8 @@ import org.slf4j.LoggerFactory;
 import stroom.mapreduce.v2.UnsafePairQueue;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.common.v2.CoprocessorSettingsMap.CoprocessorKey;
+import stroom.query.util.LambdaLogger;
+import stroom.query.util.LambdaLoggerFactory;
 import stroom.util.shared.HasTerminate;
 
 import java.util.HashMap;
@@ -30,11 +32,13 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SearchResultHandler implements ResultHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchResultHandler.class);
+    private static final LambdaLogger LAMBDA_LOGGER = LambdaLoggerFactory.getLogger(SearchResultHandler.class);
 
     private final CoprocessorSettingsMap coprocessorSettingsMap;
     private final Map<CoprocessorKey, TablePayloadHandler> handlerMap = new HashMap<>();
@@ -131,7 +135,20 @@ public class SearchResultHandler implements ResultHandler {
         }
 
         if (complete) {
-            if (!areHandlersBusy()) {
+            // We have been told the search is complete but the TablePayloadHandlers may still be doing work
+            // so wait for them
+            boolean hasPendingWorkFinished = false;
+            for (final TablePayloadHandler handler : handlerMap.values()) {
+                hasPendingWorkFinished = handler.waitForPendingWork(10, TimeUnit.SECONDS);
+
+                if (!hasPendingWorkFinished) {
+                    LOGGER.trace("Work still pending after timeout");
+                    break;
+                }
+            }
+            LOGGER.trace("isPendingWorkFinished={}", hasPendingWorkFinished);
+
+            if (hasPendingWorkFinished) {
                 LOGGER.trace("setting complete to {}", true);
                 this.complete.set(true);
                 //notify the listeners
