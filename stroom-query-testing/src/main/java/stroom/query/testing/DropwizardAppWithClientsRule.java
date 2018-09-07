@@ -8,7 +8,6 @@ import io.dropwizard.testing.ConfigOverride;
 import io.dropwizard.testing.DropwizardTestSupport;
 import io.dropwizard.testing.junit.DropwizardAppRule;
 
-import javax.annotation.Nullable;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class DropwizardAppWithClientsRule<C extends Configuration> extends Dropw
     }
 
     public DropwizardAppWithClientsRule(final Class<? extends Application<C>> applicationClass,
-                                        final @Nullable String configPath,
+                                        final String configPath,
                                         final ConfigOverride... configOverrides) {
         super(applicationClass, configPath, Optional.empty(), configOverrides);
     }

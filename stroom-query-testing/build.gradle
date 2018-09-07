@@ -61,13 +61,14 @@ dependencies {
 
     //--------3rd party--------
     compile libs.dropwizard_core
+    compile libs.dropwizard_testing
     compile libs.guice
-    compile libs.google_findbugs
     compile libs.javax_ws;
     compile libs.jackson_core
     compile libs.jackson_databind
     compile libs.jetty_http
     compile libs.junit_jupiter_api
+    compile libs.junit4
     compile libs.jose4j
     compile libs.slf4j_api
     compile libs.wiremock
