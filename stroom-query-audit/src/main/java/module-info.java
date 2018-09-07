@@ -1,0 +1,2 @@
+module stroom.query.audit {
+}
