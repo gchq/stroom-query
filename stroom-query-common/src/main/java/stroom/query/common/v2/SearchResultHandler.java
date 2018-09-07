@@ -109,31 +109,39 @@ public class SearchResultHandler implements ResultHandler {
 
     @Override
     public boolean isComplete() {
-        final boolean complete = this.complete.get();
-        if (!complete) {
-            return false;
-        }
+        return complete.get();
+    }
 
+    private boolean areHandlersBusy() {
         for (final TablePayloadHandler handler : handlerMap.values()) {
             if (handler.busy()) {
-                return false;
+                return true;
             }
         }
-
-        return true;
+        return false;
     }
 
     @Override
     public void setComplete(final boolean complete) {
-        final boolean previousValue = this.complete.get();
-        this.complete.set(complete);
+        final boolean isAlreadyComplete = this.complete.get();
+        LOGGER.trace("setComplete({}), currentValue={}", complete, isAlreadyComplete);
+        if (isAlreadyComplete && !complete) {
+            throw new RuntimeException("Attempting to mark SearchResultHandler as not complete when it has " +
+                    "already been completed");
+        }
 
-        //notify the listeners
-        if (complete && (complete != previousValue)) {
-            for (CompletionListener listener; (listener = completionListeners.poll()) != null; ) {
-                //when notified they will check isComplete
-                LOGGER.debug("Notifying {} {} that we are complete", listener.getClass().getName(), listener);
-                listener.onCompletion();
+        if (complete) {
+            if (!areHandlersBusy()) {
+                LOGGER.trace("setting complete to {}", true);
+                this.complete.set(true);
+                //notify the listeners
+                for (CompletionListener listener; (listener = completionListeners.poll()) != null; ) {
+                    // when notified they will check isComplete
+                    LOGGER.debug("Notifying {} {} that we are complete", listener.getClass().getName(), listener);
+                    listener.onCompletion();
+                }
+            } else {
+                LOGGER.trace("Handlers are busy so not setting complete");
             }
         }
     }
