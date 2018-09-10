@@ -23,6 +23,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @JsonPropertyOrder({"componentId", "rows", "resultRange", "totalResults", "error"})
 @ApiModel(
@@ -85,21 +86,15 @@ public final class TableResult extends Result {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-
         final TableResult that = (TableResult) o;
-
-        if (rows != null ? !rows.equals(that.rows) : that.rows != null) return false;
-        if (resultRange != null ? !resultRange.equals(that.resultRange) : that.resultRange != null) return false;
-        return (totalResults != null ? !totalResults.equals(that.totalResults) : that.totalResults != null);
+        return Objects.equals(rows, that.rows) &&
+                Objects.equals(resultRange, that.resultRange) &&
+                Objects.equals(totalResults, that.totalResults);
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (rows != null ? rows.hashCode() : 0);
-        result = 31 * result + (resultRange != null ? resultRange.hashCode() : 0);
-        result = 31 * result + (totalResults != null ? totalResults.hashCode() : 0);
-        return result;
+        return Objects.hash(super.hashCode(), rows, resultRange, totalResults);
     }
 
     @Override
