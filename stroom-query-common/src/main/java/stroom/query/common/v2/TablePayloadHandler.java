@@ -72,6 +72,7 @@ public class TablePayloadHandler implements PayloadHandler {
     }
 
     void addQueue(final UnsafePairQueue<GroupKey, Item> newQueue, final HasTerminate hasTerminate) {
+        LAMBDA_LOGGER.trace(() -> LambdaLogger.buildMessage("addQueue called for {} items", newQueue.size()));
         if (newQueue != null) {
             if (hasTerminate.isTerminated()) {
                 // Clear the queue if we should terminate.
@@ -94,6 +95,7 @@ public class TablePayloadHandler implements PayloadHandler {
                     mergePending(hasTerminate);
                 }
             }
+            LOGGER.trace("Finished merging items");
         }
 
         lock.lock();
