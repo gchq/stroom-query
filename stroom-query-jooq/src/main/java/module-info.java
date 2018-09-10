@@ -10,5 +10,5 @@ module stroom.query.jooq {
     requires dropwizard.flyway;
     requires guava;
     requires java.sql;
-    requires slf4j.api;
+//    requires slf4j.api;
 }
