@@ -82,11 +82,11 @@ public final class TableResult extends Result {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        TableResult that = (TableResult) o;
+        final TableResult that = (TableResult) o;
         return Objects.equals(rows, that.rows) &&
                 Objects.equals(resultRange, that.resultRange) &&
                 Objects.equals(totalResults, that.totalResults);

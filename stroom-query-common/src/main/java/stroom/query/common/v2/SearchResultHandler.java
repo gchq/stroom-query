@@ -16,9 +16,13 @@
 
 package stroom.query.common.v2;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import stroom.mapreduce.v2.UnsafePairQueue;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.common.v2.CoprocessorSettingsMap.CoprocessorKey;
+import stroom.query.util.LambdaLogger;
+import stroom.query.util.LambdaLoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -26,6 +30,10 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 public class SearchResultHandler implements ResultHandler {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SearchResultHandler.class);
+    private static final LambdaLogger LAMBDA_LOGGER = LambdaLoggerFactory.getLogger(SearchResultHandler.class);
+
     private final CoprocessorSettingsMap coprocessorSettingsMap;
     private final CompletionState completionState;
     private final Map<CoprocessorKey, TablePayloadHandler> handlerMap;
