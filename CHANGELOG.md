@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **gchq/stroom#830** : Fix api queries that never return before the server times out.
+
+* Issue **gchq/stroom#791** : Fix total results count not updating.
+
 * Issue **stroom-#808** : Fix to clear previous dashboard search results when new results are empty.
 
 * Issue **stroom-#805** : Fix for dashboard date time formatting to use local time zone.
