@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.1-beta.7] - 2018-10-11
+
 * Issue **gchq/stroom#830** : Fix api queries that never return before the server times out.
 
 * Issue **gchq/stroom#791** : Fix total results count not updating.
