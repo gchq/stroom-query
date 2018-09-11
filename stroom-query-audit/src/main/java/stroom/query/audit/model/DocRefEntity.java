@@ -7,7 +7,6 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 public class DocRefEntity implements Serializable {
-
     /**
      * Used for injection based on templated services.
      *

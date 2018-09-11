@@ -7,6 +7,8 @@ module stroom.query.testing {
     requires com.google.guice;
     requires dropwizard.core;
     requires dropwizard.testing;
+    requires javax.ws.rs.api;
+    requires jetty.http;
     requires junit;
     requires org.junit.jupiter.api;
 }

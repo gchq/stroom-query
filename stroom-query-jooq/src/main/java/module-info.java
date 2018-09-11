@@ -8,7 +8,11 @@ module stroom.query.jooq {
 
     requires dropwizard.db;
     requires dropwizard.flyway;
-    requires guava;
+    requires com.google.guice;
     requires java.sql;
-//    requires slf4j.api;
+    requires slf4j.api;
+    requires dropwizard.jooq;
+    requires jooq;
+    requires dropwizard.core;
+    requires flyway.core;
 }

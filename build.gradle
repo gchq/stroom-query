@@ -75,6 +75,8 @@ ext.libs = [
         jackson_annotations : "com.fasterxml.jackson.core:jackson-annotations:$versions.jackson",
         jackson_core        : "com.fasterxml.jackson.core:jackson-core:$versions.jackson",
         jackson_databind    : "com.fasterxml.jackson.core:jackson-databind:$versions.jackson",
+        javax_activation               : "javax.activation:javax.activation-api:1.2.0",
+        javax_activation_impl          : "javax.activation:activation:1.1.1",
         javax_inject        : "javax.inject:javax.inject:$versions.javax_inject",
         javax_ws            : "javax.ws.rs:javax.ws.rs-api:$versions.javax_ws",
         javax_servlet       : "javax.servlet:javax.servlet-api:$versions.javax_servlet",
@@ -109,12 +111,14 @@ buildscript {
         classpath 'stroom:gradle-dependency-analyze:v2.2.2'
         classpath 'com.benjaminsproule:swagger-gradle-plugin:1.0.4'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+        classpath 'org.kordamp.gradle:jdeps-gradle-plugin:0.3.0'
     }
 }
 
 allprojects {
     apply plugin: 'maven'
     apply plugin: 'maven-publish'
+//    apply plugin: 'org.kordamp.jdeps'
 
     group = 'stroom'
     version = versions.stroomQuery
@@ -135,9 +139,12 @@ def pomConfig = {
 
 //must be applied to all projects including root
 apply plugin: 'ca.cutterslade.analyze'
+apply plugin: 'java-library'
+sourceCompatibility = JavaVersion.VERSION_1_10
+targetCompatibility = JavaVersion.VERSION_1_10
 
 subprojects {
-    apply plugin: 'java'
+    apply plugin: 'java-library'
     apply plugin: 'idea'
     apply plugin: 'ca.cutterslade.analyze'
     apply plugin: 'com.jfrog.bintray'
@@ -181,9 +188,6 @@ subprojects {
             }
         }
     }
-
-
-
 
 
 

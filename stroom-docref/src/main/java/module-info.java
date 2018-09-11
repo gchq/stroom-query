@@ -1,6 +1,7 @@
 module stroom.docref {
-    requires java.xml.bind;
     requires com.fasterxml.jackson.annotation;
+    requires java.xml.bind;
+    requires swagger.annotations;
 
     exports stroom.docref;
 }
