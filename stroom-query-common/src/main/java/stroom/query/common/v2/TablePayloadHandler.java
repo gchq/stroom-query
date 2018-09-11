@@ -32,7 +32,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.LockSupport;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class TablePayloadHandler implements PayloadHandler {
@@ -134,11 +133,6 @@ public class TablePayloadHandler implements PayloadHandler {
                     }
 
                     if (didMergeItems) {
-
-                        LOGGER.info("Parking thread");
-                        LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(2));
-                        LOGGER.info("Finished parking thread");
-
                         lock.lock();
                         try {
                             // signal any thread waiting on the condition to check the busy state
