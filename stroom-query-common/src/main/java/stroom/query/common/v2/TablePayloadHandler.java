@@ -21,15 +21,22 @@ import org.slf4j.LoggerFactory;
 import stroom.mapreduce.v2.PairQueue;
 import stroom.mapreduce.v2.UnsafePairQueue;
 import stroom.query.api.v2.Field;
+import stroom.query.util.LambdaLogger;
+import stroom.query.util.LambdaLoggerFactory;
 import stroom.util.shared.HasTerminate;
 
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class TablePayloadHandler implements PayloadHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(TablePayloadHandler.class);
+    private static final LambdaLogger LAMBDA_LOGGER = LambdaLoggerFactory.getLogger(TablePayloadHandler.class);
 
     private final CompiledSorter compiledSorter;
     private final CompiledDepths compiledDepths;
@@ -41,6 +48,9 @@ public class TablePayloadHandler implements PayloadHandler {
 
     private volatile PairQueue<GroupKey, Item> currentQueue;
     private volatile Data data;
+
+    private final Lock lock = new ReentrantLock();
+    private final Condition condition = lock.newCondition();
 
     public TablePayloadHandler(final List<Field> fields,
                                final boolean showDetails,
@@ -62,6 +72,7 @@ public class TablePayloadHandler implements PayloadHandler {
     }
 
     void addQueue(final UnsafePairQueue<GroupKey, Item> newQueue, final HasTerminate hasTerminate) {
+        LAMBDA_LOGGER.trace(() -> LambdaLogger.buildMessage("addQueue called for {} items", newQueue.size()));
         if (newQueue != null) {
             if (hasTerminate.isTerminated()) {
                 // Clear the queue if we should terminate.
@@ -82,14 +93,19 @@ public class TablePayloadHandler implements PayloadHandler {
                 if (!Thread.currentThread().isInterrupted()) {
                     // Try and merge all of the items on the pending merge queue.
                     mergePending(hasTerminate);
+                    LOGGER.trace("Finished merging items");
                 }
             }
         }
+
+        LAMBDA_LOGGER.trace(() ->
+                LambdaLogger.buildMessage("Finished adding items to the queue, busy: {}", busy()));
     }
 
     private void mergePending(final HasTerminate hasTerminate) {
         // Only 1 thread will get to do a merge.
         if (merging.compareAndSet(false, true)) {
+            boolean didMergeItems = false;
             try {
                 if (hasTerminate.isTerminated()) {
                     // Clear the queue if we should terminate.
@@ -97,6 +113,9 @@ public class TablePayloadHandler implements PayloadHandler {
 
                 } else {
                     UnsafePairQueue<GroupKey, Item> queue = pendingMerges.poll();
+                    if (queue != null) {
+                        didMergeItems = true;
+                    }
                     while (queue != null) {
                         try {
                             mergeQueue(queue);
@@ -111,6 +130,17 @@ public class TablePayloadHandler implements PayloadHandler {
                         }
 
                         queue = pendingMerges.poll();
+                    }
+
+                    if (didMergeItems) {
+                        lock.lock();
+                        try {
+                            // signal any thread waiting on the condition to check the busy state
+                            LOGGER.trace("Signal all threads to check busy state");
+                            condition.signalAll();
+                        } finally {
+                            lock.unlock();
+                        }
                     }
                 }
             } finally {
@@ -128,6 +158,8 @@ public class TablePayloadHandler implements PayloadHandler {
             if (pendingMerges.peek() != null) {
                 mergePending(hasTerminate);
             }
+        } else {
+            LOGGER.trace("Another thread is busy merging, so will let it merge my items");
         }
     }
 
@@ -205,6 +237,39 @@ public class TablePayloadHandler implements PayloadHandler {
     }
 
     public boolean busy() {
-        return pendingMerges.size() > 0 || merging.get();
+        boolean isBusy = pendingMerges.size() > 0 || merging.get();
+        LAMBDA_LOGGER.trace(() -> LambdaLogger.buildMessage("busy() called, pendingMerges: {}, merging: {}, returning {}",
+                pendingMerges.size(), merging.get(), isBusy));
+        return isBusy;
+    }
+
+    public boolean waitForPendingWork(final long timeout, final TimeUnit timeUnit) {
+
+        // this assumes that when this method has been called, all calls to addQueue
+        // have been made, thus we will wait for the queue to empty and an marge activity
+        // to finish.
+
+        lock.lock();
+        try {
+
+            while (busy()) {
+                boolean awaitResult = LAMBDA_LOGGER.logDurationIfTraceEnabled(() -> {
+                    try {
+                        return condition.await(timeout, timeUnit);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        return false;
+                    }
+                }, "Waiting for TablePayloadHandler to not be busy");
+                if (!awaitResult) {
+                    // we timed out so don't go round again
+                    LOGGER.trace("Timed out waiting for TablePayloadHandler to not be busy");
+                    break;
+                }
+            }
+            return !busy();
+        } finally {
+            lock.unlock();
+        }
     }
 }

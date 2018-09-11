@@ -21,6 +21,8 @@ import org.slf4j.LoggerFactory;
 import stroom.mapreduce.v2.UnsafePairQueue;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.common.v2.CoprocessorSettingsMap.CoprocessorKey;
+import stroom.query.util.LambdaLogger;
+import stroom.query.util.LambdaLoggerFactory;
 import stroom.util.shared.HasTerminate;
 
 import java.util.HashMap;
@@ -30,11 +32,13 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SearchResultHandler implements ResultHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchResultHandler.class);
+    private static final LambdaLogger LAMBDA_LOGGER = LambdaLoggerFactory.getLogger(SearchResultHandler.class);
 
     private final CoprocessorSettingsMap coprocessorSettingsMap;
     private final Map<CoprocessorKey, TablePayloadHandler> handlerMap = new HashMap<>();
@@ -109,31 +113,52 @@ public class SearchResultHandler implements ResultHandler {
 
     @Override
     public boolean isComplete() {
-        final boolean complete = this.complete.get();
-        if (!complete) {
-            return false;
-        }
+        return complete.get();
+    }
 
+    private boolean areHandlersBusy() {
         for (final TablePayloadHandler handler : handlerMap.values()) {
             if (handler.busy()) {
-                return false;
+                return true;
             }
         }
-
-        return true;
+        return false;
     }
 
     @Override
     public void setComplete(final boolean complete) {
-        final boolean previousValue = this.complete.get();
-        this.complete.set(complete);
+        final boolean isAlreadyComplete = this.complete.get();
+        LOGGER.trace("setComplete({}), currentValue={}", complete, isAlreadyComplete);
+        if (isAlreadyComplete && !complete) {
+            throw new RuntimeException("Attempting to mark SearchResultHandler as not complete when it has " +
+                    "already been completed");
+        }
 
-        //notify the listeners
-        if (complete && (complete != previousValue)) {
-            for (CompletionListener listener; (listener = completionListeners.poll()) != null; ) {
-                //when notified they will check isComplete
-                LOGGER.debug("Notifying {} {} that we are complete", listener.getClass().getName(), listener);
-                listener.onCompletion();
+        if (complete) {
+            // We have been told the search is complete but the TablePayloadHandlers may still be doing work
+            // so wait for them
+            boolean hasPendingWorkFinished = false;
+            for (final TablePayloadHandler handler : handlerMap.values()) {
+                hasPendingWorkFinished = handler.waitForPendingWork(10, TimeUnit.SECONDS);
+
+                if (!hasPendingWorkFinished) {
+                    LOGGER.trace("Work still pending after timeout");
+                    break;
+                }
+            }
+            LOGGER.trace("isPendingWorkFinished={}", hasPendingWorkFinished);
+
+            if (hasPendingWorkFinished) {
+                LOGGER.trace("setting complete to {}", true);
+                this.complete.set(true);
+                //notify the listeners
+                for (CompletionListener listener; (listener = completionListeners.poll()) != null; ) {
+                    // when notified they will check isComplete
+                    LOGGER.debug("Notifying {} {} that we are complete", listener.getClass().getName(), listener);
+                    listener.onCompletion();
+                }
+            } else {
+                LOGGER.trace("Handlers are busy so not setting complete");
             }
         }
     }

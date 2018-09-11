@@ -26,6 +26,7 @@ import javax.xml.bind.annotation.XmlElement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @JsonPropertyOrder({"componentId", "structure", "values", "size", "error"})
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -89,21 +90,15 @@ public final class FlatResult extends Result {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-
         final FlatResult that = (FlatResult) o;
-
-        if (structure != null ? !structure.equals(that.structure) : that.structure != null) return false;
-        if (values != null ? !values.equals(that.values) : that.values != null) return false;
-        return (size != null ? !size.equals(that.size) : that.size != null);
+        return Objects.equals(structure, that.structure) &&
+                Objects.equals(values, that.values) &&
+                Objects.equals(size, that.size);
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (structure != null ? structure.hashCode() : 0);
-        result = 31 * result + (values != null ? values.hashCode() : 0);
-        result = 31 * result + (size != null ? size.hashCode() : 0);
-        return result;
+        return Objects.hash(super.hashCode(), structure, values, size);
     }
 
     @Override
