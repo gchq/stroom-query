@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **gchq/stroom#830** : Fix api queries that never return before the server times out.
+
+* Issue **gchq/stroom#791** : Fix total results count not updating.
+
 ## [v4.0-beta.7] - 2018-09-05
 
 * Added automatic module name for Java 9 builds.
