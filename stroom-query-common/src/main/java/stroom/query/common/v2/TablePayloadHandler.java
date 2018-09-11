@@ -32,6 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.LockSupport;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class TablePayloadHandler implements PayloadHandler {
@@ -93,23 +94,19 @@ public class TablePayloadHandler implements PayloadHandler {
                 if (!Thread.currentThread().isInterrupted()) {
                     // Try and merge all of the items on the pending merge queue.
                     mergePending(hasTerminate);
+                    LOGGER.trace("Finished merging items");
                 }
             }
-            LOGGER.trace("Finished merging items");
         }
 
-        lock.lock();
-        try {
-            // signal any thread waiting on the condition to check the busy state
-            condition.signalAll();
-        } finally {
-            lock.unlock();
-        }
+        LAMBDA_LOGGER.trace(() ->
+                LambdaLogger.buildMessage("Finished adding items to the queue, busy: {}", busy()));
     }
 
     private void mergePending(final HasTerminate hasTerminate) {
         // Only 1 thread will get to do a merge.
         if (merging.compareAndSet(false, true)) {
+            boolean didMergeItems = false;
             try {
                 if (hasTerminate.isTerminated()) {
                     // Clear the queue if we should terminate.
@@ -117,6 +114,9 @@ public class TablePayloadHandler implements PayloadHandler {
 
                 } else {
                     UnsafePairQueue<GroupKey, Item> queue = pendingMerges.poll();
+                    if (queue != null) {
+                        didMergeItems = true;
+                    }
                     while (queue != null) {
                         try {
                             mergeQueue(queue);
@@ -131,6 +131,22 @@ public class TablePayloadHandler implements PayloadHandler {
                         }
 
                         queue = pendingMerges.poll();
+                    }
+
+                    if (didMergeItems) {
+
+                        LOGGER.info("Parking thread");
+                        LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(2));
+                        LOGGER.info("Finished parking thread");
+
+                        lock.lock();
+                        try {
+                            // signal any thread waiting on the condition to check the busy state
+                            LOGGER.trace("Signal all threads to check busy state");
+                            condition.signalAll();
+                        } finally {
+                            lock.unlock();
+                        }
                     }
                 }
             } finally {
@@ -148,6 +164,8 @@ public class TablePayloadHandler implements PayloadHandler {
             if (pendingMerges.peek() != null) {
                 mergePending(hasTerminate);
             }
+        } else {
+            LOGGER.trace("Another thread is busy merging, so will let it merge my items");
         }
     }
 
@@ -225,7 +243,10 @@ public class TablePayloadHandler implements PayloadHandler {
     }
 
     public boolean busy() {
-        return pendingMerges.size() > 0 || merging.get();
+        boolean isBusy = pendingMerges.size() > 0 || merging.get();
+        LAMBDA_LOGGER.trace(() -> LambdaLogger.buildMessage("busy() called, pendingMerges: {}, merging: {}, returning {}",
+                pendingMerges.size(), merging.get(), isBusy));
+        return isBusy;
     }
 
     public boolean waitForPendingWork(final long timeout, final TimeUnit timeUnit) {
@@ -237,9 +258,8 @@ public class TablePayloadHandler implements PayloadHandler {
         lock.lock();
         try {
 
-            boolean hasPendingWorkFinished = true;
             while (busy()) {
-                boolean result = LAMBDA_LOGGER.logDurationIfTraceEnabled(() -> {
+                boolean awaitResult = LAMBDA_LOGGER.logDurationIfTraceEnabled(() -> {
                     try {
                         return condition.await(timeout, timeUnit);
                     } catch (InterruptedException e) {
@@ -247,12 +267,13 @@ public class TablePayloadHandler implements PayloadHandler {
                         return false;
                     }
                 }, "Waiting for TablePayloadHandler to not be busy");
-                if (!result) {
-                    hasPendingWorkFinished = false;
+                if (!awaitResult) {
+                    // we timed out so don't go round again
+                    LOGGER.trace("Timed out waiting for TablePayloadHandler to not be busy");
                     break;
                 }
             }
-            return hasPendingWorkFinished;
+            return !busy();
         } finally {
             lock.unlock();
         }
