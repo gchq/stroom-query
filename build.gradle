@@ -140,27 +140,6 @@ subprojects {
     targetCompatibility = 1.8
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     configurations {
 
         // ensure deps don't bring any logging implementations with them as this will
@@ -198,22 +177,6 @@ subprojects {
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     repositories {
         mavenLocal()
         jcenter()
@@ -224,6 +187,10 @@ subprojects {
     task sourcesJar(type: Jar, dependsOn: classes) {
         classifier = 'sources'
         from sourceSets.main.allSource
+    }
+
+    javadoc {
+        options.addBooleanOption('html5', true)
     }
 
     task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -430,6 +397,7 @@ task aggregatedJavadocs(
 	options.author true
 	options.links 'http://docs.oracle.com/javase/8/docs/api/'
 	options.addStringOption 'Xdoclint:none', '-quiet'
+        options.addBooleanOption('html5', true)
 	
 	subprojects.each { proj ->
 		proj.tasks.withType(Javadoc).each { javadocTask ->
