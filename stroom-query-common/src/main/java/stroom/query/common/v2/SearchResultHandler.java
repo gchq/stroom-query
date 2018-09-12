@@ -102,4 +102,13 @@ public class SearchResultHandler implements ResultHandler {
         }
         return null;
     }
+
+    @Override
+    public void waitForPendingWork() throws InterruptedException {
+        // wait for each handler to complete any outstanding work
+        for (final TablePayloadHandler handler : handlerMap.values()) {
+            LOGGER.trace("About to wait for handler {}", handler);
+            handler.waitForPendingWork();
+        }
+    }
 }

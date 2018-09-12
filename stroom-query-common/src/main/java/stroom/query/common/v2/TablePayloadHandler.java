@@ -26,7 +26,6 @@ import stroom.query.util.LambdaLoggerFactory;
 
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Condition;
@@ -104,7 +103,6 @@ public class TablePayloadHandler implements PayloadHandler {
     private void mergePending() {
         // Only 1 thread will get to do a merge.
         if (merging.compareAndSet(false, true)) {
-            boolean didMergeItems = false;
             try {
                 if (Thread.currentThread().isInterrupted()) {
                     // Clear the queue if we should terminate.
@@ -112,9 +110,12 @@ public class TablePayloadHandler implements PayloadHandler {
 
                 } else {
                     UnsafePairQueue<GroupKey, Item> queue = pendingMerges.poll();
+
+                    boolean didMergeItems = false;
                     if (queue != null) {
                         didMergeItems = true;
                     }
+
                     while (queue != null) {
                         try {
                             mergeQueue(queue);
@@ -237,12 +238,13 @@ public class TablePayloadHandler implements PayloadHandler {
 
     public boolean busy() {
         boolean isBusy = pendingMerges.size() > 0 || merging.get();
-        LAMBDA_LOGGER.trace(() -> LambdaLogger.buildMessage("busy() called, pendingMerges: {}, merging: {}, returning {}",
+        LAMBDA_LOGGER.trace(() ->
+                LambdaLogger.buildMessage("busy() called, pendingMerges: {}, merging: {}, returning {}",
                 pendingMerges.size(), merging.get(), isBusy));
         return isBusy;
     }
 
-    public boolean waitForPendingWork(final long timeout, final TimeUnit timeUnit) {
+    public void waitForPendingWork() throws InterruptedException {
 
         // this assumes that when this method has been called, all calls to addQueue
         // have been made, thus we will wait for the queue to empty and an marge activity
@@ -252,21 +254,14 @@ public class TablePayloadHandler implements PayloadHandler {
         try {
 
             while (busy()) {
-                boolean awaitResult = LAMBDA_LOGGER.logDurationIfTraceEnabled(() -> {
                     try {
-                        return condition.await(timeout, timeUnit);
+                        condition.await();
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
-                        return false;
+                        LOGGER.debug("Thread interrupted");
+                        throw e;
                     }
-                }, "Waiting for TablePayloadHandler to not be busy");
-                if (!awaitResult) {
-                    // we timed out so don't go round again
-                    LOGGER.trace("Timed out waiting for TablePayloadHandler to not be busy");
-                    break;
-                }
             }
-            return !busy();
         } finally {
             lock.unlock();
         }
