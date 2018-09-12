@@ -1,5 +1,5 @@
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.10'
+    gradleVersion = '4.7' //downgrading to 4.7 to get bintray plugin 1.8.4 working
 }
 
 //if the project has a value for the passed property (i.e from the cmd line via -PpropName=xxx)
