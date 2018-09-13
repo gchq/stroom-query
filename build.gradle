@@ -97,6 +97,18 @@ ext.libs = [
         zzDUMMYzz           : "makes sorting easier"
 ]
 
+//defines a list of gradle projects that we will publish with maven/bintray
+def projectsToBePublished = subprojects.findAll { project ->
+    project.path in [
+            ':stroom-docref',
+            ':stroom-query-api',
+            ':stroom-query-audit',
+            ':stroom-query-authorisation',
+            ':stroom-query-common',
+            'zzDUMMYzz to ease sorting'
+    ]
+}
+
 buildscript {
     repositories {
         mavenLocal()
@@ -109,36 +121,24 @@ buildscript {
     }
 }
 
-
 allprojects {
-    apply plugin: 'maven'
-    apply plugin: 'maven-publish'
-    apply plugin: 'com.jfrog.bintray'
 
-    group = 'stroom'
-    version = versions.stroomQuery
-}
-
-def pomConfig = {
-    licenses {
-        license {
-            name "The Apache Software License, Version 2.0"
-            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
-            distribution "repo"
-        }
-    }
-    scm {
-        url "https://github.com/stroom/stroom-query"
-    }
 }
 
 subprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
     apply plugin: 'ca.cutterslade.analyze'
+
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
+    repositories {
+        mavenLocal()
+        jcenter()
+        maven { url "https://dl.bintray.com/stroom/event-logging" }
+        maven { url "https://dl.bintray.com/stroom/stroom" }
+    }
 
     configurations {
 
@@ -173,80 +173,6 @@ subprojects {
 //                        details.useVersion versions.dropwizard_metrics
 //                    }
 //                }
-            }
-        }
-    }
-
-    repositories {
-        mavenLocal()
-        jcenter()
-        maven { url "https://dl.bintray.com/stroom/event-logging" }
-        maven { url "https://dl.bintray.com/stroom/stroom" }
-    }
-
-    task sourcesJar(type: Jar, dependsOn: classes) {
-        classifier = 'sources'
-        from sourceSets.main.allSource
-    }
-
-    javadoc {
-        // this switch is needed in java10
-        //options.addBooleanOption('html5', true)
-    }
-
-    task javadocJar(type: Jar, dependsOn: javadoc) {
-        classifier = 'javadoc'
-        from javadoc.destinationDir
-    }
-
-    artifacts {
-        archives sourcesJar
-        archives javadocJar
-    }
-
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                artifact sourcesJar
-                artifact javadocJar
-                pom.withXml {
-                    def root = asNode()
-                    root.appendNode('name', project.name)
-                    root.children().last() + pomConfig
-                }
-            }
-        }
-    }
-
-    //configuration for the bintray plugin for uploading maven artefacts to bintray
-    //see https://github.com/bintray/gradle-bintray-plugin
-    //run task bintrayUpload to push the files, assuming BINTRAY_USER/KEY are set as env vars
-    bintray {
-        //Must never write these to log or system out
-        user = System.getenv('BINTRAY_USER') //set in Travis UI
-        key = System.getenv('BINTRAY_KEY') //set in Travis UI
-
-        //The maven plugin publications to push to bintray
-        publications = ['mavenJava']
-
-        //immediately make the artefacts public
-        publish = true
-
-        pkg {
-            repo = 'stroom'
-            name = 'stroom-query'
-            userOrg = 'stroom'
-            licenses = ['Apache-2.0']
-            vcsUrl = 'https://github.com/gchq/stroom-query.git'
-            version {
-                name = "${versions.stroomQuery}"
-                desc = "stroom-query-${versions.stroomQuery}"
-                released = new Date()
-                vcsTag = "${versions.stroomQuery}"
-                gpg {
-                    //Bintray will self-sign the files
-                    sign = true //Determines whether to GPG sign the files. The default is false
-                }
             }
         }
     }
@@ -297,92 +223,106 @@ subprojects {
 //            options.addStringOption('Xdoclint:all,-missing', '-html5')
 //        }
 
+    }
+}
+
+//configures only those projects in publishedProjectsPaths
+configure(projectsToBePublished) {
+    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
+    apply plugin: 'com.jfrog.bintray'
+
+    group = 'stroom'
+    version = versions.stroomQuery
+
+    def pomConfig = {
+        licenses {
+            license {
+                name "The Apache Software License, Version 2.0"
+                url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                distribution "repo"
+            }
+        }
+        scm {
+            url "https://github.com/stroom/stroom-query"
+        }
+    }
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    javadoc {
+        // this switch is needed in java10
+        //options.addBooleanOption('html5', true)
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    artifacts {
+        archives sourcesJar
+        archives javadocJar
+    }
+
+    afterEvaluate {
         jar {
             inputs.property("moduleName", moduleName)
             manifest {
                 attributes(
-                        "Automatic-Module-Name": moduleName,
+                    "Automatic-Module-Name": moduleName,
                 )
             }
         }
     }
-}
 
-project(':stroom-docref') {
     publishing {
         publications {
             mavenJava(MavenPublication) {
-                from components.java
+                artifact sourcesJar
+                artifact javadocJar
+                pom.withXml {
+                    def root = asNode()
+                    root.appendNode('name', project.name)
+                    root.children().last() + pomConfig
+                }
             }
         }
     }
-}
 
-project(':stroom-query-api') {
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
-            }
-        }
-    }
-}
+    //configuration for the bintray plugin for uploading maven artefacts to bintray
+    //see https://github.com/bintray/gradle-bintray-plugin
+    //run task bintrayUpload to push the files, assuming BINTRAY_USER/KEY are set as env vars
+    bintray {
+        //Must never write these to log or system out
+        user = System.getenv('BINTRAY_USER') //set in Travis UI
+        key = System.getenv('BINTRAY_KEY') //set in Travis UI
 
-project(':stroom-query-authorisation') {
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
-            }
-        }
-    }
-}
+        //The maven plugin publications to push to bintray
+        publications = ['mavenJava']
 
-project(':stroom-query-common') {
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
-            }
-        }
-    }
-}
+        //immediately make the artefacts public
+        publish = true
 
-project(':stroom-query-audit') {
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
-            }
-        }
-    }
-}
-
-project(':stroom-query-hibernate') {
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
-            }
-        }
-    }
-}
-
-project(':stroom-query-jooq') {
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
-            }
-        }
-    }
-}
-
-project(':stroom-query-testing') {
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
+        pkg {
+            repo = 'stroom'
+            name = 'stroom-query'
+            userOrg = 'stroom'
+            licenses = ['Apache-2.0']
+            vcsUrl = 'https://github.com/gchq/stroom-query.git'
+            version {
+                name = "${versions.stroomQuery}"
+                desc = "stroom-query-${versions.stroomQuery}"
+                released = new Date()
+                vcsTag = "${versions.stroomQuery}"
+                gpg {
+                    //Bintray will self-sign the files
+                    sign = true //Determines whether to GPG sign the files. The default is false
+                }
             }
         }
     }
@@ -402,7 +342,8 @@ task aggregatedJavadocs(
         // this switch is needed in java10
         //options.addBooleanOption('html5', true)
 	
-	subprojects.each { proj ->
+	projectsToBePublished.each { proj ->
+	//subprojects.each { proj ->
 		proj.tasks.withType(Javadoc).each { javadocTask ->
 			source += javadocTask.source
 			classpath += javadocTask.classpath
@@ -412,4 +353,4 @@ task aggregatedJavadocs(
 	}
 }
 
-tasks.build.dependsOn aggregatedJavadocs
+project(':stroom-query-common').tasks.build.dependsOn aggregatedJavadocs
