@@ -1,6 +1,21 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+    dependencies {
+        classpath 'ca.cutterslade.gradle:gradle-dependency-analyze:1.1.0'
+        classpath 'com.benjaminsproule:swagger-gradle-plugin:1.0.2'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+    }
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = '4.7' //downgrading to 4.7 to get bintray plugin 1.8.4 working
 }
+
+apply plugin: 'ca.cutterslade.analyze'
+apply plugin: 'com.jfrog.bintray'
 
 //if the project has a value for the passed property (i.e from the cmd line via -PpropName=xxx)
 //use that, else use a default value
@@ -109,17 +124,6 @@ def projectsToBePublished = subprojects.findAll { project ->
     ]
 }
 
-buildscript {
-    repositories {
-        mavenLocal()
-        jcenter()
-    }
-    dependencies {
-        classpath 'ca.cutterslade.gradle:gradle-dependency-analyze:1.1.0'
-        classpath 'com.benjaminsproule:swagger-gradle-plugin:1.0.2'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
-    }
-}
 
 allprojects {
 
@@ -127,8 +131,8 @@ allprojects {
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'idea'
     apply plugin: 'ca.cutterslade.analyze'
+    apply plugin: 'idea'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
@@ -178,9 +182,9 @@ subprojects {
     }
 
     afterEvaluate {
-        repositories {
-            jcenter()
-        }
+        //repositories {
+            //jcenter()
+        //}
 
 //        compileJava {
 //            inputs.property("moduleName", moduleName)
@@ -228,6 +232,8 @@ subprojects {
 
 //configures only those projects in publishedProjectsPaths
 configure(projectsToBePublished) {
+    println "Configuring ${project.path} for publishing"
+
     apply plugin: 'maven'
     apply plugin: 'maven-publish'
     apply plugin: 'com.jfrog.bintray'
