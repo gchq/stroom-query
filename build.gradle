@@ -300,6 +300,14 @@ configure(projectsToBePublished) {
         }
     }
 
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
+    }
+
     //configuration for the bintray plugin for uploading maven artefacts to bintray
     //see https://github.com/bintray/gradle-bintray-plugin
     //run task bintrayUpload to push the files, assuming BINTRAY_USER/KEY are set as env vars
