@@ -10,14 +10,20 @@ buildscript {
     }
 }
 
+plugins {
+    // plugin for producing a tree of task dependencies, run task 'taskTree', e.g.
+    // ./gradlew bintrayUpload taskTree --no-repeat
+    id "com.dorongold.task-tree" version "1.3" apply true
+}
+
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.7' //downgrading to 4.7 to get bintray plugin 1.8.4 working
+    gradleVersion = '4.7' // downgrading to 4.7 to get bintray plugin 1.8.4 working
 }
 
 apply plugin: 'ca.cutterslade.analyze'
 
-//if the project has a value for the passed property (i.e from the cmd line via -PpropName=xxx)
-//use that, else use a default value
+// if the project has a value for the passed property (i.e from the cmd line via -PpropName=xxx)
+// use that, else use a default value
 ext.getPropertyOrDefault = { propName, defaultValue ->
     def val;
     if (project.hasProperty(propName) && project.getProperty(propName) != "unspecified" && project.getProperty(propName) != "") {
@@ -45,7 +51,7 @@ ext.versions = [
         flyway            : '4.0.3',
         glassfish         : '2.5.0-b32',
         guava             : '21.0',
-        jackson           : '2.9.5', //in line with dropwizard 1.3.3
+        jackson           : '2.9.5', // in line with dropwizard 1.3.3
         javax_inject      : '1',
         javax_ws          : '2.0.1',
         javax_servlet     : '3.1.0',
@@ -53,14 +59,14 @@ ext.versions = [
         jooq              : '3.9.3',
         jose4j            : '0.5.2',
         junit             : '5.2.0',
-        logback           : '1.2.3', //in line with dropwizard 1.3.3
+        logback           : '1.2.3', // in line with dropwizard 1.3.3
         kafka             : '0.10.0.1',
-        slf4j             : '1.7.25', //in line with dropwizard 1.3.3
+        slf4j             : '1.7.25', // in line with dropwizard 1.3.3
         swagger           : '1.5.16',
         zzDUMMYzz         : 'makes sorting this list easier'
 ]
 
-//dependency strings for use in sub projects
+// dependency strings for use in sub projects
 ext.libs = [
         //------Stroom-libs---------------
         eventLogging        : "event-logging:event-logging:$versions.eventLogging",
@@ -101,7 +107,7 @@ ext.libs = [
         jooq                : "org.jooq:jooq:$versions.jooq",
         logback_classic     : "ch.qos.logback:logback-classic:$versions.logback",
         logback_core        : "ch.qos.logback:logback-core:$versions.logback",
-        kafka               : "org.apache.kafka:kafka-clients:$versions.kafka", //CDH5.10 uses kafka 10.0, Kafka <10.2 is picky about client and server versions.
+        kafka               : "org.apache.kafka:kafka-clients:$versions.kafka", // CDH5.10 uses kafka 10.0, Kafka <10.2 is picky about client and server versions.
         mariadb_connector   : 'org.mariadb.jdbc:mariadb-java-client:2.0.2',
         mockito_core        : "org.mockito:mockito-core:2.11.0",
         slf4j_api           : "org.slf4j:slf4j-api:$versions.slf4j",
@@ -111,7 +117,7 @@ ext.libs = [
         zzDUMMYzz           : "makes sorting easier"
 ]
 
-//defines a list of gradle projects that we will publish with maven/bintray
+// defines a list of gradle projects that we will publish with maven/bintray
 def projectsToBePublished = subprojects.findAll { project ->
     project.path in [
             ':stroom-docref',
@@ -229,7 +235,7 @@ subprojects {
     }
 }
 
-//configures only those projects in publishedProjectsPaths
+// configures only those projects in publishedProjectsPaths
 configure(projectsToBePublished) {
     println "Configuring ${project.path} for publishing"
 
@@ -260,7 +266,7 @@ configure(projectsToBePublished) {
 
     javadoc {
         // this switch is needed in java10
-        //options.addBooleanOption('html5', true)
+        // options.addBooleanOption('html5', true)
         options.addStringOption('Xdoclint:none', '-quiet')
     }
 
@@ -307,18 +313,18 @@ configure(projectsToBePublished) {
         }
     }
 
-    //configuration for the bintray plugin for uploading maven artefacts to bintray
-    //see https://github.com/bintray/gradle-bintray-plugin
-    //run task bintrayUpload to push the files, assuming BINTRAY_USER/KEY are set as env vars
+    // configuration for the bintray plugin for uploading maven artefacts to bintray
+    // see https://github.com/bintray/gradle-bintray-plugin
+    // run task bintrayUpload to push the files, assuming BINTRAY_USER/KEY are set as env vars
     bintray {
-        //Must never write these to log or system out
-        user = System.getenv('BINTRAY_USER') //set in Travis UI
-        key = System.getenv('BINTRAY_KEY') //set in Travis UI
+        // Must never write these to log or system out
+        user = System.getenv('BINTRAY_USER') // set in Travis UI
+        key = System.getenv('BINTRAY_KEY') // set in Travis UI
 
-        //The maven plugin publications to push to bintray
+        // The maven plugin publications to push to bintray
         publications = ['mavenJava']
 
-        //immediately make the artefacts public
+        // immediately make the artefacts public
         publish = true
 
         pkg {
@@ -333,8 +339,8 @@ configure(projectsToBePublished) {
                 released = new Date()
                 vcsTag = "${versions.stroomQuery}"
                 gpg {
-                    //Bintray will self-sign the files
-                    sign = true //Determines whether to GPG sign the files. The default is false
+                    // Bintray will self-sign the files
+                    sign = true // Determines whether to GPG sign the files. The default is false
                 }
             }
         }
@@ -356,7 +362,6 @@ task aggregatedJavadocs(
         //options.addBooleanOption('html5', true)
 	
 	projectsToBePublished.each { proj ->
-	//subprojects.each { proj ->
 		proj.tasks.withType(Javadoc).each { javadocTask ->
 			source += javadocTask.source
 			classpath += javadocTask.classpath
