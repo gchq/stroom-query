@@ -15,7 +15,6 @@ task wrapper(type: Wrapper) {
 }
 
 apply plugin: 'ca.cutterslade.analyze'
-apply plugin: 'com.jfrog.bintray'
 
 //if the project has a value for the passed property (i.e from the cmd line via -PpropName=xxx)
 //use that, else use a default value
