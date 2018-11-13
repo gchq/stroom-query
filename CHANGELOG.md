@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [v4.0-beta.13] - 2018-10-12
+* Fix use of primative boolean for enabled setting.
 
 * Issue **gchq/stroom#830** : Fix api queries that never return before the server times out.
 
