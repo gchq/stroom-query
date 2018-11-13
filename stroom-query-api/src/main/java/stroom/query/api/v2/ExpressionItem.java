@@ -110,7 +110,7 @@ public abstract class ExpressionItem implements Serializable {
 
         }
 
-        public Builder(final boolean enabled) {
+        public Builder(final Boolean enabled) {
             this.enabled = enabled;
         }
 
