@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.1-beta.8] - 2018-11-13
+
 * Fix use of primative boolean for enabled setting.
 
 ## [v2.1-beta.7] - 2018-10-11
