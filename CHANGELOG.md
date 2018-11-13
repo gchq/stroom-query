@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Fix use of primative boolean for enabled setting.
+
 * Issue **gchq/stroom#830** : Fix api queries that never return before the server times out.
 
 * Issue **gchq/stroom#791** : Fix total results count not updating.
