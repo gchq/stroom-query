@@ -151,7 +151,7 @@ public final class ExpressionOperator extends ExpressionItem {
      */
     public static class Builder
             extends ExpressionItem.Builder<ExpressionOperator, Builder> {
-        private final Op op;
+        private Op op;
 
         private List<ExpressionItem> children = new ArrayList<>();
 
@@ -175,8 +175,8 @@ public final class ExpressionOperator extends ExpressionItem {
         /**
          * @param value Set the logical operator to apply to all the children items
          */
-        public Builder(final Op value) {
-            this.op = value;
+        public Builder(final Op op) {
+            op(op);
         }
 
         /**
@@ -187,7 +187,19 @@ public final class ExpressionOperator extends ExpressionItem {
          */
         public Builder(final Boolean enabled, final Op op) {
             super(enabled);
+            op(op);
+        }
+
+        /**
+         * Changes the operator of this builder
+         *
+         * @param op The operator to set for this builder
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public Builder op(final Op op) {
+            Objects.requireNonNull(op, "Attempt to set null operation");
             this.op = op;
+            return this;
         }
 
         /**
@@ -256,7 +268,7 @@ public final class ExpressionOperator extends ExpressionItem {
          * A convenience function for adding terms in one go, the parameters should read fairly clearly
          *
          * @param field     The field name
-         * @param condition The condition to apply to the valud
+         * @param condition The condition to apply to the value
          * @param value     The value
          * @return this builder, with the completed term added.
          */
@@ -275,7 +287,7 @@ public final class ExpressionOperator extends ExpressionItem {
          * A convenience function for adding dictionary terms in one go, the parameters should read fairly clearly
          *
          * @param field      The field name
-         * @param condition  The condition to apply to the valud
+         * @param condition  The condition to apply to the value
          * @param dictionary The dictionary
          * @return this builder, with the completed term added.
          */
