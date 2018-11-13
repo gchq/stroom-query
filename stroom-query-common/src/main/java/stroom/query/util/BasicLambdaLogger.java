@@ -2,6 +2,8 @@ package stroom.query.util;
 
 import org.slf4j.Logger;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.function.Supplier;
 
 public final class BasicLambdaLogger implements LambdaLogger {
@@ -119,6 +121,120 @@ public final class BasicLambdaLogger implements LambdaLogger {
             }
         } catch (final RuntimeException e) {
             logger.error("ERROR LOGGING MESSAGE - " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public <T> T logDurationIfTraceEnabled(final Supplier<T> timedWork, final Supplier<String> workDescriptionSupplier) {
+        if (logger.isTraceEnabled()) {
+            final Instant startTime = Instant.now();
+            T result = timedWork.get();
+            try {
+                logger.trace("Completed [{}] in {}", workDescriptionSupplier.get(), Duration.between(startTime, Instant.now()));
+            } catch (final Exception e) {
+                logger.error("ERROR LOGGING MESSAGE - " + e.getMessage(), e);
+            }
+            return result;
+        } else {
+            return timedWork.get();
+        }
+    }
+
+    @Override
+    public <T> T logDurationIfDebugEnabled(final Supplier<T> timedWork, final Supplier<String> workDescriptionSupplier) {
+        if (logger.isDebugEnabled()) {
+            final Instant startTime = Instant.now();
+            T result = timedWork.get();
+            try {
+                logger.debug("Completed [{}] in {}", workDescriptionSupplier.get(), Duration.between(startTime, Instant.now()));
+            } catch (final Exception e) {
+                logger.error("ERROR LOGGING MESSAGE - " + e.getMessage(), e);
+            }
+            return result;
+        } else {
+            return timedWork.get();
+        }
+    }
+
+    @Override
+    public <T> T logDurationIfInfoEnabled(final Supplier<T> timedWork, final Supplier<String> workDescriptionSupplier) {
+        if (logger.isInfoEnabled()) {
+            final Instant startTime = Instant.now();
+            T result = timedWork.get();
+            try {
+                logger.info("Completed [{}] in {}", workDescriptionSupplier.get(), Duration.between(startTime, Instant.now()));
+            } catch (final Exception e) {
+                logger.error("ERROR LOGGING MESSAGE - " + e.getMessage(), e);
+            }
+            return result;
+        } else {
+            return timedWork.get();
+        }
+    }
+
+    @Override
+    public void logDurationIfTraceEnabled(final Runnable timedWork, final Supplier<String> workDescriptionSupplier) {
+        if (logger.isTraceEnabled()) {
+            final Instant startTime = Instant.now();
+            timedWork.run();
+            try {
+                logger.trace("Completed [{}] in {}", workDescriptionSupplier.get(), Duration.between(startTime, Instant.now()));
+            } catch (final Exception e) {
+                logger.error("ERROR LOGGING MESSAGE - " + e.getMessage(), e);
+            }
+        } else {
+            timedWork.run();
+        }
+    }
+
+    @Override
+    public void logDurationIfDebugEnabled(final Runnable timedWork, final Supplier<String> workDescriptionSupplier) {
+        if (logger.isDebugEnabled()) {
+            final Instant startTime = Instant.now();
+            timedWork.run();
+            try {
+                logger.debug("Completed [{}] in {}", workDescriptionSupplier.get(), Duration.between(startTime, Instant.now()));
+            } catch (final Exception e) {
+                logger.error("ERROR LOGGING MESSAGE - " + e.getMessage(), e);
+            }
+        } else {
+            timedWork.run();
+        }
+    }
+
+    @Override
+    public void logDurationIfInfoEnabled(final Runnable timedWork, final Supplier<String> workDescriptionSupplier) {
+        if (logger.isInfoEnabled()) {
+            final Instant startTime = Instant.now();
+            timedWork.run();
+            try {
+                logger.info("Completed [{}] in {}", workDescriptionSupplier.get(), Duration.between(startTime, Instant.now()));
+            } catch (final Exception e) {
+                logger.error("ERROR LOGGING MESSAGE - " + e.getMessage(), e);
+            }
+        } else {
+            timedWork.run();
+        }
+    }
+
+    @Override
+    public void doIfTraceEnabled(final Runnable work) {
+        if (logger.isTraceEnabled()) {
+            work.run();
+        }
+    }
+
+    @Override
+    public void doIfDebugEnabled(final Runnable work) {
+        if (logger.isDebugEnabled()) {
+            work.run();
+        }
+    }
+
+    @Override
+    public void doIfInfoEnabled(final Runnable work) {
+        if (logger.isInfoEnabled()) {
+            work.run();
         }
     }
 }
