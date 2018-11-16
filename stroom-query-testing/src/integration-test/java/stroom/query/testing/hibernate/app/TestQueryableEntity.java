@@ -24,16 +24,14 @@ public class TestQueryableEntity extends QueryableEntity {
 
         @Override
         public DataSourceField get() {
-            return new DataSourceField(
-                    DataSourceField.DataSourceFieldType.FIELD,
-                    FLAVOUR,
-                    true,
-                    Arrays.asList(
-                            ExpressionTerm.Condition.EQUALS,
+            return new DataSourceField.Builder().type(
+                    DataSourceField.DataSourceFieldType.FIELD)
+                    .name(FLAVOUR)
+                    .queryable(true)
+                    .addConditions(ExpressionTerm.Condition.EQUALS,
                             ExpressionTerm.Condition.IN,
                             ExpressionTerm.Condition.IN_DICTIONARY
-                    )
-            );
+                    ).build();
         }
     }
 

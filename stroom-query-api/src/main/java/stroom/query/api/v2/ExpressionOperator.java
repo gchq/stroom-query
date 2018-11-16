@@ -177,7 +177,7 @@ public final class ExpressionOperator extends ExpressionItem {
         }
 
         /**
-         * @param value Set the logical operator to apply to all the children items
+         * @param op Set the logical operator to apply to all the children items
          */
         public Builder(final Op op) {
             op(op);
