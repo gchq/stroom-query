@@ -304,5 +304,24 @@ public final class ExpressionOperator extends ExpressionItem {
                     .dictionary(dictionary)
                     .build());
         }
+
+        /**
+         * A convenience function for adding docRef terms in one go, the parameters should read fairly clearly
+         *
+         * @param field      The field name
+         * @param condition  The condition to apply to the value
+         * @param docRef The docRef
+         * @return this builder, with the completed term added.
+         */
+        public Builder addDocRefTerm(final String field,
+                                         final ExpressionTerm.Condition condition,
+                                         final DocRef docRef) {
+            return addTerm(new ExpressionTerm.Builder()
+                    .field(field)
+                    .condition(condition)
+                    .docRef(docRef)
+                    .build());
+        }
+
     }
 }

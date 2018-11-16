@@ -34,8 +34,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@JsonPropertyOrder({"type", "name", "queryable", "conditions"})
-@XmlType(name = "DataSourceField", propOrder = {"type", "name", "queryable", "conditions"})
+@JsonPropertyOrder({"type", "docRefType", "name", "queryable", "conditions"})
+@XmlType(name = "DataSourceField", propOrder = {"type", "docRefType", "name", "queryable", "conditions"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = "The definition of a field within a data source")
 public final class DataSourceField implements Serializable, HasDisplayValue {
@@ -46,6 +46,12 @@ public final class DataSourceField implements Serializable, HasDisplayValue {
             value = "The data type for the field",
             required = true)
     private DataSourceFieldType type;
+
+    @XmlElement
+    @ApiModelProperty(
+            value = "The doc ref type for the field",
+            required = true)
+    private String docRefType;
 
     @XmlElement
     @ApiModelProperty(
@@ -76,8 +82,13 @@ public final class DataSourceField implements Serializable, HasDisplayValue {
     private DataSourceField() {
     }
 
-    public DataSourceField(final DataSourceFieldType type, final String name, final Boolean queryable, final List<Condition> conditions) {
+    public DataSourceField(final DataSourceFieldType type,
+                           final String docRefType,
+                           final String name,
+                           final Boolean queryable,
+                           final List<Condition> conditions) {
         this.type = type;
+        this.docRefType = docRefType;
         this.name = name;
         this.queryable = queryable;
         this.conditions = conditions;
@@ -85,6 +96,10 @@ public final class DataSourceField implements Serializable, HasDisplayValue {
 
     public DataSourceFieldType getType() {
         return type;
+    }
+
+    public String getDocRefType() {
+        return docRefType;
     }
 
     public String getName() {
@@ -146,7 +161,8 @@ public final class DataSourceField implements Serializable, HasDisplayValue {
         FIELD("Text", false),
         NUMERIC_FIELD("Number", true),
         DATE_FIELD("Date", false),
-        ID("Id", true);
+        ID("Id", true),
+        DOC_REF("DocRef", false);
 
         private final String displayValue;
         private final boolean numeric;
@@ -169,6 +185,7 @@ public final class DataSourceField implements Serializable, HasDisplayValue {
     public static class Builder {
 
         private DataSourceFieldType type;
+        private String docRefType;
         private String name;
         private Boolean queryable;
         private final List<Condition> conditions = new ArrayList<>();
@@ -176,6 +193,11 @@ public final class DataSourceField implements Serializable, HasDisplayValue {
         public Builder type(final DataSourceFieldType value) {
             this.type = value;
             return this;
+        }
+
+        public Builder docRefType(final String docRefType) {
+            this.docRefType = docRefType;
+            return type(DataSourceFieldType.DOC_REF);
         }
 
         public Builder name(final String value) {
@@ -194,7 +216,7 @@ public final class DataSourceField implements Serializable, HasDisplayValue {
         }
 
         public DataSourceField build() {
-            return new DataSourceField(type, name, queryable, conditions);
+            return new DataSourceField(type, docRefType, name, queryable, conditions);
         }
     }
 }
