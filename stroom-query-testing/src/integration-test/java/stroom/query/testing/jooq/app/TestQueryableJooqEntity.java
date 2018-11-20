@@ -30,16 +30,15 @@ public class TestQueryableJooqEntity extends QueryableJooqEntity {
 
         @Override
         public DataSourceField get() {
-            return new DataSourceField(
-                    DataSourceField.DataSourceFieldType.FIELD,
-                    COLOUR,
-                    true,
-                    Arrays.asList(
+            return new DataSourceField.Builder()
+                    .type(DataSourceField.DataSourceFieldType.FIELD)
+                    .name(COLOUR)
+                    .queryable(true)
+                    .addConditions(
                             ExpressionTerm.Condition.EQUALS,
                             ExpressionTerm.Condition.IN,
                             ExpressionTerm.Condition.IN_DICTIONARY
-                    )
-            );
+                    ).build();
         }
     }
 
