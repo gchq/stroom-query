@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-* Updated stroom expression to v1.4.12.
+* Updated stroom expression to v2.0.0.
 
 * Fix use of primative boolean for enabled setting.
 
