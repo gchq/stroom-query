@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Updated stroom expression to v1.4.12.
+
 * Fix use of primative boolean for enabled setting.
 
 * Issue **gchq/stroom#830** : Fix api queries that never return before the server times out.
