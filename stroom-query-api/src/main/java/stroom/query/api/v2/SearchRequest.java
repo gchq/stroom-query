@@ -133,6 +133,11 @@ public final class SearchRequest implements Serializable {
     }
 
     /**
+     * @param key               see other
+     * @param query             see other
+     * @param resultRequests    see other
+     * @param dateTimeLocale    see other
+     * @param incremental       see other
      * See {@link SearchRequest#SearchRequest(QueryKey, Query, List, String, Boolean, Long)}
      */
     public SearchRequest(final QueryKey key,
