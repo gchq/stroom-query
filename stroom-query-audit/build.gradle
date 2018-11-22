@@ -42,6 +42,7 @@ dependencies {
     compile libs.javax_servlet
     compile libs.jersey_client
     compile libs.jersey_server
+    compile libs.jetty_http
     compile libs.logback_classic
     compile libs.logback_core
     compile libs.kafka

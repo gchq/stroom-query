@@ -66,6 +66,7 @@ dependencies {
     compile libs.javax_ws;
     compile libs.jackson_core
     compile libs.jackson_databind
+    compile libs.jetty_http
     compile libs.junit_jupiter_api
     compile libs.junit4
     compile libs.jose4j
