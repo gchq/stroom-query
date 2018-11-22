@@ -2,8 +2,10 @@ buildscript {
     repositories {
         mavenLocal()
         jcenter()
+        maven { url "https://dl.bintray.com/stroom/stroom" }
     }
     dependencies {
+        // A fork of https://github.com/wfhartford/gradle-dependency-analyze that works with Java 10
         classpath 'stroom:gradle-dependency-analyze:v2.2.5'
         classpath 'com.benjaminsproule:swagger-gradle-plugin:1.0.2'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
@@ -41,7 +43,7 @@ ext.versions = [
         stroomQuery       : getPropertyOrDefault('version', 'SNAPSHOT'),
 
         //------Stroom-libs---------------
-        stroomExpression  : 'v2.0.5',
+        stroomExpression  : 'v2.0.3',
         eventLogging      : 'v4.0.5_schema-v3.2.4',
 
         //------------3rd-party------------
