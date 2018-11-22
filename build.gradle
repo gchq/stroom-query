@@ -17,7 +17,7 @@ plugins {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.7' // downgrading to 4.7 to get bintray plugin 1.8.4 working
+    gradleVersion = '4.10.2'
 }
 
 apply plugin: 'ca.cutterslade.analyze'
@@ -41,7 +41,7 @@ ext.versions = [
         stroomQuery       : getPropertyOrDefault('version', 'SNAPSHOT'),
 
         //------Stroom-libs---------------
-        stroomExpression  : 'v2.0.0',
+        stroomExpression  : 'v2.0.5',
         eventLogging      : 'v4.0.5_schema-v3.2.4',
 
         //------------3rd-party------------
@@ -139,8 +139,8 @@ subprojects {
     apply plugin: 'ca.cutterslade.analyze'
     apply plugin: 'idea'
 
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+    sourceCompatibility = JavaVersion.VERSION_1_10
+    targetCompatibility = JavaVersion.VERSION_1_10
 
     repositories {
         mavenLocal()
