@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'ca.cutterslade.gradle:gradle-dependency-analyze:1.2.0'
+        classpath 'stroom:gradle-dependency-analyze:v2.2.5'
         classpath 'com.benjaminsproule:swagger-gradle-plugin:1.0.2'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
     }
