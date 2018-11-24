@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.1-beta.12] - 2018-11-24
+
 * Changed the toString() method of ExpressionTerm to show names of DocRefs not UUIDs.
 
 ## [v2.1-beta.11] - 2018-11-20
