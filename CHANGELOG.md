@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **gchq/stroom#945** : Fix for some visualisations only showing 10 data points.
+
 ## [v2.1-beta.12] - 2018-11-24
 
 * Changed the toString() method of ExpressionTerm to show names of DocRefs not UUIDs.

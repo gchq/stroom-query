@@ -30,7 +30,6 @@ public class MaxResults {
     private final int defaultSize;
 
     public MaxResults(final List<Integer> userMaxResultsSizes, final List<Integer> defaultMaxResultsSizes) {
-
         effectiveMaxResultsSizes = getEffectiveSizes(userMaxResultsSizes, defaultMaxResultsSizes);
 
         if (effectiveMaxResultsSizes.size() > 0) {
@@ -50,23 +49,21 @@ public class MaxResults {
             size = defaultMaxResultsSizes.size();
         }
 
-        final List<Integer> effectiveSizes = IntStream.range(0, size)
+        return IntStream.range(0, size)
                 .mapToObj(i -> {
                     Integer val = Integer.MAX_VALUE;
                     if (defaultMaxResultsSizes != null && i < defaultMaxResultsSizes.size()) {
                         val = defaultMaxResultsSizes.get(i);
                     }
                     if (userMaxResultsSizes != null && i < userMaxResultsSizes.size()) {
-                        Integer userSize = userMaxResultsSizes.get(i);
-                        if ((userSize != null && userSize < val)) {
-                            val = userMaxResultsSizes.get(i);
+                        final Integer userSize = userMaxResultsSizes.get(i);
+                        if (userSize != null && userSize < val) {
+                            val = userSize;
                         }
                     }
                     return val;
                 })
                 .collect(Collectors.toList());
-
-        return effectiveSizes;
     }
 
     public int size(final int depth) {

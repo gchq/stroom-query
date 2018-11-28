@@ -140,11 +140,12 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
                     final RangeChecker rangeChecker = RangeCheckerFactory.create(resultRequest.getRequestedRange());
                     final OpenGroups openGroups = OpenGroupsFactory.create(resultRequest.getOpenGroups());
 
-                    //extract the maxResults settings from the last TableSettings object in the chain
-                    List<TableSettings> tableSettings = resultRequest.getMappings();
-                    final MaxResults maxResults = new MaxResults(
-                            tableSettings.get(tableSettings.size() - 1).getMaxResults(),
-                            defaultMaxResultsSizes);
+                    // Extract the maxResults settings from the last TableSettings object in the chain.
+                    // Do not constrain the max results with the default max results as the result size will have already
+                    // been constrained by the previous table mapping.
+                    final List<TableSettings> mappings = resultRequest.getMappings();
+                    final TableSettings tableSettings = mappings.get(mappings.size() - 1);
+                    final MaxResults maxResults = new MaxResults(tableSettings.getMaxResults(), null);
 
                     totalResults = addResults(mappedData, rangeChecker, openGroups, items, results, 0,
                             0, maxResults);
