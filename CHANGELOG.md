@@ -6,9 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [v2.1-beta.13] - 2018-11-28
+## [v2.1-beta.14] - 2018-11-28
 
 * Issue **gchq/stroom#945** : Fix for some visualisations only showing 10 data points.
+
+## [v2.1-beta.13] - 2018-11-28
+
+* Failed build.
 
 ## [v2.1-beta.12] - 2018-11-24
 
