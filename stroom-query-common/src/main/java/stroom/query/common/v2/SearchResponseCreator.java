@@ -291,9 +291,7 @@ public class SearchResponseCreator {
                 resultCreator = new FlatResultCreator(
                         resultRequest,
                         null,
-                        null,
-                        store.getDefaultMaxResultsSizes(),
-                        store.getStoreSize());
+                        null);
             }
         } catch (final Exception e) {
             throw new RuntimeException(e.getMessage());

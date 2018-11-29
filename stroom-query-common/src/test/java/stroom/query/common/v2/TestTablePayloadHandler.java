@@ -40,8 +40,8 @@ import java.util.List;
 
 public class TestTablePayloadHandler {
     private final List<Integer> defaultMaxResultsSizes = Collections.singletonList(50);
-    private final MaxResults maxResults = new MaxResults(Collections.singletonList(50), defaultMaxResultsSizes);
-    private final StoreSize storeSize = new StoreSize(Collections.singletonList(100));
+    private final Sizes maxResults = Sizes.min(Sizes.create(Collections.singletonList(50)), Sizes.create(defaultMaxResultsSizes));
+    private final Sizes storeSize = Sizes.create(Collections.singletonList(100));
 
     @Test
     public void basicTest() {

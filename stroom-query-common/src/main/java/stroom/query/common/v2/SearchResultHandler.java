@@ -47,7 +47,7 @@ public class SearchResultHandler implements ResultHandler {
 
     public SearchResultHandler(final CoprocessorSettingsMap coprocessorSettingsMap,
                                final List<Integer> defaultMaxResultsSizes,
-                               final StoreSize storeSize) {
+                               final Sizes storeSize) {
 
         this.coprocessorSettingsMap = coprocessorSettingsMap;
 
@@ -57,7 +57,8 @@ public class SearchResultHandler implements ResultHandler {
             if (coprocessorSettings instanceof TableCoprocessorSettings) {
                 final TableCoprocessorSettings tableCoprocessorSettings = (TableCoprocessorSettings) coprocessorSettings;
                 final TableSettings tableSettings = tableCoprocessorSettings.getTableSettings();
-                final MaxResults maxResults = new MaxResults(tableSettings.getMaxResults(), defaultMaxResultsSizes);
+                // Create a set of sizes that are the minimum values for the combination of user provided sizes for the table and the default maximum sizes.
+                final Sizes maxResults = Sizes.min(Sizes.create(tableSettings.getMaxResults()), Sizes.create(defaultMaxResultsSizes));
 
                 handlerMap.put(coprocessorKey, new TablePayloadHandler(
                         tableSettings.getFields(),

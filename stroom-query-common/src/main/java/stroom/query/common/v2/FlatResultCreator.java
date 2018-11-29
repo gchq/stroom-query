@@ -42,19 +42,15 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
     private final FieldFormatter fieldFormatter;
     private final List<Mapper> mappers;
     private final List<Field> fields;
-    private final List<Integer> defaultMaxResultsSizes;
 
     private String error;
 
     //TODO add defaultMaxResults to args
     public FlatResultCreator(final ResultRequest resultRequest,
                              final Map<String, String> paramMap,
-                             final FieldFormatter fieldFormatter,
-                             final List<Integer> defaultMaxResultsSizes,
-                             final StoreSize storeSize) {
+                             final FieldFormatter fieldFormatter) {
 
         this.fieldFormatter = fieldFormatter;
-        this.defaultMaxResultsSizes = defaultMaxResultsSizes;
 
         final List<TableSettings> tableSettings = resultRequest.getMappings();
 
@@ -64,7 +60,7 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
             for (int i = 0; i < tableSettings.size() - 1; i++) {
                 final TableSettings parent = tableSettings.get(i);
                 final TableSettings child = tableSettings.get(i + 1);
-                mappers.add(new Mapper(parent, child, paramMap, storeSize));
+                mappers.add(new Mapper(parent, child, paramMap));
             }
         } else {
             mappers = Collections.emptyList();
@@ -145,7 +141,8 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
                     // been constrained by the previous table mapping.
                     final List<TableSettings> mappings = resultRequest.getMappings();
                     final TableSettings tableSettings = mappings.get(mappings.size() - 1);
-                    final MaxResults maxResults = new MaxResults(tableSettings.getMaxResults(), null);
+                    // Create a set of max result sizes that are determined by the supplied max results or default to integer max value.
+                    final Sizes maxResults = Sizes.create(tableSettings.getMaxResults(), Integer.MAX_VALUE);
 
                     totalResults = addResults(mappedData, rangeChecker, openGroups, items, results, 0,
                             0, maxResults);
@@ -180,7 +177,7 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
 
     private int addResults(final Data data, final RangeChecker rangeChecker,
                            final OpenGroups openGroups, final Items<Item> items, final List<List<Object>> results,
-                           final int depth, final int parentCount, final MaxResults maxResults) {
+                           final int depth, final int parentCount, final Sizes maxResults) {
         int count = parentCount;
         int maxResultsAtThisDepth = maxResults.size(depth);
         int resultCountAtThisLevel = 0;
@@ -315,8 +312,7 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
 
         public Mapper(final TableSettings parent,
                       final TableSettings child,
-                      final Map<String, String> paramMap,
-                      final StoreSize storeSize) {
+                      final Map<String, String> paramMap) {
 
             parentFields = new String[parent.getFields().size()];
             int i = 0;
@@ -329,8 +325,9 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
             final TableCoprocessorSettings tableCoprocessorSettings = new TableCoprocessorSettings(child);
             tableCoprocessor = new TableCoprocessor(tableCoprocessorSettings, fieldIndexMap, this, paramMap);
 
-            final MaxResults maxResults = new MaxResults(child.getMaxResults(), Collections.singletonList(Integer.MAX_VALUE));
-            tablePayloadHandler = new TablePayloadHandler(child.getFields(), true, maxResults, storeSize);
+            // Create a set of max result sizes that are determined by the supplied max results or default to integer max value.
+            final Sizes maxResults = Sizes.create(child.getMaxResults(), Integer.MAX_VALUE);
+            tablePayloadHandler = new TablePayloadHandler(child.getFields(), true, maxResults, null);
         }
 
         public Data map(final Data data) {
