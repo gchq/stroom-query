@@ -302,8 +302,7 @@ public class FlatResultCreator implements ResultCreator {
 
         Mapper(final TableSettings parent,
                final TableSettings child,
-               final Map<String, String> paramMap,
-               final Sizes storeSize) {
+               final Map<String, String> paramMap) {
 
             parentFields = new String[parent.getFields().size()];
             int i = 0;

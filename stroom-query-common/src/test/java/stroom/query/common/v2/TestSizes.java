@@ -1,28 +1,28 @@
 package stroom.query.common.v2;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class TestSizes {
+class TestSizes {
     @Test
-    public void testSize_null() {
+    void testSize_null() {
         test(null, 0, 1);
         test(null, 1, 1);
     }
 
     @Test
-    public void testSize_emptyList() {
+    void testSize_emptyList() {
         List<Integer> storeSizes = Collections.emptyList();
         test(storeSizes, 0, 1);
         test(storeSizes, 1, 1);
     }
 
     @Test
-    public void testSize_populatedList() {
+    void testSize_populatedList() {
         List<Integer> storeSizes = Arrays.asList(100, 10, 1);
         test(storeSizes, 0, storeSizes.get(0));
         test(storeSizes, 1, storeSizes.get(1));
@@ -32,23 +32,23 @@ public class TestSizes {
 
     private void test(List<Integer> storeSizes, int depth, int expectedSize) {
         Sizes storeSize = Sizes.create(storeSizes);
-        Assert.assertEquals(expectedSize, storeSize.size(depth));
+        Assertions.assertEquals(expectedSize, storeSize.size(depth));
     }
 
     @Test
-    public void testSize_bothNull() {
+    void testSize_bothNull() {
         testMin(null, null, 0, 1);
         testMin(null, null, 1, 1);
     }
 
     @Test
-    public void testSize_bothEmpty() {
+    void testSize_bothEmpty() {
         testMin(Collections.emptyList(), Collections.emptyList(), 0, 1);
         testMin(Collections.emptyList(), Collections.emptyList(), 1, 1);
     }
 
     @Test
-    public void testSize_userIsNull() {
+    void testSize_userIsNull() {
         List<Integer> defaultSizes = Arrays.asList(100, 10, 1);
         testMin(null, defaultSizes, 0, defaultSizes.get(0));
         testMin(null, defaultSizes, 1, defaultSizes.get(1));
@@ -57,7 +57,7 @@ public class TestSizes {
     }
 
     @Test
-    public void testSize_defaultIsNull() {
+    void testSize_defaultIsNull() {
         List<Integer> userSizes = Arrays.asList(100, 10, 1);
         testMin(userSizes, null, 0, userSizes.get(0));
         testMin(userSizes, null, 1, userSizes.get(1));
@@ -66,7 +66,7 @@ public class TestSizes {
     }
 
     @Test
-    public void testSize_bothSuppliedSameSize() {
+    void testSize_bothSuppliedSameSize() {
         List<Integer> userSizes = Arrays.asList(100, 10, 1);
         List<Integer> defaultSizes = Arrays.asList(2000, 200, 20);
 
@@ -78,7 +78,7 @@ public class TestSizes {
     }
 
     @Test
-    public void testSize_bothSuppliedListSizeMismatch() {
+    void testSize_bothSuppliedListSizeMismatch() {
         List<Integer> userSizes = Arrays.asList(100);
         List<Integer> defaultSizes = Arrays.asList(2000, 200, 20);
 
@@ -91,7 +91,6 @@ public class TestSizes {
 
     private void testMin(List<Integer> userSizes, List<Integer> defaultSizes, int depth, int expectedSize) {
         Sizes maxResults = Sizes.min(Sizes.create(userSizes), Sizes.create(defaultSizes));
-        Assert.assertEquals(expectedSize, maxResults.size(depth));
+        Assertions.assertEquals(expectedSize, maxResults.size(depth));
     }
-
 }

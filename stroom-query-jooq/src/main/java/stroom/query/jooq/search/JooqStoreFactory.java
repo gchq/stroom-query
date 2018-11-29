@@ -17,20 +17,20 @@ import stroom.query.api.v2.Param;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.audit.CriteriaStore;
 import stroom.query.audit.model.QueryableEntity;
-import stroom.query.security.CurrentServiceUser;
-import stroom.query.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryApiException;
 import stroom.query.common.v2.Coprocessor;
 import stroom.query.common.v2.CoprocessorSettings;
 import stroom.query.common.v2.CoprocessorSettingsMap;
 import stroom.query.common.v2.Payload;
+import stroom.query.common.v2.Sizes;
 import stroom.query.common.v2.Store;
 import stroom.query.common.v2.StoreFactory;
-import stroom.query.common.v2.StoreSize;
 import stroom.query.common.v2.TableCoprocessor;
 import stroom.query.common.v2.TableCoprocessorSettings;
 import stroom.query.jooq.JooqEntity;
+import stroom.query.security.CurrentServiceUser;
+import stroom.query.security.ServiceUser;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -255,7 +255,7 @@ public class JooqStoreFactory implements StoreFactory {
 
         // Construct the store
         final List<Integer> storeSize = Collections.singletonList(tuples.size());
-        return new CriteriaStore(storeSize, new StoreSize(storeSize),
+        return new CriteriaStore(storeSize, Sizes.create(storeSize),
                 coprocessorSettingsMap,
                 payloadMap);
     }
