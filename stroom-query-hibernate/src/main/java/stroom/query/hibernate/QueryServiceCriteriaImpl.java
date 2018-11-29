@@ -29,7 +29,7 @@ import stroom.query.common.v2.CoprocessorSettings;
 import stroom.query.common.v2.CoprocessorSettingsMap;
 import stroom.query.common.v2.Payload;
 import stroom.query.common.v2.SearchResponseCreator;
-import stroom.query.common.v2.StoreSize;
+import stroom.query.common.v2.Sizes;
 import stroom.query.common.v2.TableCoprocessor;
 import stroom.query.common.v2.TableCoprocessorSettings;
 
@@ -314,7 +314,7 @@ public class QueryServiceCriteriaImpl<
         // Construct the store
         final List<Integer> storeSize = Collections.singletonList(tuples.size());
         CriteriaStore store = new CriteriaStore(storeSize,
-                new StoreSize(storeSize),
+                Sizes.create(storeSize),
                 coprocessorSettingsMap,
                 payloadMap);
 

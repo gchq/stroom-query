@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Updated stroom expression to v2.0.0.
 
+* Issue **gchq/stroom#945** : More changes to fix some visualisations only showing 10 data points.
+
+* Issue **gchq/stroom#945** : Fix for some visualisations only showing 10 data points.
+
+* Changed the toString() method of ExpressionTerm to show names of DocRefs not UUIDs.
+
+* Updated stroom expression to v1.4.12.
+
 * Fix use of primative boolean for enabled setting.
 
 * Issue **gchq/stroom#830** : Fix api queries that never return before the server times out.

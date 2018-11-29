@@ -5,12 +5,12 @@ import stroom.query.api.v2.TableSettings;
 import stroom.query.common.v2.CompiledSorter;
 import stroom.query.common.v2.CoprocessorSettingsMap;
 import stroom.query.common.v2.Data;
-import stroom.query.common.v2.Item;
 import stroom.query.common.v2.GroupKey;
+import stroom.query.common.v2.Item;
 import stroom.query.common.v2.Payload;
 import stroom.query.common.v2.ResultStoreCreator;
+import stroom.query.common.v2.Sizes;
 import stroom.query.common.v2.Store;
-import stroom.query.common.v2.StoreSize;
 import stroom.query.common.v2.TableCoprocessorSettings;
 import stroom.query.common.v2.TablePayload;
 
@@ -28,10 +28,10 @@ public class CriteriaStore implements Store {
     private final Map<CoprocessorSettingsMap.CoprocessorKey, Payload> payloadMap;
 
     private final List<Integer> defaultMaxResultsSizes;
-    private final StoreSize storeSize;
+    private final Sizes storeSize;
 
     public CriteriaStore(final List<Integer> defaultMaxResultsSizes,
-                         final StoreSize storeSize,
+                         final Sizes storeSize,
                          final CoprocessorSettingsMap coprocessorSettingsMap,
                          final Map<CoprocessorSettingsMap.CoprocessorKey, Payload> payloadMap) {
         this.defaultMaxResultsSizes = defaultMaxResultsSizes;
@@ -105,7 +105,7 @@ public class CriteriaStore implements Store {
     }
 
     @Override
-    public StoreSize getStoreSize() {
+    public Sizes getStoreSize() {
         return storeSize;
     }
 }

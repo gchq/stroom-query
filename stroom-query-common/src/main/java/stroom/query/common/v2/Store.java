@@ -88,7 +88,7 @@ public interface Store {
     /**
      * Get the store size configuration for this store
      *
-     * @return A non-null {@link StoreSize} object
+     * @return A non-null {@link Sizes} object
      */
-    StoreSize getStoreSize();
+    Sizes getStoreSize();
 }

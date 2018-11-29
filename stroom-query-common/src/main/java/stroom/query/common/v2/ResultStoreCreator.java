@@ -38,11 +38,11 @@ public class ResultStoreCreator implements Reader<GroupKey, Item> {
         }
     }
 
-    public void trim(final StoreSize storeSize) {
+    public void trim(final Sizes storeSize) {
         trim(storeSize, null, 0);
     }
 
-    private void trim(final StoreSize storeSize, final GroupKey parentKey, final int depth) {
+    private void trim(final Sizes storeSize, final GroupKey parentKey, final int depth) {
         final Items<Item> parentItems = childMap.get(parentKey);
         if (parentItems != null && storeSize != null) {
             parentItems.trim(storeSize.size(depth), sorter, item -> {

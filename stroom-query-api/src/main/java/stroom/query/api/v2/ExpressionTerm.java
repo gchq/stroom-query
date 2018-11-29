@@ -154,15 +154,22 @@ public final class ExpressionTerm extends ExpressionItem {
             }
             sb.append(" ");
             if (Condition.IN_DICTIONARY.equals(condition)) {
-                if (dictionary != null) {
-                    sb.append(dictionary.getUuid());
-                }
-            } if (Condition.IS_DOC_REF.equals(condition)) {
-                if (docRef != null) {
-                    sb.append(docRef.getUuid());
-                }
+                appendDocRef(sb, dictionary);
+            }
+            if (Condition.IS_DOC_REF.equals(condition)) {
+                appendDocRef(sb, docRef);
             } else if (value != null) {
                 sb.append(value);
+            }
+        }
+    }
+
+    private void appendDocRef(final StringBuilder sb, final DocRef docRef) {
+        if (docRef != null) {
+            if (docRef.getName() != null && docRef.getName().trim().length() > 0) {
+                sb.append(docRef.getName());
+            } else if (docRef.getUuid() != null && docRef.getUuid().trim().length() > 0) {
+                sb.append(docRef.getUuid());
             }
         }
     }
@@ -279,7 +286,6 @@ public final class ExpressionTerm extends ExpressionItem {
          * conditions are supported for an entity term.
          *
          * @param value The DocRef for the entity that this predicate is using for its evaluation
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder docRef(final DocRef value) {
@@ -289,6 +295,7 @@ public final class ExpressionTerm extends ExpressionItem {
 
         /**
          * A shortcut method for specifying the entity DocRef inline
+         *
          * @param type The element type
          * @param uuid The UUID of the dictionary
          * @param name The name of the dictionary

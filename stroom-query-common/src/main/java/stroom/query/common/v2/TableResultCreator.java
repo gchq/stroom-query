@@ -71,7 +71,8 @@ public class TableResultCreator implements ResultCreator {
 
             TableSettings tableSettings = resultRequest.getMappings().get(0);
             latestFields = tableSettings.getFields();
-            final MaxResults maxResults = new MaxResults(tableSettings.getMaxResults(), defaultMaxResultsSizes);
+            // Create a set of sizes that are the minimum values for the combination of user provided sizes for the table and the default maximum sizes.
+            final Sizes maxResults = Sizes.min(Sizes.create(tableSettings.getMaxResults()), Sizes.create(defaultMaxResultsSizes));
 
             totalResults = addTableResults(data,
                     latestFields,
@@ -91,7 +92,7 @@ public class TableResultCreator implements ResultCreator {
     }
 
     private int addTableResults(final Data data, final List<Field> fields,
-                                final MaxResults maxResults, final int offset,
+                                final Sizes maxResults, final int offset,
                                 final int length, final Set<String> openGroups,
                                 final List<Row> resultList, final GroupKey parentKey,
                                 final int depth, final int position) {
