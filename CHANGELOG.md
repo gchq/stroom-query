@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Upgraded stroom expression to v1.4.13.
+
 ## [v2.1-beta.15] - 2018-11-29
 
 * Issue **gchq/stroom#945** : More changes to fix some visualisations only showing 10 data points.
