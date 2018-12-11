@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.1-beta.17] - 2018-12-11
+
 * Issue **gchq/stroom#1007** : Max visualisation results are now limited by default to the maximum number of results defined for the first level of the parent table. This can be further limited by settings in the visualisation.
 
 ## [v2.1-beta.16] - 2018-12-06
@@ -212,9 +214,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.1-beta.2...HEAD
-[v2.1-beta.2]: https://github.com/gchq/stroom-query/compare/v2.1-beta.1...v2.1-beta.2
-[v2.1-beta.1]: https://github.com/gchq/stroom-query/compare/v2.0.0-beta.3...v2.1-beta.1
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.1-beta.16...HEAD
+[v2.1-beta.16]: https://github.com/gchq/stroom-query/compare/v2.1-beta.15...v2.1-beta.16
+[v2.1-beta.15]: https://github.com/gchq/stroom-query/compare/v2.1-beta.14...v2.1-beta.15
+[v2.1-beta.14]: https://github.com/gchq/stroom-query/compare/v2.1-beta.13...v2.1-beta.14
+[v2.1-beta.13]: https://github.com/gchq/stroom-query/compare/v2.1-beta.12...v2.1-beta.13
+[v2.1-beta.12]: https://github.com/gchq/stroom-query/compare/v2.1-beta.11...v2.1-beta.12
+[v2.1-beta.11]: https://github.com/gchq/stroom-query/compare/v2.1-beta.10...v2.1-beta.11
+[v2.1-beta.10]: https://github.com/gchq/stroom-query/compare/v2.1-beta.9...v2.1-beta.10
+[v2.1-beta.9]: https://github.com/gchq/stroom-query/compare/v2.1-beta.8...v2.1-beta.9
+[v2.1-beta.8]: https://github.com/gchq/stroom-query/compare/v2.1-beta.7...v2.1-beta.8
+[v2.1-beta.7]: https://github.com/gchq/stroom-query/compare/v2.1-beta.6...v2.1-beta.7
+[v2.1-beta.6]: https://github.com/gchq/stroom-query/compare/v2.1-beta.5...v2.1-beta.6
+[v2.1-beta.5]: https://github.com/gchq/stroom-query/compare/v2.1-beta.4...v2.1-beta.5
+[v2.1-beta.4]: https://github.com/gchq/stroom-query/compare/v2.0.0-beta.3...v2.1-beta.4
 [v2.0-beta.3]: https://github.com/gchq/stroom-query/compare/v2.0.0-beta.2...v2.0-beta.3
 [v2.0-beta.2]: https://github.com/gchq/stroom-query/compare/v2.0.0-beta.1...v2.0-beta.2
 [v2.0-beta.1]: https://github.com/gchq/stroom-query/compare/v2.0.0-alpha.28...v2.0-beta.1
