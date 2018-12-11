@@ -268,7 +268,6 @@ public class TestSearchResponseCreator {
                 .build();
     }
 
-
     private Data createSingleItemDataObject() {
         final Items<Item> items = new ItemsArrayList<>();
         final Generator[] generators = new Generator[3];
@@ -290,6 +289,4 @@ public class TestSearchResponseCreator {
         TableResult tableResult = (TableResult) searchResponse.getResults().get(0);
         Assertions.assertThat(tableResult.getTotalResults()).isEqualTo(1);
     }
-
-
 }

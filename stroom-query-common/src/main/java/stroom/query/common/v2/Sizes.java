@@ -26,6 +26,8 @@ import java.util.function.BiFunction;
  * each group level 2
  */
 public class Sizes {
+    static final int FALLBACK = Integer.MAX_VALUE;
+
     private final int[] sizes;
     private final int defaultSize;
 
@@ -55,7 +57,7 @@ public class Sizes {
             // If the list has some values the set the default size to the last value in the list.
             return create(list, list.get(list.size() - 1));
         }
-        return create(list, 1);
+        return create(FALLBACK);
     }
 
     /**
@@ -83,24 +85,18 @@ public class Sizes {
     }
 
     private static Sizes combine(final Sizes s1, final Sizes s2, final BiFunction<Integer, Integer, Integer> function) {
+        if (s1 == null) {
+            return s2;
+        } else if (s2 == null) {
+            return s1;
+        }
+
         final int length = Math.max(s1.sizes.length, s2.sizes.length);
         final int[] combinedSizes = new int[length];
         for (int i = 0; i < combinedSizes.length; i++) {
-            Integer v1 = null;
-            Integer v2 = null;
-            if (s1.sizes.length > i) {
-                v1 = s1.sizes[i];
-            }
-            if (s2.sizes.length > i) {
-                v2 = s2.sizes[i];
-            }
-            if (v1 == null) {
-                combinedSizes[i] = v2;
-            } else if (v2 == null) {
-                combinedSizes[i] = v1;
-            } else {
-                combinedSizes[i] = function.apply(v1, v2);
-            }
+            final int v1 = s1.size(i);
+            final int v2 = s2.size(i);
+            combinedSizes[i] = function.apply(v1, v2);
         }
         final int combinedDefaultSize = function.apply(s1.defaultSize, s2.defaultSize);
         return new Sizes(combinedSizes, combinedDefaultSize);
