@@ -49,8 +49,9 @@ import java.util.stream.Collectors;
 /**
  * A generic implementation of Query Resource that can be used over any hibernate based datasource that stores
  * a single Java data type.
- *
+ * <p>
  * It will use the {@link IsDataSourceField} annotation to find fields to expose as it's data source.
+ *
  * @param <QUERYABLE_ENTITY> The annotated hibernate class.
  */
 public class QueryServiceCriteriaImpl<
@@ -137,13 +138,13 @@ public class QueryServiceCriteriaImpl<
 
     @Override
     public Boolean destroy(final ServiceUser user,
-                           final QueryKey queryKey){
+                           final QueryKey queryKey) {
         return Boolean.TRUE;
     }
 
     @Override
     public Optional<DocRef> getDocRefForQueryKey(final ServiceUser user,
-                                                 final QueryKey queryKey) throws Exception {
+                                                 final QueryKey queryKey) {
         return Optional.empty();
     }
 
@@ -282,7 +283,7 @@ public class QueryServiceCriteriaImpl<
 
             //TODO should probably drive this off a new fieldIndexMap.getEntries() method or similar
             //then we only loop round fields we car about
-            for (int x=0; x<this.fields.size(); x++) {
+            for (int x = 0; x < this.fields.size(); x++) {
                 final Object value = criteriaDataPoint.get(x);
                 final String fieldName = this.fields.get(x).getName();
 
@@ -293,9 +294,7 @@ public class QueryServiceCriteriaImpl<
                 }
             }
 
-            coprocessorMap.entrySet().forEach(coprocessor -> {
-                coprocessor.getValue().receive(dataArray);
-            });
+            coprocessorMap.entrySet().forEach(coprocessor -> coprocessor.getValue().receive(dataArray));
         }
 
         // TODO putting things into a payload and taking them out again is a waste of time in this case. We could use a queue instead and that'd be fine.
@@ -315,8 +314,8 @@ public class QueryServiceCriteriaImpl<
         }
 
         // Construct the store
-        final List<Integer> storeSize = Collections.singletonList(tuples.size());
-        CriteriaStore store = new CriteriaStore(storeSize, Sizes.create(storeSize),
+        final Sizes storeSize = Sizes.create(tuples.size());
+        final CriteriaStore store = new CriteriaStore(storeSize, storeSize,
                 coprocessorSettingsMap,
                 coprocessorMap,
                 payloadMap);

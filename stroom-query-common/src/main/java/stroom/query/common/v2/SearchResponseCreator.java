@@ -77,16 +77,17 @@ public class SearchResponseCreator {
 
     /**
      * Build a {@link SearchResponse} from the passed {@link SearchRequest}.
+     *
      * @param searchRequest The {@link SearchRequest} containing the query terms and the result requests
      * @return A {@link SearchResponse} object that may be one of:
      * <ul>
-     *     <li>A 'complete' {@link SearchResponse} containing all the data requested</li>
-     *     <li>An incomplete {@link SearchResponse} containing none, some or all of the data requested, i.e the
-     *     currently know results at the point the request is made.</li>
-     *     <li>An empty response with an error message indicating the request timed out waiting for a 'complete'
-     *     result set. This only applies to non-incremental queries.</li>
-     *     <li>An empty response with a different error message. This will happen when some unexpected error has
-     *     occurred while assembling the {@link SearchResponse}</li>
+     * <li>A 'complete' {@link SearchResponse} containing all the data requested</li>
+     * <li>An incomplete {@link SearchResponse} containing none, some or all of the data requested, i.e the
+     * currently know results at the point the request is made.</li>
+     * <li>An empty response with an error message indicating the request timed out waiting for a 'complete'
+     * result set. This only applies to non-incremental queries.</li>
+     * <li>An empty response with a different error message. This will happen when some unexpected error has
+     * occurred while assembling the {@link SearchResponse}</li>
      * </ul>
      */
     public SearchResponse create(final SearchRequest searchRequest) {
@@ -291,7 +292,8 @@ public class SearchResponseCreator {
                 resultCreator = new FlatResultCreator(
                         resultRequest,
                         null,
-                        null);
+                        null,
+                        store.getDefaultMaxResultsSizes());
             }
         } catch (final Exception e) {
             throw new RuntimeException(e.getMessage());

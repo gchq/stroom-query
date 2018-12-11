@@ -35,6 +35,16 @@ public class Sizes {
     }
 
     /**
+     * Create a set of sizes based on a single default size.
+     *
+     * @param defaultSize The default size to return if needed.
+     * @return A new set of sizes.
+     */
+    public static Sizes create(final int defaultSize) {
+        return new Sizes(new int[0], defaultSize);
+    }
+
+    /**
      * Create a set of sizes based on a list of integers. The default size will be derived from the last item in the list or will default to 1.
      *
      * @param list The list of sizes to use.

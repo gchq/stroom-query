@@ -7,12 +7,12 @@ import stroom.query.common.v2.CompletionListener;
 import stroom.query.common.v2.Coprocessor;
 import stroom.query.common.v2.CoprocessorSettingsMap;
 import stroom.query.common.v2.Data;
-import stroom.query.common.v2.Item;
 import stroom.query.common.v2.GroupKey;
+import stroom.query.common.v2.Item;
 import stroom.query.common.v2.Payload;
 import stroom.query.common.v2.ResultStoreCreator;
-import stroom.query.common.v2.Store;
 import stroom.query.common.v2.Sizes;
+import stroom.query.common.v2.Store;
 import stroom.query.common.v2.TableCoprocessorSettings;
 import stroom.query.common.v2.TablePayload;
 
@@ -33,14 +33,14 @@ public class CriteriaStore implements Store {
     private final Map<CoprocessorSettingsMap.CoprocessorKey, Coprocessor> coprocessorMap;
     private final Map<CoprocessorSettingsMap.CoprocessorKey, Payload> payloadMap;
 
-    private final List<Integer> defaultMaxResultsSizes;
+    private final Sizes defaultMaxResultsSizes;
     private final Sizes storeSize;
     private final List<CompletionListener> completionListeners = Collections.synchronizedList(new ArrayList<>());
 
     //results are currently assembled synchronously in getData so the store is always complete
     private final AtomicBoolean isComplete = new AtomicBoolean(true);
 
-    public CriteriaStore(final List<Integer> defaultMaxResultsSizes,
+    public CriteriaStore(final Sizes defaultMaxResultsSizes,
                          final Sizes storeSize,
                          final CoprocessorSettingsMap coprocessorSettingsMap,
                          final Map<CoprocessorSettingsMap.CoprocessorKey, Coprocessor> coprocessorMap,
@@ -102,7 +102,7 @@ public class CriteriaStore implements Store {
     }
 
     @Override
-    public List<Integer> getDefaultMaxResultsSizes() {
+    public Sizes getDefaultMaxResultsSizes() {
         return defaultMaxResultsSizes;
     }
 

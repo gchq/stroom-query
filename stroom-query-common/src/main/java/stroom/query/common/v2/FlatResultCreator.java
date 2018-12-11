@@ -45,22 +45,26 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
 
     private String error;
 
-    //TODO add defaultMaxResults to args
     public FlatResultCreator(final ResultRequest resultRequest,
                              final Map<String, String> paramMap,
-                             final FieldFormatter fieldFormatter) {
+                             final FieldFormatter fieldFormatter,
+                             final Sizes defaultMaxResultsSizes) {
 
         this.fieldFormatter = fieldFormatter;
 
         final List<TableSettings> tableSettings = resultRequest.getMappings();
-
 
         if (tableSettings.size() > 1) {
             mappers = new ArrayList<>(tableSettings.size() - 1);
             for (int i = 0; i < tableSettings.size() - 1; i++) {
                 final TableSettings parent = tableSettings.get(i);
                 final TableSettings child = tableSettings.get(i + 1);
-                mappers.add(new Mapper(parent, child, paramMap));
+
+                // Create a set of sizes that are the minimum values for the combination of user provided sizes for the parent table and the default maximum sizes.
+                final Sizes sizes = Sizes.min(Sizes.create(parent.getMaxResults()), defaultMaxResultsSizes);
+                final int maxItems = sizes.size(0);
+
+                mappers.add(new Mapper(parent, child, paramMap, maxItems));
             }
         } else {
             mappers = Collections.emptyList();
@@ -309,10 +313,13 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
         private final FieldIndexMap fieldIndexMap;
         private final TableCoprocessor tableCoprocessor;
         private final TablePayloadHandler tablePayloadHandler;
+        private final int maxItems;
 
-        public Mapper(final TableSettings parent,
-                      final TableSettings child,
-                      final Map<String, String> paramMap) {
+        Mapper(final TableSettings parent,
+               final TableSettings child,
+               final Map<String, String> paramMap,
+               final int maxItems) {
+            this.maxItems = maxItems;
 
             parentFields = new String[parent.getFields().size()];
             int i = 0;
@@ -336,6 +343,7 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
             // TODO : Add an option to get detail level items rather than root level items.
             final Items<Item> items = data.getChildMap().get(null);
 
+            int itemCount = 0;
             for (final Item item : items) {
                 final Generator[] generators = item.getGenerators();
                 final Val[] values = new Val[fieldIndexMap.size()];
@@ -351,6 +359,12 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
 
                 // TODO : Receive Object[] for lazy + nested evaluation.
                 tableCoprocessor.receive(values);
+
+                // Trim the data to the parent first level result size.
+                itemCount++;
+                if (itemCount >= maxItems) {
+                    break;
+                }
             }
 
             final TablePayload payload = (TablePayload) tableCoprocessor.createPayload();

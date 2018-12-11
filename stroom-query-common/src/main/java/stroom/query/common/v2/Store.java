@@ -64,7 +64,7 @@ public interface Store {
      * @return A list of {@link Integer} values, where the value represents the default
      * maximum number of results at a grouping depth equal to the position in the list
      */
-   List<Integer> getDefaultMaxResultsSizes();
+    Sizes getDefaultMaxResultsSizes();
 
     /**
      * Get the store size configuration for this store

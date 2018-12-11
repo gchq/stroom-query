@@ -36,10 +36,10 @@ import java.util.Set;
 public class TableResultCreator implements ResultCreator {
     private final FieldFormatter fieldFormatter;
     private volatile List<Field> latestFields;
-    private final List<Integer> defaultMaxResultsSizes;
+    private final Sizes defaultMaxResultsSizes;
 
     public TableResultCreator(final FieldFormatter fieldFormatter,
-                              final List<Integer> defaultMaxResultsSizes) {
+                              final Sizes defaultMaxResultsSizes) {
 
         this.fieldFormatter = fieldFormatter;
         this.defaultMaxResultsSizes = defaultMaxResultsSizes;
@@ -72,7 +72,7 @@ public class TableResultCreator implements ResultCreator {
             TableSettings tableSettings = resultRequest.getMappings().get(0);
             latestFields = tableSettings.getFields();
             // Create a set of sizes that are the minimum values for the combination of user provided sizes for the table and the default maximum sizes.
-            final Sizes maxResults = Sizes.min(Sizes.create(tableSettings.getMaxResults()), Sizes.create(defaultMaxResultsSizes));
+            final Sizes maxResults = Sizes.min(Sizes.create(tableSettings.getMaxResults()), defaultMaxResultsSizes);
 
             totalResults = addTableResults(data,
                     latestFields,

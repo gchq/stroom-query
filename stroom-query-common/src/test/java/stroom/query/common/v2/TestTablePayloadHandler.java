@@ -36,12 +36,11 @@ import stroom.query.shared.v2.ParamUtil;
 import stroom.util.shared.HasTerminate;
 
 import java.util.Collections;
-import java.util.List;
 
 public class TestTablePayloadHandler {
-    private final List<Integer> defaultMaxResultsSizes = Collections.singletonList(50);
-    private final Sizes maxResults = Sizes.min(Sizes.create(Collections.singletonList(50)), Sizes.create(defaultMaxResultsSizes));
-    private final Sizes storeSize = Sizes.create(Collections.singletonList(100));
+    private final Sizes defaultMaxResultsSizes = Sizes.create(50);
+    private final Sizes maxResults = Sizes.min(Sizes.create(50), defaultMaxResultsSizes);
+    private final Sizes storeSize = Sizes.create(100);
 
     @Test
     public void basicTest() {
@@ -55,10 +54,10 @@ public class TestTablePayloadHandler {
 
         final TableSettings tableSettings = new TableSettings.Builder()
                 .addFields(new Field.Builder()
-                    .name("Text")
-                    .expression(ParamUtil.makeParam("Text"))
-                    .format(Format.Type.TEXT)
-                    .build())
+                        .name("Text")
+                        .expression(ParamUtil.makeParam("Text"))
+                        .format(Format.Type.TEXT)
+                        .build())
                 .build();
 
         final CompiledDepths compiledDepths = new CompiledDepths(tableSettings.getFields(), tableSettings.showDetail());
@@ -110,10 +109,10 @@ public class TestTablePayloadHandler {
 
         final TableSettings tableSettings = new TableSettings.Builder()
                 .addFields(new Field.Builder()
-                    .name("Text")
-                    .expression(ParamUtil.makeParam("Text"))
-                    .sort(sort)
-                    .build())
+                        .name("Text")
+                        .expression(ParamUtil.makeParam("Text"))
+                        .sort(sort)
+                        .build())
                 .build();
 
         final CompiledDepths compiledDepths = new CompiledDepths(tableSettings.getFields(), tableSettings.showDetail());
@@ -153,12 +152,12 @@ public class TestTablePayloadHandler {
 
 
         final TableSettings tableSettings = new TableSettings.Builder()
-            .addFields(new Field.Builder()
-                .name("Number")
-                .expression(ParamUtil.makeParam("Number"))
-                .sort(sort)
-                .build())
-            .build();
+                .addFields(new Field.Builder()
+                        .name("Number")
+                        .expression(ParamUtil.makeParam("Number"))
+                        .sort(sort)
+                        .build())
+                .build();
 
         final CompiledDepths compiledDepths = new CompiledDepths(tableSettings.getFields(), tableSettings.showDetail());
         final CompiledFields compiledFields = new CompiledFields(tableSettings.getFields(), null, Collections.emptyMap());
@@ -203,10 +202,10 @@ public class TestTablePayloadHandler {
 
         final TableSettings tableSettings = new TableSettings.Builder()
                 .addFields(new Field.Builder()
-                    .name("Text")
-                    .expression(ParamUtil.makeParam("Text"))
-                    .group(0)
-                    .build())
+                        .name("Text")
+                        .expression(ParamUtil.makeParam("Text"))
+                        .group(0)
+                        .build())
                 .build();
 
         final CompiledDepths compiledDepths = new CompiledDepths(tableSettings.getFields(), tableSettings.showDetail());
@@ -247,15 +246,15 @@ public class TestTablePayloadHandler {
 
         final TableSettings tableSettings = new TableSettings.Builder()
                 .addFields(new Field.Builder()
-                    .name("Count")
-                    .expression("count()")
-                    .build())
+                        .name("Count")
+                        .expression("count()")
+                        .build())
                 .addFields(new Field.Builder()
-                    .name("Text")
-                    .expression(ParamUtil.makeParam("Text"))
-                    .sort(sort)
-                    .group(0)
-                    .build())
+                        .name("Text")
+                        .expression(ParamUtil.makeParam("Text"))
+                        .sort(sort)
+                        .group(0)
+                        .build())
                 .build();
 
         final CompiledDepths compiledDepths = new CompiledDepths(tableSettings.getFields(), tableSettings.showDetail());
@@ -295,15 +294,15 @@ public class TestTablePayloadHandler {
 
         final TableSettings tableSettings = new TableSettings.Builder()
                 .addFields(new Field.Builder()
-                    .name("Count")
-                    .expression("count()")
-                    .build())
+                        .name("Count")
+                        .expression("count()")
+                        .build())
                 .addFields(new Field.Builder()
-                    .name("Text")
-                    .expression(ParamUtil.makeParam("Text"))
-                    .sort(sort)
-                    .group(1)
-                    .build())
+                        .name("Text")
+                        .expression(ParamUtil.makeParam("Text"))
+                        .sort(sort)
+                        .group(1)
+                        .build())
                 .build();
 
         final CompiledDepths compiledDepths = new CompiledDepths(tableSettings.getFields(), tableSettings.showDetail());
