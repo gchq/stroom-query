@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.1-beta.18] - 2018-12-11
+
 * Issue **gchq/stroom#1007** : Fix build.
 
 ## [v2.1-beta.17] - 2018-12-11
@@ -216,7 +218,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.1-beta.16...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.1-beta.18...HEAD
+[v2.1-beta.18]: https://github.com/gchq/stroom-query/compare/v2.1-beta.17...v2.1-beta.18
+[v2.1-beta.17]: https://github.com/gchq/stroom-query/compare/v2.1-beta.16...v2.1-beta.17
 [v2.1-beta.16]: https://github.com/gchq/stroom-query/compare/v2.1-beta.15...v2.1-beta.16
 [v2.1-beta.15]: https://github.com/gchq/stroom-query/compare/v2.1-beta.14...v2.1-beta.15
 [v2.1-beta.14]: https://github.com/gchq/stroom-query/compare/v2.1-beta.13...v2.1-beta.14
