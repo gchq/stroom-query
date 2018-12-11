@@ -26,7 +26,6 @@ import stroom.query.util.LambdaLoggerFactory;
 import stroom.util.shared.HasTerminate;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -36,7 +35,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SearchResultHandler implements ResultHandler {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchResultHandler.class);
     private static final LambdaLogger LAMBDA_LOGGER = LambdaLoggerFactory.getLogger(SearchResultHandler.class);
 
@@ -46,7 +44,7 @@ public class SearchResultHandler implements ResultHandler {
     private final Queue<CompletionListener> completionListeners = new ConcurrentLinkedQueue<>();
 
     public SearchResultHandler(final CoprocessorSettingsMap coprocessorSettingsMap,
-                               final List<Integer> defaultMaxResultsSizes,
+                               final Sizes defaultMaxResultsSizes,
                                final Sizes storeSize) {
 
         this.coprocessorSettingsMap = coprocessorSettingsMap;
@@ -58,7 +56,7 @@ public class SearchResultHandler implements ResultHandler {
                 final TableCoprocessorSettings tableCoprocessorSettings = (TableCoprocessorSettings) coprocessorSettings;
                 final TableSettings tableSettings = tableCoprocessorSettings.getTableSettings();
                 // Create a set of sizes that are the minimum values for the combination of user provided sizes for the table and the default maximum sizes.
-                final Sizes maxResults = Sizes.min(Sizes.create(tableSettings.getMaxResults()), Sizes.create(defaultMaxResultsSizes));
+                final Sizes maxResults = Sizes.min(Sizes.create(tableSettings.getMaxResults()), defaultMaxResultsSizes);
 
                 handlerMap.put(coprocessorKey, new TablePayloadHandler(
                         tableSettings.getFields(),

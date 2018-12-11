@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **gchq/stroom#1007** : Max visualisation results are now limited by default to the maximum number of results defined for the first level of the parent table. This can be further limited by settings in the visualisation.
+
 ## [v2.1-beta.18] - 2018-12-11
 
 * Issue **gchq/stroom#1007** : Fix build.
