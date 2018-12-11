@@ -27,10 +27,10 @@ public class CriteriaStore implements Store {
     private final CoprocessorSettingsMap coprocessorSettingsMap;
     private final Map<CoprocessorSettingsMap.CoprocessorKey, Payload> payloadMap;
 
-    private final List<Integer> defaultMaxResultsSizes;
+    private final Sizes defaultMaxResultsSizes;
     private final Sizes storeSize;
 
-    public CriteriaStore(final List<Integer> defaultMaxResultsSizes,
+    public CriteriaStore(final Sizes defaultMaxResultsSizes,
                          final Sizes storeSize,
                          final CoprocessorSettingsMap coprocessorSettingsMap,
                          final Map<CoprocessorSettingsMap.CoprocessorKey, Payload> payloadMap) {
@@ -100,7 +100,7 @@ public class CriteriaStore implements Store {
     }
 
     @Override
-    public List<Integer> getDefaultMaxResultsSizes() {
+    public Sizes getDefaultMaxResultsSizes() {
         return defaultMaxResultsSizes;
     }
 

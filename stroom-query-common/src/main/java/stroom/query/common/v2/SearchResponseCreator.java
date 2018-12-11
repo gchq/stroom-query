@@ -284,7 +284,8 @@ public class SearchResponseCreator {
                 resultCreator = new FlatResultCreator(
                         resultRequest,
                         null,
-                        null);
+                        null,
+                        store.getDefaultMaxResultsSizes());
             }
         } catch (final RuntimeException e) {
             throw new RuntimeException(e.getMessage());

@@ -254,8 +254,9 @@ public class JooqStoreFactory implements StoreFactory {
         }
 
         // Construct the store
-        final List<Integer> storeSize = Collections.singletonList(tuples.size());
-        return new CriteriaStore(storeSize, Sizes.create(storeSize),
+        final Sizes storeSize = Sizes.create(tuples.size());
+        return new CriteriaStore(storeSize,
+                storeSize,
                 coprocessorSettingsMap,
                 payloadMap);
     }

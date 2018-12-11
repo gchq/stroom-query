@@ -35,12 +35,11 @@ import stroom.query.common.v2.format.FormatterFactory;
 import stroom.query.shared.v2.ParamUtil;
 
 import java.util.Collections;
-import java.util.List;
 
 public class TestTablePayloadHandler {
-    private final List<Integer> defaultMaxResultsSizes = Collections.singletonList(50);
-    private final Sizes maxResults = Sizes.min(Sizes.create(Collections.singletonList(50)), Sizes.create(defaultMaxResultsSizes));
-    private final Sizes storeSize = Sizes.create(Collections.singletonList(100));
+    private final Sizes defaultMaxResultsSizes = Sizes.create(50);
+    private final Sizes maxResults = Sizes.min(Sizes.create(50), defaultMaxResultsSizes);
+    private final Sizes storeSize = Sizes.create(100);
 
     @Test
     public void basicTest() {
