@@ -44,13 +44,20 @@ public class ResultStoreCreator implements Reader<GroupKey, Item> {
 
     private void trim(final Sizes storeSize, final GroupKey parentKey, final int depth) {
         final Items<Item> parentItems = childMap.get(parentKey);
-        if (parentItems != null && storeSize != null) {
-            parentItems.trim(storeSize.size(depth), sorter, item -> {
-                // If there is a group key then cascade removal.
-                if (item.key != null) {
-                    remove(item.key);
-                }
-            });
+        if (parentItems != null) {
+
+            if (storeSize == null) {
+                // no store limits so just sort
+                parentItems.sort(sorter);
+            } else {
+                // sort then trim
+                parentItems.trim(storeSize.size(depth), sorter, item -> {
+                    // If there is a group key then cascade removal.
+                    if (item.key != null) {
+                        remove(item.key);
+                    }
+                });
+            }
 
             // Ensure remaining items children are also trimmed by cascading
             // trim operation.

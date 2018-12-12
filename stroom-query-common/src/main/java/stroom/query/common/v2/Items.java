@@ -25,6 +25,8 @@ public interface Items<E> extends Iterable<E> {
 
     int size();
 
+    void sort(Comparator<E> comparator);
+
     void trim(int size, Comparator<E> comparator, RemoveHandler<E> removeHandler);
 
     interface RemoveHandler<E> {
