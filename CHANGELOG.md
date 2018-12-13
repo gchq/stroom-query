@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+* Upgraded stroom expression to v1.4.14.
+
 ## [Unreleased]
 
 ## [v2.1-beta.20] - 2018-12-13
