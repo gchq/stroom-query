@@ -1,9 +1,12 @@
 package stroom.query.testing.jooq;
 
+import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import org.eclipse.jetty.http.HttpStatus;
-import org.junit.Before;
-import org.junit.ClassRule;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
 import stroom.docref.DocRef;
@@ -22,7 +25,7 @@ import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.audit.service.QueryApiException;
 import stroom.query.authorisation.DocumentPermission;
-import stroom.query.testing.DropwizardAppWithClientsRule;
+import stroom.query.testing.DropwizardAppExtensionWithClients;
 import stroom.query.testing.QueryRemoteServiceIT;
 import stroom.query.testing.StroomAuthenticationRule;
 import stroom.query.testing.data.CreateTestDataClient;
@@ -41,19 +44,16 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
-public class TestJooqQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRefJooqEntity, JooqConfig> {
-
-    @ClassRule
-    public static StroomAuthenticationRule authRule =
+@ExtendWith(DropwizardExtensionsSupport.class)
+class TestJooqQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRefJooqEntity, JooqConfig> {
+    private static StroomAuthenticationRule authRule =
             new StroomAuthenticationRule();
 
-    @ClassRule
-    public static final DropwizardAppWithClientsRule<JooqConfig> appRule =
-            new DropwizardAppWithClientsRule<>(JooqApp.class,
+    private static final DropwizardAppExtensionWithClients<JooqConfig> appRule =
+            new DropwizardAppExtensionWithClients<>(JooqApp.class,
                     resourceFilePath("jooq/config.yml"),
                     authRule.authToken(),
                     authRule.authService());
@@ -63,7 +63,7 @@ public class TestJooqQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRe
     private String testDataSeed;
     private DocRef testDataDocRef;
 
-    public TestJooqQueryRemoteServiceIT() {
+    TestJooqQueryRemoteServiceIT() {
         super(TestDocRefJooqEntity.TYPE,
                 TestDocRefJooqEntity.class,
                 appRule,
@@ -71,8 +71,20 @@ public class TestJooqQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRe
         testDataClient = appRule.getClient(CreateTestDataClient::new);
     }
 
-    @Before
-    public void beforeTest() throws QueryApiException {
+    @BeforeAll
+    static void beforeAll() {
+        authRule.start();
+        authRule.before();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        authRule.after();
+        authRule.stop();
+    }
+
+    @BeforeEach
+    void beforeTest() throws QueryApiException {
         testDataSeed = UUID.randomUUID().toString();
 
         testDataDocRef = new DocRef.Builder()
@@ -91,7 +103,7 @@ public class TestJooqQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRe
                 .orElseThrow(() -> new AssertionError("Response body missing"));
 
         final Response createTestDataResponse = testDataClient.createTestData(authRule.adminUser(), testDataDocRef.getUuid(), testDataSeed);
-        assertEquals(HttpStatus.NO_CONTENT_204, createTestDataResponse.getStatus());
+        assertThat(createTestDataResponse.getStatus()).isEqualTo(HttpStatus.NO_CONTENT_204);
         createTestDataResponse.close();
 
         // Clear the audit log for the create document
@@ -136,12 +148,12 @@ public class TestJooqQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRe
                 .map(DataSourceField::getName)
                 .collect(Collectors.toSet());
 
-        assertTrue(resultFieldNames.contains(DocRefEntity.CREATE_TIME));
-        assertTrue(resultFieldNames.contains(DocRefEntity.CREATE_USER));
-        assertTrue(resultFieldNames.contains(DocRefEntity.UPDATE_TIME));
-        assertTrue(resultFieldNames.contains(DocRefEntity.UPDATE_USER));
-        assertTrue(resultFieldNames.contains(TestQueryableJooqEntity.ID));
-        assertTrue(resultFieldNames.contains(TestQueryableJooqEntity.COLOUR));
+        assertThat(resultFieldNames.contains(DocRefEntity.CREATE_TIME)).isTrue();
+        assertThat(resultFieldNames.contains(DocRefEntity.CREATE_USER)).isTrue();
+        assertThat(resultFieldNames.contains(DocRefEntity.UPDATE_TIME)).isTrue();
+        assertThat(resultFieldNames.contains(DocRefEntity.UPDATE_USER)).isTrue();
+        assertThat(resultFieldNames.contains(TestQueryableJooqEntity.ID)).isTrue();
+        assertThat(resultFieldNames.contains(TestQueryableJooqEntity.COLOUR)).isTrue();
     }
 
     @Override
@@ -153,7 +165,7 @@ public class TestJooqQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRe
     }
 
     @Test
-    public void testQuerySearch() {
+    void testQuerySearch() {
 
         // Precalculate the page offsets
         int numberPages = 10;
@@ -178,7 +190,7 @@ public class TestJooqQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRe
                         .orElseThrow(() -> new AssertionError("Response body missing"));
 
                 for (final Result result : searchResponse.getResults()) {
-                    assertTrue(result instanceof FlatResult);
+                    assertThat(result instanceof FlatResult).isTrue();
 
                     final FlatResult flatResult = (FlatResult) result;
                     flatResult.getValues().stream()
@@ -191,6 +203,6 @@ public class TestJooqQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRe
             }
         });
 
-        assertEquals(CreateTestDataJooqImpl.RECORDS_TO_CREATE, resultsSet.size());
+        assertThat(resultsSet).hasSize(CreateTestDataJooqImpl.RECORDS_TO_CREATE);
     }
 }

@@ -20,7 +20,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -88,22 +93,17 @@ public final class SearchRequest implements Serializable {
     /**
      * @param key            A unique key to identify the instance of the search by. This key is used to identify multiple
      *                       requests for the same search when running in incremental mode.
-     *
      * @param query          The query terms for the search
-     *
      * @param resultRequests A list of {@link ResultRequest resultRequest} definitions. If null or the list is empty
      *                       no results will be returned. Allows the caller to request that the results of the query
      *                       are returned in multiple forms, e.g. using a number of different
      *                       filtering/aggregation/sorting approaches.
-     *
      * @param dateTimeLocale The locale to use when formatting date values in the search results. The value is the
      *                       string form of a {@link java.time.ZoneId zoneId}
-     *
      * @param incremental    If true the response will contain all results found so far. Future requests for the same
      *                       query key may return more results. Intended for use on longer running searches to allow
      *                       partial result sets to be returned as soon as they are available rather than waiting for the
      *                       full result set.
-     *
      * @param timeout        Set the maximum time (in ms) for the server to wait for a complete result set. The timeout applies to both
      *                       incremental and non incremental queries, though the behaviour is slightly different. The timeout
      *                       will make the server wait for which ever comes first out of the query completing or the timeout period
@@ -128,12 +128,8 @@ public final class SearchRequest implements Serializable {
     }
 
     /**
-     * @param key               see other
-     * @param query             see other
-     * @param resultRequests    see other
-     * @param dateTimeLocale    see other
-     * @param incremental       see other
      * See {@link SearchRequest#SearchRequest(QueryKey, Query, List, String, Boolean, Long)}
+     *
      * @param key            As linked
      * @param query          As linked
      * @param resultRequests As linked
@@ -239,12 +235,9 @@ public final class SearchRequest implements Serializable {
      */
     public static class Builder {
 
-        private QueryKey key;
-
-        private Query query;
-
         private final List<ResultRequest> resultRequests = new ArrayList<>();
-
+        private QueryKey key;
+        private Query query;
         private String dateTimeLocale;
 
         private Boolean incremental;

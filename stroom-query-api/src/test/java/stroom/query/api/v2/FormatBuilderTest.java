@@ -2,30 +2,30 @@ package stroom.query.api.v2;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class FormatBuilderTest {
+class FormatBuilderTest {
     @Test
-    public void doesBuildNumber() {
+    void doesBuildNumber() {
         final Integer decimalPlaces = 5;
         final Boolean useSeperator = true;
 
         final Format format = new Format.Builder()
                 .number(new NumberFormat.Builder()
-                    .decimalPlaces(decimalPlaces)
-                    .useSeparator(useSeperator)
-                    .build())
+                        .decimalPlaces(decimalPlaces)
+                        .useSeparator(useSeperator)
+                        .build())
                 .build();
 
-        assertEquals(Format.Type.NUMBER, format.getType());
-        assertNotNull(format.getNumberFormat());
-        assertNull(format.getDateTimeFormat());
-        assertEquals(decimalPlaces, format.getNumberFormat().getDecimalPlaces());
-        assertEquals(useSeperator, format.getNumberFormat().getUseSeparator());
+        assertThat(format.getType()).isEqualTo(Format.Type.NUMBER);
+        assertThat(format.getNumberFormat()).isNotNull();
+        assertThat(format.getDateTimeFormat()).isNull();
+        assertThat(format.getNumberFormat().getDecimalPlaces()).isEqualTo(decimalPlaces);
+        assertThat(format.getNumberFormat().getUseSeparator()).isEqualTo(useSeperator);
     }
 
     @Test
-    public void doesBuildDateTime() {
+    void doesBuildDateTime() {
         final String pattern = "DAY MONTH YEAR";
 
         final String timeZoneId = "someId";
@@ -34,7 +34,7 @@ public class FormatBuilderTest {
         final Integer offsetMinutes = 5;
 
         final Format format = new Format.Builder()
-                    .dateTime(new DateTimeFormat.Builder()
+                .dateTime(new DateTimeFormat.Builder()
                         .pattern(pattern)
                         .timeZone(new TimeZone.Builder()
                                 .id(timeZoneId)
@@ -42,17 +42,17 @@ public class FormatBuilderTest {
                                 .offsetHours(offsetHours)
                                 .offsetMinutes(offsetMinutes)
                                 .build())
-                            .build())
+                        .build())
                 .build();
 
-        assertEquals(Format.Type.DATE_TIME, format.getType());
-        assertNotNull(format.getDateTimeFormat());
-        assertNull(format.getNumberFormat());
-        assertEquals(pattern, format.getDateTimeFormat().getPattern());
+        assertThat(format.getType()).isEqualTo(Format.Type.DATE_TIME);
+        assertThat(format.getDateTimeFormat()).isNotNull();
+        assertThat(format.getNumberFormat()).isNull();
+        assertThat(format.getDateTimeFormat().getPattern()).isEqualTo(pattern);
 
-        assertEquals(timeZoneId, format.getDateTimeFormat().getTimeZone().getId());
-        assertEquals(use, format.getDateTimeFormat().getTimeZone().getUse());
-        assertEquals(offsetHours, format.getDateTimeFormat().getTimeZone().getOffsetHours());
-        assertEquals(offsetMinutes, format.getDateTimeFormat().getTimeZone().getOffsetMinutes());
+        assertThat(format.getDateTimeFormat().getTimeZone().getId()).isEqualTo(timeZoneId);
+        assertThat(format.getDateTimeFormat().getTimeZone().getUse()).isEqualTo(use);
+        assertThat(format.getDateTimeFormat().getTimeZone().getOffsetHours()).isEqualTo(offsetHours);
+        assertThat(format.getDateTimeFormat().getTimeZone().getOffsetMinutes()).isEqualTo(offsetMinutes);
     }
 }

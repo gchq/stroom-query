@@ -2,11 +2,11 @@ package stroom.query.api.v2;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class FieldBuilderTest {
+class FieldBuilderTest {
     @Test
-    public void doesBuild() {
+    void doesBuild() {
         final String name = "someName";
         final Integer group = 57;
         final Integer sortOrder = 2;
@@ -21,13 +21,13 @@ public class FieldBuilderTest {
                 .name(name)
                 .expression(expression)
                 .sort(new Sort.Builder()
-                    .order(sortOrder)
-                    .direction(sortDirection)
-                    .build())
+                        .order(sortOrder)
+                        .direction(sortDirection)
+                        .build())
                 .filter(new Filter.Builder()
-                    .includes(filterIncludes)
-                    .excludes(filterExcludes)
-                    .build())
+                        .includes(filterIncludes)
+                        .excludes(filterExcludes)
+                        .build())
                 .format(new Format.Builder()
                         .number(new NumberFormat.Builder()
                                 .decimalPlaces(numberFormatDecimalPlaces)
@@ -37,23 +37,23 @@ public class FieldBuilderTest {
                 .group(group)
                 .build();
 
-        assertEquals(name, field.getName());
-        assertEquals(expression, field.getExpression());
-        assertEquals(group, field.getGroup());
+        assertThat(field.getName()).isEqualTo(name);
+        assertThat(field.getExpression()).isEqualTo(expression);
+        assertThat(field.getGroup()).isEqualTo(group);
 
-        assertNotNull(field.getSort());
-        assertEquals(sortOrder, field.getSort().getOrder());
-        assertEquals(sortDirection, field.getSort().getDirection());
+        assertThat(field.getSort()).isNotNull();
+        assertThat(field.getSort().getOrder()).isEqualTo(sortOrder);
+        assertThat(field.getSort().getDirection()).isEqualTo(sortDirection);
 
-        assertNotNull(field.getFilter());
-        assertEquals(filterExcludes, field.getFilter().getExcludes());
-        assertEquals(filterIncludes, field.getFilter().getIncludes());
+        assertThat(field.getFilter()).isNotNull();
+        assertThat(field.getFilter().getExcludes()).isEqualTo(filterExcludes);
+        assertThat(field.getFilter().getIncludes()).isEqualTo(filterIncludes);
 
-        assertNotNull(field.getFormat());
-        assertEquals(Format.Type.NUMBER, field.getFormat().getType());
-        assertNotNull(field.getFormat().getNumberFormat());
-        assertNull(field.getFormat().getDateTimeFormat());
-        assertEquals(numberFormatDecimalPlaces, field.getFormat().getNumberFormat().getDecimalPlaces());
-        assertEquals(numberFormatUseSeperator, field.getFormat().getNumberFormat().getUseSeparator());
+        assertThat(field.getFormat()).isNotNull();
+        assertThat(field.getFormat().getType()).isEqualTo(Format.Type.NUMBER);
+        assertThat(field.getFormat().getNumberFormat()).isNotNull();
+        assertThat(field.getFormat().getDateTimeFormat()).isNull();
+        assertThat(field.getFormat().getNumberFormat().getDecimalPlaces()).isEqualTo(numberFormatDecimalPlaces);
+        assertThat(field.getFormat().getNumberFormat().getUseSeparator()).isEqualTo(numberFormatUseSeperator);
     }
 }

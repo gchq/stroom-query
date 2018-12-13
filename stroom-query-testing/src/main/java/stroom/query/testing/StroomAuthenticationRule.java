@@ -1,7 +1,6 @@
 package stroom.query.testing;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.github.tomakehurst.wiremock.core.Options;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import io.dropwizard.testing.ConfigOverride;
@@ -15,15 +14,25 @@ import org.jose4j.jwt.JwtClaims;
 import org.jose4j.lang.JoseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import stroom.query.authorisation.DocumentPermission;
 import stroom.docref.DocRef;
+import stroom.query.authorisation.DocumentPermission;
 import stroom.query.security.ServiceUser;
 
 import javax.ws.rs.core.MediaType;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.containing;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.ok;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
@@ -34,17 +43,13 @@ import static org.junit.jupiter.api.Assertions.fail;
  */
 public class StroomAuthenticationRule extends WireMockClassRule {
     private static final Logger LOGGER = LoggerFactory.getLogger(StroomAuthenticationRule.class);
-
-    private final String ADMIN_USER = UUID.randomUUID().toString();
-
-    private RsaJsonWebKey jwk;
-    private final ConcurrentHashMap<String, ServiceUser> authenticatedUsers = new ConcurrentHashMap<>();
-
-    private RsaJsonWebKey invalidJwk;
-    private final ConcurrentHashMap<String, ServiceUser> unauthenticatedUsers = new ConcurrentHashMap<>();
-
     private static final com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper
             = new com.fasterxml.jackson.databind.ObjectMapper();
+    private final String ADMIN_USER = UUID.randomUUID().toString();
+    private final ConcurrentHashMap<String, ServiceUser> authenticatedUsers = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, ServiceUser> unauthenticatedUsers = new ConcurrentHashMap<>();
+    private RsaJsonWebKey jwk;
+    private RsaJsonWebKey invalidJwk;
 
     public StroomAuthenticationRule() {
         super(WireMockConfiguration.options().dynamicPort());
@@ -52,6 +57,7 @@ public class StroomAuthenticationRule extends WireMockClassRule {
 
     /**
      * Create a Dropwizard config override that can inject the dynamic port into the test auth service URL
+     *
      * @return The Config Override for the Auth Service Token URL
      */
     public ConfigOverride authToken() {
@@ -61,6 +67,7 @@ public class StroomAuthenticationRule extends WireMockClassRule {
 
     /**
      * Creates a Dropwizard config override that can inject the dynamic port into the test authorisation service URL
+     *
      * @return The Config override for the authorisation service URL.
      */
     public ConfigOverride authService() {
@@ -69,7 +76,7 @@ public class StroomAuthenticationRule extends WireMockClassRule {
     }
 
     @Override
-    protected void before() {
+    public void before() {
         super.before();
 
         LOGGER.info("Setting Up Stroom Auth with Wiremock");
@@ -116,7 +123,7 @@ public class StroomAuthenticationRule extends WireMockClassRule {
     }
 
     @Override
-    protected void after() {
+    public void after() {
         super.after();
 
         authenticatedUsers.clear();
@@ -210,6 +217,32 @@ public class StroomAuthenticationRule extends WireMockClassRule {
         });
     }
 
+    private void givePermission(final ServiceUser serviceUser,
+                                final DocRef docRef,
+                                final String permissionName) {
+        /**
+         * Setup Authorisation Service for Doc Refs, by default allow everything
+         * Specific sub classes may have more specific cases to test for unauthorised actions.
+         */
+
+        final Map<String, Object> request = new HashMap<>();
+        request.put("docRef", docRef);
+        request.put("permission", permissionName);
+
+        String requestJson;
+        try {
+            requestJson = jacksonObjectMapper.writeValueAsString(request);
+        } catch (JsonProcessingException e) {
+            fail(e.getLocalizedMessage());
+            return;
+        }
+
+        stubFor(post(urlEqualTo("/api/authorisation/v1/isAuthorised"))
+                .withRequestBody(equalToJson(requestJson))
+                .withHeader("Authorization", containing(serviceUser.getJwt()))
+                .willReturn(ok("Mock approval for authorisation")));
+    }
+
     public class PermissionBuilder {
         private final List<ServiceUser> serviceUsers = new ArrayList<>();
         private final List<DocRef> docRefs = new ArrayList<>();
@@ -266,31 +299,5 @@ public class StroomAuthenticationRule extends WireMockClassRule {
                     )
             );
         }
-    }
-
-    private void givePermission(final ServiceUser serviceUser,
-                                final DocRef docRef,
-                                final String permissionName) {
-        /**
-         * Setup Authorisation Service for Doc Refs, by default allow everything
-         * Specific sub classes may have more specific cases to test for unauthorised actions.
-         */
-
-        final Map<String, Object> request = new HashMap<>();
-        request.put("docRef", docRef);
-        request.put("permission", permissionName);
-
-        String requestJson;
-        try {
-            requestJson = jacksonObjectMapper.writeValueAsString(request);
-        } catch (JsonProcessingException e) {
-            fail(e.getLocalizedMessage());
-            return;
-        }
-
-        stubFor(post(urlEqualTo("/api/authorisation/v1/isAuthorised"))
-                .withRequestBody(equalToJson(requestJson))
-                .withHeader("Authorization", containing(serviceUser.getJwt()))
-                .willReturn(ok("Mock approval for authorisation")));
     }
 }

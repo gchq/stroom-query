@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class RowBuilderTest {
+class RowBuilderTest {
     @Test
-    public void doesBuild() {
+    void doesBuild() {
         final Integer depth = 3;
         final List<String> values = Arrays.asList("qwerty", "asdfg");
         final String groupKey = "someGroup";
@@ -20,8 +20,8 @@ public class RowBuilderTest {
                 .groupKey(groupKey)
                 .build();
 
-        assertEquals(depth, row.getDepth());
-        assertEquals(groupKey, row.getGroupKey());
-        assertEquals(values, row.getValues());
+        assertThat(row.getDepth()).isEqualTo(depth);
+        assertThat(row.getGroupKey()).isEqualTo(groupKey);
+        assertThat(row.getValues()).isEqualTo(values);
     }
 }

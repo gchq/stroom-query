@@ -6,12 +6,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class FlatResultBuilderTest {
+class FlatResultBuilderTest {
     @Test
-    public void doesBuild() {
+    void doesBuild() {
         // Given
         final String componentId = "someComponentId";
         final String error = "something went wrong";
@@ -35,24 +34,24 @@ public class FlatResultBuilderTest {
         final FlatResult flatResult = flatResultBuilder.build();
 
         // Then
-        assertEquals(componentId, flatResult.getComponentId());
-        assertEquals(error, flatResult.getError());
-        assertEquals(Long.valueOf(numberResultSets), flatResult.getSize());
+        assertThat(flatResult.getComponentId()).isEqualTo(componentId);
+        assertThat(flatResult.getError()).isEqualTo(error);
+        assertThat(flatResult.getSize()).isEqualTo(Long.valueOf(numberResultSets));
 
         final long fieldsCount = flatResult.getStructure().stream()
-                .peek(field -> assertTrue(field.getName().startsWith("field")))
+                .peek(field -> assertThat(field.getName().startsWith("field")).isTrue())
                 .count();
-        assertEquals(numberFields, fieldsCount);
+        assertThat(fieldsCount).isEqualTo(numberFields);
 
         final long valuesCount = flatResult.getValues().stream().peek(values -> {
             final long vCount = values.stream()
                     .filter(o -> o instanceof String)
                     .map(o -> (String) o)
-                    .peek(o -> assertTrue(o.startsWith("field")))
+                    .peek(o -> assertThat(o.startsWith("field")).isTrue())
                     .count();
-            assertEquals(numberFields, vCount);
+            assertThat(vCount).isEqualTo(numberFields);
         }).count();
 
-        assertEquals(numberResultSets, valuesCount);
+        assertThat(valuesCount).isEqualTo(numberResultSets);
     }
 }

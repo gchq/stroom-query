@@ -5,12 +5,11 @@ import stroom.docref.DocRef;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class SearchRequestBuilderTest {
+class SearchRequestBuilderTest {
     @Test
-    public void doesBuild() {
+    void doesBuild() {
         // Given
         final String dateTimeLocale = "en-gb";
         final boolean incremental = true;
@@ -22,31 +21,31 @@ public class SearchRequestBuilderTest {
         // When
         final SearchRequest searchRequest = new SearchRequest.Builder()
                 .query(new Query.Builder()
-                    .dataSource(new DocRef.Builder()
-                        .uuid(dataSourceUuid)
+                        .dataSource(new DocRef.Builder()
+                                .uuid(dataSourceUuid)
+                                .build())
                         .build())
-                    .build())
                 .dateTimeLocale(dateTimeLocale)
                 .incremental(incremental)
                 .key(queryKeyUUID)
                 .addResultRequests(new ResultRequest.Builder()
-                    .componentId(resultRequestComponentId0)
-                    .build())
+                        .componentId(resultRequestComponentId0)
+                        .build())
                 .addResultRequests(new ResultRequest.Builder()
-                    .componentId(resultRequestComponentId1)
-                    .build())
+                        .componentId(resultRequestComponentId1)
+                        .build())
                 .build();
 
         // Then
-        assertEquals(dateTimeLocale, searchRequest.getDateTimeLocale());
-        assertEquals(incremental, searchRequest.getIncremental());
-        assertNotNull(searchRequest.getKey());
-        assertEquals(queryKeyUUID, searchRequest.getKey().getUuid());
-        assertEquals(2, searchRequest.getResultRequests().size());
-        assertEquals(resultRequestComponentId0, searchRequest.getResultRequests().get(0).getComponentId());
-        assertEquals(resultRequestComponentId1, searchRequest.getResultRequests().get(1).getComponentId());
-        assertNotNull(searchRequest.getQuery());
-        assertNotNull(searchRequest.getQuery().getDataSource());
-        assertEquals(dataSourceUuid, searchRequest.getQuery().getDataSource().getUuid());
+        assertThat(searchRequest.getDateTimeLocale()).isEqualTo(dateTimeLocale);
+        assertThat(searchRequest.getIncremental()).isEqualTo(incremental);
+        assertThat(searchRequest.getKey()).isNotNull();
+        assertThat(searchRequest.getKey().getUuid()).isEqualTo(queryKeyUUID);
+        assertThat(searchRequest.getResultRequests()).hasSize(2);
+        assertThat(searchRequest.getResultRequests().get(0).getComponentId()).isEqualTo(resultRequestComponentId0);
+        assertThat(searchRequest.getResultRequests().get(1).getComponentId()).isEqualTo(resultRequestComponentId1);
+        assertThat(searchRequest.getQuery()).isNotNull();
+        assertThat(searchRequest.getQuery().getDataSource()).isNotNull();
+        assertThat(searchRequest.getQuery().getDataSource().getUuid()).isEqualTo(dataSourceUuid);
     }
 }

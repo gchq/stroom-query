@@ -6,11 +6,11 @@ import stroom.docref.DocRef;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class QueryBuilderTest {
+class QueryBuilderTest {
     @Test
-    public void doesBuild() {
+    void doesBuild() {
         final String dataSourceName = "someDataSource";
         final String dataSourceType = "someDocRefType";
         final String dataSourceUuid = UUID.randomUUID().toString();
@@ -31,40 +31,40 @@ public class QueryBuilderTest {
 
         // Examine the params
         final List<Param> params = query.getParams();
-        assertNotNull(params);
-        assertEquals(2, params.size());
+        assertThat(params).isNotNull();
+        assertThat(params).hasSize(2);
         final Param param0 = params.get(0);
-        assertEquals("someKey0", param0.getKey());
-        assertEquals("someValue0", param0.getValue());
+        assertThat(param0.getKey()).isEqualTo("someKey0");
+        assertThat(param0.getValue()).isEqualTo("someValue0");
         final Param param1 = params.get(1);
-        assertEquals("someKey1", param1.getKey());
-        assertEquals("someValue1", param1.getValue());
+        assertThat(param1.getKey()).isEqualTo("someKey1");
+        assertThat(param1.getValue()).isEqualTo("someValue1");
 
         // Examine the datasource
         final DocRef dataSource = query.getDataSource();
-        assertNotNull(dataSource);
-        assertEquals(dataSourceName, dataSource.getName());
-        assertEquals(dataSourceType, dataSource.getType());
-        assertEquals(dataSourceUuid, dataSource.getUuid());
+        assertThat(dataSource).isNotNull();
+        assertThat(dataSource.getName()).isEqualTo(dataSourceName);
+        assertThat(dataSource.getType()).isEqualTo(dataSourceType);
+        assertThat(dataSource.getUuid()).isEqualTo(dataSourceUuid);
 
         // Examine the expression
         ExpressionOperator root = query.getExpression();
-        assertNotNull(root);
-        assertEquals(3, root.getChildren().size());
+        assertThat(root).isNotNull();
+        assertThat(root.getChildren()).hasSize(3);
 
         ExpressionItem rootChild1 = root.getChildren().get(0);
         ExpressionItem rootChild2 = root.getChildren().get(1);
         ExpressionItem rootChild3 = root.getChildren().get(2);
 
-        assertTrue(rootChild1 instanceof ExpressionTerm);
-        assertEquals("fieldX", ((ExpressionTerm) rootChild1).getField());
+        assertThat(rootChild1 instanceof ExpressionTerm).isTrue();
+        assertThat(((ExpressionTerm) rootChild1).getField()).isEqualTo("fieldX");
 
-        assertTrue(rootChild2 instanceof ExpressionOperator);
+        assertThat(rootChild2 instanceof ExpressionOperator).isTrue();
         ExpressionOperator child2Op = (ExpressionOperator) rootChild2;
-        assertEquals(ExpressionOperator.Op.OR, child2Op.getOp());
-        assertEquals(2, child2Op.getChildren().size());
+        assertThat(child2Op.getOp()).isEqualTo(ExpressionOperator.Op.OR);
+        assertThat(child2Op.getChildren()).hasSize(2);
 
-        assertTrue(rootChild3 instanceof ExpressionTerm);
-        assertEquals("fieldY", ((ExpressionTerm) rootChild3).getField());
+        assertThat(rootChild3 instanceof ExpressionTerm).isTrue();
+        assertThat(((ExpressionTerm) rootChild3).getField()).isEqualTo("fieldY");
     }
 }

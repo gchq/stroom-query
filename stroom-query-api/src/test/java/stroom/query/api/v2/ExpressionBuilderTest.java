@@ -1,35 +1,36 @@
 package stroom.query.api.v2;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class ExpressionBuilderTest {
+import static org.assertj.core.api.Assertions.assertThat;
+
+class ExpressionBuilderTest {
     @Test
-    public void doesBuild() {
+    void doesBuild() {
         ExpressionOperator root = new ExpressionOperator.Builder(ExpressionOperator.Op.AND)
-                    .addTerm("fieldX", ExpressionTerm.Condition.EQUALS, "abc")
-                    .addOperator(new ExpressionOperator.Builder(ExpressionOperator.Op.OR)
+                .addTerm("fieldX", ExpressionTerm.Condition.EQUALS, "abc")
+                .addOperator(new ExpressionOperator.Builder(ExpressionOperator.Op.OR)
                         .addTerm("fieldA", ExpressionTerm.Condition.EQUALS, "Fred")
                         .addTerm("fieldA", ExpressionTerm.Condition.EQUALS, "Fred")
                         .build())
-                    .addTerm("fieldY", ExpressionTerm.Condition.BETWEEN, "10,20")
+                .addTerm("fieldY", ExpressionTerm.Condition.BETWEEN, "10,20")
                 .build();
 
-        Assertions.assertEquals(3, root.getChildren().size());
+        assertThat(root.getChildren()).hasSize(3);
 
         ExpressionItem rootChild1 = root.getChildren().get(0);
         ExpressionItem rootChild2 = root.getChildren().get(1);
         ExpressionItem rootChild3 = root.getChildren().get(2);
 
-        Assertions.assertTrue(rootChild1 instanceof ExpressionTerm);
-        Assertions.assertEquals("fieldX", ((ExpressionTerm) rootChild1).getField());
+        assertThat(rootChild1 instanceof ExpressionTerm).isTrue();
+        assertThat(((ExpressionTerm) rootChild1).getField()).isEqualTo("fieldX");
 
-        Assertions.assertTrue(rootChild2 instanceof ExpressionOperator);
+        assertThat(rootChild2 instanceof ExpressionOperator).isTrue();
         ExpressionOperator child2Op = (ExpressionOperator) rootChild2;
-        Assertions.assertEquals(ExpressionOperator.Op.OR, child2Op.getOp());
-        Assertions.assertEquals(2, child2Op.getChildren().size());
+        assertThat(child2Op.getOp()).isEqualTo(ExpressionOperator.Op.OR);
+        assertThat(child2Op.getChildren()).hasSize(2);
 
-        Assertions.assertTrue(rootChild3 instanceof ExpressionTerm);
-        Assertions.assertEquals("fieldY", ((ExpressionTerm) rootChild3).getField());
+        assertThat(rootChild3 instanceof ExpressionTerm).isTrue();
+        assertThat(((ExpressionTerm) rootChild3).getField()).isEqualTo("fieldY");
     }
 }

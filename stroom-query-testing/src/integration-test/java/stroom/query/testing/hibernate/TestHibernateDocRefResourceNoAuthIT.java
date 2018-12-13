@@ -1,9 +1,11 @@
 package stroom.query.testing.hibernate;
 
-import org.junit.Before;
-import org.junit.ClassRule;
+
+import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.query.testing.DocRefResourceNoAuthIT;
-import stroom.query.testing.DropwizardAppWithClientsRule;
+import stroom.query.testing.DropwizardAppExtensionWithClients;
 import stroom.query.testing.hibernate.app.HibernateApp;
 import stroom.query.testing.hibernate.app.HibernateConfig;
 import stroom.query.testing.hibernate.app.TestDocRefHibernateEntity;
@@ -14,13 +16,12 @@ import java.util.UUID;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 
-public class TestHibernateDocRefResourceNoAuthIT extends DocRefResourceNoAuthIT<TestDocRefHibernateEntity, HibernateConfig> {
+@ExtendWith(DropwizardExtensionsSupport.class)
+class TestHibernateDocRefResourceNoAuthIT extends DocRefResourceNoAuthIT<TestDocRefHibernateEntity, HibernateConfig> {
+    private static final DropwizardAppExtensionWithClients<HibernateConfig> appRule =
+            new DropwizardAppExtensionWithClients<>(HibernateApp.class, resourceFilePath("hibernate_noauth/config.yml"));
 
-    @ClassRule
-    public static final DropwizardAppWithClientsRule<HibernateConfig> appRule =
-            new DropwizardAppWithClientsRule<>(HibernateApp.class, resourceFilePath("hibernate_noauth/config.yml"));
-
-    public TestHibernateDocRefResourceNoAuthIT() {
+    TestHibernateDocRefResourceNoAuthIT() {
         super(TestDocRefHibernateEntity.class,
                 appRule);
     }
@@ -39,8 +40,8 @@ public class TestHibernateDocRefResourceNoAuthIT extends DocRefResourceNoAuthIT<
         return values;
     }
 
-    @Before
-    public void beforeTest() {
+    @BeforeEach
+    void beforeTest() {
         // TestDocRefServiceImpl.eraseAllData();
     }
 }

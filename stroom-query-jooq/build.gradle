@@ -39,5 +39,6 @@ dependencies {
     compile libs.jooq
     compile libs.slf4j_api
 
+    testCompile libs.assertj_core
     testCompile libs.junit_jupiter_api
 }

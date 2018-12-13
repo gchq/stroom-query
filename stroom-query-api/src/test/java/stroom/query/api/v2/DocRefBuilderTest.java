@@ -7,9 +7,9 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DocRefBuilderTest {
+class DocRefBuilderTest {
     @Test
-    public void doesBuild() {
+    void doesBuild() {
         final String name = "someName";
         final String type = "someType";
         final String uuid = UUID.randomUUID().toString();

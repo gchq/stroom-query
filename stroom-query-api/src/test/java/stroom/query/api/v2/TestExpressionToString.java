@@ -16,14 +16,15 @@
 
 package stroom.query.api.v2;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import stroom.query.api.v2.ExpressionOperator.Op;
 import stroom.query.api.v2.ExpressionTerm.Condition;
 
-public class TestExpressionToString {
+import static org.assertj.core.api.Assertions.assertThat;
+
+class TestExpressionToString {
     @Test
-    public void TestSingleLine() {
+    void TestSingleLine() {
         ExpressionOperator.Builder builder = new ExpressionOperator.Builder(Op.AND).enabled(false);
         single("", builder);
 
@@ -74,7 +75,7 @@ public class TestExpressionToString {
     }
 
     @Test
-    public void TestMultiLine() {
+    void TestMultiLine() {
         ExpressionOperator.Builder builder = new ExpressionOperator.Builder(Op.AND).enabled(false);
         multi("", builder);
 
@@ -117,9 +118,9 @@ public class TestExpressionToString {
 
         builder = new ExpressionOperator.Builder(Op.AND).enabled(true)
                 .addOperator(new ExpressionOperator.Builder(Op.AND)
-                    .addTerm("nestedField1", Condition.EQUALS, "nestedValue1")
-                    .addTerm("nestedField2", Condition.EQUALS, "nestedValue2")
-                .build())
+                        .addTerm("nestedField1", Condition.EQUALS, "nestedValue1")
+                        .addTerm("nestedField2", Condition.EQUALS, "nestedValue2")
+                        .build())
                 .addTerm("field", Condition.EQUALS, "value");
         multi("AND\n  AND\n    nestedField1 = nestedValue1\n    nestedField2 = nestedValue2\n  field = value", builder);
     }
@@ -127,12 +128,12 @@ public class TestExpressionToString {
     private void single(final String expected, final ExpressionItem.Builder builder) {
         final String actual = builder.build().toString();
         System.out.println(actual);
-        Assertions.assertEquals(expected, actual);
+        assertThat(actual).isEqualTo(expected);
     }
 
     private void multi(final String expected, final ExpressionItem.Builder builder) {
         final String actual = builder.build().toMultiLineString();
         System.out.println(actual);
-        Assertions.assertEquals(expected, actual);
+        assertThat(actual).isEqualTo(expected);
     }
 }

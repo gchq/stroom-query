@@ -22,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import stroom.datasource.api.v2.DataSource;
@@ -65,8 +64,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @Disabled("TODO: fails intermittently")
-public class TestSerialisation {
+class TestSerialisation {
     private static DataSource getDataSource() {
         return new DataSource.Builder()
                 .addFields(new DataSourceField.Builder()
@@ -137,7 +138,7 @@ public class TestSerialisation {
     }
 
     @Test
-    public void testPolymorphic() throws IOException, JAXBException {
+    void testPolymorphic() throws IOException, JAXBException {
         final List<Base> list = new ArrayList<>();
         list.add(new Sub1(2, 5));
         list.add(new Sub2(8, "test"));
@@ -147,7 +148,7 @@ public class TestSerialisation {
     }
 
     @Test
-    public void testPolymorphic2() throws IOException, JAXBException {
+    void testPolymorphic2() throws IOException, JAXBException {
         final List<Object> list = new ArrayList<>();
         list.add(1);
         list.add(2);
@@ -161,17 +162,17 @@ public class TestSerialisation {
     }
 
     @Test
-    public void testDataSourceSerialisation() throws IOException, JAXBException {
+    void testDataSourceSerialisation() throws IOException, JAXBException {
         test(getDataSource(), DataSource.class, "testDataSourceSerialisation");
     }
 
     @Test
-    public void testSearchRequestSerialisation() throws IOException, JAXBException {
+    void testSearchRequestSerialisation() throws IOException, JAXBException {
         test(getSearchRequest(), SearchRequest.class, "testSearchRequestSerialisation");
     }
 
     @Test
-    public void testSearchResponseSerialisation() throws IOException, JAXBException {
+    void testSearchResponseSerialisation() throws IOException, JAXBException {
         test(getSearchResponse(), SearchResponse.class, "testSearchResponseSerialisation");
     }
 
@@ -203,13 +204,13 @@ public class TestSerialisation {
         System.out.println(serialisedOut);
 
         assertEqualsIgnoreWhitespace(serialisedIn, serialisedOut);
-        Assertions.assertEquals(objIn, objOut);
+        assertThat(objOut).isEqualTo(objIn);
     }
 
     private void assertEqualsIgnoreWhitespace(final String expected, final String actual) {
         final String str1 = removeWhitespace(expected);
         final String str2 = removeWhitespace(actual);
-        Assertions.assertEquals(str1, str2);
+        assertThat(str2).isEqualTo(str1);
     }
 
     private String removeWhitespace(final String in) {

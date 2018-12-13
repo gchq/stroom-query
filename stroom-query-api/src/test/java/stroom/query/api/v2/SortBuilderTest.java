@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SortBuilderTest {
+class SortBuilderTest {
     @Test
-    public void doesBuild() {
+    void doesBuild() {
         final Sort.SortDirection direction = Sort.SortDirection.DESCENDING;
         final Integer order = 3;
 

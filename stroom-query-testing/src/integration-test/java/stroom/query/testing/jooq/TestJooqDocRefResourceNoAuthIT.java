@@ -1,9 +1,10 @@
 package stroom.query.testing.jooq;
 
-import org.junit.Before;
-import org.junit.ClassRule;
+
+import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
+import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.query.testing.DocRefResourceNoAuthIT;
-import stroom.query.testing.DropwizardAppWithClientsRule;
+import stroom.query.testing.DropwizardAppExtensionWithClients;
 import stroom.query.testing.jooq.app.JooqApp;
 import stroom.query.testing.jooq.app.JooqConfig;
 import stroom.query.testing.jooq.app.TestDocRefJooqEntity;
@@ -14,13 +15,12 @@ import java.util.UUID;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 
-public class TestJooqDocRefResourceNoAuthIT extends DocRefResourceNoAuthIT<TestDocRefJooqEntity, JooqConfig> {
+@ExtendWith(DropwizardExtensionsSupport.class)
+class TestJooqDocRefResourceNoAuthIT extends DocRefResourceNoAuthIT<TestDocRefJooqEntity, JooqConfig> {
+    private static final DropwizardAppExtensionWithClients<JooqConfig> appRule =
+            new DropwizardAppExtensionWithClients<>(JooqApp.class, resourceFilePath("jooq_noauth/config.yml"));
 
-    @ClassRule
-    public static final DropwizardAppWithClientsRule<JooqConfig> appRule =
-            new DropwizardAppWithClientsRule<>(JooqApp.class, resourceFilePath("jooq_noauth/config.yml"));
-
-    public TestJooqDocRefResourceNoAuthIT() {
+    TestJooqDocRefResourceNoAuthIT() {
         super(TestDocRefJooqEntity.class,
                 appRule);
     }
@@ -37,10 +37,5 @@ public class TestJooqDocRefResourceNoAuthIT extends DocRefResourceNoAuthIT<TestD
         final Map<String, String> values = new HashMap<>();
         values.put(TestDocRefJooqEntity.PLANET_NAME, docRefEntity.getPlanetName());
         return values;
-    }
-
-    @Before
-    public void beforeTest() {
-        // TestDocRefServiceImpl.eraseAllData();
     }
 }

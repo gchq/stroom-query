@@ -22,7 +22,7 @@ dependencies {
     compile libs.swagger_annotations
     compile libs.jaxb_api
 
-    testCompile libs.assertj
+    testCompile libs.assertj_core
     testCompile libs.junit_jupiter_api
 }
 

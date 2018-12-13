@@ -16,7 +16,6 @@
 
 package stroom.query.common.v2;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import stroom.dashboard.expression.v1.Val;
 import stroom.dashboard.expression.v1.ValString;
@@ -36,13 +35,15 @@ import stroom.query.shared.v2.ParamUtil;
 
 import java.util.Collections;
 
-public class TestTablePayloadHandler {
+import static org.assertj.core.api.Assertions.assertThat;
+
+class TestTablePayloadHandler {
     private final Sizes defaultMaxResultsSizes = Sizes.create(50);
     private final Sizes maxResults = Sizes.min(Sizes.create(50), defaultMaxResultsSizes);
     private final Sizes storeSize = Sizes.create(100);
 
     @Test
-    public void basicTest() {
+    void basicTest() {
         final FormatterFactory formatterFactory = new FormatterFactory(null);
         final FieldFormatter fieldFormatter = new FieldFormatter(formatterFactory);
 
@@ -87,11 +88,11 @@ public class TestTablePayloadHandler {
         final TableResult searchResult = (TableResult) tableComponentResultCreator.create(
                 data,
                 tableResultRequest);
-        Assertions.assertEquals(50, searchResult.getTotalResults().intValue());
+        assertThat(searchResult.getTotalResults().intValue()).isEqualTo(50);
     }
 
     @Test
-    public void sortedTextTest() {
+    void sortedTextTest() {
         final Sort sort = new Sort(0, SortDirection.ASCENDING);
 
 //        final DataSourceFieldsMap dataSourceFieldsMap = new DataSourceFieldsMap();
@@ -134,7 +135,7 @@ public class TestTablePayloadHandler {
     }
 
     @Test
-    public void sortedNumberTest() {
+    void sortedNumberTest() {
         final Sort sort = new Sort(0, SortDirection.ASCENDING);
 
 //        final DataSourceFieldsMap dataSourceFieldsMap = new DataSourceFieldsMap();
@@ -178,7 +179,7 @@ public class TestTablePayloadHandler {
     }
 
     @Test
-    public void sortedCountedTextTest1() {
+    void sortedCountedTextTest1() {
         final Sort sort = new Sort(0, SortDirection.ASCENDING);
 
 //        final DataSourceFieldsMap dataSourceFieldsMap = new DataSourceFieldsMap();
@@ -227,7 +228,7 @@ public class TestTablePayloadHandler {
     }
 
     @Test
-    public void sortedCountedTextTest2() {
+    void sortedCountedTextTest2() {
         final Sort sort = new Sort(0, SortDirection.ASCENDING);
 
 //        final DataSourceFieldsMap dataSourceFieldsMap = new DataSourceFieldsMap();
@@ -276,7 +277,7 @@ public class TestTablePayloadHandler {
     }
 
     @Test
-    public void sortedCountedTextTest3() {
+    void sortedCountedTextTest3() {
         final Sort sort = new Sort(0, SortDirection.ASCENDING);
 
 //        final DataSourceFieldsMap dataSourceFieldsMap = new DataSourceFieldsMap();
@@ -339,7 +340,7 @@ public class TestTablePayloadHandler {
         final TableResult searchResult = (TableResult) tableComponentResultCreator.create(data,
                 tableResultRequest);
 
-        Assertions.assertTrue(searchResult.getTotalResults() <= 50);
+        assertThat(searchResult.getTotalResults() <= 50).isTrue();
 
         String lastValue = null;
         for (final Row result : searchResult.getRows()) {
@@ -347,7 +348,7 @@ public class TestTablePayloadHandler {
 
             if (lastValue != null) {
                 final int diff = lastValue.compareTo(value);
-                Assertions.assertTrue(diff <= 0);
+                assertThat(diff <= 0).isTrue();
             }
             lastValue = value;
         }

@@ -4,12 +4,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class TableResultBuilderTest {
+class TableResultBuilderTest {
     @Test
-    public void doesBuild() {
+    void doesBuild() {
         // Given
         final String error = "Something went wrong";
         final String componentId = "someTabularComponentId";
@@ -24,26 +23,26 @@ public class TableResultBuilderTest {
                 .componentId(componentId)
                 .error(error)
                 .resultRange(new OffsetRange.Builder()
-                    .offset(offset)
-                    .length(length)
-                    .build());
+                        .offset(offset)
+                        .length(length)
+                        .build());
 
         IntStream.range(0, numberResults).forEach(x ->
-            builder.addRows(new Row.Builder().groupKey(String.format("rowGroup%d", x)).build())
+                builder.addRows(new Row.Builder().groupKey(String.format("rowGroup%d", x)).build())
         );
 
         final TableResult tableResult = builder.build();
 
         // Then
-        assertEquals(componentId, tableResult.getComponentId());
-        assertEquals(error, tableResult.getError());
-        assertEquals(offset, tableResult.getResultRange().getOffset());
-        assertEquals(length, tableResult.getResultRange().getLength());
+        assertThat(tableResult.getComponentId()).isEqualTo(componentId);
+        assertThat(tableResult.getError()).isEqualTo(error);
+        assertThat(tableResult.getResultRange().getOffset()).isEqualTo(offset);
+        assertThat(tableResult.getResultRange().getLength()).isEqualTo(length);
 
         final long rowCount = tableResult.getRows().stream().peek(row ->
-                assertTrue(row.getGroupKey().startsWith("rowGroup"))
+                assertThat(row.getGroupKey().startsWith("rowGroup")).isTrue()
         ).count();
-        assertEquals((long) numberResults, rowCount);
-        assertEquals(numberResults, tableResult.getTotalResults());
+        assertThat(rowCount).isEqualTo((long) numberResults);
+        assertThat(tableResult.getTotalResults()).isEqualTo(numberResults);
     }
 }

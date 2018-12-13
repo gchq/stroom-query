@@ -17,20 +17,25 @@
 package stroom.query.security;
 
 import org.junit.jupiter.api.Test;
-import stroom.query.security.CurrentServiceUser;
-import stroom.query.security.ServiceUser;
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
-public class CurrentServiceUserTest {
+class CurrentServiceUserTest {
     @Test
-    public void testMultipleThreadsGivenDistinctUsers() {
+    void testMultipleThreadsGivenDistinctUsers() {
         // Given
         final int n = 3;
         final Set<ServiceUser> users = Collections.synchronizedSet(new HashSet<>());
@@ -55,8 +60,8 @@ public class CurrentServiceUserTest {
 
                     final ServiceUser pUser = CurrentServiceUser.popServiceUser();
 
-                    assertEquals(user, cUser);
-                    assertEquals(user, pUser);
+                    assertThat(cUser).isEqualTo(user);
+                    assertThat(pUser).isEqualTo(user);
                     users.add(user);
                 })
                 .map(executorService::submit)
@@ -70,6 +75,6 @@ public class CurrentServiceUserTest {
             }
         });
 
-        assertEquals(3, users.size());
+        assertThat(users).hasSize(3);
     }
 }

@@ -2,11 +2,11 @@ package stroom.query.api.v2;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class ResultRequestBuilderTest {
+class ResultRequestBuilderTest {
     @Test
-    public void doesBuild() {
+    void doesBuild() {
         // Given
         final String componentId = "someComponent";
         final ResultRequest.Fetch fetch = ResultRequest.Fetch.CHANGES;
@@ -39,20 +39,20 @@ public class ResultRequestBuilderTest {
                 .build();
 
         // Then
-        assertEquals(componentId, resultRequest.getComponentId());
-        assertEquals(fetch, resultRequest.getFetch());
+        assertThat(resultRequest.getComponentId()).isEqualTo(componentId);
+        assertThat(resultRequest.getFetch()).isEqualTo(fetch);
 
-        assertEquals(2, resultRequest.getOpenGroups().size());
-        assertTrue(resultRequest.getOpenGroups().contains(openGroup0));
-        assertTrue(resultRequest.getOpenGroups().contains(openGroup1));
+        assertThat(resultRequest.getOpenGroups()).hasSize(2);
+        assertThat(resultRequest.getOpenGroups().contains(openGroup0)).isTrue();
+        assertThat(resultRequest.getOpenGroups().contains(openGroup1)).isTrue();
 
-        assertNotNull(resultRequest.getRequestedRange());
-        assertEquals(rangeLength, resultRequest.getRequestedRange().getLength());
-        assertEquals(rangeOffset, resultRequest.getRequestedRange().getOffset());
+        assertThat(resultRequest.getRequestedRange()).isNotNull();
+        assertThat(resultRequest.getRequestedRange().getLength()).isEqualTo(rangeLength);
+        assertThat(resultRequest.getRequestedRange().getOffset()).isEqualTo(rangeOffset);
 
-        assertEquals(3, resultRequest.getMappings().size());
-        assertEquals(queryId0, resultRequest.getMappings().get(0).getQueryId());
-        assertEquals(queryId1, resultRequest.getMappings().get(1).getQueryId());
-        assertEquals(queryId2, resultRequest.getMappings().get(2).getQueryId());
+        assertThat(resultRequest.getMappings()).hasSize(3);
+        assertThat(resultRequest.getMappings().get(0).getQueryId()).isEqualTo(queryId0);
+        assertThat(resultRequest.getMappings().get(1).getQueryId()).isEqualTo(queryId1);
+        assertThat(resultRequest.getMappings().get(2).getQueryId()).isEqualTo(queryId2);
     }
 }

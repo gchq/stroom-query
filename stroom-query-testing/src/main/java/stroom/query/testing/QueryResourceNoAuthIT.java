@@ -2,8 +2,8 @@ package stroom.query.testing;
 
 import io.dropwizard.Configuration;
 import org.eclipse.jetty.http.HttpStatus;
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.datasource.api.v2.DataSource;
 import stroom.docref.DocRef;
 import stroom.query.api.v2.ExpressionOperator;
@@ -19,22 +19,21 @@ import stroom.query.security.NoAuthValueFactoryProvider;
 import javax.ws.rs.core.Response;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static stroom.query.testing.FifoLogbackRule.containsAllOf;
+import static org.assertj.core.api.Assertions.assertThat;
+import static stroom.query.testing.FifoLogbackExtension.containsAllOf;
 
+@ExtendWith(FifoLogbackExtensionSupport.class)
 public abstract class QueryResourceNoAuthIT<
         DOC_REF_ENTITY extends DocRefEntity,
         CONFIG_CLASS extends Configuration> {
 
     private final String docRefType;
+    protected FifoLogbackExtension auditLogRule = new FifoLogbackExtension();
     protected DocRefResourceHttpClient<DOC_REF_ENTITY> docRefClient;
     private QueryResourceHttpClient queryClient;
 
-    @Rule
-    public FifoLogbackRule auditLogRule = new FifoLogbackRule();
-
     protected QueryResourceNoAuthIT(final String docRefType,
-                                    final DropwizardAppWithClientsRule<CONFIG_CLASS> appRule) {
+                                    final DropwizardAppExtensionWithClients<CONFIG_CLASS> appRule) {
         this.docRefType = docRefType;
         this.queryClient = appRule.getClient(QueryResourceHttpClient::new);
         this.docRefClient = appRule.getClient(DocRefResourceHttpClient::new);
@@ -53,11 +52,11 @@ public abstract class QueryResourceNoAuthIT<
     protected abstract DOC_REF_ENTITY getValidEntity(final DocRef docRef);
 
     @Test
-    public void testGetDataSource() {
+    void testGetDataSource() {
         final DocRef docRef = createDocument();
 
         final Response response = queryClient.getDataSource(NoAuthValueFactoryProvider.ADMIN_USER, docRef);
-        assertEquals(HttpStatus.OK_200, response.getStatus());
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK_200);
 
         final DataSource result = response.readEntity(DataSource.class);
         response.close();
@@ -73,7 +72,7 @@ public abstract class QueryResourceNoAuthIT<
     }
 
     @Test
-    public void testSearchPermissions() {
+    void testSearchPermissions() {
         final DocRef docRef = createDocument();
 
         final SearchRequest searchRequest = getValidSearchRequest(docRef,
@@ -84,7 +83,7 @@ public abstract class QueryResourceNoAuthIT<
                         .build());
 
         final Response authorisedResponse = queryClient.search(NoAuthValueFactoryProvider.ADMIN_USER, searchRequest);
-        assertEquals(HttpStatus.OK_200, authorisedResponse.getStatus());
+        assertThat(authorisedResponse.getStatus()).isEqualTo(HttpStatus.OK_200);
         authorisedResponse.close();
     }
 
@@ -109,7 +108,7 @@ public abstract class QueryResourceNoAuthIT<
                 NoAuthValueFactoryProvider.ADMIN_USER,
                 docRef.getUuid(),
                 docRef.getName());
-        assertEquals(HttpStatus.OK_200, createResponse.getStatus());
+        assertThat(createResponse.getStatus()).isEqualTo(HttpStatus.OK_200);
         createResponse.close();
 
         final DOC_REF_ENTITY docRefEntityToUse = (docRefEntity != null) ? docRefEntity : getValidEntity(docRef);
@@ -117,7 +116,7 @@ public abstract class QueryResourceNoAuthIT<
                 docRefClient.update(NoAuthValueFactoryProvider.ADMIN_USER,
                         docRef.getUuid(),
                         docRefEntityToUse);
-        assertEquals(HttpStatus.OK_200, updateIndexResponse.getStatus());
+        assertThat(updateIndexResponse.getStatus()).isEqualTo(HttpStatus.OK_200);
         updateIndexResponse.close();
 
         return docRef;

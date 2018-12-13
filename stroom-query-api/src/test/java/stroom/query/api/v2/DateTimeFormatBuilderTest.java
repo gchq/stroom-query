@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DateTimeFormatBuilderTest {
+class DateTimeFormatBuilderTest {
     @Test
-    public void doesBuild() {
+    void doesBuild() {
         final String pattern = "DAY MONTH YEAR";
 
         final String timeZoneId = "someId";

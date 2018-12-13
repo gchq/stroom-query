@@ -2,11 +2,11 @@ package stroom.query.api.v2;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class TimeZoneBuilderTest {
+class TimeZoneBuilderTest {
     @Test
-    public void doesBuild() {
+    void doesBuild() {
         final String id = "someId";
         final TimeZone.Use use = TimeZone.Use.LOCAL;
         final Integer offsetHours = 3;
@@ -19,9 +19,9 @@ public class TimeZoneBuilderTest {
                 .offsetMinutes(offsetMinutes)
                 .build();
 
-        assertEquals(id, timeZone.getId());
-        assertEquals(use, timeZone.getUse());
-        assertEquals(offsetHours, timeZone.getOffsetHours());
-        assertEquals(offsetMinutes, timeZone.getOffsetMinutes());
+        assertThat(timeZone.getId()).isEqualTo(id);
+        assertThat(timeZone.getUse()).isEqualTo(use);
+        assertThat(timeZone.getOffsetHours()).isEqualTo(offsetHours);
+        assertThat(timeZone.getOffsetMinutes()).isEqualTo(offsetMinutes);
     }
 }

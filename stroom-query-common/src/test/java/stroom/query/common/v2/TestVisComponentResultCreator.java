@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Disabled
-public class TestVisComponentResultCreator {
+class TestVisComponentResultCreator {
 //    final Path TEST_DIR = TestFileUtil.getTestResourcesDir().resolve("TestVisComponentResultCreator");
 //
 //    @Test
@@ -300,7 +300,7 @@ public class TestVisComponentResultCreator {
 //            final Path actualFile = dir.resolve(actualFileName);
 //            if (!expected.equals(data)) {
 //                StreamUtil.stringToFile(data, actualFile);
-//                Assert.fail("Files are not the same");
+//                fail("Files are not the same");
 //            } else if (Files.isRegularFile(actualFile)) {
 //                Files.delete(actualFile);
 //            }

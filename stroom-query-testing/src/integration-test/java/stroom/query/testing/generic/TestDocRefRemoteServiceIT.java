@@ -1,9 +1,13 @@
 package stroom.query.testing.generic;
 
-import org.junit.Before;
-import org.junit.ClassRule;
+
+import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.query.testing.DocRefRemoteServiceIT;
-import stroom.query.testing.DropwizardAppWithClientsRule;
+import stroom.query.testing.DropwizardAppExtensionWithClients;
 import stroom.query.testing.StroomAuthenticationRule;
 import stroom.query.testing.generic.app.App;
 import stroom.query.testing.generic.app.Config;
@@ -16,23 +20,33 @@ import java.util.UUID;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 
-public class TestDocRefRemoteServiceIT extends DocRefRemoteServiceIT<TestDocRefEntity, Config> {
+@ExtendWith(DropwizardExtensionsSupport.class)
+class TestDocRefRemoteServiceIT extends DocRefRemoteServiceIT<TestDocRefEntity, Config> {
+    private static StroomAuthenticationRule authRule = new StroomAuthenticationRule();
 
-    @ClassRule
-    public static StroomAuthenticationRule authRule = new StroomAuthenticationRule();
-
-    @ClassRule
-    public static final DropwizardAppWithClientsRule<Config> appRule =
-            new DropwizardAppWithClientsRule<>(App.class,
+    private static final DropwizardAppExtensionWithClients<Config> appRule =
+            new DropwizardAppExtensionWithClients<>(App.class,
                     resourceFilePath("generic/config.yml"),
                     authRule.authService(),
                     authRule.authToken());
 
-    public TestDocRefRemoteServiceIT() {
+    TestDocRefRemoteServiceIT() {
         super(TestDocRefEntity.TYPE,
                 TestDocRefEntity.class,
                 appRule,
                 authRule);
+    }
+
+    @BeforeAll
+    static void beforeAll() {
+        authRule.start();
+        authRule.before();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        authRule.after();
+        authRule.stop();
     }
 
     @Override
@@ -49,8 +63,8 @@ public class TestDocRefRemoteServiceIT extends DocRefRemoteServiceIT<TestDocRefE
         return values;
     }
 
-    @Before
-    public void beforeTest() {
+    @BeforeEach
+    void beforeTest() {
         TestDocRefServiceImpl.eraseAllData();
     }
 }

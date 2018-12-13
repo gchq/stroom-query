@@ -1,24 +1,25 @@
 package stroom.query.testing;
 
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import stroom.query.audit.logback.FifoLogbackAppender;
 
 import java.util.function.Predicate;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static stroom.query.testing.FifoLogbackRule.containsAllOf;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static stroom.query.testing.FifoLogbackExtension.containsAllOf;
 
-public class TestFifoLogbackRule {
+@ExtendWith(FifoLogbackExtensionSupport.class)
+class TestFifoLogbackRule {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestFifoLogbackRule.class);
 
-    @Rule
-    public FifoLogbackRule auditLogRule = new FifoLogbackRule();
+    protected FifoLogbackExtension auditLogRule = new FifoLogbackExtension();
 
     @Test
-    public void testSimpleSequence() {
+    void testSimpleSequence() {
         final FifoLogbackAppender<String> logbackAppender = new FifoLogbackAppender<>();
 
         logbackAppender.doAppend("my special log one");
@@ -32,14 +33,14 @@ public class TestFifoLogbackRule {
     }
 
     @Test
-    public void testSimpleSequenceFailure() {
+    void testSimpleSequenceFailure() {
         final FifoLogbackAppender<String> logbackAppender = new FifoLogbackAppender<>();
 
         logbackAppender.doAppend("my special log one");
         logbackAppender.doAppend("my special log two");
         logbackAppender.doAppend("my special log three");
 
-        final FifoLogbackRule.LogChecker checker = auditLogRule.check().thereAreAtLeast(3)
+        final FifoLogbackExtension.LogChecker checker = auditLogRule.check().thereAreAtLeast(3)
                 .containsOrdered(containsAllOf("special", "one"))
                 .containsOrdered(containsAllOf("special", "three"));
         try {
@@ -51,14 +52,14 @@ public class TestFifoLogbackRule {
     }
 
     @Test
-    public void testContainsAnywhere() {
+    void testContainsAnywhere() {
         final FifoLogbackAppender<String> logbackAppender = new FifoLogbackAppender<>();
 
         logbackAppender.doAppend("my special log one");
         logbackAppender.doAppend("my special log two");
         logbackAppender.doAppend("my special log three");
 
-        final FifoLogbackRule.LogChecker checker = auditLogRule.check().thereAreAtLeast(3)
+        final FifoLogbackExtension.LogChecker checker = auditLogRule.check().thereAreAtLeast(3)
                 .containsAnywhere(containsAllOf("special", "three"))
                 .containsAnywhere(containsAllOf("special", "two"))
                 .containsAnywhere(containsAllOf("special", "one"));
@@ -72,14 +73,14 @@ public class TestFifoLogbackRule {
     }
 
     @Test
-    public void testUncheckedLots() {
+    void testUncheckedLots() {
         final FifoLogbackAppender<String> logbackAppender = new FifoLogbackAppender<>();
 
         logbackAppender.doAppend("my special log one");
         logbackAppender.doAppend("my special log two");
         logbackAppender.doAppend("my special log three");
 
-        final FifoLogbackRule.LogChecker logChecker = auditLogRule.check().thereAreAtLeast(3)
+        final FifoLogbackExtension.LogChecker logChecker = auditLogRule.check().thereAreAtLeast(3)
                 .containsOrdered(containsAllOf("special", "one"))
                 // miss out two
                 .containsOrdered(containsAllOf("special", "three"));
@@ -97,12 +98,12 @@ public class TestFifoLogbackRule {
     }
 
     @Test
-    public void testPredicate() {
+    void testPredicate() {
         final String logToCheck = "special one";
-        final Predicate<String> pass = FifoLogbackRule.containsAllOf("special", "one");
-        final Predicate<String> fail = FifoLogbackRule.containsAllOf("special", "two");
+        final Predicate<String> pass = FifoLogbackExtension.containsAllOf("special", "one");
+        final Predicate<String> fail = FifoLogbackExtension.containsAllOf("special", "two");
 
-        assertTrue(pass.test(logToCheck));
-        assertFalse(fail.test(logToCheck));
+        assertThat(pass.test(logToCheck)).isTrue();
+        assertThat(fail.test(logToCheck)).isFalse();
     }
 }

@@ -60,6 +60,7 @@ dependencies {
     compile project(':stroom-query-audit')
 
     //--------3rd party--------
+    compile libs.assertj_core
     compile libs.dropwizard_core
     compile libs.guice
     compile libs.google_findbugs
@@ -68,7 +69,6 @@ dependencies {
     compile libs.jackson_databind
     compile libs.jetty_http
     compile libs.junit_jupiter_api
-    compile libs.junit4
     compile libs.jose4j
     compile libs.slf4j_api
     compile libs.wiremock
@@ -76,8 +76,10 @@ dependencies {
 
     compile libs.dropwizard_testing
 
-    integrationTestCompile libs.jackson_annotations
+    integrationTestCompile libs.assertj_core
     integrationTestCompile libs.dropwizard_flyway
+    integrationTestCompile libs.jackson_annotations
+    integrationTestCompile libs.junit_jupiter_api
     integrationTestCompile project(':stroom-query-hibernate')
     integrationTestCompile project(':stroom-query-jooq')
     integrationTestRuntime libs.mariadb_connector

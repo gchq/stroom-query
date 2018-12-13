@@ -1,11 +1,12 @@
 package stroom.query.common.v2;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class TestSizes {
     @Test
@@ -32,7 +33,7 @@ class TestSizes {
 
     private void test(List<Integer> storeSizes, int depth, int expectedSize) {
         Sizes storeSize = Sizes.create(storeSizes);
-        Assertions.assertEquals(expectedSize, storeSize.size(depth));
+        assertThat(storeSize.size(depth)).isEqualTo(expectedSize);
     }
 
     @Test
@@ -103,11 +104,11 @@ class TestSizes {
 
     private void testMin(List<Integer> userSizes, List<Integer> defaultSizes, int depth, int expectedSize) {
         Sizes maxResults = Sizes.min(Sizes.create(userSizes), Sizes.create(defaultSizes));
-        Assertions.assertEquals(expectedSize, maxResults.size(depth));
+        assertThat(maxResults.size(depth)).isEqualTo(expectedSize);
     }
 
     private void testMax(List<Integer> userSizes, List<Integer> defaultSizes, int depth, int expectedSize) {
         Sizes maxResults = Sizes.max(Sizes.create(userSizes), Sizes.create(defaultSizes));
-        Assertions.assertEquals(expectedSize, maxResults.size(depth));
+        assertThat(maxResults.size(depth)).isEqualTo(expectedSize);
     }
 }

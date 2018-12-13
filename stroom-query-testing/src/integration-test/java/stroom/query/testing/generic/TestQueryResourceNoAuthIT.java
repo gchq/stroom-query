@@ -1,6 +1,8 @@
 package stroom.query.testing.generic;
 
-import org.junit.ClassRule;
+
+import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
+import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
 import stroom.docref.DocRef;
@@ -11,7 +13,7 @@ import stroom.query.api.v2.Query;
 import stroom.query.api.v2.ResultRequest;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.TableSettings;
-import stroom.query.testing.DropwizardAppWithClientsRule;
+import stroom.query.testing.DropwizardAppExtensionWithClients;
 import stroom.query.testing.QueryResourceNoAuthIT;
 import stroom.query.testing.generic.app.App;
 import stroom.query.testing.generic.app.Config;
@@ -22,15 +24,14 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class TestQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDocRefEntity, Config> {
+@ExtendWith(DropwizardExtensionsSupport.class)
+class TestQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDocRefEntity, Config> {
+    private static final DropwizardAppExtensionWithClients<Config> appRule =
+            new DropwizardAppExtensionWithClients<>(App.class, resourceFilePath("generic_noauth/config.yml"));
 
-    @ClassRule
-    public static final DropwizardAppWithClientsRule<Config> appRule =
-            new DropwizardAppWithClientsRule<>(App.class, resourceFilePath("generic_noauth/config.yml"));
-
-    public TestQueryResourceNoAuthIT() {
+    TestQueryResourceNoAuthIT() {
         super(TestDocRefEntity.TYPE,
                 appRule);
     }
@@ -73,7 +74,7 @@ public class TestQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDocRefE
                 .map(DataSourceField::getName)
                 .collect(Collectors.toSet());
 
-        assertTrue(resultFieldNames.contains(TestDocRefEntity.INDEX_NAME));
+        assertThat(resultFieldNames.contains(TestDocRefEntity.INDEX_NAME)).isTrue();
     }
 
     @Override

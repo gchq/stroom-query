@@ -1,9 +1,8 @@
 package stroom.query.testing;
 
 import io.dropwizard.Configuration;
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
-import stroom.query.authorisation.DocumentPermission;
+import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.datasource.api.v2.DataSource;
 import stroom.docref.DocRef;
 import stroom.query.api.v2.ExpressionOperator;
@@ -17,27 +16,27 @@ import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.audit.rest.AuditedQueryResourceImpl;
 import stroom.query.audit.service.QueryApiException;
+import stroom.query.authorisation.DocumentPermission;
 
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.fail;
-import static stroom.query.testing.FifoLogbackRule.containsAllOf;
+import static stroom.query.testing.FifoLogbackExtension.containsAllOf;
 
+@ExtendWith(FifoLogbackExtensionSupport.class)
 public abstract class QueryRemoteServiceIT<
         DOC_REF_ENTITY extends DocRefEntity,
         CONFIG_CLASS extends Configuration> {
 
     private final String docRefType;
+    private final StroomAuthenticationRule authRule;
+    protected FifoLogbackExtension auditLogRule = new FifoLogbackExtension();
     protected DocRefServiceHttpClient<DOC_REF_ENTITY> docRefClient;
     protected QueryServiceHttpClient queryClient;
-    private final StroomAuthenticationRule authRule;
-
-    @Rule
-    public FifoLogbackRule auditLogRule = new FifoLogbackRule();
 
     protected QueryRemoteServiceIT(final String docRefType,
                                    final Class<DOC_REF_ENTITY> docRefEntityClass,
-                                   final DropwizardAppWithClientsRule<CONFIG_CLASS> appRule,
+                                   final DropwizardAppExtensionWithClients<CONFIG_CLASS> appRule,
                                    final StroomAuthenticationRule authRule) {
         this.docRefType = docRefType;
         this.authRule = authRule;
@@ -58,7 +57,7 @@ public abstract class QueryRemoteServiceIT<
     }
 
     @Test
-    public void testGetDataSource() throws QueryApiException {
+    void testGetDataSource() throws QueryApiException {
         final DocRef docRef = createDocument();
 
         final DataSource result = queryClient.getDataSource(authRule.adminUser(), docRef)
@@ -74,7 +73,7 @@ public abstract class QueryRemoteServiceIT<
     }
 
     @Test
-    public void testGetDataSourcePermissions() throws QueryApiException {
+    void testGetDataSourcePermissions() throws QueryApiException {
         final DocRef docRef = createDocument();
 
         final String authorisedUsername = UUID.randomUUID().toString();
@@ -113,7 +112,7 @@ public abstract class QueryRemoteServiceIT<
     }
 
     @Test
-    public void testSearchPermissions() throws QueryApiException {
+    void testSearchPermissions() throws QueryApiException {
         final DocRef docRef = createDocument();
 
         final String authorisedUsername = UUID.randomUUID().toString();

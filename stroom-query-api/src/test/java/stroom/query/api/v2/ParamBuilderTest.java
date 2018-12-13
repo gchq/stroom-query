@@ -2,11 +2,11 @@ package stroom.query.api.v2;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class ParamBuilderTest {
+class ParamBuilderTest {
     @Test
-    public void doesBuild() {
+    void doesBuild() {
         final String key = "someKey";
         final String value = "someValue";
 
@@ -15,7 +15,7 @@ public class ParamBuilderTest {
                 .value(value)
                 .build();
 
-        assertEquals(key, param.getKey());
-        assertEquals(value, param.getValue());
+        assertThat(param.getKey()).isEqualTo(key);
+        assertThat(param.getValue()).isEqualTo(value);
     }
 }

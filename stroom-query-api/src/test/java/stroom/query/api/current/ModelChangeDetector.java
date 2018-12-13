@@ -18,13 +18,14 @@ import static org.assertj.core.api.Assertions.assertThat;
  * that the test that fails here could be resolved by temporarily uncommenting the line in the test that writes out the
  * model's portrait. Don't commit this test with the line uncommented! If you do the test will always pass.
  */
-public class ModelChangeDetector {
+
+class ModelChangeDetector {
 
     private static final String SEARCH_REQUEST_PORTRAIT_FILE_CURRENT = "src/test/resources/searchRequestPortrait-current.txt";
     private static final String SEARCH_REQUEST_PORTRAIT_FILE_NEW = "src/test/resources/searchRequestPortrait-new.txt";
 
     @Test
-    public void detect_changes_in_SearchRequest() throws IOException {
+    void detect_changes_in_SearchRequest() throws IOException {
         String newPortrait = ClassPhotographer.takePortraitOf(SearchRequest.class, "stroom.query.api");
 
         // Uncomment this line to update the model portrait

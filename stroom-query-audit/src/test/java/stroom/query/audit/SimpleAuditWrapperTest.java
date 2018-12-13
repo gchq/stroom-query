@@ -10,15 +10,15 @@ import stroom.query.security.ServiceUser;
 import javax.ws.rs.core.Response;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-public class SimpleAuditWrapperTest {
+class SimpleAuditWrapperTest {
 
     @Test
-    public void test() {
+    void test() {
         final String auditType = "TestFunction";
         final EventLoggingService eventLoggingService = spy(new QueryEventLoggingService());
         final ServiceUser user = new ServiceUser.Builder()
@@ -39,7 +39,7 @@ public class SimpleAuditWrapperTest {
                     eventDetail.setCreate(createObj);
                 })
                 .callAndAudit(eventLoggingService);
-        assertEquals(HttpStatus.OK_200, response.getStatus());
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK_200);
         verify(eventLoggingService).log(any());
     }
 }

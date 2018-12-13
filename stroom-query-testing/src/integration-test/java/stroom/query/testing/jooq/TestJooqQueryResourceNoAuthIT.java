@@ -1,8 +1,9 @@
 package stroom.query.testing.jooq;
 
+import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import org.eclipse.jetty.http.HttpStatus;
-import org.junit.Before;
-import org.junit.ClassRule;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
 import stroom.docref.DocRef;
@@ -16,7 +17,7 @@ import stroom.query.api.v2.TableSettings;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.security.NoAuthValueFactoryProvider;
-import stroom.query.testing.DropwizardAppWithClientsRule;
+import stroom.query.testing.DropwizardAppExtensionWithClients;
 import stroom.query.testing.QueryResourceNoAuthIT;
 import stroom.query.testing.data.CreateTestDataClient;
 import stroom.query.testing.jooq.app.JooqApp;
@@ -30,26 +31,24 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class TestJooqQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDocRefJooqEntity, JooqConfig> {
-
-    @ClassRule
-    public static final DropwizardAppWithClientsRule<JooqConfig> appRule =
-            new DropwizardAppWithClientsRule<>(JooqApp.class, resourceFilePath("jooq_noauth/config.yml"));
+@ExtendWith(DropwizardExtensionsSupport.class)
+class TestJooqQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDocRefJooqEntity, JooqConfig> {
+    private static final DropwizardAppExtensionWithClients<JooqConfig> appRule =
+            new DropwizardAppExtensionWithClients<>(JooqApp.class, resourceFilePath("jooq_noauth/config.yml"));
 
     private final CreateTestDataClient testDataClient;
 
 
-    public TestJooqQueryResourceNoAuthIT() {
+    TestJooqQueryResourceNoAuthIT() {
         super(TestDocRefJooqEntity.TYPE,
                 appRule);
         testDataClient = appRule.getClient(CreateTestDataClient::new);
     }
 
-    @Before
-    public void beforeTest() {
+    @BeforeEach
+    void beforeTest() {
         String testDataSeed = UUID.randomUUID().toString();
 
         DocRef testDataDocRef = new DocRef.Builder()
@@ -62,14 +61,14 @@ public class TestJooqQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDoc
                 NoAuthValueFactoryProvider.ADMIN_USER,
                 testDataDocRef.getUuid(),
                 testDataDocRef.getName());
-        assertEquals(HttpStatus.OK_200, createDocumentResponse.getStatus());
+        assertThat(createDocumentResponse.getStatus()).isEqualTo(HttpStatus.OK_200);
         createDocumentResponse.close();
 
         final Response createTestDataResponse = testDataClient.createTestData(
                 NoAuthValueFactoryProvider.ADMIN_USER,
                 testDataDocRef.getUuid(),
                 testDataSeed);
-        assertEquals(HttpStatus.NO_CONTENT_204, createTestDataResponse.getStatus());
+        assertThat(createTestDataResponse.getStatus()).isEqualTo(HttpStatus.NO_CONTENT_204);
         createTestDataResponse.close();
 
         // Clear the audit log for the create document
@@ -114,12 +113,12 @@ public class TestJooqQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDoc
                 .map(DataSourceField::getName)
                 .collect(Collectors.toSet());
 
-        assertTrue(resultFieldNames.contains(DocRefEntity.CREATE_TIME));
-        assertTrue(resultFieldNames.contains(DocRefEntity.CREATE_USER));
-        assertTrue(resultFieldNames.contains(DocRefEntity.UPDATE_TIME));
-        assertTrue(resultFieldNames.contains(DocRefEntity.UPDATE_USER));
-        assertTrue(resultFieldNames.contains(TestQueryableJooqEntity.ID));
-        assertTrue(resultFieldNames.contains(TestQueryableJooqEntity.COLOUR));
+        assertThat(resultFieldNames.contains(DocRefEntity.CREATE_TIME)).isTrue();
+        assertThat(resultFieldNames.contains(DocRefEntity.CREATE_USER)).isTrue();
+        assertThat(resultFieldNames.contains(DocRefEntity.UPDATE_TIME)).isTrue();
+        assertThat(resultFieldNames.contains(DocRefEntity.UPDATE_USER)).isTrue();
+        assertThat(resultFieldNames.contains(TestQueryableJooqEntity.ID)).isTrue();
+        assertThat(resultFieldNames.contains(TestQueryableJooqEntity.COLOUR)).isTrue();
     }
 
     @Override

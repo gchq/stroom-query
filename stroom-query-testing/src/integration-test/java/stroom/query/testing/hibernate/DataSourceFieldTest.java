@@ -10,15 +10,15 @@ import stroom.query.testing.hibernate.app.TestQueryableHibernateEntity;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class DataSourceFieldTest {
+class DataSourceFieldTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataSourceFieldTest.class);
 
     @Test
-    public void test() {
+    void test() {
         final Set<IsDataSourceField> annotations = QueryableEntity.getFields(TestQueryableHibernateEntity.class).collect(Collectors.toSet());
         LOGGER.info("Annotations Found: " + annotations);
-        assertTrue(annotations.size() > 0);
+        assertThat(annotations).isNotEmpty();
     }
 }

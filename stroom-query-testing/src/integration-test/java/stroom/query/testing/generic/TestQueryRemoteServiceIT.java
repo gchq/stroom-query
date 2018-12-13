@@ -1,6 +1,9 @@
 package stroom.query.testing.generic;
 
-import org.junit.ClassRule;
+import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
 import stroom.docref.DocRef;
@@ -11,7 +14,7 @@ import stroom.query.api.v2.Query;
 import stroom.query.api.v2.ResultRequest;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.TableSettings;
-import stroom.query.testing.DropwizardAppWithClientsRule;
+import stroom.query.testing.DropwizardAppExtensionWithClients;
 import stroom.query.testing.QueryRemoteServiceIT;
 import stroom.query.testing.StroomAuthenticationRule;
 import stroom.query.testing.generic.app.App;
@@ -23,26 +26,36 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class TestQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRefEntity, Config> {
-
-    @ClassRule
-    public static StroomAuthenticationRule authRule =
+@ExtendWith(DropwizardExtensionsSupport.class)
+class TestQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRefEntity, Config> {
+    private static StroomAuthenticationRule authRule =
             new StroomAuthenticationRule();
 
-    @ClassRule
-    public static final DropwizardAppWithClientsRule<Config> appRule =
-            new DropwizardAppWithClientsRule<>(App.class,
+    private static final DropwizardAppExtensionWithClients<Config> appRule =
+            new DropwizardAppExtensionWithClients<>(App.class,
                     resourceFilePath("generic/config.yml"),
                     authRule.authToken(),
                     authRule.authService());
 
-    public TestQueryRemoteServiceIT() {
+    TestQueryRemoteServiceIT() {
         super(TestDocRefEntity.TYPE,
                 TestDocRefEntity.class,
                 appRule,
                 authRule);
+    }
+
+    @BeforeAll
+    static void beforeAll() {
+        authRule.start();
+        authRule.before();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        authRule.after();
+        authRule.stop();
     }
 
     @Override
@@ -83,7 +96,7 @@ public class TestQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRefEnt
                 .map(DataSourceField::getName)
                 .collect(Collectors.toSet());
 
-        assertTrue(resultFieldNames.contains(TestDocRefEntity.INDEX_NAME));
+        assertThat(resultFieldNames.contains(TestDocRefEntity.INDEX_NAME)).isTrue();
     }
 
     @Override

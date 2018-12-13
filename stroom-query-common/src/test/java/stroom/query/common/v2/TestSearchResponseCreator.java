@@ -1,6 +1,5 @@
 package stroom.query.common.v2;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,8 +29,10 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @ExtendWith(MockitoExtension.class)
-public class TestSearchResponseCreator {
+class TestSearchResponseCreator {
 
     private static Duration TOLLERANCE = Duration.ofMillis(100);
 
@@ -51,7 +52,7 @@ public class TestSearchResponseCreator {
     }
 
     @Test
-    public void create_nonIncremental_timesOut() {
+    void create_nonIncremental_timesOut() {
 
         Duration serverTimeout = Duration.ofMillis(500);
         SearchResponseCreator searchResponseCreator = new SearchResponseCreator(mockStore, serverTimeout);
@@ -68,20 +69,20 @@ public class TestSearchResponseCreator {
         SearchResponse searchResponse = timedResult.getResult();
         Duration actualDuration = timedResult.getDuration();
 
-        Assertions.assertThat(searchResponse).isNotNull();
-        Assertions.assertThat(searchResponse.getResults()).isNullOrEmpty();
+        assertThat(searchResponse).isNotNull();
+        assertThat(searchResponse.getResults()).isNullOrEmpty();
 
-        Assertions.assertThat(TimingUtils.isWithinTollerance(
+        assertThat(TimingUtils.isWithinTollerance(
                 serverTimeout,
                 actualDuration,
                 TOLLERANCE)).isTrue();
 
-        Assertions.assertThat(searchResponse.getErrors()).hasSize(1);
-        Assertions.assertThat(searchResponse.getErrors().get(0)).containsIgnoringCase("timed out");
+        assertThat(searchResponse.getErrors()).hasSize(1);
+        assertThat(searchResponse.getErrors().get(0)).containsIgnoringCase("timed out");
     }
 
     @Test
-    public void create_nonIncremental_completesImmediately() {
+    void create_nonIncremental_completesImmediately() {
 
         //long timeout because we should return almost immediately
         Duration serverTimeout = Duration.ofMillis(5_000);
@@ -102,14 +103,14 @@ public class TestSearchResponseCreator {
         assertResponseWithData(searchResponse);
 
         //allow 100ms for java to run the code, it will never be 0
-        Assertions.assertThat(TimingUtils.isWithinTollerance(
+        assertThat(TimingUtils.isWithinTollerance(
                 Duration.ZERO,
                 actualDuration,
                 TOLLERANCE)).isTrue();
     }
 
     @Test
-    public void create_nonIncremental_completesBeforeTimeout() {
+    void create_nonIncremental_completesBeforeTimeout() {
 
         Duration serverTimeout = Duration.ofMillis(5_000);
         Duration clientTimeout = Duration.ofMillis(5_000);
@@ -130,7 +131,7 @@ public class TestSearchResponseCreator {
 
         assertResponseWithData(searchResponse);
 
-        Assertions.assertThat(TimingUtils.isWithinTollerance(
+        assertThat(TimingUtils.isWithinTollerance(
                 Duration.ofMillis(sleepTime),
                 actualDuration,
                 TOLLERANCE)).isTrue();
@@ -138,7 +139,7 @@ public class TestSearchResponseCreator {
 
 
     @Test
-    public void create_incremental_noTimeout() {
+    void create_incremental_noTimeout() {
 
         Duration serverTimeout = Duration.ofMillis(5_000);
         Duration clientTimeout = Duration.ofMillis(0);
@@ -160,19 +161,19 @@ public class TestSearchResponseCreator {
         SearchResponse searchResponse = timedResult.getResult();
         Duration actualDuration = timedResult.getDuration();
 
-        Assertions.assertThat(searchResponse).isNotNull();
-        Assertions.assertThat(searchResponse.getResults()).isNullOrEmpty();
+        assertThat(searchResponse).isNotNull();
+        assertThat(searchResponse.getResults()).isNullOrEmpty();
 
-        Assertions.assertThat(TimingUtils.isWithinTollerance(
+        assertThat(TimingUtils.isWithinTollerance(
                 clientTimeout,
                 actualDuration,
                 TOLLERANCE)).isTrue();
 
-        Assertions.assertThat(searchResponse.getErrors()).isNullOrEmpty();
+        assertThat(searchResponse.getErrors()).isNullOrEmpty();
     }
 
     @Test
-    public void create_incremental_timesOutWithDataThenCompletes() {
+    void create_incremental_timesOutWithDataThenCompletes() {
 
         //long timeout because we should return almost immediately
         Duration serverTimeout = Duration.ofMillis(500);
@@ -194,7 +195,7 @@ public class TestSearchResponseCreator {
         assertResponseWithData(searchResponse);
 
         //allow 100ms for java to run the code, it will never be 0
-        Assertions.assertThat(TimingUtils.isWithinTollerance(
+        assertThat(TimingUtils.isWithinTollerance(
                 clientTimeout,
                 actualDuration,
                 TOLLERANCE)).isTrue();
@@ -216,7 +217,7 @@ public class TestSearchResponseCreator {
         assertResponseWithData(searchResponse2);
 
         //allow 100ms for java to run the code, it will never be 0
-        Assertions.assertThat(TimingUtils.isWithinTollerance(
+        assertThat(TimingUtils.isWithinTollerance(
                 Duration.ofMillis(sleepTime),
                 actualDuration,
                 TOLLERANCE)).isTrue();
@@ -290,10 +291,10 @@ public class TestSearchResponseCreator {
     }
 
     private void assertResponseWithData(final SearchResponse searchResponse) {
-        Assertions.assertThat(searchResponse).isNotNull();
-        Assertions.assertThat(searchResponse.getResults()).hasSize(1);
-        Assertions.assertThat(searchResponse.getResults().get(0)).isInstanceOf(TableResult.class);
+        assertThat(searchResponse).isNotNull();
+        assertThat(searchResponse.getResults()).hasSize(1);
+        assertThat(searchResponse.getResults().get(0)).isInstanceOf(TableResult.class);
         TableResult tableResult = (TableResult) searchResponse.getResults().get(0);
-        Assertions.assertThat(tableResult.getTotalResults()).isEqualTo(1);
+        assertThat(tableResult.getTotalResults()).isEqualTo(1);
     }
 }

@@ -2,11 +2,11 @@ package stroom.datasource.api.v2;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class DataSourceBuilderTest {
+class DataSourceBuilderTest {
     @Test
-    public void doeBuild() {
+    void doeBuild() {
         // Given
         final String field0 = "field0";
         final String field1 = "field1";
@@ -26,9 +26,9 @@ public class DataSourceBuilderTest {
                 .build();
 
         // Then
-        assertEquals(3, dataSource.getFields().size());
-        assertEquals(field0, dataSource.getFields().get(0).getName());
-        assertEquals(field1, dataSource.getFields().get(1).getName());
-        assertEquals(field2, dataSource.getFields().get(2).getName());
+        assertThat(dataSource.getFields()).hasSize(3);
+        assertThat(dataSource.getFields().get(0).getName()).isEqualTo(field0);
+        assertThat(dataSource.getFields().get(1).getName()).isEqualTo(field1);
+        assertThat(dataSource.getFields().get(2).getName()).isEqualTo(field2);
     }
 }

@@ -1,6 +1,8 @@
 package stroom.query.testing.hibernate;
 
-import org.junit.ClassRule;
+
+import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
+import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
 import stroom.docref.DocRef;
@@ -12,7 +14,7 @@ import stroom.query.api.v2.ResultRequest;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.audit.model.DocRefEntity;
-import stroom.query.testing.DropwizardAppWithClientsRule;
+import stroom.query.testing.DropwizardAppExtensionWithClients;
 import stroom.query.testing.QueryResourceNoAuthIT;
 import stroom.query.testing.hibernate.app.HibernateApp;
 import stroom.query.testing.hibernate.app.HibernateConfig;
@@ -24,15 +26,14 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class TestHibernateQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDocRefHibernateEntity, HibernateConfig> {
+@ExtendWith(DropwizardExtensionsSupport.class)
+class TestHibernateQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDocRefHibernateEntity, HibernateConfig> {
+    private static final DropwizardAppExtensionWithClients<HibernateConfig> appRule =
+            new DropwizardAppExtensionWithClients<>(HibernateApp.class, resourceFilePath("hibernate_noauth/config.yml"));
 
-    @ClassRule
-    public static final DropwizardAppWithClientsRule<HibernateConfig> appRule =
-            new DropwizardAppWithClientsRule<>(HibernateApp.class, resourceFilePath("hibernate_noauth/config.yml"));
-
-    public TestHibernateQueryResourceNoAuthIT() {
+    TestHibernateQueryResourceNoAuthIT() {
         super(TestDocRefHibernateEntity.TYPE,
                 appRule);
     }
@@ -75,12 +76,12 @@ public class TestHibernateQueryResourceNoAuthIT extends QueryResourceNoAuthIT<Te
                 .map(DataSourceField::getName)
                 .collect(Collectors.toSet());
 
-        assertTrue(resultFieldNames.contains(DocRefEntity.CREATE_TIME));
-        assertTrue(resultFieldNames.contains(DocRefEntity.CREATE_USER));
-        assertTrue(resultFieldNames.contains(DocRefEntity.UPDATE_TIME));
-        assertTrue(resultFieldNames.contains(DocRefEntity.UPDATE_USER));
-        assertTrue(resultFieldNames.contains(TestQueryableHibernateEntity.ID));
-        assertTrue(resultFieldNames.contains(TestQueryableHibernateEntity.FLAVOUR));
+        assertThat(resultFieldNames.contains(DocRefEntity.CREATE_TIME)).isTrue();
+        assertThat(resultFieldNames.contains(DocRefEntity.CREATE_USER)).isTrue();
+        assertThat(resultFieldNames.contains(DocRefEntity.UPDATE_TIME)).isTrue();
+        assertThat(resultFieldNames.contains(DocRefEntity.UPDATE_USER)).isTrue();
+        assertThat(resultFieldNames.contains(TestQueryableHibernateEntity.ID)).isTrue();
+        assertThat(resultFieldNames.contains(TestQueryableHibernateEntity.FLAVOUR)).isTrue();
     }
 
     @Override

@@ -2,11 +2,11 @@ package stroom.query.api.v2;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class NumberFormatBuilderTest {
+class NumberFormatBuilderTest {
     @Test
-    public void doesBuild() {
+    void doesBuild() {
         final Integer decimalPlaces = 5;
         final Boolean useSeperator = true;
 
@@ -15,7 +15,7 @@ public class NumberFormatBuilderTest {
                 .useSeparator(useSeperator)
                 .build();
 
-        assertEquals(decimalPlaces, numberFormat.getDecimalPlaces());
-        assertEquals(useSeperator, numberFormat.getUseSeparator());
+        assertThat(numberFormat.getDecimalPlaces()).isEqualTo(decimalPlaces);
+        assertThat(numberFormat.getUseSeparator()).isEqualTo(useSeperator);
     }
 }

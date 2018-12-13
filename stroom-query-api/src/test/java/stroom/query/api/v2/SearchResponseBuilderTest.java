@@ -2,12 +2,11 @@ package stroom.query.api.v2;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class SearchResponseBuilderTest {
+class SearchResponseBuilderTest {
     @Test
-    public void doesBuildFlat() {
+    void doesBuildFlat() {
         // Given
         final String error0 = "something went wrong 0";
         final String error1 = "something went wrong 1";
@@ -28,28 +27,28 @@ public class SearchResponseBuilderTest {
                         .componentId(flatResultComponentId1)
                         .build())
                 .addResults(new FlatResult.Builder()
-                    .componentId(flatResultComponentId2)
-                    .build())
+                        .componentId(flatResultComponentId2)
+                        .build())
                 .build();
 
         // Then
-        assertEquals(2, searchResponse.getErrors().size());
-        assertTrue(searchResponse.getComplete());
-        assertTrue(searchResponse.getErrors().contains(error0));
-        assertTrue(searchResponse.getErrors().contains(error1));
-        assertEquals(1, searchResponse.getHighlights().size());
-        assertEquals(highlight0, searchResponse.getHighlights().get(0));
+        assertThat(searchResponse.getErrors()).hasSize(2);
+        assertThat(searchResponse.getComplete()).isTrue();
+        assertThat(searchResponse.getErrors().contains(error0)).isTrue();
+        assertThat(searchResponse.getErrors().contains(error1)).isTrue();
+        assertThat(searchResponse.getHighlights()).hasSize(1);
+        assertThat(searchResponse.getHighlights().get(0)).isEqualTo(highlight0);
         long resultCount = searchResponse.getResults().stream()
                 .filter(result -> result instanceof FlatResult)
                 .map(result -> (FlatResult) result)
                 .map(Result::getComponentId)
                 .filter(s -> s.startsWith("flatResult"))
                 .count();
-        assertEquals(3L, resultCount);
+        assertThat(resultCount).isEqualTo(3L);
     }
 
     @Test
-    public void doesBuildTable() {
+    void doesBuildTable() {
         // Given
         final String error0 = "something went wrong 0";
         final String error1 = "something went wrong 1";
@@ -75,18 +74,18 @@ public class SearchResponseBuilderTest {
                 .build();
 
         // Then
-        assertEquals(2, searchResponse.getErrors().size());
-        assertTrue(searchResponse.getComplete());
-        assertTrue(searchResponse.getErrors().contains(error0));
-        assertTrue(searchResponse.getErrors().contains(error1));
-        assertEquals(1, searchResponse.getHighlights().size());
-        assertEquals(highlight0, searchResponse.getHighlights().get(0));
+        assertThat(searchResponse.getErrors()).hasSize(2);
+        assertThat(searchResponse.getComplete()).isTrue();
+        assertThat(searchResponse.getErrors().contains(error0)).isTrue();
+        assertThat(searchResponse.getErrors().contains(error1)).isTrue();
+        assertThat(searchResponse.getHighlights()).hasSize(1);
+        assertThat(searchResponse.getHighlights().get(0)).isEqualTo(highlight0);
         long resultCount = searchResponse.getResults().stream()
                 .filter(result -> result instanceof TableResult)
                 .map(result -> (TableResult) result)
                 .map(Result::getComponentId)
                 .filter(s -> s.startsWith("tableResult"))
                 .count();
-        assertEquals(3L, resultCount);
+        assertThat(resultCount).isEqualTo(3L);
     }
 }

@@ -2,12 +2,9 @@ package stroom.query.testing;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Key;
-import com.google.inject.TypeLiteral;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import stroom.query.audit.client.RemoteClientCache;
 import stroom.query.audit.service.QueryApiException;
 import stroom.query.audit.service.QueryService;
 import stroom.query.audit.service.QueryServiceSupplier;
@@ -19,12 +16,12 @@ import java.util.UUID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
-public class RemoteClientInvocationTest {
+class RemoteClientInvocationTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(RemoteClientInvocationTest.class);
 
 
     @Test
-    public void test(){
+    void test() {
         final Map<String, String> urlsByType = new HashMap<>();
         urlsByType.put(UUID.randomUUID().toString(), "http://localhost:28080/");
         urlsByType.put(UUID.randomUUID().toString(), "http://localhost:18080/");

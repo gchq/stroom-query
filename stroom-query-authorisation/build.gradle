@@ -32,5 +32,6 @@ dependencies {
     compile libs.dropwizard_auth_jwt
     compile libs.slf4j_api
 
+    testCompile libs.assertj_core
     testCompile libs.junit_jupiter_api
 }

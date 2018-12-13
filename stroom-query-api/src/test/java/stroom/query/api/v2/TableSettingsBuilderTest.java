@@ -4,20 +4,20 @@ import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class TableSettingsBuilderTest {
+class TableSettingsBuilderTest {
     @Test
-    public void doesBuild() {
+    void doesBuild() {
         final Boolean extractValues = true;
         final Boolean showDetail = false;
         final String queryId = "someQueryId";
-        
+
         // Extraction Pipeline
         final String extractPipelineName = "pipelineName";
         final String extractPipelineType = "pipelineType";
         final String extractPipelineUuid = UUID.randomUUID().toString();
-        
+
         // Field 1
         final String field1Name = "field1";
         final Integer field1Group = 57;
@@ -39,7 +39,7 @@ public class TableSettingsBuilderTest {
         final String field2FilterIncludes = "stuff to include field 2&&";
         final Integer field2NumberFormatDecimalPlaces = 6;
         final Boolean field2NumberFormatUseSeperator = false;
-        
+
         final TableSettings tableSettings = new TableSettings.Builder()
                 .extractValues(extractValues)
                 .showDetail(showDetail)
@@ -84,56 +84,56 @@ public class TableSettingsBuilderTest {
                         .build())
                 .extractionPipeline(extractPipelineType, extractPipelineUuid, extractPipelineName)
                 .build();
-        
-        assertEquals(extractValues, tableSettings.getExtractValues());
-        assertEquals(showDetail, tableSettings.getShowDetail());
-        assertEquals(queryId, tableSettings.getQueryId());
-        
-        assertNotNull(tableSettings.getExtractionPipeline());
-        assertEquals(extractPipelineName, tableSettings.getExtractionPipeline().getName());
-        assertEquals(extractPipelineUuid, tableSettings.getExtractionPipeline().getUuid());
-        assertEquals(extractPipelineType, tableSettings.getExtractionPipeline().getType());
-        
-        assertEquals(2, tableSettings.getFields().size());
+
+        assertThat(tableSettings.getExtractValues()).isEqualTo(extractValues);
+        assertThat(tableSettings.getShowDetail()).isEqualTo(showDetail);
+        assertThat(tableSettings.getQueryId()).isEqualTo(queryId);
+
+        assertThat(tableSettings.getExtractionPipeline()).isNotNull();
+        assertThat(tableSettings.getExtractionPipeline().getName()).isEqualTo(extractPipelineName);
+        assertThat(tableSettings.getExtractionPipeline().getUuid()).isEqualTo(extractPipelineUuid);
+        assertThat(tableSettings.getExtractionPipeline().getType()).isEqualTo(extractPipelineType);
+
+        assertThat(tableSettings.getFields()).hasSize(2);
         final Field field1 = tableSettings.getFields().get(0);
-        assertEquals(field1Name, field1.getName());
-        assertEquals(field1Expression, field1.getExpression());
-        assertEquals(field1Group, field1.getGroup());
+        assertThat(field1.getName()).isEqualTo(field1Name);
+        assertThat(field1.getExpression()).isEqualTo(field1Expression);
+        assertThat(field1.getGroup()).isEqualTo(field1Group);
 
-        assertNotNull(field1.getSort());
-        assertEquals(field1SortOrder, field1.getSort().getOrder());
-        assertEquals(field1SortDirection, field1.getSort().getDirection());
+        assertThat(field1.getSort()).isNotNull();
+        assertThat(field1.getSort().getOrder()).isEqualTo(field1SortOrder);
+        assertThat(field1.getSort().getDirection()).isEqualTo(field1SortDirection);
 
-        assertNotNull(field1.getFilter());
-        assertEquals(field1FilterExcludes, field1.getFilter().getExcludes());
-        assertEquals(field1FilterIncludes, field1.getFilter().getIncludes());
+        assertThat(field1.getFilter()).isNotNull();
+        assertThat(field1.getFilter().getExcludes()).isEqualTo(field1FilterExcludes);
+        assertThat(field1.getFilter().getIncludes()).isEqualTo(field1FilterIncludes);
 
-        assertNotNull(field1.getFormat());
-        assertEquals(Format.Type.NUMBER, field1.getFormat().getType());
-        assertNotNull(field1.getFormat().getNumberFormat());
-        assertNull(field1.getFormat().getDateTimeFormat());
-        assertEquals(field1NumberFormatDecimalPlaces, field1.getFormat().getNumberFormat().getDecimalPlaces());
-        assertEquals(field1NumberFormatUseSeperator, field1.getFormat().getNumberFormat().getUseSeparator());
-        
+        assertThat(field1.getFormat()).isNotNull();
+        assertThat(field1.getFormat().getType()).isEqualTo(Format.Type.NUMBER);
+        assertThat(field1.getFormat().getNumberFormat()).isNotNull();
+        assertThat(field1.getFormat().getDateTimeFormat()).isNull();
+        assertThat(field1.getFormat().getNumberFormat().getDecimalPlaces()).isEqualTo(field1NumberFormatDecimalPlaces);
+        assertThat(field1.getFormat().getNumberFormat().getUseSeparator()).isEqualTo(field1NumberFormatUseSeperator);
+
         final Field field2 = tableSettings.getFields().get(1);
-        assertEquals(field2Name, field2.getName());
-        assertEquals(field2Expression, field2.getExpression());
-        assertEquals(field2Group, field2.getGroup());
+        assertThat(field2.getName()).isEqualTo(field2Name);
+        assertThat(field2.getExpression()).isEqualTo(field2Expression);
+        assertThat(field2.getGroup()).isEqualTo(field2Group);
 
-        assertNotNull(field2.getSort());
-        assertEquals(field2SortOrder, field2.getSort().getOrder());
-        assertEquals(field2SortDirection, field2.getSort().getDirection());
+        assertThat(field2.getSort()).isNotNull();
+        assertThat(field2.getSort().getOrder()).isEqualTo(field2SortOrder);
+        assertThat(field2.getSort().getDirection()).isEqualTo(field2SortDirection);
 
-        assertNotNull(field2.getFilter());
-        assertEquals(field2FilterExcludes, field2.getFilter().getExcludes());
-        assertEquals(field2FilterIncludes, field2.getFilter().getIncludes());
+        assertThat(field2.getFilter()).isNotNull();
+        assertThat(field2.getFilter().getExcludes()).isEqualTo(field2FilterExcludes);
+        assertThat(field2.getFilter().getIncludes()).isEqualTo(field2FilterIncludes);
 
-        assertNotNull(field2.getFormat());
-        assertEquals(Format.Type.NUMBER, field2.getFormat().getType());
-        assertNotNull(field2.getFormat().getNumberFormat());
-        assertNull(field2.getFormat().getDateTimeFormat());
-        assertEquals(field2NumberFormatDecimalPlaces, field2.getFormat().getNumberFormat().getDecimalPlaces());
-        assertEquals(field2NumberFormatUseSeperator, field2.getFormat().getNumberFormat().getUseSeparator());
-        
+        assertThat(field2.getFormat()).isNotNull();
+        assertThat(field2.getFormat().getType()).isEqualTo(Format.Type.NUMBER);
+        assertThat(field2.getFormat().getNumberFormat()).isNotNull();
+        assertThat(field2.getFormat().getDateTimeFormat()).isNull();
+        assertThat(field2.getFormat().getNumberFormat().getDecimalPlaces()).isEqualTo(field2NumberFormatDecimalPlaces);
+        assertThat(field2.getFormat().getNumberFormat().getUseSeparator()).isEqualTo(field2NumberFormatUseSeperator);
+
     }
 }

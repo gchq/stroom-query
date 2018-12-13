@@ -2,11 +2,11 @@ package stroom.query.api.v2;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class FilterBuilderTest {
+class FilterBuilderTest {
     @Test
-    public void doesBuild() {
+    void doesBuild() {
         final String excludes = "stuff to exclude **";
         final String includes = "stuff to include &&";
 
@@ -15,7 +15,7 @@ public class FilterBuilderTest {
                 .includes(includes)
                 .build();
 
-        assertEquals(excludes, filter.getExcludes());
-        assertEquals(includes, filter.getIncludes());
+        assertThat(filter.getExcludes()).isEqualTo(excludes);
+        assertThat(filter.getIncludes()).isEqualTo(includes);
     }
 }

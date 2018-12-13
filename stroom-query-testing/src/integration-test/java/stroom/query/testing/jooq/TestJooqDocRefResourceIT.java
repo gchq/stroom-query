@@ -1,9 +1,13 @@
 package stroom.query.testing.jooq;
 
-import org.junit.Before;
-import org.junit.ClassRule;
+
+import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.query.testing.DocRefResourceIT;
-import stroom.query.testing.DropwizardAppWithClientsRule;
+import stroom.query.testing.DropwizardAppExtensionWithClients;
 import stroom.query.testing.StroomAuthenticationRule;
 import stroom.query.testing.jooq.app.JooqApp;
 import stroom.query.testing.jooq.app.JooqConfig;
@@ -15,24 +19,34 @@ import java.util.UUID;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 
-public class TestJooqDocRefResourceIT extends DocRefResourceIT<TestDocRefJooqEntity, JooqConfig> {
-
-    @ClassRule
-    public static StroomAuthenticationRule authRule =
+@ExtendWith(DropwizardExtensionsSupport.class)
+class TestJooqDocRefResourceIT extends DocRefResourceIT<TestDocRefJooqEntity, JooqConfig> {
+    private static StroomAuthenticationRule authRule =
             new StroomAuthenticationRule();
 
-    @ClassRule
-    public static final DropwizardAppWithClientsRule<JooqConfig> appRule =
-            new DropwizardAppWithClientsRule<>(JooqApp.class,
+    private static final DropwizardAppExtensionWithClients<JooqConfig> appRule =
+            new DropwizardAppExtensionWithClients<>(JooqApp.class,
                     resourceFilePath("jooq/config.yml"),
                     authRule.authToken(),
                     authRule.authService());
 
-    public TestJooqDocRefResourceIT() {
+    TestJooqDocRefResourceIT() {
         super(TestDocRefJooqEntity.TYPE,
                 TestDocRefJooqEntity.class,
                 appRule,
                 authRule);
+    }
+
+    @BeforeAll
+    static void beforeAll() {
+        authRule.start();
+        authRule.before();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        authRule.after();
+        authRule.stop();
     }
 
     @Override
@@ -49,8 +63,8 @@ public class TestJooqDocRefResourceIT extends DocRefResourceIT<TestDocRefJooqEnt
         return values;
     }
 
-    @Before
-    public void beforeTest() {
+    @BeforeEach
+    void beforeTest() {
         // TestDocRefServiceImpl.eraseAllData();
     }
 }

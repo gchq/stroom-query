@@ -1,9 +1,11 @@
 package stroom.query.testing.generic;
 
-import org.junit.Before;
-import org.junit.ClassRule;
+
+import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.query.testing.DocRefResourceNoAuthIT;
-import stroom.query.testing.DropwizardAppWithClientsRule;
+import stroom.query.testing.DropwizardAppExtensionWithClients;
 import stroom.query.testing.generic.app.App;
 import stroom.query.testing.generic.app.Config;
 import stroom.query.testing.generic.app.TestDocRefEntity;
@@ -15,13 +17,12 @@ import java.util.UUID;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 
-public class TestDocRefResourceNoAuthIT extends DocRefResourceNoAuthIT<TestDocRefEntity, Config> {
+@ExtendWith(DropwizardExtensionsSupport.class)
+class TestDocRefResourceNoAuthIT extends DocRefResourceNoAuthIT<TestDocRefEntity, Config> {
+    private static final DropwizardAppExtensionWithClients<Config> appRule =
+            new DropwizardAppExtensionWithClients<>(App.class, resourceFilePath("generic_noauth/config.yml"));
 
-    @ClassRule
-    public static final DropwizardAppWithClientsRule<Config> appRule =
-            new DropwizardAppWithClientsRule<>(App.class, resourceFilePath("generic_noauth/config.yml"));
-
-    public TestDocRefResourceNoAuthIT() {
+    TestDocRefResourceNoAuthIT() {
         super(TestDocRefEntity.class,
                 appRule);
     }
@@ -40,8 +41,8 @@ public class TestDocRefResourceNoAuthIT extends DocRefResourceNoAuthIT<TestDocRe
         return values;
     }
 
-    @Before
-    public void beforeTest() {
+    @BeforeEach
+    void beforeTest() {
         TestDocRefServiceImpl.eraseAllData();
     }
 }

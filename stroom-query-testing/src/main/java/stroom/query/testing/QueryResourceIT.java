@@ -2,7 +2,6 @@ package stroom.query.testing;
 
 import io.dropwizard.Configuration;
 import org.eclipse.jetty.http.HttpStatus;
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 import stroom.datasource.api.v2.DataSource;
 import stroom.docref.DocRef;
@@ -19,23 +18,21 @@ import stroom.query.authorisation.DocumentPermission;
 import javax.ws.rs.core.Response;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static stroom.query.testing.FifoLogbackRule.containsAllOf;
+import static org.assertj.core.api.Assertions.assertThat;
+import static stroom.query.testing.FifoLogbackExtension.containsAllOf;
 
 public abstract class QueryResourceIT<
         DOC_REF_ENTITY extends DocRefEntity,
         CONFIG_CLASS extends Configuration> {
 
     private final String docRefType;
+    private final StroomAuthenticationRule authRule;
+    public FifoLogbackExtension auditLogRule = new FifoLogbackExtension();
     protected DocRefResourceHttpClient<DOC_REF_ENTITY> docRefClient;
     protected QueryResourceHttpClient queryClient;
-    private final StroomAuthenticationRule authRule;
-
-    @Rule
-    public FifoLogbackRule auditLogRule = new FifoLogbackRule();
 
     protected QueryResourceIT(final String docRefType,
-                              final DropwizardAppWithClientsRule<CONFIG_CLASS> appRule,
+                              final DropwizardAppExtensionWithClients<CONFIG_CLASS> appRule,
                               final StroomAuthenticationRule authRule) {
         this.docRefType = docRefType;
         this.authRule = authRule;
@@ -56,11 +53,11 @@ public abstract class QueryResourceIT<
     }
 
     @Test
-    public void testGetDataSource() {
+    void testGetDataSource() {
         final DocRef docRef = createDocument();
 
         final Response response = queryClient.getDataSource(authRule.adminUser(), docRef);
-        assertEquals(HttpStatus.OK_200, response.getStatus());
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK_200);
         final DataSource result = response.readEntity(DataSource.class);
         response.close();
 
@@ -75,7 +72,7 @@ public abstract class QueryResourceIT<
     }
 
     @Test
-    public void testGetDataSourcePermissions() {
+    void testGetDataSourcePermissions() {
         final DocRef docRef = createDocument();
 
         final String authorisedUsername = UUID.randomUUID().toString();
@@ -88,15 +85,15 @@ public abstract class QueryResourceIT<
                 .done();
 
         final Response authorisedResponse = queryClient.getDataSource(authRule.authenticatedUser(authorisedUsername), docRef);
-        assertEquals(HttpStatus.OK_200, authorisedResponse.getStatus());
+        assertThat(authorisedResponse.getStatus()).isEqualTo(HttpStatus.OK_200);
         authorisedResponse.close();
 
         final Response unauthorisedResponse = queryClient.getDataSource(authRule.authenticatedUser(unauthorisedUsername), docRef);
-        assertEquals(HttpStatus.FORBIDDEN_403, unauthorisedResponse.getStatus());
+        assertThat(unauthorisedResponse.getStatus()).isEqualTo(HttpStatus.FORBIDDEN_403);
         unauthorisedResponse.close();
 
         final Response unauthenticatedResponse = queryClient.getDataSource(authRule.unauthenticatedUser(unauthenticatedUsername), docRef);
-        assertEquals(HttpStatus.UNAUTHORIZED_401, unauthenticatedResponse.getStatus());
+        assertThat(unauthenticatedResponse.getStatus()).isEqualTo(HttpStatus.UNAUTHORIZED_401);
         unauthenticatedResponse.close();
 
         // Create index, update, authorised get, unauthorised get
@@ -109,7 +106,7 @@ public abstract class QueryResourceIT<
     }
 
     @Test
-    public void testSearchPermissions() {
+    void testSearchPermissions() {
         final DocRef docRef = createDocument();
 
         final String authorisedUsername = UUID.randomUUID().toString();
@@ -129,15 +126,15 @@ public abstract class QueryResourceIT<
                         .build());
 
         final Response authorisedResponse = queryClient.search(authRule.authenticatedUser(authorisedUsername), searchRequest);
-        assertEquals(HttpStatus.OK_200, authorisedResponse.getStatus());
+        assertThat(authorisedResponse.getStatus()).isEqualTo(HttpStatus.OK_200);
         authorisedResponse.close();
 
         final Response unauthorisedResponse = queryClient.getDataSource(authRule.authenticatedUser(unauthorisedUsername), docRef);
-        assertEquals(HttpStatus.FORBIDDEN_403, unauthorisedResponse.getStatus());
+        assertThat(unauthorisedResponse.getStatus()).isEqualTo(HttpStatus.FORBIDDEN_403);
         unauthorisedResponse.close();
 
         final Response unauthenticatedResponse = queryClient.getDataSource(authRule.unauthenticatedUser(unauthenticatedUsername), docRef);
-        assertEquals(HttpStatus.UNAUTHORIZED_401, unauthenticatedResponse.getStatus());
+        assertThat(unauthenticatedResponse.getStatus()).isEqualTo(HttpStatus.UNAUTHORIZED_401);
         unauthenticatedResponse.close();
 
     }
@@ -167,7 +164,7 @@ public abstract class QueryResourceIT<
                 authRule.adminUser(),
                 docRef.getUuid(),
                 docRef.getName());
-        assertEquals(HttpStatus.OK_200, createResponse.getStatus());
+        assertThat(createResponse.getStatus()).isEqualTo(HttpStatus.OK_200);
         createResponse.close();
 
         // Give admin all the roles required to manipulate the document and it's underlying data
@@ -182,7 +179,7 @@ public abstract class QueryResourceIT<
                 docRefClient.update(authRule.adminUser(),
                         docRef.getUuid(),
                         docRefEntityToUse);
-        assertEquals(HttpStatus.OK_200, updateIndexResponse.getStatus());
+        assertThat(updateIndexResponse.getStatus()).isEqualTo(HttpStatus.OK_200);
         updateIndexResponse.close();
 
         return docRef;
