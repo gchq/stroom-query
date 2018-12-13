@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.1-beta.20] - 2018-12-13
+
 * Issue **gchq/stroom#1015** : Fix problem of stroom-query ignoring visualisation sort settings.
 
 ## [v2.1-beta.19] - 2018-12-11
@@ -224,7 +226,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.1-beta.19...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.1-beta.20...HEAD
+[v2.1-beta.20]: https://github.com/gchq/stroom-query/compare/v2.1-beta.19...v2.1-beta.20
 [v2.1-beta.19]: https://github.com/gchq/stroom-query/compare/v2.1-beta.18...v2.1-beta.19
 [v2.1-beta.18]: https://github.com/gchq/stroom-query/compare/v2.1-beta.17...v2.1-beta.18
 [v2.1-beta.17]: https://github.com/gchq/stroom-query/compare/v2.1-beta.16...v2.1-beta.17
