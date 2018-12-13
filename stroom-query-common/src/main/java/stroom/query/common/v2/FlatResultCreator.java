@@ -16,6 +16,8 @@
 
 package stroom.query.common.v2;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import stroom.dashboard.expression.v1.FieldIndexMap;
 import stroom.dashboard.expression.v1.Generator;
 import stroom.dashboard.expression.v1.Val;
@@ -38,6 +40,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class FlatResultCreator implements ResultCreator {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FlatResultCreator.class);
     private final FieldFormatter fieldFormatter;
     private final List<Mapper> mappers;
     private final List<Field> fields;
@@ -171,6 +174,7 @@ public class FlatResultCreator implements ResultCreator {
                 return resultBuilder.build();
 
             } catch (final RuntimeException e) {
+                LOGGER.error("Error creating result for resultRequest {}", resultRequest.getComponentId(), e);
                 error = e.getMessage();
             }
         }
@@ -192,62 +196,64 @@ public class FlatResultCreator implements ResultCreator {
             }
         }
 
-        for (final Item item : items) {
-            if (rangeChecker.check(count)) {
+        if (items != null) {
+            for (final Item item : items) {
+                if (rangeChecker.check(count)) {
 
-                final List<Object> values = new ArrayList<>(fields.size() + 3);
+                    final List<Object> values = new ArrayList<>(fields.size() + 3);
 
-                if (item.getKey() != null) {
-                    values.add(toNodeKey(groupFields, item.getKey().getParent()));
-                    values.add(toNodeKey(groupFields, item.getKey()));
-                } else {
-                    values.add(null);
-                    values.add(null);
-                }
-                values.add(depth);
+                    if (item.getKey() != null) {
+                        values.add(toNodeKey(groupFields, item.getKey().getParent()));
+                        values.add(toNodeKey(groupFields, item.getKey()));
+                    } else {
+                        values.add(null);
+                        values.add(null);
+                    }
+                    values.add(depth);
 
-                // Convert all list into fully resolved objects evaluating
-                // functions where necessary.
-                int i = 0;
-                for (final Field field : fields) {
-                    final Generator generator = item.getGenerators()[i];
-                    Object value = null;
-                    if (generator != null) {
-                        // Convert all list into fully resolved
-                        // objects evaluating functions where necessary.
-                        final Val val = generator.eval();
-                        if (val != null) {
-                            if (fieldFormatter != null) {
-                                value = fieldFormatter.format(field, val);
-                            } else {
-                                value = convert(field, val);
+                    // Convert all list into fully resolved objects evaluating
+                    // functions where necessary.
+                    int i = 0;
+                    for (final Field field : fields) {
+                        final Generator generator = item.getGenerators()[i];
+                        Object value = null;
+                        if (generator != null) {
+                            // Convert all list into fully resolved
+                            // objects evaluating functions where necessary.
+                            final Val val = generator.eval();
+                            if (val != null) {
+                                if (fieldFormatter != null) {
+                                    value = fieldFormatter.format(field, val);
+                                } else {
+                                    value = convert(field, val);
+                                }
                             }
                         }
+
+                        values.add(value);
+                        i++;
                     }
 
-                    values.add(value);
-                    i++;
-                }
+                    // Add the values.
+                    results.add(values);
+                    resultCountAtThisLevel++;
 
-                // Add the values.
-                results.add(values);
-                resultCountAtThisLevel++;
-
-                // Add child results if a node is open.
-                if (item.getKey() != null && openGroups.isOpen(item.getKey())) {
-                    final Items<Item> childItems = data.getChildMap().get(item.getKey());
-                    if (childItems != null) {
-                        count = addResults(data, rangeChecker, openGroups,
-                                childItems, results, depth + 1, count, maxResults);
+                    // Add child results if a node is open.
+                    if (item.getKey() != null && openGroups.isOpen(item.getKey())) {
+                        final Items<Item> childItems = data.getChildMap().get(item.getKey());
+                        if (childItems != null) {
+                            count = addResults(data, rangeChecker, openGroups,
+                                    childItems, results, depth + 1, count, maxResults);
+                        }
                     }
                 }
-            }
 
-            // Increment the position.
-            count++;
+                // Increment the position.
+                count++;
 
-            if (resultCountAtThisLevel >= maxResultsAtThisDepth) {
-                break;
+                if (resultCountAtThisLevel >= maxResultsAtThisDepth) {
+                    break;
+                }
             }
         }
 
@@ -336,33 +342,36 @@ public class FlatResultCreator implements ResultCreator {
             final Items<Item> items = data.getChildMap().get(null);
 
             int itemCount = 0;
-            for (final Item item : items) {
-                final Generator[] generators = item.getGenerators();
-                final Val[] values = new Val[fieldIndexMap.size()];
-                for (int i = 0; i < generators.length; i++) {
-                    final Generator generator = generators[i];
-                    if (generator != null) {
-                        final int index = fieldIndexMap.get(parentFields[i]);
-                        if (index >= 0) {
-                            values[index] = generator.eval();
+            tablePayloadHandler.clear();
+            if (items != null) {
+                for (final Item item : items) {
+                    final Generator[] generators = item.getGenerators();
+                    final Val[] values = new Val[fieldIndexMap.size()];
+                    for (int i = 0; i < generators.length; i++) {
+                        final Generator generator = generators[i];
+                        if (generator != null) {
+                            final int index = fieldIndexMap.get(parentFields[i]);
+                            if (index >= 0) {
+                                values[index] = generator.eval();
+                            }
                         }
                     }
-                }
 
-                // TODO : Receive Object[] for lazy + nested evaluation.
-                tableCoprocessor.receive(values);
+                    // TODO : Receive Object[] for lazy + nested evaluation.
+                    tableCoprocessor.receive(values);
 
-                // Trim the data to the parent first level result size.
-                itemCount++;
-                if (itemCount >= maxItems) {
-                    break;
+                    // Trim the data to the parent first level result size.
+                    itemCount++;
+                    if (itemCount >= maxItems) {
+                        break;
+                    }
                 }
+                final TablePayload payload = (TablePayload) tableCoprocessor.createPayload();
+
+                tablePayloadHandler.clear();
+                tablePayloadHandler.addQueue(payload.getQueue());
             }
 
-            final TablePayload payload = (TablePayload) tableCoprocessor.createPayload();
-
-            tablePayloadHandler.clear();
-            tablePayloadHandler.addQueue(payload.getQueue());
             return tablePayloadHandler.getData();
         }
     }

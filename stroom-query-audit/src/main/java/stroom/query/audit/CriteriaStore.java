@@ -84,7 +84,7 @@ public class CriteriaStore implements Store {
         resultStoreCreator.read(queue);
 
         // Trim the number of results in the store.
-        resultStoreCreator.trim(storeSize);
+        resultStoreCreator.sortAndTrim(storeSize);
 
         return resultStoreCreator.create(queue.size(), queue.size());
     }

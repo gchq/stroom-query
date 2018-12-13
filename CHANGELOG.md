@@ -233,7 +233,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.1-beta.19...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.1-beta.21...HEAD
+[v2.1-beta.21]: https://github.com/gchq/stroom-query/compare/v2.1-beta.20...v2.1-beta.21
+[v2.1-beta.20]: https://github.com/gchq/stroom-query/compare/v2.1-beta.19...v2.1-beta.20
 [v2.1-beta.19]: https://github.com/gchq/stroom-query/compare/v2.1-beta.18...v2.1-beta.19
 [v2.1-beta.18]: https://github.com/gchq/stroom-query/compare/v2.1-beta.17...v2.1-beta.18
 [v2.1-beta.17]: https://github.com/gchq/stroom-query/compare/v2.1-beta.16...v2.1-beta.17
