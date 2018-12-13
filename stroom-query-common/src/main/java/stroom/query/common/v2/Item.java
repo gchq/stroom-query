@@ -66,7 +66,17 @@ public class Item implements Serializable {
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         for (final Generator value : generators) {
-            sb.append(value.eval().toString());
+            if (value != null) {
+                try {
+                    sb.append(value.eval().toString());
+                } catch (Exception e) {
+                    // if the evaluation of the generator fails record the class of the exception
+                    // so we can see which one has a problem
+                    sb.append(e.getClass().getCanonicalName());
+                }
+            } else {
+                sb.append("null");
+            }
             sb.append("\t");
         }
         if (sb.length() > 0) {
