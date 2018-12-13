@@ -201,7 +201,7 @@ public class TablePayloadHandler implements PayloadHandler {
         resultStoreCreator.read(queue);
 
         // Trim the number of results in the store.
-        resultStoreCreator.trim(storeSize);
+        resultStoreCreator.sortAndTrim(storeSize);
 
         // Put the remaining items into the current queue ready for the next
         // result.

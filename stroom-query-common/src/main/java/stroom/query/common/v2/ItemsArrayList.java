@@ -47,7 +47,7 @@ public class ItemsArrayList<E> implements Items<E> {
     }
 
     @Override
-    public void trim(final int size, final Comparator<E> comparator, final RemoveHandler<E> removeHandler) {
+    public void sortAndTrim(final int size, final Comparator<E> comparator, final RemoveHandler<E> removeHandler) {
         // Sort the list before trimming if we have a comparator.
         sort(comparator);
 
