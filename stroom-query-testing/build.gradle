@@ -16,44 +16,6 @@
 
 ext.moduleName = 'stroom.query.testing'
 
-sourceSets {
-    // This lets us use different directories for our integration tests.
-    integrationTest {
-        java {
-            compileClasspath += main.output + test.output
-            runtimeClasspath += main.output + test.output
-            srcDir file('src/integration-test/java')
-        }
-        resources.srcDir file('src/integration-test/resources')
-    }
-}
-
-configurations {
-    // This means our integration tests get all the dependencies from our tests and we don't need to specify them twice.
-    integrationTestImplementation.extendsFrom testImplementation
-    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
-}
-
-// This task lets us run the actual integration tests.
-task integrationTest(type: Test) {
-    useJUnitPlatform()
-    
-    testClassesDirs = sourceSets.integrationTest.output.classesDirs
-    classpath = sourceSets.integrationTest.runtimeClasspath
-    testLogging {
-        events "standardOut", "started", "passed", "skipped", "failed"
-    }
-}
-
-// These lines pull the integration test task into our build process.
-check.dependsOn integrationTest
-integrationTest.mustRunAfter test
-
-// This means the reports from our integration tests won't over-write the reports from our unit tests.
-tasks.withType(Test) {
-    reports.html.destination = file("${reporting.baseDir}/${name}")
-}
-
 dependencies {
     //--------Project----------
     implementation project(':stroom-docref')
@@ -63,7 +25,9 @@ dependencies {
 
     //--------3rd party--------
     implementation libs.assertj_core
+    implementation libs.dropwizard_auth
     implementation libs.dropwizard_core
+    implementation libs.dropwizard_jersey
     implementation libs.dropwizard_testing
     implementation libs.guice
     implementation libs.google_findbugs
@@ -74,22 +38,22 @@ dependencies {
     implementation libs.jetty_http
     implementation libs.junit_jupiter_api
     implementation libs.jose4j
+    implementation libs.mockito_core
     implementation libs.slf4j_api
     implementation libs.wiremock
-    implementation libs.mockito_core
-    
-    integrationTestImplementation libs.test_containers
-    integrationTestImplementation libs.test_containers_psql
-    integrationTestImplementation libs.assertj_core
-    integrationTestImplementation libs.dropwizard_auth
-    integrationTestImplementation libs.dropwizard_flyway
-    integrationTestImplementation libs.jackson_annotations
-    integrationTestCompileOnly libs.junit_jupiter_api
-    integrationTestImplementation project(':stroom-query-hibernate')
-    integrationTestImplementation project(':stroom-query-jooq')
-    integrationTestRuntimeOnly libs.mariadb_connector
-    integrationTestRuntimeOnly 'org.apache.derby:derby:10.8.2.2'
 
-    integrationTestRuntimeOnly libs.junit_jupiter_engine
-    integrationTestRuntimeOnly libs.jaxb_runtime
+    //testCompile libs.test_containers
+    //testCompile libs.test_containers_psql
+    testCompile libs.assertj_core
+    testCompile libs.dropwizard_flyway
+    testCompile libs.jackson_annotations
+    testCompileOnly libs.junit_jupiter_api
+    testCompile project(':stroom-query-hibernate')
+    testCompile project(':stroom-query-jooq')
+    testRuntime libs.mariadb_connector
+    testRuntime 'org.apache.derby:derby:10.8.2.2'
+    
+    testRuntimeOnly libs.junit_jupiter_engine
+    testRuntimeOnly libs.jaxb_runtime
+    testRuntimeOnly libs.javax_transaction
 }

@@ -1,6 +1,6 @@
 package stroom.query.common.v2;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -42,7 +42,7 @@ class TestSearchResponseCreator {
     @Captor
     private ArgumentCaptor<CompletionListener> completionListenerCaptor;
 
-    @BeforeAll
+    @BeforeEach
     public void setup() {
         //default mock behaviour
         Mockito.when(mockStore.getErrors()).thenReturn(Collections.emptyList());

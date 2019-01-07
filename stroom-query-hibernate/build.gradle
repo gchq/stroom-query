@@ -33,9 +33,9 @@ dependencies {
     implementation libs.dropwizard_db
     implementation libs.dropwizard_flyway
     implementation libs.flyway_core
+    implementation libs.guice
     implementation libs.hibernate_core
     implementation libs.hibernate_jpa
-    implementation libs.guice
     implementation libs.javax_inject
     implementation libs.jaxb_api
     implementation libs.slf4j_api
