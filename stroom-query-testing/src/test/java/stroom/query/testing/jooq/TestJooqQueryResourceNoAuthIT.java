@@ -11,6 +11,8 @@ import stroom.query.api.v2.*;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.security.NoAuthValueFactoryProvider;
+import stroom.query.testing.DatabaseContainerExtension;
+import stroom.query.testing.DatabaseContainerExtensionSupport;
 import stroom.query.testing.DropwizardAppExtensionWithClients;
 import stroom.query.testing.QueryResourceNoAuthIT;
 import stroom.query.testing.data.CreateTestDataClient;
@@ -27,8 +29,12 @@ import java.util.stream.Collectors;
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ExtendWith(DatabaseContainerExtensionSupport.class)
 @ExtendWith(DropwizardExtensionsSupport.class)
 class TestJooqQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDocRefJooqEntity, JooqConfig> {
+
+    private static final DatabaseContainerExtension dbRule = new DatabaseContainerExtension();
+
     private static final DropwizardAppExtensionWithClients<JooqConfig> appRule =
             new DropwizardAppExtensionWithClients<>(JooqApp.class, resourceFilePath("jooq_noauth/config.yml"));
 

@@ -13,10 +13,7 @@ import stroom.query.audit.model.DocRefEntity;
 import stroom.query.audit.rest.AuditedDocRefResourceImpl;
 import stroom.query.audit.service.QueryApiException;
 import stroom.query.authorisation.DocumentPermission;
-import stroom.query.testing.DropwizardAppExtensionWithClients;
-import stroom.query.testing.QueryRemoteServiceIT;
-import stroom.query.testing.StroomAuthenticationExtension;
-import stroom.query.testing.StroomAuthenticationExtensionSupport;
+import stroom.query.testing.*;
 import stroom.query.testing.data.CreateTestDataClient;
 import stroom.query.testing.jooq.app.*;
 
@@ -32,9 +29,13 @@ import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
+@ExtendWith(DatabaseContainerExtensionSupport.class)
 @ExtendWith(DropwizardExtensionsSupport.class)
 @ExtendWith(StroomAuthenticationExtensionSupport.class)
 class TestJooqQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRefJooqEntity, JooqConfig> {
+
+    private static final DatabaseContainerExtension dbRule = new DatabaseContainerExtension();
+
     private static StroomAuthenticationExtension authRule =
             new StroomAuthenticationExtension();
 

@@ -39,19 +39,19 @@ dependencies {
     compile libs.slf4j_api
     compile libs.wiremock
     compile libs.mockito_core
+    compile libs.test_containers
+    compile libs.test_containers_mysql
 
     compile libs.dropwizard_testing
 
-    //testCompile libs.test_containers
-    //testCompile libs.test_containers_psql
+    testCompile project(':stroom-query-hibernate')
+    testCompile project(':stroom-query-jooq')
+    
     testCompile libs.assertj_core
     testCompile libs.dropwizard_flyway
     testCompile libs.jackson_annotations
     testCompileOnly libs.junit_jupiter_api
-    testCompile project(':stroom-query-hibernate')
-    testCompile project(':stroom-query-jooq')
-    testRuntime libs.mariadb_connector
-    testRuntime 'org.apache.derby:derby:10.8.2.2'
+    testRuntime libs.mysql_connector
 
     testRuntimeOnly libs.junit_jupiter_engine
     

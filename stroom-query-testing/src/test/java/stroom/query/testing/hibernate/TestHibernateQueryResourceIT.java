@@ -8,10 +8,7 @@ import stroom.datasource.api.v2.DataSourceField;
 import stroom.docref.DocRef;
 import stroom.query.api.v2.*;
 import stroom.query.audit.model.DocRefEntity;
-import stroom.query.testing.DropwizardAppExtensionWithClients;
-import stroom.query.testing.QueryResourceIT;
-import stroom.query.testing.StroomAuthenticationExtension;
-import stroom.query.testing.StroomAuthenticationExtensionSupport;
+import stroom.query.testing.*;
 import stroom.query.testing.hibernate.app.HibernateApp;
 import stroom.query.testing.hibernate.app.HibernateConfig;
 import stroom.query.testing.hibernate.app.TestDocRefHibernateEntity;
@@ -24,9 +21,12 @@ import java.util.stream.Collectors;
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ExtendWith(DatabaseContainerExtensionSupport.class)
 @ExtendWith(DropwizardExtensionsSupport.class)
 @ExtendWith(StroomAuthenticationExtensionSupport.class)
 class TestHibernateQueryResourceIT extends QueryResourceIT<TestDocRefHibernateEntity, HibernateConfig> {
+
+    private static final DatabaseContainerExtension dbRule = new DatabaseContainerExtension();
     private static StroomAuthenticationExtension authRule =
             new StroomAuthenticationExtension();
 

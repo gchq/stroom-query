@@ -3,6 +3,8 @@ package stroom.query.testing.hibernate;
 
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import org.junit.jupiter.api.extension.ExtendWith;
+import stroom.query.testing.DatabaseContainerExtension;
+import stroom.query.testing.DatabaseContainerExtensionSupport;
 import stroom.query.testing.DocRefResourceNoAuthIT;
 import stroom.query.testing.DropwizardAppExtensionWithClients;
 import stroom.query.testing.hibernate.app.HibernateApp;
@@ -15,8 +17,11 @@ import java.util.UUID;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 
+@ExtendWith(DatabaseContainerExtensionSupport.class)
 @ExtendWith(DropwizardExtensionsSupport.class)
 class TestHibernateDocRefResourceNoAuthIT extends DocRefResourceNoAuthIT<TestDocRefHibernateEntity, HibernateConfig> {
+
+    private static final DatabaseContainerExtension dbRule = new DatabaseContainerExtension();
     private static final DropwizardAppExtensionWithClients<HibernateConfig> appRule =
             new DropwizardAppExtensionWithClients<>(HibernateApp.class, resourceFilePath("hibernate_noauth/config.yml"));
 

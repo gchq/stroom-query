@@ -3,6 +3,8 @@ package stroom.query.testing.jooq;
 
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import org.junit.jupiter.api.extension.ExtendWith;
+import stroom.query.testing.DatabaseContainerExtension;
+import stroom.query.testing.DatabaseContainerExtensionSupport;
 import stroom.query.testing.DocRefResourceNoAuthIT;
 import stroom.query.testing.DropwizardAppExtensionWithClients;
 import stroom.query.testing.jooq.app.JooqApp;
@@ -15,8 +17,12 @@ import java.util.UUID;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 
+@ExtendWith(DatabaseContainerExtensionSupport.class)
 @ExtendWith(DropwizardExtensionsSupport.class)
 class TestJooqDocRefResourceNoAuthIT extends DocRefResourceNoAuthIT<TestDocRefJooqEntity, JooqConfig> {
+
+    private static final DatabaseContainerExtension dbRule = new DatabaseContainerExtension();
+
     private static final DropwizardAppExtensionWithClients<JooqConfig> appRule =
             new DropwizardAppExtensionWithClients<>(JooqApp.class, resourceFilePath("jooq_noauth/config.yml"));
 

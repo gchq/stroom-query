@@ -24,8 +24,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static stroom.query.testing.FifoLogbackExtension.containsAllOf;
 
 @ExtendWith(FifoLogbackExtensionSupport.class)
-@ExtendWith(DropwizardAppExtensionWithClientsSupport.class)
-@ExtendWith(StroomAuthenticationExtensionSupport.class)
 public abstract class QueryRemoteServiceIT<
         DOC_REF_ENTITY extends DocRefEntity,
         CONFIG_CLASS extends Configuration> {
