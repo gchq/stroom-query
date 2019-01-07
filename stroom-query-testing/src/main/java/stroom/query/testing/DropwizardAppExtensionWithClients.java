@@ -39,34 +39,10 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class DropwizardAppExtensionWithClients<C extends Configuration> extends DropwizardAppExtension<C> {
     private final List<Closeable> clients = new ArrayList<>();
 
-//    public DropwizardAppExtensionWithClients(final Class<? extends Application<C>> applicationClass) {
-//        super(applicationClass, (String) null);
-//    }
-
     public DropwizardAppExtensionWithClients(final Class<? extends Application<C>> applicationClass,
                                              final @Nullable String configPath,
                                              final ConfigOverride... configOverrides) {
         super(applicationClass, configPath, Optional.empty(), configOverrides);
-    }
-
-//    public DropwizardAppExtensionWithClients(final Class<? extends Application<C>> applicationClass,
-//                                             final String configPath,
-//                                             final Optional<String> customPropertyPrefix,
-//                                             final ConfigOverride... configOverrides) {
-//        super(applicationClass, configPath, customPropertyPrefix, ServerCommand::new, configOverrides);
-//    }
-//
-//    public DropwizardAppExtensionWithClients(final Class<? extends Application<C>> applicationClass,
-//                                             final String configPath,
-//                                             final Optional<String> customPropertyPrefix,
-//                                             final Function<Application<C>, Command> commandInstantiator,
-//                                             final ConfigOverride... configOverrides) {
-//        super(new DropwizardTestSupport<>(applicationClass, configPath, customPropertyPrefix, commandInstantiator,
-//                configOverrides));
-//    }
-
-    public DropwizardAppExtensionWithClients(Class<? extends Application<C>> applicationClass, C configuration) {
-        super(applicationClass, configuration);
     }
 
     @Override

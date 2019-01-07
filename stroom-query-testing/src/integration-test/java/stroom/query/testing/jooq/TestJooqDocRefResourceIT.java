@@ -18,8 +18,6 @@ import java.util.UUID;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 
-@ExtendWith(DropwizardExtensionsSupport.class)
-@ExtendWith(StroomAuthenticationExtensionSupport.class)
 class TestJooqDocRefResourceIT extends DocRefResourceIT<TestDocRefJooqEntity, JooqConfig> {
     private static StroomAuthenticationExtension authRule = new StroomAuthenticationExtension();
 

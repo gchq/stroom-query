@@ -19,8 +19,6 @@ import java.util.UUID;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 
-@ExtendWith(DropwizardExtensionsSupport.class)
-@ExtendWith(StroomAuthenticationExtensionSupport.class)
 class TestDocRefResourceIT extends DocRefResourceIT<TestDocRefEntity, Config> {
     private static StroomAuthenticationExtension authRule = new StroomAuthenticationExtension();
 

@@ -88,4 +88,5 @@ dependencies {
     integrationTestRuntime 'org.apache.derby:derby:10.8.2.2'
 
     integrationTestRuntimeOnly libs.junit_jupiter_engine
+    integrationTestRuntimeOnly libs.jaxb_runtime
 }
