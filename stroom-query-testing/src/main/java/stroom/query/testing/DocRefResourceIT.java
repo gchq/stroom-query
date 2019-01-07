@@ -19,20 +19,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static stroom.query.testing.FifoLogbackExtension.containsAllOf;
 
 @ExtendWith(FifoLogbackExtensionSupport.class)
+@ExtendWith(StroomAuthenticationExtensionSupport.class)
 public abstract class DocRefResourceIT<
         DOC_REF_ENTITY extends DocRefEntity,
         CONFIG_CLASS extends Configuration> {
 
     private final String docRefType;
     private final Class<DOC_REF_ENTITY> docRefEntityClass;
-    private final StroomAuthenticationRule authRule;
+    private final StroomAuthenticationExtension authRule;
     protected FifoLogbackExtension auditLogRule = new FifoLogbackExtension();
     private DocRefResourceHttpClient<DOC_REF_ENTITY> docRefClient;
 
     protected DocRefResourceIT(final String docRefType,
                                final Class<DOC_REF_ENTITY> docRefEntityClass,
                                final DropwizardAppExtensionWithClients<CONFIG_CLASS> appRule,
-                               final StroomAuthenticationRule authRule) {
+                               final StroomAuthenticationExtension authRule) {
         this.docRefType = docRefType;
         this.docRefEntityClass = docRefEntityClass;
         this.authRule = authRule;

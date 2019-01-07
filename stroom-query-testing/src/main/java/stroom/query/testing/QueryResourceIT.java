@@ -3,6 +3,7 @@ package stroom.query.testing;
 import io.dropwizard.Configuration;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.datasource.api.v2.DataSource;
 import stroom.docref.DocRef;
 import stroom.query.api.v2.ExpressionOperator;
@@ -26,14 +27,14 @@ public abstract class QueryResourceIT<
         CONFIG_CLASS extends Configuration> {
 
     private final String docRefType;
-    private final StroomAuthenticationRule authRule;
+    private final StroomAuthenticationExtension authRule;
     public FifoLogbackExtension auditLogRule = new FifoLogbackExtension();
     protected DocRefResourceHttpClient<DOC_REF_ENTITY> docRefClient;
     protected QueryResourceHttpClient queryClient;
 
     protected QueryResourceIT(final String docRefType,
                               final DropwizardAppExtensionWithClients<CONFIG_CLASS> appRule,
-                              final StroomAuthenticationRule authRule) {
+                              final StroomAuthenticationExtension authRule) {
         this.docRefType = docRefType;
         this.authRule = authRule;
         this.queryClient = appRule.getClient(QueryResourceHttpClient::new);

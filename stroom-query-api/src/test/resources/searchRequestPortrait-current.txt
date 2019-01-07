@@ -63,22 +63,6 @@ class stroom.query.api.v2.DateTimeFormat - public int stroom.query.api.v2.DateTi
 class stroom.query.api.v2.DateTimeFormat - public java.lang.String stroom.query.api.v2.DateTimeFormat.getPattern()
 class stroom.query.api.v2.DateTimeFormat - public java.lang.String stroom.query.api.v2.DateTimeFormat.toString()
 class stroom.query.api.v2.DateTimeFormat - public stroom.query.api.v2.TimeZone stroom.query.api.v2.DateTimeFormat.getTimeZone()
-class stroom.docref.DocRef - public boolean stroom.docref.DocRef.equals(java.lang.Object)
-class stroom.docref.DocRef - public final native java.lang.Class<?> java.lang.Object.getClass()
-class stroom.docref.DocRef - public final native void java.lang.Object.notify()
-class stroom.docref.DocRef - public final native void java.lang.Object.notifyAll()
-class stroom.docref.DocRef - public final native void java.lang.Object.wait(long) throws java.lang.InterruptedException
-class stroom.docref.DocRef - public final void java.lang.Object.wait() throws java.lang.InterruptedException
-class stroom.docref.DocRef - public final void java.lang.Object.wait(long,int) throws java.lang.InterruptedException
-class stroom.docref.DocRef - public int stroom.docref.DocRef.compareTo(java.lang.Object)
-class stroom.docref.DocRef - public int stroom.docref.DocRef.compareTo(stroom.docref.DocRef)
-class stroom.docref.DocRef - public int stroom.docref.DocRef.hashCode()
-class stroom.docref.DocRef - public java.lang.String stroom.docref.DocRef.getDisplayValue()
-class stroom.docref.DocRef - public java.lang.String stroom.docref.DocRef.getName()
-class stroom.docref.DocRef - public java.lang.String stroom.docref.DocRef.getType()
-class stroom.docref.DocRef - public java.lang.String stroom.docref.DocRef.getUuid()
-class stroom.docref.DocRef - public java.lang.String stroom.docref.DocRef.toInfoString()
-class stroom.docref.DocRef - public java.lang.String stroom.docref.DocRef.toString()
 class stroom.query.api.v2.ExpressionItem - public boolean stroom.query.api.v2.ExpressionItem.enabled()
 class stroom.query.api.v2.ExpressionItem - public boolean stroom.query.api.v2.ExpressionItem.equals(java.lang.Object)
 class stroom.query.api.v2.ExpressionItem - public final native java.lang.Class<?> java.lang.Object.getClass()

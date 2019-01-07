@@ -2,8 +2,6 @@ package stroom.query.testing.hibernate;
 
 
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
@@ -18,7 +16,8 @@ import stroom.query.api.v2.TableSettings;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.testing.DropwizardAppExtensionWithClients;
 import stroom.query.testing.QueryRemoteServiceIT;
-import stroom.query.testing.StroomAuthenticationRule;
+import stroom.query.testing.StroomAuthenticationExtension;
+import stroom.query.testing.StroomAuthenticationExtensionSupport;
 import stroom.query.testing.hibernate.app.HibernateApp;
 import stroom.query.testing.hibernate.app.HibernateConfig;
 import stroom.query.testing.hibernate.app.TestDocRefHibernateEntity;
@@ -32,8 +31,9 @@ import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(DropwizardExtensionsSupport.class)
+@ExtendWith(StroomAuthenticationExtensionSupport.class)
 class TestHibernateQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRefHibernateEntity, HibernateConfig> {
-    private static StroomAuthenticationRule authRule = new StroomAuthenticationRule();
+    private static StroomAuthenticationExtension authRule = new StroomAuthenticationExtension();
 
     private static final DropwizardAppExtensionWithClients<HibernateConfig> appRule =
             new DropwizardAppExtensionWithClients<>(HibernateApp.class,
@@ -46,18 +46,6 @@ class TestHibernateQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRefH
                 TestDocRefHibernateEntity.class,
                 appRule,
                 authRule);
-    }
-
-    @BeforeAll
-    static void beforeAll() {
-        authRule.start();
-        authRule.before();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        authRule.after();
-        authRule.stop();
     }
 
     @Override

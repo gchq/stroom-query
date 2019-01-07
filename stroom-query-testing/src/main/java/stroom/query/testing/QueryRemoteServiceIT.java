@@ -24,12 +24,13 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static stroom.query.testing.FifoLogbackExtension.containsAllOf;
 
 @ExtendWith(FifoLogbackExtensionSupport.class)
+@ExtendWith(StroomAuthenticationExtensionSupport.class)
 public abstract class QueryRemoteServiceIT<
         DOC_REF_ENTITY extends DocRefEntity,
         CONFIG_CLASS extends Configuration> {
 
     private final String docRefType;
-    private final StroomAuthenticationRule authRule;
+    private final StroomAuthenticationExtension authRule;
     protected FifoLogbackExtension auditLogRule = new FifoLogbackExtension();
     protected DocRefServiceHttpClient<DOC_REF_ENTITY> docRefClient;
     protected QueryServiceHttpClient queryClient;
@@ -37,7 +38,7 @@ public abstract class QueryRemoteServiceIT<
     protected QueryRemoteServiceIT(final String docRefType,
                                    final Class<DOC_REF_ENTITY> docRefEntityClass,
                                    final DropwizardAppExtensionWithClients<CONFIG_CLASS> appRule,
-                                   final StroomAuthenticationRule authRule) {
+                                   final StroomAuthenticationExtension authRule) {
         this.docRefType = docRefType;
         this.authRule = authRule;
         this.queryClient = appRule.getClient(url -> new QueryServiceHttpClient(docRefType, url));

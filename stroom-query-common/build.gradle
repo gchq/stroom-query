@@ -34,6 +34,8 @@ dependencies {
 
     //--------testing----------
     testCompile libs.assertj_core
-    testCompile libs.junit_jupiter_api
+    testCompileOnly libs.junit_jupiter_api
     testCompile libs.mockito_core
+
+    testRuntimeOnly libs.junit_jupiter_engine
 }

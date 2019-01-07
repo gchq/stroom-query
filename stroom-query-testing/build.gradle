@@ -36,7 +36,9 @@ configurations {
 
 // This task lets us run the actual integration tests.
 task integrationTest(type: Test) {
-    testClassesDir = sourceSets.integrationTest.output.classesDir
+    useJUnitPlatform()
+    
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
     classpath = sourceSets.integrationTest.runtimeClasspath
     testLogging {
         events "standardOut", "started", "passed", "skipped", "failed"
@@ -79,9 +81,11 @@ dependencies {
     integrationTestCompile libs.assertj_core
     integrationTestCompile libs.dropwizard_flyway
     integrationTestCompile libs.jackson_annotations
-    integrationTestCompile libs.junit_jupiter_api
+    integrationTestCompileOnly libs.junit_jupiter_api
     integrationTestCompile project(':stroom-query-hibernate')
     integrationTestCompile project(':stroom-query-jooq')
     integrationTestRuntime libs.mariadb_connector
     integrationTestRuntime 'org.apache.derby:derby:10.8.2.2'
+
+    integrationTestRuntimeOnly libs.junit_jupiter_engine
 }

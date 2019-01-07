@@ -2,8 +2,6 @@ package stroom.query.testing.jooq;
 
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import org.eclipse.jetty.http.HttpStatus;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,7 +25,8 @@ import stroom.query.audit.service.QueryApiException;
 import stroom.query.authorisation.DocumentPermission;
 import stroom.query.testing.DropwizardAppExtensionWithClients;
 import stroom.query.testing.QueryRemoteServiceIT;
-import stroom.query.testing.StroomAuthenticationRule;
+import stroom.query.testing.StroomAuthenticationExtension;
+import stroom.query.testing.StroomAuthenticationExtensionSupport;
 import stroom.query.testing.data.CreateTestDataClient;
 import stroom.query.testing.jooq.app.CreateTestDataJooqImpl;
 import stroom.query.testing.jooq.app.JooqApp;
@@ -48,9 +47,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 @ExtendWith(DropwizardExtensionsSupport.class)
+@ExtendWith(StroomAuthenticationExtensionSupport.class)
 class TestJooqQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRefJooqEntity, JooqConfig> {
-    private static StroomAuthenticationRule authRule =
-            new StroomAuthenticationRule();
+    private static StroomAuthenticationExtension authRule =
+            new StroomAuthenticationExtension();
 
     private static final DropwizardAppExtensionWithClients<JooqConfig> appRule =
             new DropwizardAppExtensionWithClients<>(JooqApp.class,
@@ -69,18 +69,6 @@ class TestJooqQueryRemoteServiceIT extends QueryRemoteServiceIT<TestDocRefJooqEn
                 appRule,
                 authRule);
         testDataClient = appRule.getClient(CreateTestDataClient::new);
-    }
-
-    @BeforeAll
-    static void beforeAll() {
-        authRule.start();
-        authRule.before();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        authRule.after();
-        authRule.stop();
     }
 
     @BeforeEach

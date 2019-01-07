@@ -2,8 +2,6 @@ package stroom.query.testing.generic;
 
 
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
@@ -17,7 +15,8 @@ import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.testing.DropwizardAppExtensionWithClients;
 import stroom.query.testing.QueryResourceIT;
-import stroom.query.testing.StroomAuthenticationRule;
+import stroom.query.testing.StroomAuthenticationExtension;
+import stroom.query.testing.StroomAuthenticationExtensionSupport;
 import stroom.query.testing.generic.app.App;
 import stroom.query.testing.generic.app.Config;
 import stroom.query.testing.generic.app.TestDocRefEntity;
@@ -30,9 +29,10 @@ import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(DropwizardExtensionsSupport.class)
+@ExtendWith(StroomAuthenticationExtensionSupport.class)
 class TestQueryResourceIT extends QueryResourceIT<TestDocRefEntity, Config> {
-    private static StroomAuthenticationRule authRule =
-            new StroomAuthenticationRule();
+    private static StroomAuthenticationExtension authRule =
+            new StroomAuthenticationExtension();
 
     private static final DropwizardAppExtensionWithClients<Config> appRule =
             new DropwizardAppExtensionWithClients<>(App.class,
@@ -45,18 +45,6 @@ class TestQueryResourceIT extends QueryResourceIT<TestDocRefEntity, Config> {
                 appRule,
                 authRule);
 
-    }
-
-    @BeforeAll
-    static void beforeAll() {
-        authRule.start();
-        authRule.before();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        authRule.after();
-        authRule.stop();
     }
 
     @Override

@@ -1,8 +1,25 @@
+/*
+ * Copyright 2019 Crown Copyright
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package stroom.query.testing;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import io.dropwizard.testing.ConfigOverride;
 import org.eclipse.jetty.http.HttpStatus;
 import org.jose4j.jwk.JsonWebKey;
@@ -41,17 +58,16 @@ import static org.junit.jupiter.api.Assertions.fail;
  * It provides methods for getting authenticated and unauthenticated users, it also gives tests the ability
  * to grant permissions to specific users.
  */
-public class StroomAuthenticationRule extends WireMockClassRule {
-    private static final Logger LOGGER = LoggerFactory.getLogger(StroomAuthenticationRule.class);
-    private static final com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper
-            = new com.fasterxml.jackson.databind.ObjectMapper();
+public class StroomAuthenticationExtension extends WireMockServer {
+    private static final Logger LOGGER = LoggerFactory.getLogger(StroomAuthenticationExtension.class);
+    private static final com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper = new com.fasterxml.jackson.databind.ObjectMapper();
     private final String ADMIN_USER = UUID.randomUUID().toString();
     private final ConcurrentHashMap<String, ServiceUser> authenticatedUsers = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, ServiceUser> unauthenticatedUsers = new ConcurrentHashMap<>();
     private RsaJsonWebKey jwk;
     private RsaJsonWebKey invalidJwk;
 
-    public StroomAuthenticationRule() {
+    public StroomAuthenticationExtension() {
         super(WireMockConfiguration.options().dynamicPort());
     }
 
@@ -61,6 +77,8 @@ public class StroomAuthenticationRule extends WireMockClassRule {
      * @return The Config Override for the Auth Service Token URL
      */
     public ConfigOverride authToken() {
+        beforeAll();
+
         return ConfigOverride.config("token.publicKeyUrl",
                 () -> String.format("http://localhost:%d/testAuthService/publicKey", this.port()));
     }
@@ -71,14 +89,43 @@ public class StroomAuthenticationRule extends WireMockClassRule {
      * @return The Config override for the authorisation service URL.
      */
     public ConfigOverride authService() {
+        beforeAll();
+
         return ConfigOverride.config("authorisationService.url",
                 () -> String.format("http://localhost:%d/api/authorisation/v1", this.port()));
     }
 
-    @Override
-    public void before() {
-        super.before();
+    void beforeAll() {
+        if (!isRunning()) {
+            start();
+        }
+    }
 
+    void beforeEach() {
+        if (isRunning()) {
+            before();
+        } else {
+            WireMock.configureFor("localhost", port());
+            before();
+        }
+    }
+
+    void afterAll() {
+        if (isRunning()) {
+            stop();
+        }
+    }
+
+    void afterEach() {
+        if (isRunning()) {
+            after();
+            client.resetMappings();
+        } else {
+            after();
+        }
+    }
+
+    private void before() {
         LOGGER.info("Setting Up Stroom Auth with Wiremock");
 
         //
@@ -122,10 +169,7 @@ public class StroomAuthenticationRule extends WireMockClassRule {
                         .withStatus(HttpStatus.UNAUTHORIZED_401)));
     }
 
-    @Override
-    public void after() {
-        super.after();
-
+    private void after() {
         authenticatedUsers.clear();
         unauthenticatedUsers.clear();
     }
@@ -253,7 +297,7 @@ public class StroomAuthenticationRule extends WireMockClassRule {
         }
 
         public PermissionBuilder andAuthenticatedUser(final String username) {
-            return andUser(StroomAuthenticationRule.this.authenticatedUser(username));
+            return andUser(StroomAuthenticationExtension.this.authenticatedUser(username));
         }
 
         public PermissionBuilder andUser(final ServiceUser serviceUser) {
@@ -294,7 +338,7 @@ public class StroomAuthenticationRule extends WireMockClassRule {
             serviceUsers.forEach(serviceUser ->
                     docRefs.forEach(docRef ->
                             permissionNames.forEach(permissionName ->
-                                    StroomAuthenticationRule.this.givePermission(serviceUser, docRef, permissionName)
+                                    StroomAuthenticationExtension.this.givePermission(serviceUser, docRef, permissionName)
                             )
                     )
             );
