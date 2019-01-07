@@ -115,7 +115,7 @@ ext.libs = [
         slf4j_api           : "org.slf4j:slf4j-api:$versions.slf4j",
         swagger_annotations : "io.swagger:swagger-annotations:$versions.swagger",
         test_containers     : "org.testcontainers:testcontainers:1.8.0",
-        test_containers_psql: "org.testcontainers:postgresql :1.8.0",
+        test_containers_psql: "org.testcontainers:postgresql:1.8.0",
         ws_rs_api           : "javax.ws.rs:javax.ws.rs-api:2.0.1",
         wiremock            : 'com.github.tomakehurst:wiremock:2.14.0',
         zzDUMMYzz           : "makes sorting easier"
