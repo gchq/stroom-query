@@ -1,6 +1,7 @@
 package stroom.query.testing;
 
 import io.dropwizard.Configuration;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.query.api.v2.DocRefInfo;
@@ -22,12 +23,15 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static stroom.query.testing.FifoLogbackExtension.containsAllOf;
 
 @ExtendWith(FifoLogbackExtensionSupport.class)
+@ExtendWith(DropwizardAppExtensionWithClientsSupport.class)
 @ExtendWith(StroomAuthenticationExtensionSupport.class)
 public abstract class DocRefRemoteServiceIT<
         DOC_REF_ENTITY extends DocRefEntity,
         CONFIG_CLASS extends Configuration> {
 
     private final String docRefType;
+    private final Class<DOC_REF_ENTITY> docRefEntityClass;
+    private final DropwizardAppExtensionWithClients<CONFIG_CLASS> appRule;
     private final StroomAuthenticationExtension authRule;
     protected FifoLogbackExtension auditLogRule = new FifoLogbackExtension();
     private DocRefServiceHttpClient<DOC_REF_ENTITY> docRefClient;
@@ -37,8 +41,14 @@ public abstract class DocRefRemoteServiceIT<
                                     final DropwizardAppExtensionWithClients<CONFIG_CLASS> appRule,
                                     final StroomAuthenticationExtension authRule) {
         this.docRefType = docRefType;
+        this.docRefEntityClass = docRefEntityClass;
+        this.appRule = appRule;
         this.authRule = authRule;
-        this.docRefClient = appRule.getClient(u -> new DocRefServiceHttpClient<>(docRefType, docRefEntityClass, u));
+    }
+
+    @BeforeEach
+    void beforeEach() {
+        docRefClient = appRule.getClient(u -> new DocRefServiceHttpClient<>(docRefType, docRefEntityClass, u));
     }
 
     @Test
@@ -120,7 +130,7 @@ public abstract class DocRefRemoteServiceIT<
         assertThatThrownBy(() -> docRefClient.update(
                 authRule.unauthenticatedUser(unauthenticatedUsername),
                 uuid,
-                unauthenticatedEntityUpdate)).isInstanceOf(UnauthorisedException.class);
+                unauthenticatedEntityUpdate)).isInstanceOf(UnauthenticatedException.class);
 
         // Check it is still in the state from the authorised update
         final DOC_REF_ENTITY checkEntity = docRefClient.get(authRule.authenticatedUser(authorisedUsername), uuid)

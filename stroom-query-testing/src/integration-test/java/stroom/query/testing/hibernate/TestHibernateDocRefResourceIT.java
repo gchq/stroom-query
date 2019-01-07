@@ -1,7 +1,6 @@
 package stroom.query.testing.hibernate;
 
 
-import org.junit.jupiter.api.BeforeEach;
 import stroom.query.testing.DocRefResourceIT;
 import stroom.query.testing.DropwizardAppExtensionWithClients;
 import stroom.query.testing.StroomAuthenticationExtension;
@@ -43,10 +42,5 @@ class TestHibernateDocRefResourceIT extends DocRefResourceIT<TestDocRefHibernate
         final Map<String, String> values = new HashMap<>();
         values.put(TestDocRefHibernateEntity.CLAN_NAME, docRefEntity.getClanName());
         return values;
-    }
-
-    @BeforeEach
-    public void beforeTest() {
-        // TestDocRefServiceImpl.eraseAllData();
     }
 }

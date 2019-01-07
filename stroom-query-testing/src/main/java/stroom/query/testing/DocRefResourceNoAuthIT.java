@@ -2,6 +2,7 @@ package stroom.query.testing;
 
 import io.dropwizard.Configuration;
 import org.eclipse.jetty.http.HttpStatus;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.query.api.v2.DocRefInfo;
@@ -19,18 +20,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static stroom.query.testing.FifoLogbackExtension.containsAllOf;
 
 @ExtendWith(FifoLogbackExtensionSupport.class)
+@ExtendWith(DropwizardAppExtensionWithClientsSupport.class)
 public abstract class DocRefResourceNoAuthIT<
         DOC_REF_ENTITY extends DocRefEntity,
         CONFIG_CLASS extends Configuration> {
 
     private final Class<DOC_REF_ENTITY> docRefEntityClass;
+    private final DropwizardAppExtensionWithClients<CONFIG_CLASS> appRule;
     protected FifoLogbackExtension auditLogRule = new FifoLogbackExtension();
     private DocRefResourceHttpClient<DOC_REF_ENTITY> docRefClient;
 
     protected DocRefResourceNoAuthIT(final Class<DOC_REF_ENTITY> docRefEntityClass,
                                      final DropwizardAppExtensionWithClients<CONFIG_CLASS> appRule) {
         this.docRefEntityClass = docRefEntityClass;
-        this.docRefClient = appRule.getClient(DocRefResourceHttpClient::new);
+        this.appRule = appRule;
+    }
+
+    @BeforeEach
+    void beforeEach() {
+        docRefClient = appRule.getClient(DocRefResourceHttpClient::new);
     }
 
     @Test

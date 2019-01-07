@@ -2,6 +2,8 @@ package stroom.query.testing;
 
 import io.dropwizard.Configuration;
 import org.eclipse.jetty.http.HttpStatus;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.datasource.api.v2.DataSource;
@@ -23,11 +25,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static stroom.query.testing.FifoLogbackExtension.containsAllOf;
 
 @ExtendWith(FifoLogbackExtensionSupport.class)
+@ExtendWith(DropwizardAppExtensionWithClientsSupport.class)
 public abstract class QueryResourceNoAuthIT<
         DOC_REF_ENTITY extends DocRefEntity,
         CONFIG_CLASS extends Configuration> {
 
     private final String docRefType;
+    private final DropwizardAppExtensionWithClients<CONFIG_CLASS> appRule;
     protected FifoLogbackExtension auditLogRule = new FifoLogbackExtension();
     protected DocRefResourceHttpClient<DOC_REF_ENTITY> docRefClient;
     private QueryResourceHttpClient queryClient;
@@ -35,8 +39,19 @@ public abstract class QueryResourceNoAuthIT<
     protected QueryResourceNoAuthIT(final String docRefType,
                                     final DropwizardAppExtensionWithClients<CONFIG_CLASS> appRule) {
         this.docRefType = docRefType;
-        this.queryClient = appRule.getClient(QueryResourceHttpClient::new);
-        this.docRefClient = appRule.getClient(DocRefResourceHttpClient::new);
+        this.appRule = appRule;
+    }
+
+    @BeforeEach
+    void beforeEach() {
+        appRule.before();
+        queryClient = appRule.getClient(QueryResourceHttpClient::new);
+        docRefClient = appRule.getClient(DocRefResourceHttpClient::new);
+    }
+
+    @AfterEach
+    void afterEach() {
+        appRule.after();
     }
 
     protected QueryResourceHttpClient getQueryClient() {

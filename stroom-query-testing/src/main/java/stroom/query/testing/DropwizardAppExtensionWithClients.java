@@ -45,13 +45,11 @@ public class DropwizardAppExtensionWithClients<C extends Configuration> extends 
         super(applicationClass, configPath, Optional.empty(), configOverrides);
     }
 
-    @Override
-    public void before() {
+    public void beforeAll() {
         super.before();
     }
 
-    @Override
-    public void after() {
+    public void afterAll() {
         super.after();
 
         for (Closeable client : clients) {

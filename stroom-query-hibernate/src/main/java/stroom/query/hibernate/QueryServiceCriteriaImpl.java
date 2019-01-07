@@ -51,7 +51,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * A generic implementation of Query Resource that can be used over any hibernate based datasource that stores
+ * A memory implementation of Query Resource that can be used over any hibernate based datasource that stores
  * a single Java data type.
  * <p>
  * It will use the {@link IsDataSourceField} annotation to find fields to expose as it's data source.

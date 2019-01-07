@@ -61,7 +61,7 @@ public class ClassPhotographer {
         if (method.getReturnType().toString().contains(basePackage)) {
             classesForRecursion.add(method.getReturnType());
         } else {
-            // Check for generic return types
+            // Check for memory return types
             if (method.getGenericReturnType() instanceof ParameterizedType) {
                 ParameterizedType type = (ParameterizedType) method.getGenericReturnType();
                 Arrays.stream(type.getActualTypeArguments())

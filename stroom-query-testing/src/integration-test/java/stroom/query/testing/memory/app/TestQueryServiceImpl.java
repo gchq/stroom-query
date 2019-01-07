@@ -1,4 +1,4 @@
-package stroom.query.testing.generic.app;
+package stroom.query.testing.memory.app;
 
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;

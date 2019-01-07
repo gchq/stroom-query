@@ -2,7 +2,6 @@ package stroom.query.testing.jooq;
 
 
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.query.testing.DocRefRemoteServiceIT;
 import stroom.query.testing.DropwizardAppExtensionWithClients;
@@ -48,10 +47,5 @@ class TestJooqDocRefRemoteServiceIT extends DocRefRemoteServiceIT<TestDocRefJooq
         final Map<String, String> values = new HashMap<>();
         values.put(TestDocRefJooqEntity.PLANET_NAME, docRefEntity.getPlanetName());
         return values;
-    }
-
-    @BeforeEach
-    void beforeTest() {
-        // TestDocRefServiceImpl.eraseAllData();
     }
 }

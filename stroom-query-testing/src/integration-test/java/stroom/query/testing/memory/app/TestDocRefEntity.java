@@ -1,4 +1,4 @@
-package stroom.query.testing.generic.app;
+package stroom.query.testing.memory.app;
 
 import stroom.query.audit.model.DocRefEntity;
 

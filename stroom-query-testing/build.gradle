@@ -79,6 +79,8 @@ dependencies {
 
     implementation libs.dropwizard_testing
 
+    integrationTestImplementation libs.test_containers
+    integrationTestImplementation libs.test_containers_psql
     integrationTestImplementation libs.assertj_core
     integrationTestImplementation libs.dropwizard_flyway
     integrationTestImplementation libs.jackson_annotations

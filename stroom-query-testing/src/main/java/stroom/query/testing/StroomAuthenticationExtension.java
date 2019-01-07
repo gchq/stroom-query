@@ -36,20 +36,10 @@ import stroom.query.authorisation.DocumentPermission;
 import stroom.query.security.ServiceUser;
 
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.containing;
-import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.ok;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
@@ -98,30 +88,16 @@ public class StroomAuthenticationExtension extends WireMockServer {
     void beforeAll() {
         if (!isRunning()) {
             start();
-        }
-    }
-
-    void beforeEach() {
-        if (isRunning()) {
             before();
-        } else {
             WireMock.configureFor("localhost", port());
-            before();
         }
     }
 
     void afterAll() {
         if (isRunning()) {
-            stop();
-        }
-    }
-
-    void afterEach() {
-        if (isRunning()) {
             after();
             client.resetMappings();
-        } else {
-            after();
+            stop();
         }
     }
 

@@ -1,4 +1,4 @@
-package stroom.query.testing.generic.app;
+package stroom.query.testing.memory.app;
 
 import com.codahale.metrics.health.HealthCheck;
 import com.google.inject.Guice;
