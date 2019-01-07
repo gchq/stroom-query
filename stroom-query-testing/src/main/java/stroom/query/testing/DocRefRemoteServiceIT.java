@@ -130,7 +130,7 @@ public abstract class DocRefRemoteServiceIT<
         assertThatThrownBy(() -> docRefClient.update(
                 authRule.unauthenticatedUser(unauthenticatedUsername),
                 uuid,
-                unauthenticatedEntityUpdate)).isInstanceOf(UnauthorisedException.class);
+                unauthenticatedEntityUpdate)).isInstanceOf(UnauthenticatedException.class);
 
         // Check it is still in the state from the authorised update
         final DOC_REF_ENTITY checkEntity = docRefClient.get(authRule.authenticatedUser(authorisedUsername), uuid)

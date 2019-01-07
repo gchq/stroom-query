@@ -1,14 +1,14 @@
-package stroom.query.testing.generic;
+package stroom.query.testing.memory;
 
 
 import org.junit.jupiter.api.BeforeEach;
 import stroom.query.testing.DocRefResourceIT;
 import stroom.query.testing.DropwizardAppExtensionWithClients;
 import stroom.query.testing.StroomAuthenticationExtension;
-import stroom.query.testing.generic.app.App;
-import stroom.query.testing.generic.app.Config;
-import stroom.query.testing.generic.app.TestDocRefEntity;
-import stroom.query.testing.generic.app.TestDocRefServiceImpl;
+import stroom.query.testing.memory.app.App;
+import stroom.query.testing.memory.app.Config;
+import stroom.query.testing.memory.app.TestDocRefEntity;
+import stroom.query.testing.memory.app.TestDocRefServiceImpl;
 
 import java.util.HashMap;
 import java.util.Map;

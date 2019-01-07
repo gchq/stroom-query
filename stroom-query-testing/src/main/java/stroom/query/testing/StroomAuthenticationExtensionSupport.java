@@ -1,6 +1,8 @@
 package stroom.query.testing;
 
-import org.junit.jupiter.api.extension.*;
+import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -14,7 +16,7 @@ import java.util.stream.Collectors;
  * It provides methods for getting authenticated and unauthenticated users, it also gives tests the ability
  * to grant permissions to specific users.
  */
-public class StroomAuthenticationExtensionSupport implements BeforeAllCallback, BeforeEachCallback, AfterAllCallback, AfterEachCallback {
+public class StroomAuthenticationExtensionSupport implements BeforeAllCallback, AfterAllCallback {
     private static Set<Field> findAnnotatedFields(Class<?> testClass, boolean isStaticMember) {
         final Set<Field> set = Arrays.stream(testClass.getDeclaredFields()).
                 filter(m -> isStaticMember == Modifier.isStatic(m.getModifiers())).
@@ -46,36 +48,10 @@ public class StroomAuthenticationExtensionSupport implements BeforeAllCallback, 
     }
 
     @Override
-    public void afterEach(ExtensionContext extensionContext) {
-        final Object testInstance = extensionContext.getTestInstance()
-                .orElseThrow(() -> new IllegalStateException("Unable to get the current test instance"));
-        try {
-            for (Field member : findAnnotatedFields(testInstance.getClass(), false)) {
-                ((StroomAuthenticationExtension) get(member, testInstance)).afterEach();
-            }
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
     public void beforeAll(ExtensionContext extensionContext) {
         try {
             for (Field member : findAnnotatedFields(extensionContext.getRequiredTestClass(), true)) {
                 ((StroomAuthenticationExtension) get(member, null)).beforeAll();
-            }
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void beforeEach(ExtensionContext extensionContext) {
-        final Object testInstance = extensionContext.getTestInstance()
-                .orElseThrow(() -> new IllegalStateException("Unable to get the current test instance"));
-        try {
-            for (Field member : findAnnotatedFields(testInstance.getClass(), false)) {
-                ((StroomAuthenticationExtension) get(member, testInstance)).beforeEach();
             }
         } catch (Throwable e) {
             throw new RuntimeException(e);

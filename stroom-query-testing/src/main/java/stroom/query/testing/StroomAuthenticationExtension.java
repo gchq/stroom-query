@@ -88,30 +88,16 @@ public class StroomAuthenticationExtension extends WireMockServer {
     void beforeAll() {
         if (!isRunning()) {
             start();
-        }
-    }
-
-    void beforeEach() {
-        if (isRunning()) {
             before();
-        } else {
             WireMock.configureFor("localhost", port());
-            before();
         }
     }
 
     void afterAll() {
         if (isRunning()) {
-            stop();
-        }
-    }
-
-    void afterEach() {
-        if (isRunning()) {
             after();
             client.resetMappings();
-        } else {
-            after();
+            stop();
         }
     }
 

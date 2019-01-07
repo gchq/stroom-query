@@ -1,4 +1,4 @@
-package stroom.query.testing.generic;
+package stroom.query.testing.memory;
 
 
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
@@ -8,10 +8,12 @@ import stroom.datasource.api.v2.DataSourceField;
 import stroom.docref.DocRef;
 import stroom.query.api.v2.*;
 import stroom.query.testing.DropwizardAppExtensionWithClients;
-import stroom.query.testing.QueryResourceNoAuthIT;
-import stroom.query.testing.generic.app.App;
-import stroom.query.testing.generic.app.Config;
-import stroom.query.testing.generic.app.TestDocRefEntity;
+import stroom.query.testing.QueryResourceIT;
+import stroom.query.testing.StroomAuthenticationExtension;
+import stroom.query.testing.StroomAuthenticationExtensionSupport;
+import stroom.query.testing.memory.app.App;
+import stroom.query.testing.memory.app.Config;
+import stroom.query.testing.memory.app.TestDocRefEntity;
 
 import java.util.Set;
 import java.util.UUID;
@@ -21,13 +23,22 @@ import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(DropwizardExtensionsSupport.class)
-class TestQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDocRefEntity, Config> {
-    private static final DropwizardAppExtensionWithClients<Config> appRule =
-            new DropwizardAppExtensionWithClients<>(App.class, resourceFilePath("generic_noauth/config.yml"));
+@ExtendWith(StroomAuthenticationExtensionSupport.class)
+class TestQueryResourceIT extends QueryResourceIT<TestDocRefEntity, Config> {
+    private static StroomAuthenticationExtension authRule =
+            new StroomAuthenticationExtension();
 
-    TestQueryResourceNoAuthIT() {
+    private static final DropwizardAppExtensionWithClients<Config> appRule =
+            new DropwizardAppExtensionWithClients<>(App.class,
+                    resourceFilePath("generic/config.yml"),
+                    authRule.authToken(),
+                    authRule.authService());
+
+    TestQueryResourceIT() {
         super(TestDocRefEntity.TYPE,
-                appRule);
+                appRule,
+                authRule);
+
     }
 
     @Override

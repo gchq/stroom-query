@@ -1,15 +1,17 @@
-package stroom.query.testing.generic;
+package stroom.query.testing.memory;
 
 
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
-import stroom.query.testing.DocRefResourceNoAuthIT;
+import stroom.query.testing.DocRefRemoteServiceIT;
 import stroom.query.testing.DropwizardAppExtensionWithClients;
-import stroom.query.testing.generic.app.App;
-import stroom.query.testing.generic.app.Config;
-import stroom.query.testing.generic.app.TestDocRefEntity;
-import stroom.query.testing.generic.app.TestDocRefServiceImpl;
+import stroom.query.testing.StroomAuthenticationExtension;
+import stroom.query.testing.StroomAuthenticationExtensionSupport;
+import stroom.query.testing.memory.app.App;
+import stroom.query.testing.memory.app.Config;
+import stroom.query.testing.memory.app.TestDocRefEntity;
+import stroom.query.testing.memory.app.TestDocRefServiceImpl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,13 +20,21 @@ import java.util.UUID;
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 
 @ExtendWith(DropwizardExtensionsSupport.class)
-class TestDocRefResourceNoAuthIT extends DocRefResourceNoAuthIT<TestDocRefEntity, Config> {
-    private static final DropwizardAppExtensionWithClients<Config> appRule =
-            new DropwizardAppExtensionWithClients<>(App.class, resourceFilePath("generic_noauth/config.yml"));
+@ExtendWith(StroomAuthenticationExtensionSupport.class)
+class TestDocRefRemoteServiceIT extends DocRefRemoteServiceIT<TestDocRefEntity, Config> {
+    private static StroomAuthenticationExtension authRule = new StroomAuthenticationExtension();
 
-    TestDocRefResourceNoAuthIT() {
-        super(TestDocRefEntity.class,
-                appRule);
+    private static final DropwizardAppExtensionWithClients<Config> appRule =
+            new DropwizardAppExtensionWithClients<>(App.class,
+                    resourceFilePath("generic/config.yml"),
+                    authRule.authService(),
+                    authRule.authToken());
+
+    TestDocRefRemoteServiceIT() {
+        super(TestDocRefEntity.TYPE,
+                TestDocRefEntity.class,
+                appRule,
+                authRule);
     }
 
     @Override
