@@ -40,7 +40,7 @@ dependencies {
     implementation libs.jooq
     implementation libs.slf4j_api
 
-    testImplementation libs.assertj_core
+    testCompile libs.assertj_core
     testCompileOnly libs.junit_jupiter_api
 
     testRuntimeOnly libs.junit_jupiter_engine

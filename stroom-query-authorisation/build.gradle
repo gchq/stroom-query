@@ -18,22 +18,22 @@ ext.moduleName = 'stroom.query.authorisation'
 
 dependencies {
     //--------Project----------
-    implementation project(':stroom-docref')
+    compile project(':stroom-docref')
 
     //--------3rd party--------
-    implementation libs.glassfish_hk2
-    implementation libs.jackson_annotations
-    implementation libs.javax_inject
-    implementation libs.javax_ws
-    implementation libs.jaxb_api
-    implementation libs.jersey_client
-    implementation libs.jersey_server
-    implementation libs.jose4j
+    compile libs.glassfish_hk2
+    compile libs.jackson_annotations
+    compile libs.javax_inject
+    compile libs.javax_ws
+    compile libs.jaxb_api
+    compile libs.jersey_client
+    compile libs.jersey_server
+    compile libs.jose4j
     implementation libs.dropwizard_auth
     implementation libs.dropwizard_auth_jwt
     implementation libs.slf4j_api
 
-    testImplementation libs.assertj_core
+    testCompile libs.assertj_core
     testCompileOnly libs.junit_jupiter_api
 
     testRuntimeOnly libs.junit_jupiter_engine

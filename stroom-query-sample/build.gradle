@@ -20,13 +20,13 @@ ext.moduleName = 'stroom.query.sample'
 
 dependencies {
     //--------Project----------
-    implementation project(':stroom-docref')
-    implementation project(':stroom-query-api')
+    compile project(':stroom-docref')
+    compile project(':stroom-query-api')
 
     //--------3rd party--------
-    implementation libs.jaxb_api
-    implementation libs.swagger_annotations
-    implementation libs.ws_rs_api
+    compile libs.jaxb_api
+    compile libs.swagger_annotations
+    compile libs.ws_rs_api
 }
 
 //// Generate swagger specs for the ExampleEndpoint

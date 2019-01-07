@@ -16,17 +16,19 @@
 
 ext.moduleName = 'stroom.query.api'
 
+gradleLint.rules = ['all-dependency'] // add as many rules here as you'd like
+
 dependencies {
-    implementation project(':stroom-docref')
-    implementation libs.jackson_annotations
-    implementation libs.swagger_annotations
-    implementation libs.jaxb_api
+    compile project(':stroom-docref')
+    compile libs.jackson_annotations
+    compile libs.swagger_annotations
+    compile libs.jaxb_api
 
-    implementation libs.dropwizard_core // should be flagged
-    testImplementation libs.dropwizard_core // should be flagged
+    compile libs.dropwizard_core // should be flagged
+    testCompile libs.dropwizard_core // should be flagged
 
-    testImplementation libs.assertj_core
-    testImplementation libs.junit_jupiter_api
+    testCompile libs.assertj_core
+    testCompile libs.junit_jupiter_api
 
     testRuntimeOnly libs.junit_jupiter_engine
 }

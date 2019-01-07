@@ -18,24 +18,24 @@ ext.moduleName = 'stroom.query.common'
 
 dependencies {
     //--------Project----------
-    implementation project(':stroom-docref')
-    implementation project(':stroom-query-api')
+    compile project(':stroom-docref')
+    compile project(':stroom-query-api')
 
     //--------Stroom libs------
-    implementation libs.stroomExpression
+    compile libs.stroomExpression
 
     //--------3rd party--------
-    implementation libs.guava
-    implementation libs.jackson_databind
-    implementation libs.jackson_annotations
-    implementation libs.jackson_core
-    implementation libs.slf4j_api
-    implementation libs.jaxb_api
+    compile libs.guava
+    compile libs.jackson_databind
+    compile libs.jackson_annotations
+    compile libs.jackson_core
+    compile libs.slf4j_api
+    compile libs.jaxb_api
 
     //--------testing----------
-    testImplementation libs.assertj_core
+    testCompile libs.assertj_core
     testCompileOnly libs.junit_jupiter_api
-    testImplementation libs.mockito_core
+    testCompile libs.mockito_core
 
     testRuntimeOnly libs.junit_jupiter_engine
 }

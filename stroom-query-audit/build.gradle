@@ -18,39 +18,39 @@ ext.moduleName = 'stroom.query.audit'
 
 dependencies {
     //--------Project----------
-    implementation project(':stroom-docref')
-    implementation project(':stroom-query-api')
-    implementation project(':stroom-query-common')
-    implementation project(':stroom-query-authorisation')
+    compile project(':stroom-docref')
+    compile project(':stroom-query-api')
+    compile project(':stroom-query-common')
+    compile project(':stroom-query-authorisation')
 
     //--------Stroom libs------
-    implementation libs.eventLogging
+    compile libs.eventLogging
 
     //--------3rd party--------
-    implementation libs.dropwizard_auth
-    implementation libs.dropwizard_core
-    implementation libs.dropwizard_logging
-    implementation libs.dropwizard_metrics
-    implementation libs.dropwizard_jersey
-    implementation libs.guava
-    implementation libs.guice
-    implementation libs.jackson_annotations
-    implementation libs.jackson_core
-    implementation libs.jackson_databind
-    implementation libs.javax_inject
-    implementation libs.javax_ws
-    implementation libs.javax_servlet
-    implementation libs.jersey_client
-    implementation libs.jersey_server
-    implementation libs.jetty_http
-    implementation libs.logback_classic
-    implementation libs.logback_core
-    implementation libs.kafka
-    implementation libs.slf4j_api
+    compile libs.dropwizard_auth
+    compile libs.dropwizard_core
+    compile libs.dropwizard_logging
+    compile libs.dropwizard_metrics
+    compile libs.dropwizard_jersey
+    compile libs.guava
+    compile libs.guice
+    compile libs.jackson_annotations
+    compile libs.jackson_core
+    compile libs.jackson_databind
+    compile libs.javax_inject
+    compile libs.javax_ws
+    compile libs.javax_servlet
+    compile libs.jersey_client
+    compile libs.jersey_server
+    compile libs.jetty_http
+    compile libs.logback_classic
+    compile libs.logback_core
+    compile libs.kafka
+    compile libs.slf4j_api
 
-    testImplementation libs.assertj_core
+    testCompile libs.assertj_core
     testCompileOnly libs.junit_jupiter_api
-    testImplementation libs.mockito_core
+    testCompile libs.mockito_core
 
     testRuntimeOnly libs.junit_jupiter_engine
     testRuntimeOnly libs.jaxb_runtime
