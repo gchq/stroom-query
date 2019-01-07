@@ -48,7 +48,6 @@ class TestDocRefResourceIT extends DocRefResourceIT<TestDocRefEntity, Config> {
 
     @BeforeEach
     public void beforeTest() {
-        super.beforeTest();
         TestDocRefServiceImpl.eraseAllData();
     }
 }

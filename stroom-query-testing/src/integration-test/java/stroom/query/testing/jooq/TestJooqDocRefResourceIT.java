@@ -1,7 +1,6 @@
 package stroom.query.testing.jooq;
 
 
-import org.junit.jupiter.api.BeforeEach;
 import stroom.query.testing.DocRefResourceIT;
 import stroom.query.testing.DropwizardAppExtensionWithClients;
 import stroom.query.testing.StroomAuthenticationExtension;
@@ -43,12 +42,5 @@ class TestJooqDocRefResourceIT extends DocRefResourceIT<TestDocRefJooqEntity, Jo
         final Map<String, String> values = new HashMap<>();
         values.put(TestDocRefJooqEntity.PLANET_NAME, docRefEntity.getPlanetName());
         return values;
-    }
-
-    @BeforeEach
-    public void beforeTest() {
-        appRule.before();
-        super.beforeTest();
-        // TestDocRefServiceImpl.eraseAllData();
     }
 }
