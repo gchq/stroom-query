@@ -1,19 +1,19 @@
 package stroom.query.testing.jooq.app;
 
 import org.jooq.Field;
+import org.jooq.impl.DSL;
+import stroom.query.audit.model.DocRefEntity;
 import stroom.query.jooq.DocRefJooqEntity;
 import stroom.query.jooq.JooqEntity;
 
 import java.util.Objects;
-
-import static org.jooq.impl.DSL.field;
 
 @JooqEntity(tableName="test_jooq_doc_ref")
 public class TestDocRefJooqEntity extends DocRefJooqEntity {
     public static final String TYPE = "TestDocRefJooqEntity";
 
     public static final String PLANET_NAME = "planetName";
-    public static final Field<String> PLANET_NAME_FIELD = field(PLANET_NAME, String.class);
+    public static final Field<String> PLANET_NAME_FIELD = DSL.field(PLANET_NAME, String.class);
 
     private String planetName;
 
@@ -50,7 +50,7 @@ public class TestDocRefJooqEntity extends DocRefJooqEntity {
     }
 
     public static final class Builder
-            extends BaseBuilder<TestDocRefJooqEntity, Builder> {
+            extends DocRefEntity.BaseBuilder<TestDocRefJooqEntity, Builder> {
 
         public Builder(final TestDocRefJooqEntity instance) {
             super(instance);

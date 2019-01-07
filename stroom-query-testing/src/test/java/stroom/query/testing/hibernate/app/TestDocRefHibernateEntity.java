@@ -1,5 +1,6 @@
 package stroom.query.testing.hibernate.app;
 
+import stroom.query.audit.model.DocRefEntity;
 import stroom.query.hibernate.DocRefHibernateEntity;
 
 import javax.persistence.Column;
@@ -48,7 +49,7 @@ public class TestDocRefHibernateEntity extends DocRefHibernateEntity {
     }
 
     public static final class Builder
-            extends BaseBuilder<TestDocRefHibernateEntity, Builder> {
+            extends DocRefEntity.BaseBuilder<TestDocRefHibernateEntity, Builder> {
 
         public Builder(final TestDocRefHibernateEntity instance) {
             super(instance);
