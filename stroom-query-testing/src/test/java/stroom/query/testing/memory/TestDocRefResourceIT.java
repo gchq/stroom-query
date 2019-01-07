@@ -1,7 +1,9 @@
 package stroom.query.testing.memory;
 
 
+import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.query.testing.DocRefResourceIT;
 import stroom.query.testing.DropwizardAppExtensionWithClients;
 import stroom.query.testing.StroomAuthenticationExtension;
@@ -16,6 +18,7 @@ import java.util.UUID;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 
+@ExtendWith(DropwizardExtensionsSupport.class)
 class TestDocRefResourceIT extends DocRefResourceIT<TestDocRefEntity, Config> {
     private static StroomAuthenticationExtension authRule = new StroomAuthenticationExtension();
 

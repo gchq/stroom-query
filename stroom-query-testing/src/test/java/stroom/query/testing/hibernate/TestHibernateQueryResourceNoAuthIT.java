@@ -8,6 +8,8 @@ import stroom.datasource.api.v2.DataSourceField;
 import stroom.docref.DocRef;
 import stroom.query.api.v2.*;
 import stroom.query.audit.model.DocRefEntity;
+import stroom.query.testing.DatabaseContainerExtension;
+import stroom.query.testing.DatabaseContainerExtensionSupport;
 import stroom.query.testing.DropwizardAppExtensionWithClients;
 import stroom.query.testing.QueryResourceNoAuthIT;
 import stroom.query.testing.hibernate.app.HibernateApp;
@@ -22,8 +24,11 @@ import java.util.stream.Collectors;
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ExtendWith(DatabaseContainerExtensionSupport.class)
 @ExtendWith(DropwizardExtensionsSupport.class)
 class TestHibernateQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDocRefHibernateEntity, HibernateConfig> {
+
+    private static final DatabaseContainerExtension dbRule = new DatabaseContainerExtension();
     private static final DropwizardAppExtensionWithClients<HibernateConfig> appRule =
             new DropwizardAppExtensionWithClients<>(HibernateApp.class, resourceFilePath("hibernate_noauth/config.yml"));
 

@@ -1,9 +1,9 @@
 package stroom.query.testing.hibernate;
 
 
-import stroom.query.testing.DocRefResourceIT;
-import stroom.query.testing.DropwizardAppExtensionWithClients;
-import stroom.query.testing.StroomAuthenticationExtension;
+import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
+import org.junit.jupiter.api.extension.ExtendWith;
+import stroom.query.testing.*;
 import stroom.query.testing.hibernate.app.HibernateApp;
 import stroom.query.testing.hibernate.app.HibernateConfig;
 import stroom.query.testing.hibernate.app.TestDocRefHibernateEntity;
@@ -14,7 +14,12 @@ import java.util.UUID;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 
+@ExtendWith(DatabaseContainerExtensionSupport.class)
+@ExtendWith(DropwizardExtensionsSupport.class)
+@ExtendWith(StroomAuthenticationExtensionSupport.class)
 class TestHibernateDocRefResourceIT extends DocRefResourceIT<TestDocRefHibernateEntity, HibernateConfig> {
+
+    private static final DatabaseContainerExtension dbRule = new DatabaseContainerExtension();
     private static StroomAuthenticationExtension authRule = new StroomAuthenticationExtension();
 
     private static final DropwizardAppExtensionWithClients<HibernateConfig> appRule =

@@ -20,8 +20,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static stroom.query.testing.FifoLogbackExtension.containsAllOf;
 
 @ExtendWith(FifoLogbackExtensionSupport.class)
-@ExtendWith(DropwizardAppExtensionWithClientsSupport.class)
-@ExtendWith(StroomAuthenticationExtensionSupport.class)
 public abstract class DocRefResourceIT<
         DOC_REF_ENTITY extends DocRefEntity,
         CONFIG_CLASS extends Configuration> {
@@ -44,7 +42,7 @@ public abstract class DocRefResourceIT<
     }
 
     @BeforeEach
-    void beforeAll() {
+    public void beforeAll() {
         docRefClient = appRule.getClient(DocRefResourceHttpClient::new);
     }
 

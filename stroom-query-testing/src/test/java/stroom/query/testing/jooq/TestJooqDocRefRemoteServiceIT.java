@@ -3,10 +3,7 @@ package stroom.query.testing.jooq;
 
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import org.junit.jupiter.api.extension.ExtendWith;
-import stroom.query.testing.DocRefRemoteServiceIT;
-import stroom.query.testing.DropwizardAppExtensionWithClients;
-import stroom.query.testing.StroomAuthenticationExtension;
-import stroom.query.testing.StroomAuthenticationExtensionSupport;
+import stroom.query.testing.*;
 import stroom.query.testing.jooq.app.JooqApp;
 import stroom.query.testing.jooq.app.JooqConfig;
 import stroom.query.testing.jooq.app.TestDocRefJooqEntity;
@@ -17,10 +14,13 @@ import java.util.UUID;
 
 import static io.dropwizard.testing.ResourceHelpers.resourceFilePath;
 
+@ExtendWith(DatabaseContainerExtensionSupport.class)
 @ExtendWith(DropwizardExtensionsSupport.class)
 @ExtendWith(StroomAuthenticationExtensionSupport.class)
 class TestJooqDocRefRemoteServiceIT extends DocRefRemoteServiceIT<TestDocRefJooqEntity, JooqConfig> {
     private static StroomAuthenticationExtension authRule = new StroomAuthenticationExtension();
+
+    private static final DatabaseContainerExtension dbRule = new DatabaseContainerExtension();
 
     private static final DropwizardAppExtensionWithClients<JooqConfig> appRule =
             new DropwizardAppExtensionWithClients<>(JooqApp.class,

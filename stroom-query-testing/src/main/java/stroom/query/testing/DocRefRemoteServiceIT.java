@@ -23,8 +23,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static stroom.query.testing.FifoLogbackExtension.containsAllOf;
 
 @ExtendWith(FifoLogbackExtensionSupport.class)
-@ExtendWith(DropwizardAppExtensionWithClientsSupport.class)
-@ExtendWith(StroomAuthenticationExtensionSupport.class)
 public abstract class DocRefRemoteServiceIT<
         DOC_REF_ENTITY extends DocRefEntity,
         CONFIG_CLASS extends Configuration> {

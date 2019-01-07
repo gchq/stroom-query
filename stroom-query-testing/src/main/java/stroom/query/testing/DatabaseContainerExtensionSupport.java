@@ -10,11 +10,17 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class DropwizardAppExtensionWithClientsSupport implements BeforeAllCallback, AfterAllCallback {
+/**
+ * This rule effectively builds an Authentication and Authorisation service for use in integration tests.
+ * <p>
+ * It provides methods for getting authenticated and unauthenticated users, it also gives tests the ability
+ * to grant permissions to specific users.
+ */
+public class DatabaseContainerExtensionSupport implements BeforeAllCallback, AfterAllCallback {
     private static Set<Field> findAnnotatedFields(Class<?> testClass, boolean isStaticMember) {
         final Set<Field> set = Arrays.stream(testClass.getDeclaredFields()).
                 filter(m -> isStaticMember == Modifier.isStatic(m.getModifiers())).
-                filter(m -> DropwizardAppExtensionWithClients.class.isAssignableFrom(m.getType())).
+                filter(m -> DatabaseContainerExtension.class.isAssignableFrom(m.getType())).
                 collect(Collectors.toSet());
         if (!testClass.getSuperclass().equals(Object.class)) {
             set.addAll(findAnnotatedFields(testClass.getSuperclass(), isStaticMember));
@@ -34,7 +40,7 @@ public class DropwizardAppExtensionWithClientsSupport implements BeforeAllCallba
     public void afterAll(ExtensionContext extensionContext) {
         try {
             for (Field member : findAnnotatedFields(extensionContext.getRequiredTestClass(), true)) {
-                ((DropwizardAppExtensionWithClients) get(member, null)).afterAll();
+                ((DatabaseContainerExtension) get(member, null)).afterAll();
             }
         } catch (Throwable e) {
             throw new RuntimeException(e);
@@ -45,7 +51,7 @@ public class DropwizardAppExtensionWithClientsSupport implements BeforeAllCallba
     public void beforeAll(ExtensionContext extensionContext) {
         try {
             for (Field member : findAnnotatedFields(extensionContext.getRequiredTestClass(), true)) {
-                ((DropwizardAppExtensionWithClients) get(member, null)).beforeAll();
+                ((DatabaseContainerExtension) get(member, null)).beforeAll();
             }
         } catch (Throwable e) {
             throw new RuntimeException(e);

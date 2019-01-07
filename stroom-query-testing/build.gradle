@@ -44,6 +44,8 @@ dependencies {
     implementation libs.mockito_core
     implementation libs.slf4j_api
     implementation libs.wiremock
+    implementation libs.test_containers
+    implementation libs.test_containers_mysql
     
     testImplementation project(':stroom-query-hibernate')
     testImplementation project(':stroom-query-jooq')
@@ -53,13 +55,11 @@ dependencies {
     testImplementation libs.dropwizard_flyway
     testImplementation libs.dropwizard_jersey
     testImplementation libs.jackson_annotations
-    
-    testCompileOnly libs.junit_jupiter_api
+    testImplementation libs.junit_jupiter_api
 
-    testRuntime libs.mariadb_connector
-    testRuntime 'org.apache.derby:derby:10.8.2.2'
-    
-    testRuntimeOnly libs.junit_jupiter_engine
-    testRuntimeOnly libs.jaxb_runtime
     testRuntimeOnly libs.javax_transaction
+    testRuntimeOnly libs.jaxb_runtime
+    testRuntimeOnly libs.junit_jupiter_engine
+    testRuntimeOnly libs.mariadb_connector
+    testRuntimeOnly 'org.apache.derby:derby:10.8.2.2'
 }
