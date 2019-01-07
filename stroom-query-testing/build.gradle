@@ -30,8 +30,8 @@ sourceSets {
 
 configurations {
     // This means our integration tests get all the dependencies from our tests and we don't need to specify them twice.
-    integrationTestCompile.extendsFrom testCompile
-    integrationTestRuntime.extendsFrom testRuntime
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
 }
 
 // This task lets us run the actual integration tests.
@@ -56,36 +56,37 @@ tasks.withType(Test) {
 
 dependencies {
     //--------Project----------
-    compile project(':stroom-docref')
-    compile project(':stroom-query-api')
-    compile project(':stroom-query-authorisation')
-    compile project(':stroom-query-audit')
+    implementation project(':stroom-docref')
+    implementation project(':stroom-query-api')
+    implementation project(':stroom-query-authorisation')
+    implementation project(':stroom-query-audit')
 
     //--------3rd party--------
-    compile libs.assertj_core
-    compile libs.dropwizard_core
-    compile libs.guice
-    compile libs.google_findbugs
-    compile libs.javax_ws;
-    compile libs.jackson_core
-    compile libs.jackson_databind
-    compile libs.jetty_http
-    compile libs.junit_jupiter_api
-    compile libs.jose4j
-    compile libs.slf4j_api
-    compile libs.wiremock
-    compile libs.mockito_core
+    implementation libs.assertj_core
+    implementation libs.dropwizard_core
+    implementation libs.guice
+    implementation libs.google_findbugs
+    implementation libs.javax_ws;
+    implementation libs.jackson_core
+    implementation libs.jackson_databind
+    implementation libs.jaxb_api
+    implementation libs.jetty_http
+    compileOnly libs.junit_jupiter_api
+    implementation libs.jose4j
+    implementation libs.slf4j_api
+    implementation libs.wiremock
+    implementation libs.mockito_core
 
-    compile libs.dropwizard_testing
+    implementation libs.dropwizard_testing
 
-    integrationTestCompile libs.assertj_core
-    integrationTestCompile libs.dropwizard_flyway
-    integrationTestCompile libs.jackson_annotations
+    integrationTestImplementation libs.assertj_core
+    integrationTestImplementation libs.dropwizard_flyway
+    integrationTestImplementation libs.jackson_annotations
     integrationTestCompileOnly libs.junit_jupiter_api
-    integrationTestCompile project(':stroom-query-hibernate')
-    integrationTestCompile project(':stroom-query-jooq')
-    integrationTestRuntime libs.mariadb_connector
-    integrationTestRuntime 'org.apache.derby:derby:10.8.2.2'
+    integrationTestImplementation project(':stroom-query-hibernate')
+    integrationTestImplementation project(':stroom-query-jooq')
+    integrationTestRuntimeOnly libs.mariadb_connector
+    integrationTestRuntimeOnly 'org.apache.derby:derby:10.8.2.2'
 
     integrationTestRuntimeOnly libs.junit_jupiter_engine
     integrationTestRuntimeOnly libs.jaxb_runtime

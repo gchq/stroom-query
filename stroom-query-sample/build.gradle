@@ -20,12 +20,13 @@ apply plugin: 'com.benjaminsproule.swagger'
 
 dependencies {
     //--------Project----------
-    compile project(':stroom-docref')
-    compile project(':stroom-query-api')
+    implementation project(':stroom-docref')
+    implementation project(':stroom-query-api')
 
     //--------3rd party--------
-    compile libs.swagger_annotations
-    compile libs.ws_rs_api
+    implementation libs.jaxb_api
+    implementation libs.swagger_annotations
+    implementation libs.ws_rs_api
 }
 
 // Generate swagger specs for the ExampleEndpoint

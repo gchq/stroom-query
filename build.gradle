@@ -136,7 +136,7 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: 'java'
+    apply plugin: 'java-library'
     apply plugin: 'ca.cutterslade.analyze'
     apply plugin: 'idea'
 
@@ -153,6 +153,8 @@ subprojects {
     test {
         useJUnitPlatform()
     }
+
+    task allDeps(type: DependencyReportTask) {}
 
     configurations {
 
