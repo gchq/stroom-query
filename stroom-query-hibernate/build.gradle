@@ -37,6 +37,7 @@ dependencies {
     compile libs.hibernate_jpa
     compile libs.guice
     compile libs.javax_inject
+    compile libs.javax_transaction
     compile libs.slf4j_api
 
     testCompile libs.assertj_core
