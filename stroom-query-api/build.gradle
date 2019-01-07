@@ -22,8 +22,11 @@ dependencies {
     implementation libs.swagger_annotations
     implementation libs.jaxb_api
 
+    implementation libs.dropwizard_core // should be flagged
+    testImplementation libs.dropwizard_core // should be flagged
+
     testImplementation libs.assertj_core
-    testCompileOnly libs.junit_jupiter_api
+    testImplementation libs.junit_jupiter_api
 
     testRuntimeOnly libs.junit_jupiter_engine
 }

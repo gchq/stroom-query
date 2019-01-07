@@ -28,28 +28,34 @@ dependencies {
     implementation libs.dropwizard_auth
     implementation libs.dropwizard_core
     implementation libs.dropwizard_jersey
+    implementation libs.dropwizard_jooq
     implementation libs.dropwizard_testing
     implementation libs.guice
     implementation libs.google_findbugs
+    implementation libs.hibernate_core
+    implementation libs.hibernate_jpa
     implementation libs.javax_ws;
     implementation libs.jackson_core
     implementation libs.jackson_databind
     implementation libs.jaxb_api
     implementation libs.jetty_http
-    implementation libs.junit_jupiter_api
     implementation libs.jose4j
+    implementation libs.junit_jupiter_api
     implementation libs.mockito_core
     implementation libs.slf4j_api
     implementation libs.wiremock
-
-    //testCompile libs.test_containers
-    //testCompile libs.test_containers_psql
-    testCompile libs.assertj_core
-    testCompile libs.dropwizard_flyway
-    testCompile libs.jackson_annotations
+    
+    testImplementation project(':stroom-query-hibernate')
+    testImplementation project(':stroom-query-jooq')
+    
+    testImplementation libs.assertj_core
+    testImplementation libs.dropwizard_core
+    testImplementation libs.dropwizard_flyway
+    testImplementation libs.dropwizard_jersey
+    testImplementation libs.jackson_annotations
+    
     testCompileOnly libs.junit_jupiter_api
-    testCompile project(':stroom-query-hibernate')
-    testCompile project(':stroom-query-jooq')
+
     testRuntime libs.mariadb_connector
     testRuntime 'org.apache.derby:derby:10.8.2.2'
     

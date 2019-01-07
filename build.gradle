@@ -7,7 +7,7 @@ buildscript {
     dependencies {
         // A fork of https://github.com/wfhartford/gradle-dependency-analyze that works with Java 10
         classpath 'stroom:gradle-dependency-analyze:v2.2.5'
-        classpath 'com.benjaminsproule:swagger-gradle-plugin:1.0.2'
+        classpath 'com.benjaminsproule:swagger-gradle-plugin:1.0.6'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
     }
 }
@@ -158,6 +158,92 @@ subprojects {
     }
 
     task allDeps(type: DependencyReportTask) {}
+
+    // Make dependency analyser work with java-library plugin.
+    task analyzeJavaLibraryDependencies(dependsOn: classes, type: ca.cutterslade.gradle.analyze.AnalyzeDependenciesTask) {
+        classesDirs = sourceSets.main.output.classesDirs
+        require = [
+//                project.configurations.api,
+//project.configurations.compile,
+//                project.configurations.compileClasspath,
+                project.configurations.compile
+        ]
+        allowedToDeclare = [
+                project.configurations.permitUnusedDeclared
+        ]
+    }
+    task analyzeJavaLibraryTestDependencies(dependsOn: testClasses, type: ca.cutterslade.gradle.analyze.AnalyzeDependenciesTask) {
+        classesDirs = sourceSets.test.output.classesDirs
+        require = [
+//                project.configurations.testApi,
+                project.configurations.testCompile
+//                project.configurations.testRuntimeClasspath
+        ]
+        allowedToDeclare = [
+                project.configurations.permitTestUnusedDeclared
+        ]
+        allowedToUse = [
+                project.configurations.runtimeClasspath
+        ]
+    }
+//    task analyzeDeps(dependsOn: [analyzeJavaLibraryDependencies, analyzeJavaLibraryTestDependencies]) {
+//
+//    }
+
+//    def mainTask = project.task('analyzeJavaLibraryDependencies',
+//            dependsOn: 'classes',
+//            type: AnalyzeDependenciesTask,
+//            group: 'Verification',
+//            description: 'Analyze project for dependency issues related to main source set.'
+//    ) {
+//        require = [
+//                project.configurations.runtimeClasspath,
+//                project.configurations.findByName('compileOnly'),
+//                project.configurations.findByName('provided')
+//        ]
+//        allowedToUse = [
+//                project.configurations.permitUsedUndeclared
+//        ]
+//        allowedToDeclare = [
+//                project.configurations.permitUnusedDeclared
+//        ]
+//        def output = project.sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME).output
+//        classesDirs = output.hasProperty('classesDirs') ? output.classesDirs : project.files(output.classesDir)
+//    }
+//
+//    def testTask = project.task('analyzeTestClassesDependencies',
+//            dependsOn: 'testClasses',
+//            type: AnalyzeDependenciesTask,
+//            group: 'Verification',
+//            description: 'Analyze project for dependency issues related to test source set.'
+//    ) {
+//        require = [
+//                project.configurations.testCompile,
+//                project.configurations.findByName('testCompileOnly')
+//        ]
+//        allowedToUse = [
+//                project.configurations.compile,
+//                project.configurations.permitTestUsedUndeclared,
+//                project.configurations.findByName('provided')
+//        ]
+//        allowedToDeclare = [
+//                project.configurations.permitTestUnusedDeclared
+//        ]
+//        def output = project.sourceSets.getByName(SourceSet.TEST_SOURCE_SET_NAME).output
+//        classesDirs = output.hasProperty('classesDirs') ? output.classesDirs : project.files(output.classesDir)
+//    }
+//
+//    project.check.dependsOn project.task('analyzeDeps',
+//            dependsOn: [analyzeJavaLibraryDependencies, analyzeJavaLibraryTestDependencies],
+//            group: 'Verification',
+//            description: 'Analyze project for dependency issues.'
+//    )
+//
+    tasks.analyzeJavaLibraryDependencies.dependsOn(classes)
+    tasks.analyzeJavaLibraryTestDependencies.dependsOn(testClasses)
+    tasks.check.dependsOn(analyzeJavaLibraryDependencies)
+    tasks.check.dependsOn(analyzeJavaLibraryTestDependencies)
+
 
     configurations {
 
