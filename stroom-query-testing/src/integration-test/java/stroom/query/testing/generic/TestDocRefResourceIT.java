@@ -1,13 +1,10 @@
 package stroom.query.testing.generic;
 
 
-import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.query.testing.DocRefResourceIT;
 import stroom.query.testing.DropwizardAppExtensionWithClients;
 import stroom.query.testing.StroomAuthenticationExtension;
-import stroom.query.testing.StroomAuthenticationExtensionSupport;
 import stroom.query.testing.generic.app.App;
 import stroom.query.testing.generic.app.Config;
 import stroom.query.testing.generic.app.TestDocRefEntity;
@@ -50,7 +47,8 @@ class TestDocRefResourceIT extends DocRefResourceIT<TestDocRefEntity, Config> {
     }
 
     @BeforeEach
-    void beforeTest() {
+    public void beforeTest() {
+        super.beforeTest();
         TestDocRefServiceImpl.eraseAllData();
     }
 }

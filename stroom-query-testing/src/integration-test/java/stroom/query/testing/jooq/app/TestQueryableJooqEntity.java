@@ -9,7 +9,6 @@ import stroom.query.jooq.QueryableJooqEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
-import java.util.Arrays;
 import java.util.function.Supplier;
 
 import static org.jooq.impl.DSL.field;

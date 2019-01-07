@@ -1,13 +1,10 @@
 package stroom.query.testing.hibernate;
 
 
-import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.query.testing.DocRefResourceIT;
 import stroom.query.testing.DropwizardAppExtensionWithClients;
 import stroom.query.testing.StroomAuthenticationExtension;
-import stroom.query.testing.StroomAuthenticationExtensionSupport;
 import stroom.query.testing.hibernate.app.HibernateApp;
 import stroom.query.testing.hibernate.app.HibernateConfig;
 import stroom.query.testing.hibernate.app.TestDocRefHibernateEntity;
@@ -49,7 +46,7 @@ class TestHibernateDocRefResourceIT extends DocRefResourceIT<TestDocRefHibernate
     }
 
     @BeforeEach
-    void beforeTest() {
+    public void beforeTest() {
         // TestDocRefServiceImpl.eraseAllData();
     }
 }

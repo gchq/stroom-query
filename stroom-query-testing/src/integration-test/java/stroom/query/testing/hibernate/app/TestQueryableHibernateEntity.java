@@ -8,7 +8,6 @@ import stroom.query.hibernate.QueryableHibernateEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.util.Arrays;
 import java.util.function.Supplier;
 
 @Entity(name="test_hibernate_entity")

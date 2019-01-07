@@ -1,13 +1,10 @@
 package stroom.query.testing.jooq;
 
 
-import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.query.testing.DocRefResourceIT;
 import stroom.query.testing.DropwizardAppExtensionWithClients;
 import stroom.query.testing.StroomAuthenticationExtension;
-import stroom.query.testing.StroomAuthenticationExtensionSupport;
 import stroom.query.testing.jooq.app.JooqApp;
 import stroom.query.testing.jooq.app.JooqConfig;
 import stroom.query.testing.jooq.app.TestDocRefJooqEntity;
@@ -49,7 +46,9 @@ class TestJooqDocRefResourceIT extends DocRefResourceIT<TestDocRefJooqEntity, Jo
     }
 
     @BeforeEach
-    void beforeTest() {
+    public void beforeTest() {
+        appRule.before();
+        super.beforeTest();
         // TestDocRefServiceImpl.eraseAllData();
     }
 }
