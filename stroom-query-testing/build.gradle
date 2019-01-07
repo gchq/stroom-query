@@ -64,6 +64,7 @@ dependencies {
     //--------3rd party--------
     implementation libs.assertj_core
     implementation libs.dropwizard_core
+    implementation libs.dropwizard_testing
     implementation libs.guice
     implementation libs.google_findbugs
     implementation libs.javax_ws;
@@ -71,17 +72,16 @@ dependencies {
     implementation libs.jackson_databind
     implementation libs.jaxb_api
     implementation libs.jetty_http
-    compileOnly libs.junit_jupiter_api
+    implementation libs.junit_jupiter_api
     implementation libs.jose4j
     implementation libs.slf4j_api
     implementation libs.wiremock
     implementation libs.mockito_core
-
-    implementation libs.dropwizard_testing
-
+    
     integrationTestImplementation libs.test_containers
     integrationTestImplementation libs.test_containers_psql
     integrationTestImplementation libs.assertj_core
+    integrationTestImplementation libs.dropwizard_auth
     integrationTestImplementation libs.dropwizard_flyway
     integrationTestImplementation libs.jackson_annotations
     integrationTestCompileOnly libs.junit_jupiter_api
