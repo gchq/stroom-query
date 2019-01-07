@@ -53,4 +53,5 @@ dependencies {
     testCompile libs.mockito_core
 
     testRuntimeOnly libs.junit_jupiter_engine
+    testRuntimeOnly libs.jaxb_runtime
 }

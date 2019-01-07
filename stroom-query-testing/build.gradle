@@ -78,6 +78,8 @@ dependencies {
 
     compile libs.dropwizard_testing
 
+    integrationTestCompile libs.test_containers
+    integrationTestCompile libs.test_containers_psql
     integrationTestCompile libs.assertj_core
     integrationTestCompile libs.dropwizard_flyway
     integrationTestCompile libs.jackson_annotations
