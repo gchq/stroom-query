@@ -140,7 +140,7 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: 'java'
+    apply plugin: 'java-library'
     apply plugin: 'ca.cutterslade.analyze'
     apply plugin: 'idea'
 
@@ -157,6 +157,8 @@ subprojects {
     test {
         useJUnitPlatform()
     }
+
+    task allDeps(type: DependencyReportTask) {}
 
     configurations {
 
@@ -271,7 +273,7 @@ configure(projectsToBePublished) {
 
     javadoc {
         // this switch is needed in java10
-        // options.addBooleanOption('html5', true)
+        options.addBooleanOption('html5', true)
         options.addStringOption('Xdoclint:none', '-quiet')
     }
 

@@ -17,12 +17,12 @@
 ext.moduleName = 'stroom.query.api'
 
 dependencies {
-    compile project(':stroom-docref')
-    compile libs.jackson_annotations
-    compile libs.swagger_annotations
-    compile libs.jaxb_api
+    implementation project(':stroom-docref')
+    implementation libs.jackson_annotations
+    implementation libs.swagger_annotations
+    implementation libs.jaxb_api
 
-    testCompile libs.assertj_core
+    testImplementation libs.assertj_core
     testCompileOnly libs.junit_jupiter_api
 
     testRuntimeOnly libs.junit_jupiter_engine

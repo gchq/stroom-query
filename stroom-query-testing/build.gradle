@@ -18,31 +18,31 @@ ext.moduleName = 'stroom.query.testing'
 
 dependencies {
     //--------Project----------
-    compile project(':stroom-docref')
-    compile project(':stroom-query-api')
-    compile project(':stroom-query-authorisation')
-    compile project(':stroom-query-audit')
+    implementation project(':stroom-docref')
+    implementation project(':stroom-query-api')
+    implementation project(':stroom-query-authorisation')
+    implementation project(':stroom-query-audit')
 
     //--------3rd party--------
-    compile libs.assertj_core
-    compile libs.dropwizard_core
-    compile libs.dropwizard_auth
-    compile libs.dropwizard_jersey
-    compile libs.guice
-    compile libs.google_findbugs
-    compile libs.javax_ws;
-    compile libs.jackson_core
-    compile libs.jackson_databind
-    compile libs.jetty_http
-    compile libs.junit_jupiter_api
-    compile libs.jose4j
-    compile libs.slf4j_api
-    compile libs.wiremock
-    compile libs.mockito_core
-    compile libs.test_containers
-    compile libs.test_containers_mysql
-
-    compile libs.dropwizard_testing
+    implementation libs.assertj_core
+    implementation libs.dropwizard_auth
+    implementation libs.dropwizard_core
+    implementation libs.dropwizard_jersey
+    implementation libs.dropwizard_testing
+    implementation libs.guice
+    implementation libs.google_findbugs
+    implementation libs.javax_ws;
+    implementation libs.jackson_core
+    implementation libs.jackson_databind
+    implementation libs.jaxb_api
+    implementation libs.jetty_http
+    implementation libs.junit_jupiter_api
+    implementation libs.jose4j
+    implementation libs.mockito_core
+    implementation libs.slf4j_api
+    implementation libs.wiremock
+    implementation libs.test_containers
+    implementation libs.test_containers_mysql
 
     testCompile project(':stroom-query-hibernate')
     testCompile project(':stroom-query-jooq')
@@ -52,8 +52,7 @@ dependencies {
     testCompile libs.jackson_annotations
     testCompileOnly libs.junit_jupiter_api
     testRuntime libs.mysql_connector
-
-    testRuntimeOnly libs.junit_jupiter_engine
+    testRuntime 'org.apache.derby:derby:10.8.2.2'
     
     testRuntimeOnly libs.junit_jupiter_engine
     testRuntimeOnly libs.jaxb_runtime
