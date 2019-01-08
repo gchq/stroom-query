@@ -17,6 +17,8 @@
 ext.moduleName = 'stroom.query.audit'
 
 dependencies {
+    compile 'org.glassfish.hk2.external:javax.inject:2.5.0-b32'
+    compile 'io.dropwizard:dropwizard-jackson:1.3.3'
     //--------Project----------
     compile project(':stroom-docref')
     compile project(':stroom-query-api')
@@ -42,16 +44,15 @@ dependencies {
     compile libs.javax_servlet
     compile libs.jersey_client
     compile libs.jersey_server
-    compile libs.jetty_http
     compile libs.logback_classic
     compile libs.logback_core
     compile libs.kafka
     compile libs.slf4j_api
 
     testCompile libs.assertj_core
-    testCompileOnly libs.junit_jupiter_api
+    testCompile libs.junit_jupiter_api
     testCompile libs.mockito_core
 
-    testRuntimeOnly libs.junit_jupiter_engine
-    testRuntimeOnly libs.jaxb_runtime
+    testRuntime libs.junit_jupiter_engine
+    testRuntime libs.jaxb_runtime
 }

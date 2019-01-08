@@ -17,6 +17,8 @@
 ext.moduleName = 'stroom.query.hibernate'
 
 dependencies {
+    compile 'org.glassfish.hk2.external:javax.inject:2.5.0-b32'
+    compile 'io.dropwizard.metrics:metrics-core:4.0.2'
     //--------Project----------
     compile project(':stroom-docref')
     compile project(':stroom-query-api')
@@ -37,11 +39,10 @@ dependencies {
     compile libs.hibernate_core
     compile libs.hibernate_jpa
     compile libs.javax_inject
-    compile libs.jaxb_api
     compile libs.slf4j_api
 
     testCompile libs.assertj_core
-    testCompileOnly libs.junit_jupiter_api
+    testCompile libs.junit_jupiter_api
 
-    testRuntimeOnly libs.junit_jupiter_engine
+    testRuntime libs.junit_jupiter_engine
 }

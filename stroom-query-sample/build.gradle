@@ -24,7 +24,6 @@ dependencies {
     compile project(':stroom-query-api')
 
     //--------3rd party--------
-    compile libs.jaxb_api
     compile libs.swagger_annotations
     compile libs.ws_rs_api
 }
