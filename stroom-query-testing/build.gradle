@@ -60,6 +60,6 @@ dependencies {
     testRuntimeOnly libs.javax_transaction
     testRuntimeOnly libs.jaxb_runtime
     testRuntimeOnly libs.junit_jupiter_engine
-    testRuntimeOnly libs.mariadb_connector
+    testRuntimeOnly libs.mysql_connector
     testRuntimeOnly 'org.apache.derby:derby:10.8.2.2'
 }
