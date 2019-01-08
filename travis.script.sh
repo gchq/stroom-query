@@ -35,6 +35,6 @@ echo -e "TRAVIS_EVENT_TYPE:    [${GREEN}${TRAVIS_EVENT_TYPE}${NC}]"
 echo -e "PRODUCT_VERSION:      [${GREEN}${PRODUCT_VERSION}${NC}]"
 
 #Run the build (including running maven install task to generate poms
-./gradlew -Pversion=$PRODUCT_VERSION clean build ${EXTRA_BUILD_ARGS}
+./gradlew -Pversion=$PRODUCT_VERSION clean build --debug ${EXTRA_BUILD_ARGS}
 
 exit 0
