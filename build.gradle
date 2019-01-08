@@ -136,17 +136,14 @@ def projectsToBePublished = subprojects.findAll { project ->
 allprojects {
     apply plugin: 'nebula.lint'
 //    gradleLint.rules = ['all-dependency'] // add as many rules here as you'd like
-    gradleLint.rules = ['unused-dependency', 'deprecated-dependency-configuration']
+//    gradleLint.rules = ['unused-dependency', 'deprecated-dependency-configuration']
+    gradleLint.rules = ['unused-dependency']
 }
 
 subprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
-    apply plugin: 'nebula.lint'
-
-//        gradleLint.rules = ['all-dependency'] // add as many rules here as you'd like
-    gradleLint.rules = ['unused-dependency', , 'deprecated-dependency-configuration']
-
+    
     sourceCompatibility = JavaVersion.VERSION_1_10
     targetCompatibility = JavaVersion.VERSION_1_10
 
