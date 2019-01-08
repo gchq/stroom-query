@@ -49,7 +49,7 @@ dependencies {
     
     testImplementation project(':stroom-query-hibernate')
     testImplementation project(':stroom-query-jooq')
-    
+
     testImplementation libs.assertj_core
     testImplementation libs.dropwizard_core
     testImplementation libs.dropwizard_flyway
