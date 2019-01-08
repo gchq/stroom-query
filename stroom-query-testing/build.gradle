@@ -28,37 +28,38 @@ dependencies {
     implementation libs.dropwizard_auth
     implementation libs.dropwizard_core
     implementation libs.dropwizard_jersey
+    implementation libs.dropwizard_jooq
     implementation libs.dropwizard_testing
     implementation libs.guice
     implementation libs.google_findbugs
+    implementation libs.hibernate_core
+    implementation libs.hibernate_jpa
     implementation libs.javax_ws;
     implementation libs.jackson_core
     implementation libs.jackson_databind
     implementation libs.jaxb_api
     implementation libs.jetty_http
-    implementation libs.junit_jupiter_api
     implementation libs.jose4j
+    implementation libs.junit_jupiter_api
     implementation libs.mockito_core
     implementation libs.slf4j_api
     implementation libs.wiremock
     implementation libs.test_containers
     implementation libs.test_containers_mysql
+    
+    testImplementation project(':stroom-query-hibernate')
+    testImplementation project(':stroom-query-jooq')
 
-    testCompile project(':stroom-query-hibernate')
-    testCompile project(':stroom-query-jooq')
-    
-    testCompile libs.assertj_core
-    testCompile libs.dropwizard_flyway
-    testCompile libs.dropwizard_jooq
-    testCompile libs.hibernate_core
-    testCompile libs.hibernate_jpa
-    testCompile libs.jackson_annotations
-    testCompile libs.jooq
-    testCompileOnly libs.junit_jupiter_api
-    testRuntime libs.mysql_connector
-    testRuntime 'org.apache.derby:derby:10.8.2.2'
-    
-    testRuntimeOnly libs.junit_jupiter_engine
-    testRuntimeOnly libs.jaxb_runtime
+    testImplementation libs.assertj_core
+    testImplementation libs.dropwizard_core
+    testImplementation libs.dropwizard_flyway
+    testImplementation libs.dropwizard_jersey
+    testImplementation libs.jackson_annotations
+    testImplementation libs.junit_jupiter_api
+
     testRuntimeOnly libs.javax_transaction
+    testRuntimeOnly libs.jaxb_runtime
+    testRuntimeOnly libs.junit_jupiter_engine
+    testRuntimeOnly libs.mysql_connector
+    testRuntimeOnly 'org.apache.derby:derby:10.8.2.2'
 }
