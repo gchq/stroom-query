@@ -49,7 +49,11 @@ dependencies {
     
     testCompile libs.assertj_core
     testCompile libs.dropwizard_flyway
+    testCompile libs.dropwizard_jooq
+    testCompile libs.hibernate_core
+    testCompile libs.hibernate_jpa
     testCompile libs.jackson_annotations
+    testCompile libs.jooq
     testCompileOnly libs.junit_jupiter_api
     testRuntime libs.mysql_connector
     testRuntime 'org.apache.derby:derby:10.8.2.2'
