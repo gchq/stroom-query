@@ -1,7 +1,7 @@
 package stroom.query.audit.service;
 
 import stroom.docref.DocRef;
-import stroom.query.api.v2.DocRefInfo;
+import stroom.docref.DocRefInfo;
 import stroom.query.audit.ExportDTO;
 import stroom.query.audit.model.DocRefEntity;
 import stroom.query.security.ServiceUser;

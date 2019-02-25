@@ -16,7 +16,7 @@
 
 ext.moduleName = 'stroom.query.sample'
 
-//apply plugin: 'com.benjaminsproule.swagger'
+apply plugin: 'com.benjaminsproule.swagger'
 
 dependencies {
     //--------Project----------
@@ -29,38 +29,38 @@ dependencies {
     implementation libs.ws_rs_api
 }
 
-//// Generate swagger specs for the ExampleEndpoint
-//// This is to allow easier checking of the generated spec files when making changes to the model's swagger annotations
-//swagger {
-//    apiSource {
-//        springmvc = false //makes it search for jersey annotations
-//        outputFormats = [ 'json', 'yaml' ]
-//        locations = [ 'stroom.query.api.v2.sample.ExampleEndpoint' ]
-//        schemes = [ 'http', 'https' ]
-//        host = 'localhost:8080'
-//        basePath = '/v2'
-//        info {
-//            title = 'stroom-query'
-//            version = 'v2'
-//            description = 'An API for querying data sources including the ability to request multiple result definitions'
-//            contact {
-//                name = 'GCHQ'
-//                url = 'https://github.com/gchq/stroom-query'
-//            }
-//            license {
-//                url = 'http://www.apache.org/licenses/LICENSE-2.0.html'
-//                name = 'Apache 2.0'
-//            }
-//        }
-//        //outputPath = "${project.buildDir}/generated/document.html"
-//        swaggerDirectory = "${project.buildDir}"
-//    }
-//}
-//
-//tasks.generateSwaggerDocumentation {
-//    dependsOn classes
-//}
-//
-//tasks.build{
-//    dependsOn generateSwaggerDocumentation
-//}
+// Generate swagger specs for the ExampleEndpoint
+// This is to allow easier checking of the generated spec files when making changes to the model's swagger annotations
+swagger {
+    apiSource {
+        springmvc = false //makes it search for jersey annotations
+        outputFormats = [ 'json', 'yaml' ]
+        locations = [ 'stroom.query.api.v2.sample.ExampleEndpoint' ]
+        schemes = [ 'http', 'https' ]
+        host = 'localhost:8080'
+        basePath = '/v2'
+        info {
+            title = 'stroom-query'
+            version = 'v2'
+            description = 'An API for querying data sources including the ability to request multiple result definitions'
+            contact {
+                name = 'GCHQ'
+                url = 'https://github.com/gchq/stroom-query'
+            }
+            license {
+                url = 'http://www.apache.org/licenses/LICENSE-2.0.html'
+                name = 'Apache 2.0'
+            }
+        }
+        //outputPath = "${project.buildDir}/generated/document.html"
+        swaggerDirectory = "${project.buildDir}"
+    }
+}
+
+tasks.generateSwaggerDocumentation {
+    dependsOn classes
+}
+
+tasks.build{
+    dependsOn generateSwaggerDocumentation
+}
