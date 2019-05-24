@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.1-beta.22] - 2019-05-24
+
+* Upgraded stroom expression to v1.4.15.
+
 ## [v2.1-beta.21] - 2018-12-13
 
 * Upgraded stroom expression to v1.4.14.
@@ -230,7 +234,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.1-beta.21...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.1-beta.22...HEAD
+[v2.1-beta.22]: https://github.com/gchq/stroom-query/compare/v2.1-beta.21...v2.1-beta.22
 [v2.1-beta.21]: https://github.com/gchq/stroom-query/compare/v2.1-beta.20...v2.1-beta.21
 [v2.1-beta.20]: https://github.com/gchq/stroom-query/compare/v2.1-beta.19...v2.1-beta.20
 [v2.1-beta.19]: https://github.com/gchq/stroom-query/compare/v2.1-beta.18...v2.1-beta.19
