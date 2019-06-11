@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.2-beta.1] - 2019-06-11
+
+* Issue **gchq/stroom#1167** : Added IN_FOLDER as a new condition type and removed unnecessary dictionary doc ref.
+
 ## [v2.1-beta.23] - 2019-05-28
 
 * Upgraded stroom expression to v1.4.16.
@@ -238,7 +242,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.1-beta.23...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.2-beta.1...HEAD
+[v2.2-beta.1]: https://github.com/gchq/stroom-query/compare/v2.1-beta.23...v2.2-beta.1
 [v2.1-beta.23]: https://github.com/gchq/stroom-query/compare/v2.1-beta.22...v2.1-beta.23
 [v2.1-beta.22]: https://github.com/gchq/stroom-query/compare/v2.1-beta.21...v2.1-beta.22
 [v2.1-beta.21]: https://github.com/gchq/stroom-query/compare/v2.1-beta.20...v2.1-beta.21

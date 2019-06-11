@@ -82,23 +82,18 @@ public final class ExpressionOperator extends ExpressionItem {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-
-        final ExpressionOperator that = (ExpressionOperator) o;
-
-        if (op != that.op) return false;
-        return children != null ? children.equals(that.children) : that.children == null;
+        ExpressionOperator that = (ExpressionOperator) o;
+        return op == that.op &&
+                Objects.equals(children, that.children);
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (op != null ? op.hashCode() : 0);
-        result = 31 * result + (children != null ? children.hashCode() : 0);
-        return result;
+        return Objects.hash(super.hashCode(), op, children);
     }
 
     @Override
@@ -288,40 +283,21 @@ public final class ExpressionOperator extends ExpressionItem {
         }
 
         /**
-         * A convenience function for adding dictionary terms in one go, the parameters should read fairly clearly
-         *
-         * @param field      The field name
-         * @param condition  The condition to apply to the value
-         * @param dictionary The dictionary
-         * @return this builder, with the completed term added.
-         */
-        public Builder addDictionaryTerm(final String field,
-                                         final ExpressionTerm.Condition condition,
-                                         final DocRef dictionary) {
-            return addTerm(new ExpressionTerm.Builder()
-                    .field(field)
-                    .condition(condition)
-                    .dictionary(dictionary)
-                    .build());
-        }
-
-        /**
          * A convenience function for adding docRef terms in one go, the parameters should read fairly clearly
          *
-         * @param field      The field name
-         * @param condition  The condition to apply to the value
-         * @param docRef The docRef
+         * @param field     The field name
+         * @param condition The condition to apply to the value
+         * @param docRef    The docRef
          * @return this builder, with the completed term added.
          */
         public Builder addDocRefTerm(final String field,
-                                         final ExpressionTerm.Condition condition,
-                                         final DocRef docRef) {
+                                     final ExpressionTerm.Condition condition,
+                                     final DocRef docRef) {
             return addTerm(new ExpressionTerm.Builder()
                     .field(field)
                     .condition(condition)
                     .docRef(docRef)
                     .build());
         }
-
     }
 }
