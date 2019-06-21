@@ -37,7 +37,7 @@ public class TableCoprocessor implements Coprocessor {
 
     public TableCoprocessor(final TableCoprocessorSettings settings,
                             final FieldIndexMap fieldIndexMap,
-                            final HasTerminate taskMonitor,
+                            final HasTerminate hasTerminate,
                             final Map<String, String> paramMap) {
         final TableSettings tableSettings = settings.getTableSettings();
 
@@ -45,7 +45,7 @@ public class TableCoprocessor implements Coprocessor {
         compiledDepths = new CompiledDepths(fields, tableSettings.showDetail());
         compiledFields = new CompiledFields(fields, fieldIndexMap, paramMap);
 
-        queue = new BlockingPairQueue<>(taskMonitor);
+        queue = new BlockingPairQueue<>(hasTerminate);
         mapper = new ItemMapper(queue, compiledFields, compiledDepths.getMaxDepth(), compiledDepths.getMaxGroupDepth());
     }
 

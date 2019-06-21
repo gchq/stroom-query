@@ -68,13 +68,17 @@ public class QueryServiceCriteriaImpl<
 
     private final DocRefService<DOC_REF_ENTITY> docRefEntityDocRefService;
 
+    private final HasTerminate hasTerminate;
+
     @Inject
     public QueryServiceCriteriaImpl(final QueryableEntity.ClassProvider<QUERYABLE_ENTITY> dtoClassProvider,
                                     final DocRefService<DOC_REF_ENTITY> docRefEntityDocRefService,
-                                    final SessionFactory database) {
+                                    final SessionFactory database,
+                                    final HasTerminate hasTerminate) {
         this.database = database;
         this.docRefEntityDocRefService = docRefEntityDocRefService;
         this.dtoClass = dtoClassProvider.get();
+        this.hasTerminate = hasTerminate;
 
         this.fields = Arrays.stream(dtoClass.getMethods()).map(method -> method.getAnnotation(IsDataSourceField.class))
                 .filter(Objects::nonNull)
@@ -256,20 +260,8 @@ public class QueryServiceCriteriaImpl<
 
                 if (coprocessorSettings instanceof TableCoprocessorSettings) {
                     final TableCoprocessorSettings tableCoprocessorSettings = (TableCoprocessorSettings) coprocessorSettings;
-                    final HasTerminate taskMonitor = new HasTerminate() {
-                        //TODO do something about this
-                        @Override
-                        public void terminate() {
-                            System.out.println("terminating");
-                        }
-
-                        @Override
-                        public boolean isTerminated() {
-                            return false;
-                        }
-                    };
                     final Coprocessor coprocessor = new TableCoprocessor(
-                            tableCoprocessorSettings, fieldIndexMap, taskMonitor, paramMap);
+                            tableCoprocessorSettings, fieldIndexMap, hasTerminate, paramMap);
 
                     coprocessorMap.put(coprocessorId, coprocessor);
                 }
@@ -324,7 +316,7 @@ public class QueryServiceCriteriaImpl<
         // It seems a little pointless to put it into the StatisticsStore only to get it out again so for now
         // we'll just get it straight from the config.
 
-        final SearchResponseCreator searchResponseCreator = new SearchResponseCreator(store);
+        final SearchResponseCreator searchResponseCreator = new SearchResponseCreator(store, hasTerminate);
 
         return searchResponseCreator.create(searchRequest);
     }

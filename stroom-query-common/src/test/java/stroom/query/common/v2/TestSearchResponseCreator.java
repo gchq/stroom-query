@@ -20,6 +20,7 @@ import stroom.query.api.v2.SearchResponse;
 import stroom.query.api.v2.TableResult;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.test.util.TimingUtils;
+import stroom.util.shared.NonTerminate;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -53,7 +54,7 @@ public class TestSearchResponseCreator {
     public void create_nonIncremental_timesOut() {
 
         Duration serverTimeout = Duration.ofMillis(500);
-        SearchResponseCreator searchResponseCreator = new SearchResponseCreator(mockStore, serverTimeout);
+        SearchResponseCreator searchResponseCreator = new SearchResponseCreator(mockStore, serverTimeout, new NonTerminate());
 
         //store is never complete
         Mockito.when(mockStore.isComplete()).thenReturn(false);
@@ -83,7 +84,7 @@ public class TestSearchResponseCreator {
 
         //long timeout because we should return almost immediately
         Duration serverTimeout = Duration.ofMillis(5_000);
-        SearchResponseCreator searchResponseCreator = new SearchResponseCreator(mockStore, serverTimeout);
+        SearchResponseCreator searchResponseCreator = new SearchResponseCreator(mockStore, serverTimeout, new NonTerminate());
 
         //store is immediately complete to replicate a synchronous store
         Mockito.when(mockStore.isComplete()).thenReturn(true);
@@ -110,7 +111,7 @@ public class TestSearchResponseCreator {
 
         Duration serverTimeout = Duration.ofMillis(5_000);
         Duration clienTimeout = Duration.ofMillis(5_000);
-        SearchResponseCreator searchResponseCreator = new SearchResponseCreator(mockStore, serverTimeout);
+        SearchResponseCreator searchResponseCreator = new SearchResponseCreator(mockStore, serverTimeout, new NonTerminate());
 
         //store initially not complete
         Mockito.when(mockStore.isComplete()).thenReturn(false);
@@ -140,7 +141,7 @@ public class TestSearchResponseCreator {
 
         Duration serverTimeout = Duration.ofMillis(5_000);
         Duration clientTimeout = Duration.ofMillis(0);
-        SearchResponseCreator searchResponseCreator = new SearchResponseCreator(mockStore, serverTimeout);
+        SearchResponseCreator searchResponseCreator = new SearchResponseCreator(mockStore, serverTimeout, new NonTerminate());
 
         //store is not complete during test
         Mockito.when(mockStore.isComplete()).thenReturn(false);
@@ -174,7 +175,7 @@ public class TestSearchResponseCreator {
         //long timeout because we should return almost immediately
         Duration serverTimeout = Duration.ofMillis(500);
         Duration clientTimeout = Duration.ofMillis(500);
-        SearchResponseCreator searchResponseCreator = new SearchResponseCreator(mockStore, serverTimeout);
+        SearchResponseCreator searchResponseCreator = new SearchResponseCreator(mockStore, serverTimeout, new NonTerminate());
 
         //store is immediately complete to replicate a synchronous store
         Mockito.when(mockStore.isComplete()).thenReturn(false);

@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class FlatResultCreator implements ResultCreator, HasTerminate {
+public class FlatResultCreator implements ResultCreator {
     private static final Logger LOGGER = LoggerFactory.getLogger(FlatResultCreator.class);
     private final FieldFormatter fieldFormatter;
     private final List<Mapper> mappers;
@@ -51,7 +51,8 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
     public FlatResultCreator(final ResultRequest resultRequest,
                              final Map<String, String> paramMap,
                              final FieldFormatter fieldFormatter,
-                             final Sizes defaultMaxResultsSizes) {
+                             final Sizes defaultMaxResultsSizes,
+                             final HasTerminate hasTerminate) {
 
         this.fieldFormatter = fieldFormatter;
 
@@ -67,7 +68,7 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
                 final Sizes sizes = Sizes.min(Sizes.create(parent.getMaxResults()), defaultMaxResultsSizes);
                 final int maxItems = sizes.size(0);
 
-                mappers.add(new Mapper(parent, child, paramMap, maxItems));
+                mappers.add(new Mapper(parent, child, paramMap, maxItems, hasTerminate));
             }
         } else {
             mappers = Collections.emptyList();
@@ -295,15 +296,6 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
         return type;
     }
 
-    @Override
-    public void terminate() {
-    }
-
-    @Override
-    public boolean isTerminated() {
-        return false;
-    }
-
     @FunctionalInterface
     private interface RangeChecker {
         boolean check(long count);
@@ -314,18 +306,21 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
         boolean isOpen(GroupKey group);
     }
 
-    private static class Mapper implements HasTerminate {
+    private static class Mapper {
         private final String[] parentFields;
         private final FieldIndexMap fieldIndexMap;
         private final TableCoprocessor tableCoprocessor;
         private final TablePayloadHandler tablePayloadHandler;
         private final int maxItems;
+        private final HasTerminate hasTerminate;
 
         Mapper(final TableSettings parent,
                final TableSettings child,
                final Map<String, String> paramMap,
-               final int maxItems) {
+               final int maxItems,
+               final HasTerminate hasTerminate) {
             this.maxItems = maxItems;
+            this.hasTerminate = hasTerminate;
 
             parentFields = new String[parent.getFields().size()];
             int i = 0;
@@ -336,7 +331,7 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
             fieldIndexMap = new FieldIndexMap(true);
 
             final TableCoprocessorSettings tableCoprocessorSettings = new TableCoprocessorSettings(child);
-            tableCoprocessor = new TableCoprocessor(tableCoprocessorSettings, fieldIndexMap, this, paramMap);
+            tableCoprocessor = new TableCoprocessor(tableCoprocessorSettings, fieldIndexMap, hasTerminate, paramMap);
 
             // Create a set of max result sizes that are determined by the supplied max results or default to integer max value.
             final Sizes maxResults = Sizes.create(child.getMaxResults(), Integer.MAX_VALUE);
@@ -376,19 +371,10 @@ public class FlatResultCreator implements ResultCreator, HasTerminate {
                 }
                 final TablePayload payload = (TablePayload) tableCoprocessor.createPayload();
 
-                tablePayloadHandler.addQueue(payload.getQueue(), this);
+                tablePayloadHandler.addQueue(payload.getQueue(), hasTerminate);
             }
 
             return tablePayloadHandler.getData();
-        }
-
-        @Override
-        public void terminate() {
-        }
-
-        @Override
-        public boolean isTerminated() {
-            return false;
         }
     }
 

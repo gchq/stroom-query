@@ -28,6 +28,7 @@ import stroom.query.api.v2.TableResult;
 import stroom.query.common.v2.format.FieldFormatter;
 import stroom.query.common.v2.format.FormatterFactory;
 import stroom.query.util.LambdaLogger;
+import stroom.util.shared.HasTerminate;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -55,12 +56,15 @@ public class SearchResponseCreator {
     // Cache the last results for each component.
     private final Map<String, Result> resultCache = new HashMap<>();
 
+    private final HasTerminate hasTerminate;
+
     /**
      * @param store The underlying store to use for creating the search responses.
      */
-    public SearchResponseCreator(final Store store) {
-
+    public SearchResponseCreator(final Store store,
+                                 final HasTerminate hasTerminate) {
         this.store = Objects.requireNonNull(store);
+        this.hasTerminate = Objects.requireNonNull(hasTerminate);
         this.defaultTimeout = FALL_BACK_DEFAULT_TIMEOUT;
     }
 
@@ -69,9 +73,11 @@ public class SearchResponseCreator {
      * @param defaultTimeout The service's default timeout period to use for waiting for the store to complete. This
      *                       will be used when the search request hasn't specified a timeout period.
      */
-    public SearchResponseCreator(final Store store, final Duration defaultTimeout) {
-
+    public SearchResponseCreator(final Store store,
+                                 final Duration defaultTimeout,
+                                 final HasTerminate hasTerminate) {
         this.store = Objects.requireNonNull(store);
+        this.hasTerminate = Objects.requireNonNull(hasTerminate);
         this.defaultTimeout = Objects.requireNonNull(defaultTimeout);
     }
 
@@ -219,7 +225,7 @@ public class SearchResponseCreator {
                 if (data != null) {
                     try {
                         final ResultCreator resultCreator = getResultCreator(componentId,
-                                resultRequest, searchRequest.getDateTimeLocale());
+                                resultRequest, searchRequest.getDateTimeLocale(), hasTerminate);
                         if (resultCreator != null) {
                             result = resultCreator.create(data, resultRequest);
                         }
@@ -277,7 +283,8 @@ public class SearchResponseCreator {
 
     private ResultCreator getResultCreator(final String componentId,
                                            final ResultRequest resultRequest,
-                                           final String dateTimeLocale) {
+                                           final String dateTimeLocale,
+                                           final HasTerminate hasTerminate) {
 
         if (cachedResultCreators.containsKey(componentId)) {
             return cachedResultCreators.get(componentId);
@@ -293,7 +300,8 @@ public class SearchResponseCreator {
                         resultRequest,
                         null,
                         null,
-                        store.getDefaultMaxResultsSizes());
+                        store.getDefaultMaxResultsSizes(),
+                        hasTerminate);
             }
         } catch (final Exception e) {
             throw new RuntimeException(e.getMessage());

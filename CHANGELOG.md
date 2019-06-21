@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **gchq/stroom#1154** : Add HasTerminate where needed to allow termination of searches.
+
 ## [v2.2-beta.1] - 2019-06-11
 
 * Issue **gchq/stroom#1167** : Added IN_FOLDER as a new condition type and removed unnecessary dictionary doc ref.

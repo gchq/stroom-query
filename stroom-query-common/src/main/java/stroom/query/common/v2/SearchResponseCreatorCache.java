@@ -2,6 +2,7 @@ package stroom.query.common.v2;
 
 import stroom.query.api.v2.QueryKey;
 import stroom.query.api.v2.SearchRequest;
+import stroom.util.shared.HasTerminate;
 
 /**
  * A self populating cache of {@link SearchResponseCreator} instances
@@ -29,15 +30,18 @@ public interface SearchResponseCreatorCache {
     class Key {
         private final QueryKey queryKey;
         private final SearchRequest searchRequest;
+        private final HasTerminate hasTerminate;
 
-        public Key(final SearchRequest searchRequest) {
+        public Key(final SearchRequest searchRequest, final HasTerminate hasTerminate) {
             this.queryKey = searchRequest.getKey();
             this.searchRequest = searchRequest;
+            this.hasTerminate = hasTerminate;
         }
 
-        public Key(final QueryKey queryKey) {
+        public Key(final QueryKey queryKey, final HasTerminate hasTerminate) {
             this.queryKey = queryKey;
             this.searchRequest = null;
+            this.hasTerminate = hasTerminate;
         }
 
         public QueryKey getQueryKey() {
@@ -46,6 +50,10 @@ public interface SearchResponseCreatorCache {
 
         public SearchRequest getSearchRequest() {
             return searchRequest;
+        }
+
+        public HasTerminate getHasTerminate() {
+            return hasTerminate;
         }
 
         @Override
