@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.2-beta.2] - 2019-06-21
+
 * Issue **gchq/stroom#1154** : Add HasTerminate where needed to allow termination of searches.
 
 ## [v2.2-beta.1] - 2019-06-11
@@ -244,7 +246,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.2-beta.1...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.2-beta.2...HEAD
+[v2.2-beta.2]: https://github.com/gchq/stroom-query/compare/v2.2-beta.1...v2.2-beta.2
 [v2.2-beta.1]: https://github.com/gchq/stroom-query/compare/v2.1-beta.23...v2.2-beta.1
 [v2.1-beta.23]: https://github.com/gchq/stroom-query/compare/v2.1-beta.22...v2.1-beta.23
 [v2.1-beta.22]: https://github.com/gchq/stroom-query/compare/v2.1-beta.21...v2.1-beta.22
