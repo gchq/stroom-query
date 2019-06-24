@@ -16,8 +16,8 @@ import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.hibernate.AuditedCriteriaQueryBundle;
-import stroom.query.testing.generic.app.TestDocRefEntity;
-import stroom.query.testing.generic.app.TestDocRefServiceImpl;
+import stroom.util.shared.HasTerminate;
+import stroom.util.shared.NonTerminate;
 
 public class HibernateApp extends Application<HibernateConfig> {
     // Wrap the flyway bundle so that we can call migrate in the bundles 'run'.
@@ -80,7 +80,9 @@ public class HibernateApp extends Application<HibernateConfig> {
         environment.jersey().register(new AbstractBinder() {
             @Override
             protected void configure() {
-                bind(TestDocRefServiceCriteriaImpl.class).to(new TypeLiteral<DocRefService<TestDocRefHibernateEntity>>() {});
+                bind(TestDocRefServiceCriteriaImpl.class).to(new TypeLiteral<DocRefService<TestDocRefHibernateEntity>>() {
+                });
+                bind(NonTerminate.class).to(HasTerminate.class);
             }
         });
     }

@@ -59,7 +59,8 @@ public class SearchResponseCreator {
     private final HasTerminate hasTerminate;
 
     /**
-     * @param store The underlying store to use for creating the search responses.
+     * @param store        The underlying store to use for creating the search responses.
+     * @param hasTerminate Object that provides termination control.
      */
     public SearchResponseCreator(final Store store,
                                  final HasTerminate hasTerminate) {
@@ -72,6 +73,7 @@ public class SearchResponseCreator {
      * @param store          The underlying store to use for creating the search responses.
      * @param defaultTimeout The service's default timeout period to use for waiting for the store to complete. This
      *                       will be used when the search request hasn't specified a timeout period.
+     * @param hasTerminate   Object that provides termination control.
      */
     public SearchResponseCreator(final Store store,
                                  final Duration defaultTimeout,
