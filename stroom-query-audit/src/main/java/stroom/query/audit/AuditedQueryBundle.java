@@ -24,6 +24,8 @@ import stroom.query.audit.security.TokenConfig;
 import stroom.query.audit.service.DocRefEntity;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryService;
+import stroom.util.shared.HasTerminate;
+import stroom.util.shared.HasTerminateImpl;
 
 /**
  * This Dropwizard bundle can be used to register an implementation of Query Resource implementation
@@ -68,6 +70,7 @@ public class AuditedQueryBundle<CONFIG extends Configuration & HasTokenConfig & 
         environment.jersey().register(new AbstractBinder() {
             @Override
             protected void configure() {
+                bind(HasTerminateImpl.class).to(HasTerminate.class);
                 bind(QueryEventLoggingService.class).to(EventLoggingService.class);
                 bind(queryServiceClass).to(QueryService.class);
                 bind(new DocRefEntity.ClassProvider<>(docRefEntityClass)).to(DocRefEntity.ClassProvider.class);
