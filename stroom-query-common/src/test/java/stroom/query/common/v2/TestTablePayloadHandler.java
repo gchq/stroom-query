@@ -33,7 +33,7 @@ import stroom.query.api.v2.TableSettings;
 import stroom.query.common.v2.format.FieldFormatter;
 import stroom.query.common.v2.format.FormatterFactory;
 import stroom.query.shared.v2.ParamUtil;
-import stroom.util.shared.NonTerminate;
+import stroom.util.shared.HasTerminateImpl;
 
 import java.util.Collections;
 
@@ -80,7 +80,7 @@ public class TestTablePayloadHandler {
                 tableSettings.showDetail(),
                 maxResults,
                 storeSize);
-        payloadHandler.addQueue(queue, new NonTerminate());
+        payloadHandler.addQueue(queue, new HasTerminateImpl());
         final Data data = payloadHandler.getData();
 
         // Make sure we only get 50 results.
@@ -132,7 +132,7 @@ public class TestTablePayloadHandler {
 
         final TablePayloadHandler payloadHandler = new TablePayloadHandler(tableSettings.getFields(),
                 tableSettings.showDetail(), maxResults, storeSize);
-        payloadHandler.addQueue(queue, new NonTerminate());
+        payloadHandler.addQueue(queue, new HasTerminateImpl());
         final Data data = payloadHandler.getData();
 
         final ResultRequest tableResultRequest = new ResultRequest("componentX", tableSettings, new OffsetRange(0, 3000));
@@ -176,7 +176,7 @@ public class TestTablePayloadHandler {
 
         final TablePayloadHandler payloadHandler = new TablePayloadHandler(tableSettings.getFields(),
                 tableSettings.showDetail(), maxResults, storeSize);
-        payloadHandler.addQueue(queue, new NonTerminate());
+        payloadHandler.addQueue(queue, new HasTerminateImpl());
         final Data data = payloadHandler.getData();
 
         final ResultRequest tableResultRequest = new ResultRequest("componentX", tableSettings, new OffsetRange(0, 3000));
@@ -225,7 +225,7 @@ public class TestTablePayloadHandler {
 
         final TablePayloadHandler payloadHandler = new TablePayloadHandler(tableSettings.getFields(),
                 tableSettings.showDetail(), maxResults, storeSize);
-        payloadHandler.addQueue(queue, new NonTerminate());
+        payloadHandler.addQueue(queue, new HasTerminateImpl());
         final Data data = payloadHandler.getData();
 
         final ResultRequest tableResultRequest = new ResultRequest("componentX", tableSettings, new OffsetRange(0, 3000));
@@ -274,7 +274,7 @@ public class TestTablePayloadHandler {
 
         final TablePayloadHandler payloadHandler = new TablePayloadHandler(tableSettings.getFields(),
                 tableSettings.showDetail(), maxResults, storeSize);
-        payloadHandler.addQueue(queue, new NonTerminate());
+        payloadHandler.addQueue(queue, new HasTerminateImpl());
         final Data data = payloadHandler.getData();
 
         final ResultRequest tableResultRequest = new ResultRequest("componentX", tableSettings, new OffsetRange(0, 3000));
@@ -322,7 +322,7 @@ public class TestTablePayloadHandler {
 
         final TablePayloadHandler payloadHandler = new TablePayloadHandler(tableSettings.getFields(),
                 tableSettings.showDetail(), maxResults, storeSize);
-        payloadHandler.addQueue(queue, new NonTerminate());
+        payloadHandler.addQueue(queue, new HasTerminateImpl());
         final Data data = payloadHandler.getData();
 
         final ResultRequest tableResultRequest = new ResultRequest(

@@ -56,16 +56,11 @@ public class SearchResponseCreator {
     // Cache the last results for each component.
     private final Map<String, Result> resultCache = new HashMap<>();
 
-    private final HasTerminate hasTerminate;
-
     /**
-     * @param store        The underlying store to use for creating the search responses.
-     * @param hasTerminate Object that provides termination control.
+     * @param store The underlying store to use for creating the search responses.
      */
-    public SearchResponseCreator(final Store store,
-                                 final HasTerminate hasTerminate) {
+    public SearchResponseCreator(final Store store) {
         this.store = Objects.requireNonNull(store);
-        this.hasTerminate = Objects.requireNonNull(hasTerminate);
         this.defaultTimeout = FALL_BACK_DEFAULT_TIMEOUT;
     }
 
@@ -73,13 +68,10 @@ public class SearchResponseCreator {
      * @param store          The underlying store to use for creating the search responses.
      * @param defaultTimeout The service's default timeout period to use for waiting for the store to complete. This
      *                       will be used when the search request hasn't specified a timeout period.
-     * @param hasTerminate   Object that provides termination control.
      */
     public SearchResponseCreator(final Store store,
-                                 final Duration defaultTimeout,
-                                 final HasTerminate hasTerminate) {
+                                 final Duration defaultTimeout) {
         this.store = Objects.requireNonNull(store);
-        this.hasTerminate = Objects.requireNonNull(hasTerminate);
         this.defaultTimeout = Objects.requireNonNull(defaultTimeout);
     }
 
@@ -87,6 +79,7 @@ public class SearchResponseCreator {
      * Build a {@link SearchResponse} from the passed {@link SearchRequest}.
      *
      * @param searchRequest The {@link SearchRequest} containing the query terms and the result requests
+     * @param hasTerminate  Object that provides termination control.
      * @return A {@link SearchResponse} object that may be one of:
      * <ul>
      * <li>A 'complete' {@link SearchResponse} containing all the data requested</li>
@@ -98,7 +91,7 @@ public class SearchResponseCreator {
      * occurred while assembling the {@link SearchResponse}</li>
      * </ul>
      */
-    public SearchResponse create(final SearchRequest searchRequest) {
+    public SearchResponse create(final SearchRequest searchRequest, final HasTerminate hasTerminate) {
         final boolean didSearchComplete;
 
         if (!store.isComplete()) {
@@ -144,7 +137,7 @@ public class SearchResponseCreator {
             // Get completion state before we get results.
             final boolean complete = store.isComplete();
 
-            List<Result> results = getResults(searchRequest);
+            List<Result> results = getResults(searchRequest, hasTerminate);
 
             if (results.size() == 0) {
                 results = null;
@@ -210,7 +203,7 @@ public class SearchResponseCreator {
         }
     }
 
-    private List<Result> getResults(final SearchRequest searchRequest) {
+    private List<Result> getResults(final SearchRequest searchRequest, final HasTerminate hasTerminate) {
 
         // Provide results if this search is incremental or the search is complete.
         List<Result> results = new ArrayList<>(searchRequest.getResultRequests().size());

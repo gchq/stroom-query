@@ -49,7 +49,7 @@ public abstract class AbstractInMemorySearchResponseCreatorCacheFactory implemen
         final Function<SearchResponseCreatorCache.Key, SearchResponseCreator> loaderFunc = (SearchResponseCreatorCache.Key key) -> {
             LOGGER.debug("Loading new store for key {}", key);
             final Store store = storeFactory.create(key.getSearchRequest());
-            return new SearchResponseCreator(store, key.getHasTerminate());
+            return new SearchResponseCreator(store);
         };
         return CacheLoader.from(loaderFunc::apply);
     }

@@ -10,6 +10,7 @@ import stroom.query.api.v2.SearchResponse;
 import stroom.query.audit.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryService;
+import stroom.util.shared.HasTerminate;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -26,7 +27,7 @@ public class TestQueryServiceImpl implements QueryService {
 
     @Override
     public Optional<DataSource> getDataSource(final ServiceUser user,
-                                              final DocRef docRef) throws Exception {
+                                              final DocRef docRef) {
         return Optional.of(new DataSource.Builder()
                 .addFields(new DataSourceField.Builder()
                         .type(DataSourceField.DataSourceFieldType.FIELD)
@@ -42,7 +43,8 @@ public class TestQueryServiceImpl implements QueryService {
 
     @Override
     public Optional<SearchResponse> search(final ServiceUser user,
-                                           final SearchRequest request) throws Exception {
+                                           final SearchRequest request,
+                                           final HasTerminate hasTerminate) {
         return Optional.of(new SearchResponse.TableResultBuilder()
                 // Yeah whatever...
                 .build());
@@ -50,13 +52,13 @@ public class TestQueryServiceImpl implements QueryService {
 
     @Override
     public Boolean destroy(final ServiceUser user,
-                           final QueryKey queryKey) throws Exception {
+                           final QueryKey queryKey) {
         return Boolean.TRUE;
     }
 
     @Override
     public Optional<DocRef> getDocRefForQueryKey(final ServiceUser user,
-                                                 final QueryKey queryKey) throws Exception {
+                                                 final QueryKey queryKey) {
         return Optional.empty();
     }
 }

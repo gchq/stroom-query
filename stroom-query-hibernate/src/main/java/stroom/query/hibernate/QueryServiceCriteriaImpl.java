@@ -110,7 +110,8 @@ public class QueryServiceCriteriaImpl<
 
     @Override
     public Optional<SearchResponse> search(final ServiceUser user,
-                                           final SearchRequest request) throws Exception {
+                                           final SearchRequest request,
+                                           final HasTerminate hasTerminate) throws Exception {
         final String dataSourceUuid = request.getQuery().getDataSource().getUuid();
 
         final Optional<DOC_REF_ENTITY> docRefEntity = docRefEntityDocRefService.get(user, dataSourceUuid);
@@ -134,7 +135,7 @@ public class QueryServiceCriteriaImpl<
 
             cq.where(cb.and(requestPredicate, dataSourcePredicate));
             final List<Tuple> tuples = session.createQuery(cq).getResultList();
-            final SearchResponse searchResponse = projectResults(request, tuples);
+            final SearchResponse searchResponse = projectResults(request, hasTerminate, tuples);
 
             return Optional.of(searchResponse);
         }
@@ -233,6 +234,7 @@ public class QueryServiceCriteriaImpl<
 
     // TODO I copied this from 'stats', but can't make head or tail of it to try and move it into somewhere more sensible
     private SearchResponse projectResults(final SearchRequest searchRequest,
+                                          final HasTerminate hasTerminate,
                                           final List<Tuple> tuples) {
 
         // TODO: possibly the mapping from the componentId to the coprocessorsettings map is a bit odd.
@@ -316,8 +318,8 @@ public class QueryServiceCriteriaImpl<
         // It seems a little pointless to put it into the StatisticsStore only to get it out again so for now
         // we'll just get it straight from the config.
 
-        final SearchResponseCreator searchResponseCreator = new SearchResponseCreator(store, hasTerminate);
+        final SearchResponseCreator searchResponseCreator = new SearchResponseCreator(store);
 
-        return searchResponseCreator.create(searchRequest);
+        return searchResponseCreator.create(searchRequest, hasTerminate);
     }
 }

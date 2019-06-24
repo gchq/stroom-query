@@ -6,6 +6,7 @@ import stroom.query.api.v2.QueryKey;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.SearchResponse;
 import stroom.query.audit.security.ServiceUser;
+import stroom.util.shared.HasTerminate;
 
 import java.util.Optional;
 
@@ -27,11 +28,13 @@ public interface QueryService {
      *
      * @param user The authenticated user
      * @param request The details of the search
+     * @param hasTerminate  Object that provides termination control.
      * @return The search results
      * @throws Exception If something goes wrong
      */
     Optional<SearchResponse> search(ServiceUser user,
-                                    SearchRequest request) throws Exception;
+                                    SearchRequest request,
+                                    HasTerminate hasTerminate) throws Exception;
 
     /**
      * Destroy any existing query being conducted under the given key.

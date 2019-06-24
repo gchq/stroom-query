@@ -16,7 +16,7 @@
 
 package stroom.util.shared;
 
-public class NonTerminate implements HasTerminate {
+public class HasTerminateImpl implements HasTerminate {
     @Override
     public void terminate() {
 

@@ -20,6 +20,7 @@ import stroom.query.audit.security.ServiceUser;
 import stroom.query.audit.service.DocRefEntity;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryService;
+import stroom.util.shared.HasTerminate;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
@@ -42,22 +43,26 @@ public class AuditedQueryResourceImpl<T extends DocRefEntity> implements QueryRe
 
     private final DocRefService<T> docRefService;
 
+    private final HasTerminate hasTerminate;
+
     @Inject
     public AuditedQueryResourceImpl(final EventLoggingService eventLoggingService,
                                     final QueryService service,
                                     final AuthorisationService authorisationService,
-                                    final DocRefService<T> docRefService) {
+                                    final DocRefService<T> docRefService,
+                                    final HasTerminate hasTerminate) {
         this.eventLoggingService = eventLoggingService;
         this.service = service;
         this.authorisationService = authorisationService;
         this.docRefService = docRefService;
+        this.hasTerminate = hasTerminate;
     }
 
     public static final String GET_DATA_SOURCE = "GET_DATA_SOURCE";
 
     @Override
     public Response getDataSource(final ServiceUser user,
-                                  final DocRef docRef){
+                                  final DocRef docRef) {
         return DocRefAuditWrapper.<T>withUser(user)
                 .withDocRef(docRef)
                 .withDocRefEntity(d -> docRefService.get(user, docRef.getUuid()))
@@ -88,14 +93,14 @@ public class AuditedQueryResourceImpl<T extends DocRefEntity> implements QueryRe
 
     @Override
     public Response search(final ServiceUser user,
-                           final SearchRequest request){
+                           final SearchRequest request) {
         return DocRefAuditWrapper.<T>withUser(user)
                 .withDocRef(request.getQuery().getDataSource())
                 .withDocRefEntity(docRef -> docRefService.get(user, docRef.getUuid()))
                 .withAuthSupplier(docRef -> authorisationService.isAuthorised(user,
                         docRef,
                         DocumentPermission.READ))
-                .withResponse(docRefEntity -> service.search(user, request)
+                .withResponse(docRefEntity -> service.search(user, request, hasTerminate)
                         .map(d -> Response.ok(d).build())
                         .orElse(Response.status(HttpStatus.NOT_FOUND_404)
                                 .build()))
