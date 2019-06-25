@@ -12,7 +12,7 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import java.util.function.Supplier;
 
-@JooqEntity(tableName="test_jooq_entity")
+@JooqEntity(tableName = "test_jooq_entity")
 public class TestQueryableJooqEntity extends QueryableJooqEntity {
     public static final String COLOUR = "colour";
     public static final String ID = "id";
@@ -28,12 +28,11 @@ public class TestQueryableJooqEntity extends QueryableJooqEntity {
 
         @Override
         public DataSourceField get() {
-            return new DataSourceField.Builder()
-                    .type(DataSourceField.DataSourceFieldType.FIELD)
+            return new DataSourceField.Builder().type(
+                    DataSourceField.DataSourceFieldType.FIELD)
                     .name(COLOUR)
                     .queryable(true)
-                    .addConditions(
-                            ExpressionTerm.Condition.EQUALS,
+                    .addConditions(ExpressionTerm.Condition.EQUALS,
                             ExpressionTerm.Condition.IN,
                             ExpressionTerm.Condition.IN_DICTIONARY
                     ).build();
@@ -41,7 +40,7 @@ public class TestQueryableJooqEntity extends QueryableJooqEntity {
     }
 
     @Id
-    @Column(name= COLOUR)
+    @Column(name = COLOUR)
     @IsDataSourceField(fieldSupplier = ColourField.class)
     public String getColour() {
         return colour;
@@ -68,7 +67,7 @@ public class TestQueryableJooqEntity extends QueryableJooqEntity {
     }
 
     @Id
-    @Column(name=ID)
+    @Column(name = ID)
     @IsDataSourceField(fieldSupplier = IdField.class)
     public String getId() {
         return id;

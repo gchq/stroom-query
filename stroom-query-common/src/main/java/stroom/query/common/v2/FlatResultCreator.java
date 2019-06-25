@@ -367,8 +367,6 @@ public class FlatResultCreator implements ResultCreator {
                     }
                 }
                 final TablePayload payload = (TablePayload) tableCoprocessor.createPayload();
-
-                tablePayloadHandler.clear();
                 tablePayloadHandler.addQueue(payload.getQueue());
             }
 

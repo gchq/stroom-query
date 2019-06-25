@@ -72,7 +72,7 @@ public class Item implements Serializable {
             if (value != null) {
                 try {
                     sb.append(value.eval().toString());
-                } catch (Exception e) {
+                } catch (final RuntimeException e) {
                     // if the evaluation of the generator fails record the class of the exception
                     // so we can see which one has a problem
                     sb.append(e.getClass().getCanonicalName());

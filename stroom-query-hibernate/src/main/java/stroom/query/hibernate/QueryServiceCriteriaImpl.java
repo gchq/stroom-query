@@ -313,7 +313,7 @@ public class QueryServiceCriteriaImpl<
 
         // Construct the store
         final Sizes storeSize = Sizes.create(tuples.size());
-        final CriteriaStore store = new CriteriaStore(storeSize,
+        CriteriaStore store = new CriteriaStore(storeSize,
                 storeSize,
                 coprocessorSettingsMap,
                 payloadMap);

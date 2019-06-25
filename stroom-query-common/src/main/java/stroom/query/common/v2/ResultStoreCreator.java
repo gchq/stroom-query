@@ -45,7 +45,6 @@ public class ResultStoreCreator implements Reader<GroupKey, Item> {
     private void sortAndTrim(final Sizes storeSize, final GroupKey parentKey, final int depth) {
         final Items<Item> parentItems = childMap.get(parentKey);
         if (parentItems != null) {
-
             if (storeSize == null) {
                 // no store limits so just sort
                 parentItems.sort(sorter);

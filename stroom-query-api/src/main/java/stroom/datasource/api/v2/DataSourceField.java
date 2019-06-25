@@ -23,7 +23,12 @@ import io.swagger.annotations.ApiModelProperty;
 import stroom.docref.HasDisplayValue;
 import stroom.query.api.v2.ExpressionTerm.Condition;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -173,7 +178,6 @@ public final class DataSourceField implements Serializable, HasDisplayValue {
     }
 
     public static class Builder {
-
         private DataSourceFieldType type;
         private String docRefType;
         private String name;
@@ -200,7 +204,7 @@ public final class DataSourceField implements Serializable, HasDisplayValue {
             return this;
         }
 
-        public Builder addConditions(final Condition...values) {
+        public Builder addConditions(final Condition... values) {
             this.conditions.addAll(Arrays.asList(values));
             return this;
         }

@@ -48,13 +48,9 @@ import static org.jooq.impl.DSL.not;
 import static org.jooq.impl.DSL.or;
 
 public class JooqStoreFactory implements StoreFactory {
-
     private final JooqDataSourceProvider dataSourceProvider;
-
     private final DSLContext database;
-
     private final DocRefService<?> docRefService;
-
     private final Table<Record> table;
 
     @Inject
@@ -255,7 +251,8 @@ public class JooqStoreFactory implements StoreFactory {
 
         // Construct the store
         final Sizes storeSize = Sizes.create(tuples.size());
-        return new CriteriaStore(storeSize,
+        return new CriteriaStore(
+                storeSize,
                 storeSize,
                 coprocessorSettingsMap,
                 payloadMap);

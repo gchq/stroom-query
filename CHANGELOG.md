@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **gchq/stroom#1154** : Add HasTerminate where needed to allow termination of searches.
+
+* Issue **gchq/stroom#1167** : Added IN_FOLDER as a new condition type and removed unnecessary dictionary doc ref.
+
+* Issue **gchq/stroom#1015** : Fix problem of stroom-query ignoring visualisation sort settings.
+
+* Issue **gchq/stroom#1007** : Max visualisation results are now limited by default to the maximum number of results defined for the first level of the parent table. This can be further limited by settings in the visualisation.
+
 * Updated stroom expression to v2.0.4.
 
 * Issue **gchq/stroom#1007** : Max visualisation results are now limited by default to the maximum number of results defined for the first level of the parent table. This can be further limited by settings in the visualisation.

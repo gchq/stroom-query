@@ -23,7 +23,6 @@ import java.util.concurrent.TimeUnit;
  * Used to store the results from a query made on a {@link stroom.query.audit.service.QueryService}
  */
 public class CriteriaStore implements Store {
-
     private final CoprocessorSettingsMap coprocessorSettingsMap;
     private final Map<CoprocessorSettingsMap.CoprocessorKey, Payload> payloadMap;
 
