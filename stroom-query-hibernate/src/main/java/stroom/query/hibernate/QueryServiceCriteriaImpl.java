@@ -20,7 +20,6 @@ import stroom.query.api.v2.SearchResponse;
 import stroom.query.audit.CriteriaStore;
 import stroom.query.audit.model.IsDataSourceField;
 import stroom.query.audit.model.QueryableEntity;
-import stroom.security.ServiceUser;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryApiException;
 import stroom.query.audit.service.QueryService;
@@ -29,9 +28,10 @@ import stroom.query.common.v2.CoprocessorSettings;
 import stroom.query.common.v2.CoprocessorSettingsMap;
 import stroom.query.common.v2.Payload;
 import stroom.query.common.v2.SearchResponseCreator;
-import stroom.query.common.v2.StoreSize;
+import stroom.query.common.v2.Sizes;
 import stroom.query.common.v2.TableCoprocessor;
 import stroom.query.common.v2.TableCoprocessorSettings;
+import stroom.security.ServiceUser;
 
 import javax.inject.Inject;
 import javax.persistence.Tuple;
@@ -311,9 +311,9 @@ public class QueryServiceCriteriaImpl<
         }
 
         // Construct the store
-        final List<Integer> storeSize = Collections.singletonList(tuples.size());
+        final Sizes storeSize = Sizes.create(tuples.size());
         CriteriaStore store = new CriteriaStore(storeSize,
-                new StoreSize(storeSize),
+                storeSize,
                 coprocessorSettingsMap,
                 payloadMap);
 

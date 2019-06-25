@@ -8,7 +8,6 @@ import stroom.query.hibernate.QueryableHibernateEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.util.Arrays;
 import java.util.function.Supplier;
 
 @Entity(name="test_hibernate_entity")
@@ -24,16 +23,14 @@ public class TestQueryableHibernateEntity extends QueryableHibernateEntity {
 
         @Override
         public DataSourceField get() {
-            return new DataSourceField(
-                    DataSourceField.DataSourceFieldType.FIELD,
-                    FLAVOUR,
-                    true,
-                    Arrays.asList(
-                            ExpressionTerm.Condition.EQUALS,
+            return new DataSourceField.Builder().type(
+                    DataSourceField.DataSourceFieldType.FIELD)
+                    .name(FLAVOUR)
+                    .queryable(true)
+                    .addConditions(ExpressionTerm.Condition.EQUALS,
                             ExpressionTerm.Condition.IN,
                             ExpressionTerm.Condition.IN_DICTIONARY
-                    )
-            );
+                    ).build();
         }
     }
 
