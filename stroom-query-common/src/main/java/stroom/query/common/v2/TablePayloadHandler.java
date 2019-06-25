@@ -39,8 +39,8 @@ public class TablePayloadHandler implements PayloadHandler {
 
     private final CompiledSorter compiledSorter;
     private final CompiledDepths compiledDepths;
-    private final MaxResults maxResults;
-    private final StoreSize storeSize;
+    private final Sizes maxResults;
+    private final Sizes storeSize;
     private final AtomicLong totalResults = new AtomicLong();
     private final LinkedBlockingQueue<UnsafePairQueue<GroupKey, Item>> pendingMerges = new LinkedBlockingQueue<>();
     private final AtomicBoolean merging = new AtomicBoolean();
@@ -53,8 +53,8 @@ public class TablePayloadHandler implements PayloadHandler {
 
     public TablePayloadHandler(final List<Field> fields,
                                final boolean showDetails,
-                               final MaxResults maxResults,
-                               final StoreSize storeSize) {
+                               final Sizes maxResults,
+                               final Sizes storeSize) {
         this.compiledSorter = new CompiledSorter(fields);
         this.maxResults = maxResults;
         this.storeSize = storeSize;
@@ -200,7 +200,7 @@ public class TablePayloadHandler implements PayloadHandler {
         resultStoreCreator.read(queue);
 
         // Trim the number of results in the store.
-        resultStoreCreator.trim(storeSize);
+        resultStoreCreator.sortAndTrim(storeSize);
 
         // Put the remaining items into the current queue ready for the next
         // result.

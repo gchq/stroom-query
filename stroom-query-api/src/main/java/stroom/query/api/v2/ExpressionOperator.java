@@ -173,7 +173,7 @@ public final class ExpressionOperator extends ExpressionItem {
         }
 
         /**
-         * @param value Set the logical operator to apply to all the children items
+         * @param op Set the logical operator to apply to all the children items
          */
         public Builder(final Op op) {
             op(op);
@@ -284,20 +284,20 @@ public final class ExpressionOperator extends ExpressionItem {
         }
 
         /**
-         * A convenience function for adding dictionary terms in one go, the parameters should read fairly clearly
+         * A convenience function for adding docRef terms in one go, the parameters should read fairly clearly
          *
-         * @param field      The field name
-         * @param condition  The condition to apply to the value
-         * @param dictionary The dictionary
+         * @param field     The field name
+         * @param condition The condition to apply to the value
+         * @param docRef    The docRef
          * @return this builder, with the completed term added.
          */
-        public Builder addDictionaryTerm(final String field,
-                                         final ExpressionTerm.Condition condition,
-                                         final DocRef dictionary) {
+        public Builder addDocRefTerm(final String field,
+                                     final ExpressionTerm.Condition condition,
+                                     final DocRef docRef) {
             return addTerm(new ExpressionTerm.Builder()
                     .field(field)
                     .condition(condition)
-                    .dictionary(dictionary)
+                    .docRef(docRef)
                     .build());
         }
     }

@@ -23,15 +23,20 @@ import io.swagger.annotations.ApiModelProperty;
 import stroom.docref.HasDisplayValue;
 import stroom.query.api.v2.ExpressionTerm.Condition;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-@JsonPropertyOrder({"type", "name", "queryable", "conditions"})
-@XmlType(name = "DataSourceField", propOrder = {"type", "name", "queryable", "conditions"})
+@JsonPropertyOrder({"type", "docRefType", "name", "queryable", "conditions"})
+@XmlType(name = "DataSourceField", propOrder = {"type", "docRefType", "name", "queryable", "conditions"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = "The definition of a field within a data source")
 public final class DataSourceField implements Serializable, HasDisplayValue {
@@ -42,6 +47,12 @@ public final class DataSourceField implements Serializable, HasDisplayValue {
             value = "The data type for the field",
             required = true)
     private DataSourceFieldType type;
+
+    @XmlElement
+    @ApiModelProperty(
+            value = "The doc ref type for the field",
+            required = true)
+    private String docRefType;
 
     @XmlElement
     @ApiModelProperty(
@@ -72,8 +83,13 @@ public final class DataSourceField implements Serializable, HasDisplayValue {
     private DataSourceField() {
     }
 
-    public DataSourceField(final DataSourceFieldType type, final String name, final Boolean queryable, final List<Condition> conditions) {
+    public DataSourceField(final DataSourceFieldType type,
+                           final String docRefType,
+                           final String name,
+                           final Boolean queryable,
+                           final List<Condition> conditions) {
         this.type = type;
+        this.docRefType = docRefType;
         this.name = name;
         this.queryable = queryable;
         this.conditions = conditions;
@@ -81,6 +97,10 @@ public final class DataSourceField implements Serializable, HasDisplayValue {
 
     public DataSourceFieldType getType() {
         return type;
+    }
+
+    public String getDocRefType() {
+        return docRefType;
     }
 
     public String getName() {
@@ -136,7 +156,8 @@ public final class DataSourceField implements Serializable, HasDisplayValue {
         FIELD("Text", false),
         NUMERIC_FIELD("Number", true),
         DATE_FIELD("Date", false),
-        ID("Id", true);
+        ID("Id", true),
+        DOC_REF("DocRef", false);
 
         private final String displayValue;
         private final boolean numeric;
@@ -157,8 +178,8 @@ public final class DataSourceField implements Serializable, HasDisplayValue {
     }
 
     public static class Builder {
-
         private DataSourceFieldType type;
+        private String docRefType;
         private String name;
         private Boolean queryable;
         private final List<Condition> conditions = new ArrayList<>();
@@ -166,6 +187,11 @@ public final class DataSourceField implements Serializable, HasDisplayValue {
         public Builder type(final DataSourceFieldType value) {
             this.type = value;
             return this;
+        }
+
+        public Builder docRefType(final String docRefType) {
+            this.docRefType = docRefType;
+            return type(DataSourceFieldType.DOC_REF);
         }
 
         public Builder name(final String value) {
@@ -178,13 +204,13 @@ public final class DataSourceField implements Serializable, HasDisplayValue {
             return this;
         }
 
-        public Builder addConditions(final Condition...values) {
+        public Builder addConditions(final Condition... values) {
             this.conditions.addAll(Arrays.asList(values));
             return this;
         }
 
         public DataSourceField build() {
-            return new DataSourceField(type, name, queryable, conditions);
+            return new DataSourceField(type, docRefType, name, queryable, conditions);
         }
     }
 }

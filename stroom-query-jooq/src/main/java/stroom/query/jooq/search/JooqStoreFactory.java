@@ -25,9 +25,9 @@ import stroom.query.common.v2.Coprocessor;
 import stroom.query.common.v2.CoprocessorSettings;
 import stroom.query.common.v2.CoprocessorSettingsMap;
 import stroom.query.common.v2.Payload;
+import stroom.query.common.v2.Sizes;
 import stroom.query.common.v2.Store;
 import stroom.query.common.v2.StoreFactory;
-import stroom.query.common.v2.StoreSize;
 import stroom.query.common.v2.TableCoprocessor;
 import stroom.query.common.v2.TableCoprocessorSettings;
 import stroom.query.jooq.JooqEntity;
@@ -48,13 +48,9 @@ import static org.jooq.impl.DSL.not;
 import static org.jooq.impl.DSL.or;
 
 public class JooqStoreFactory implements StoreFactory {
-
     private final JooqDataSourceProvider dataSourceProvider;
-
     private final DSLContext database;
-
     private final DocRefService<?> docRefService;
-
     private final Table<Record> table;
 
     @Inject
@@ -254,8 +250,10 @@ public class JooqStoreFactory implements StoreFactory {
         }
 
         // Construct the store
-        final List<Integer> storeSize = Collections.singletonList(tuples.size());
-        return new CriteriaStore(storeSize, new StoreSize(storeSize),
+        final Sizes storeSize = Sizes.create(tuples.size());
+        return new CriteriaStore(
+                storeSize,
+                storeSize,
                 coprocessorSettingsMap,
                 payloadMap);
     }

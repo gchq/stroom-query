@@ -30,8 +30,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-@JsonPropertyOrder({"field", "condition", "value", "dictionary"})
-@XmlType(name = "ExpressionTerm", propOrder = {"field", "condition", "value", "dictionary"})
+@JsonPropertyOrder({"field", "condition", "value", "docRef"})
+@XmlType(name = "ExpressionTerm", propOrder = {"field", "condition", "value", "docRef"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(
         value = "ExpressionTerm",
@@ -54,15 +54,13 @@ public final class ExpressionTerm extends ExpressionItem {
 
     @XmlElement
     @ApiModelProperty(
-            value = "The value that the field value is being evaluated against. Not required if a dictionary is supplied",
-            required = false)
+            value = "The value that the field value is being evaluated against. Not required if a dictionary is supplied")
     private String value;
 
     @XmlElement
     @ApiModelProperty(
-            value = "The DocRef for the dictionary that this predicate is using for its evaluation",
-            required = true)
-    private DocRef dictionary;
+            value = "The DocRef that the field value is being evaluated against if the condition is IN_DICTIONARY, IN_FOLDER or IS_DOC_REF")
+    private DocRef docRef;
 
     private ExpressionTerm() {
     }
@@ -71,20 +69,20 @@ public final class ExpressionTerm extends ExpressionItem {
         this(null, field, condition, value, null);
     }
 
-    public ExpressionTerm(final String field, final Condition condition, final DocRef dictionary) {
-        this(null, field, condition, null, dictionary);
+    public ExpressionTerm(final String field, final Condition condition, final DocRef docRef) {
+        this(null, field, condition, null, docRef);
     }
 
     public ExpressionTerm(final Boolean enabled,
                           final String field,
                           final Condition condition,
                           final String value,
-                          final DocRef dictionary) {
+                          final DocRef docRef) {
         super(enabled);
         this.field = field;
         this.condition = condition;
         this.value = value;
-        this.dictionary = dictionary;
+        this.docRef = docRef;
     }
 
     public String getField() {
@@ -99,8 +97,8 @@ public final class ExpressionTerm extends ExpressionItem {
         return value;
     }
 
-    public DocRef getDictionary() {
-        return dictionary;
+    public DocRef getDocRef() {
+        return docRef;
     }
 
     @Override
@@ -112,12 +110,12 @@ public final class ExpressionTerm extends ExpressionItem {
         return Objects.equals(field, that.field) &&
                 condition == that.condition &&
                 Objects.equals(value, that.value) &&
-                Objects.equals(dictionary, that.dictionary);
+                Objects.equals(docRef, that.docRef);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), field, condition, value, dictionary);
+        return Objects.hash(super.hashCode(), field, condition, value, docRef);
     }
 
     @Override
@@ -137,11 +135,23 @@ public final class ExpressionTerm extends ExpressionItem {
             }
             sb.append(" ");
             if (Condition.IN_DICTIONARY.equals(condition)) {
-                if (dictionary != null) {
-                    sb.append(dictionary.getUuid());
-                }
+                appendDocRef(sb, docRef);
+            } else if (Condition.IN_FOLDER.equals(condition)) {
+                appendDocRef(sb, docRef);
+            } else if (Condition.IS_DOC_REF.equals(condition)) {
+                appendDocRef(sb, docRef);
             } else if (value != null) {
                 sb.append(value);
+            }
+        }
+    }
+
+    private void appendDocRef(final StringBuilder sb, final DocRef docRef) {
+        if (docRef != null) {
+            if (docRef.getName() != null && docRef.getName().trim().length() > 0) {
+                sb.append(docRef.getName());
+            } else if (docRef.getUuid() != null && docRef.getUuid().trim().length() > 0) {
+                sb.append(docRef.getUuid());
             }
         }
     }
@@ -155,7 +165,9 @@ public final class ExpressionTerm extends ExpressionItem {
         LESS_THAN_OR_EQUAL_TO("<="),
         BETWEEN("between"),
         IN("in"),
-        IN_DICTIONARY("in dictionary");
+        IN_DICTIONARY("in dictionary"),
+        IN_FOLDER("in folder"),
+        IS_DOC_REF("is");
 
         public static final List<Condition> SIMPLE_CONDITIONS = Arrays.asList(
                 EQUALS,
@@ -190,7 +202,7 @@ public final class ExpressionTerm extends ExpressionItem {
 
         private String value;
 
-        private DocRef dictionary;
+        private DocRef docRef;
 
         /**
          * @param value The name of the field that is being evaluated in this predicate term"
@@ -220,28 +232,28 @@ public final class ExpressionTerm extends ExpressionItem {
         }
 
         /**
-         * Add a dictionary term to the builder, e.g fieldX|IN_DICTIONARY|docRefToDictionaryY
-         * Term is enabled by default. Not all data sources support dictionary terms and only certain
-         * conditions are supported for a dictionary term.
+         * Add a entity term to the builder, e.g fieldX|IS_DOC_REF|docRefToDictionaryY
+         * Term is enabled by default. Not all data sources support entity terms and only certain
+         * conditions are supported for an entity term.
          *
-         * @param value The DocRef for the dictionary that this predicate is using for its evaluation
+         * @param value The DocRef for the entity that this predicate is using for its evaluation
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder dictionary(final DocRef value) {
-            this.dictionary = value;
+        public Builder docRef(final DocRef value) {
+            this.docRef = value;
             return this;
         }
 
         /**
-         * A shortcut method for specifying the dictionary DocRef inline
+         * A shortcut method for specifying the entity DocRef inline
          *
          * @param type The element type
          * @param uuid The UUID of the dictionary
          * @param name The name of the dictionary
-         * @return this builder, with the completed dictionary added,
+         * @return this builder, with the completed entity added,
          */
-        public Builder dictionary(final String type, final String uuid, final String name) {
-            return this.dictionary(
+        public Builder docRef(final String type, final String uuid, final String name) {
+            return this.docRef(
                     new DocRef.Builder()
                             .type(type)
                             .uuid(uuid)
@@ -251,7 +263,7 @@ public final class ExpressionTerm extends ExpressionItem {
 
         @Override
         public ExpressionTerm build() {
-            return new ExpressionTerm(getEnabled(), field, condition, value, dictionary);
+            return new ExpressionTerm(getEnabled(), field, condition, value, docRef);
         }
 
         @Override

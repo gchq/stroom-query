@@ -9,7 +9,8 @@ import stroom.query.api.v2.SearchRequest;
 public interface SearchResponseCreatorCache {
 
     /**
-     * Get a {@link SearchResponseCreator} from the cache or create one and add it to the cache
+     * @param key The key to read/create
+     * @return Get a {@link SearchResponseCreator} from the cache or create one and add it to the cache
      * if it doesn't exist.
      */
     SearchResponseCreator get(final Key key);

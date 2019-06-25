@@ -1,11 +1,9 @@
 package stroom.query.common.v2;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
@@ -31,28 +29,23 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @ExtendWith(MockitoExtension.class)
-public class TestSearchResponseCreator {
-
+class TestSearchResponseCreator {
     private static Duration TOLLERANCE = Duration.ofMillis(100);
 
     @Mock
     private Store mockStore;
 
-    @Captor
-    private ArgumentCaptor<CompletionListener> completionListenerCaptor;
-
-    @BeforeAll
-    public void setup() {
+    @BeforeEach
+    void setup() {
         //default mock behaviour
         Mockito.when(mockStore.getErrors()).thenReturn(Collections.emptyList());
         Mockito.when(mockStore.getHighlights()).thenReturn(Collections.emptyList());
         Mockito.when(mockStore.getData(Mockito.any())).thenReturn(createSingleItemDataObject());
-        Mockito.when(mockStore.getStoreSize()).thenReturn(new StoreSize(Arrays.asList(100, 10, 1)));
+        Mockito.when(mockStore.getStoreSize()).thenReturn(Sizes.create(Arrays.asList(100, 10, 1)));
     }
 
     @Test
-    public void create_nonIncremental_timesOut() {
-
+    void create_nonIncremental_timesOut() {
         Duration serverTimeout = Duration.ofMillis(500);
         SearchResponseCreator searchResponseCreator = new SearchResponseCreator(mockStore, serverTimeout);
 
@@ -81,8 +74,7 @@ public class TestSearchResponseCreator {
     }
 
     @Test
-    public void create_nonIncremental_completesImmediately() {
-
+    void create_nonIncremental_completesImmediately() {
         //long timeout because we should return almost immediately
         Duration serverTimeout = Duration.ofMillis(5_000);
         SearchResponseCreator searchResponseCreator = new SearchResponseCreator(mockStore, serverTimeout);
@@ -109,8 +101,7 @@ public class TestSearchResponseCreator {
     }
 
     @Test
-    public void create_nonIncremental_completesBeforeTimeout() {
-
+    void create_nonIncremental_completesBeforeTimeout() {
         Duration serverTimeout = Duration.ofMillis(5_000);
         Duration clientTimeout = Duration.ofMillis(5_000);
         SearchResponseCreator searchResponseCreator = new SearchResponseCreator(mockStore, serverTimeout);
@@ -136,10 +127,8 @@ public class TestSearchResponseCreator {
                 TOLLERANCE)).isTrue();
     }
 
-
     @Test
-    public void create_incremental_noTimeout() {
-
+    void create_incremental_noTimeout() {
         Duration serverTimeout = Duration.ofMillis(5_000);
         Duration clientTimeout = Duration.ofMillis(0);
         SearchResponseCreator searchResponseCreator = new SearchResponseCreator(mockStore, serverTimeout);
@@ -172,7 +161,7 @@ public class TestSearchResponseCreator {
     }
 
     @Test
-    public void create_incremental_timesOutWithDataThenCompletes() {
+    void create_incremental_timesOutWithDataThenCompletes() {
 
         //long timeout because we should return almost immediately
         Duration serverTimeout = Duration.ofMillis(500);
