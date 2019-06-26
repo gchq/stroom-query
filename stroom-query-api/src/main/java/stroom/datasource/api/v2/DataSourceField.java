@@ -154,6 +154,7 @@ public final class DataSourceField implements Serializable, HasDisplayValue {
 
     public enum DataSourceFieldType implements HasDisplayValue {
         FIELD("Text", false),
+        BOOLEAN_FIELD("Boolean", false),
         NUMERIC_FIELD("Number", true),
         DATE_FIELD("Date", false),
         ID("Id", true),

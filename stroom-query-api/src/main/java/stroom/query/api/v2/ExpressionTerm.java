@@ -167,7 +167,9 @@ public final class ExpressionTerm extends ExpressionItem {
         IN("in"),
         IN_DICTIONARY("in dictionary"),
         IN_FOLDER("in folder"),
-        IS_DOC_REF("is");
+        IS_DOC_REF("is"),
+        IS_NULL("is null"),
+        IS_NOT_NULL("is not null");
 
         public static final List<Condition> SIMPLE_CONDITIONS = Arrays.asList(
                 EQUALS,

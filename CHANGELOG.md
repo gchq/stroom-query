@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.0-beta.27] - 2019-06-26
+
+* Added boolean field type.
+
+* Added `IS_NULL` and `IS_NOT_NULL` conditions.
+
 ## [v4.0-beta.26] - 2019-06-25
 
 * Issue **gchq/stroom#1154** : Add HasTerminate where needed to allow termination of searches.
@@ -245,5 +251,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.26...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.27...HEAD
+[v4.0-beta.27]: https://github.com/gchq/stroom-query/compare/v4.0-beta.26...v4.0-beta.27
 [v4.0-beta.26]: https://github.com/gchq/stroom-query/compare/v4.0-beta.25...v4.0-beta.26
