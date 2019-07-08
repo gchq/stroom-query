@@ -16,11 +16,13 @@
 
 package stroom.datasource.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModelProperty;
 import stroom.query.api.v2.ExpressionTerm.Condition;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,5 +67,12 @@ public class DocRefField extends AbstractField {
 
     public String getDocRefType() {
         return docRefType;
+    }
+
+    @JsonIgnore
+    @XmlTransient
+    @Override
+    public String getType() {
+        return FieldTypes.DOC_REF;
     }
 }

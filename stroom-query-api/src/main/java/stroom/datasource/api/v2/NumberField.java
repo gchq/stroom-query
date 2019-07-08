@@ -55,4 +55,11 @@ public class NumberField extends AbstractField {
     public boolean isNumeric() {
         return true;
     }
+
+    @JsonIgnore
+    @XmlTransient
+    @Override
+    public String getType() {
+        return FieldTypes.NUMBER;
+    }
 }

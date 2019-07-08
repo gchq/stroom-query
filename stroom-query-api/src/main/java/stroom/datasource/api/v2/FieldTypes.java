@@ -16,24 +16,19 @@
 
 package stroom.datasource.api.v2;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import javax.xml.bind.annotation.XmlTransient;
+public class FieldTypes {
+    public static final String BOOLEAN = "Boolean";
+    public static final String DATE = "Date";
+    public static final String DOC_REF = "DocRef";
+    public static final String ID = "Id";
+    public static final String INTEGER = "Integer";
+    public static final String LONG = "Long";
+    public static final String NUMBER = "Number";
+    public static final String TEXT = "Text";
 
-public class IntegerField extends NumberField {
-    private static final long serialVersionUID = 1272545271946712570L;
-
-    public IntegerField() {
-    }
-
-    public IntegerField(final String name) {
-        super(name);
-    }
-
-    @JsonIgnore
-    @XmlTransient
-    @Override
-    public String getType() {
-        return FieldTypes.INTEGER;
-    }
+    public static final List<String> TYPES = new ArrayList<>(Arrays.asList(BOOLEAN, DATE, DOC_REF, ID, INTEGER, LONG, TEXT));
 }

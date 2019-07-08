@@ -41,14 +41,14 @@ import java.util.Objects;
         use = JsonTypeInfo.Id.NAME,
         property = "type")
 @JsonSubTypes({
-        @Type(value = TextField.class, name = "Text"),
-        @Type(value = BooleanField.class, name = "Boolean"),
-        @Type(value = NumberField.class, name = "Number"),
-        @Type(value = LongField.class, name = "Long"),
-        @Type(value = IntegerField.class, name = "Integer"),
-        @Type(value = DateField.class, name = "Date"),
-        @Type(value = IdField.class, name = "Id"),
-        @Type(value = DocRefField.class, name = "DocRef")
+        @Type(value = BooleanField.class, name = FieldTypes.BOOLEAN),
+        @Type(value = DateField.class, name = FieldTypes.DATE),
+        @Type(value = DocRefField.class, name = FieldTypes.DOC_REF),
+        @Type(value = IdField.class, name = FieldTypes.ID),
+        @Type(value = IntegerField.class, name = FieldTypes.INTEGER),
+        @Type(value = LongField.class, name = FieldTypes.LONG),
+        @Type(value = NumberField.class, name = FieldTypes.NUMBER),
+        @Type(value = TextField.class, name = FieldTypes.TEXT)
 })
 
 @XmlType(name = "DataSourceField", propOrder = {"type", "docRefType", "name", "queryable", "conditions"})
@@ -102,10 +102,9 @@ public abstract class AbstractField implements Serializable, HasDisplayValue {
         this.conditions = conditions;
     }
 
-//    public DataSourceFieldType getType() {
-//        return type;
-//    }
-
+    @JsonIgnore
+    @XmlTransient
+    public abstract String getType();
 
     public String getName() {
         return name;

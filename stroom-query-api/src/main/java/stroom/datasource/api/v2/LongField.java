@@ -16,6 +16,10 @@
 
 package stroom.datasource.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.xml.bind.annotation.XmlTransient;
+
 public class LongField extends NumberField {
     private static final long serialVersionUID = 1272545271946712570L;
 
@@ -24,5 +28,12 @@ public class LongField extends NumberField {
 
     public LongField(final String name) {
         super(name);
+    }
+
+    @JsonIgnore
+    @XmlTransient
+    @Override
+    public String getType() {
+        return FieldTypes.LONG;
     }
 }

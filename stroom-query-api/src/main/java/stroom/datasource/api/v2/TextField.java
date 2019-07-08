@@ -16,8 +16,10 @@
 
 package stroom.datasource.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import stroom.query.api.v2.ExpressionTerm.Condition;
 
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,5 +45,12 @@ public class TextField extends AbstractField {
                      final Boolean queryable,
                      final List<Condition> conditions) {
         super(name, queryable, conditions);
+    }
+
+    @JsonIgnore
+    @XmlTransient
+    @Override
+    public String getType() {
+        return FieldTypes.TEXT;
     }
 }
