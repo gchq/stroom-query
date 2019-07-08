@@ -38,16 +38,16 @@ public final class DataSource implements Serializable {
     @XmlElementWrapper(name = "fields")
     @XmlElement(name = "field")
     @ApiModelProperty(required = true)
-    private List<DataSourceField> fields;
+    private List<AbstractField> fields;
 
     private DataSource() {
     }
 
-    public DataSource(final List<DataSourceField> fields) {
+    public DataSource(final List<AbstractField> fields) {
         this.fields = fields;
     }
 
-    public List<DataSourceField> getFields() {
+    public List<AbstractField> getFields() {
         return fields;
     }
 
@@ -73,9 +73,9 @@ public final class DataSource implements Serializable {
 
     public static class Builder {
 
-        private final List<DataSourceField> fields = new ArrayList<>();
+        private final List<AbstractField> fields = new ArrayList<>();
 
-        public Builder addFields(final DataSourceField...values) {
+        public Builder addFields(final AbstractField...values) {
             this.fields.addAll(Arrays.asList(values));
             return this;
         }

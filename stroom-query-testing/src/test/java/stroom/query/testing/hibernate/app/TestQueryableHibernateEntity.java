@@ -1,7 +1,7 @@
 package stroom.query.testing.hibernate.app;
 
-import stroom.datasource.api.v2.DataSourceField;
-import stroom.query.api.v2.ExpressionTerm;
+import stroom.datasource.api.v2.AbstractField;
+import stroom.datasource.api.v2.TextField;
 import stroom.query.audit.model.IsDataSourceField;
 import stroom.query.hibernate.QueryableHibernateEntity;
 
@@ -19,18 +19,10 @@ public class TestQueryableHibernateEntity extends QueryableHibernateEntity {
 
     private String flavour;
 
-    public static class FlavourField implements Supplier<DataSourceField> {
-
+    public static class FlavourField implements Supplier<AbstractField> {
         @Override
-        public DataSourceField get() {
-            return new DataSourceField.Builder().type(
-                    DataSourceField.DataSourceFieldType.FIELD)
-                    .name(FLAVOUR)
-                    .queryable(true)
-                    .addConditions(ExpressionTerm.Condition.EQUALS,
-                            ExpressionTerm.Condition.IN,
-                            ExpressionTerm.Condition.IN_DICTIONARY
-                    ).build();
+        public AbstractField get() {
+            return new TextField(FLAVOUR);
         }
     }
 
@@ -45,19 +37,10 @@ public class TestQueryableHibernateEntity extends QueryableHibernateEntity {
         this.flavour = flavour;
     }
 
-    public static class IdField implements Supplier<DataSourceField> {
-
+    public static class IdField implements Supplier<AbstractField> {
         @Override
-        public DataSourceField get() {
-            return new DataSourceField.Builder()
-                    .type(DataSourceField.DataSourceFieldType.ID)
-                    .name(ID)
-                    .queryable(true)
-                    .addConditions(
-                            ExpressionTerm.Condition.EQUALS,
-                            ExpressionTerm.Condition.IN,
-                            ExpressionTerm.Condition.IN_DICTIONARY
-                    ).build();
+        public AbstractField get() {
+            return new stroom.datasource.api.v2.IdField(ID);
         }
     }
 

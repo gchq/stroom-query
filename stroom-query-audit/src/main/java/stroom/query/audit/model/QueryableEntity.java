@@ -1,7 +1,8 @@
 package stroom.query.audit.model;
 
-import stroom.datasource.api.v2.DataSourceField;
-import stroom.query.api.v2.ExpressionTerm;
+import stroom.datasource.api.v2.AbstractField;
+import stroom.datasource.api.v2.DateField;
+import stroom.datasource.api.v2.TextField;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -13,7 +14,7 @@ public class QueryableEntity implements Serializable {
     /**
      * Climbs the super-class chain to find all instances of an annotation on any method.
      *
-     * @param clazz             The class to search through, will be called recursively
+     * @param clazz The class to search through, will be called recursively
      * @return A stream of Annotations
      */
     public static Stream<IsDataSourceField> getFields(final Class clazz) {
@@ -66,22 +67,11 @@ public class QueryableEntity implements Serializable {
         this.dataSourceUuid = dataSourceUuid;
     }
 
-    public static class CreateTimeField implements Supplier<DataSourceField> {
+    public static class CreateTimeField implements Supplier<AbstractField> {
 
         @Override
-        public DataSourceField get() {
-            return new DataSourceField.Builder()
-                    .type(DataSourceField.DataSourceFieldType.DATE_FIELD)
-                    .name(DocRefEntity.CREATE_TIME)
-                    .queryable(true)
-                    .addConditions(
-                            ExpressionTerm.Condition.BETWEEN,
-                            ExpressionTerm.Condition.EQUALS,
-                            ExpressionTerm.Condition.GREATER_THAN,
-                            ExpressionTerm.Condition.GREATER_THAN_OR_EQUAL_TO,
-                            ExpressionTerm.Condition.LESS_THAN,
-                            ExpressionTerm.Condition.LESS_THAN_OR_EQUAL_TO
-                    ).build();
+        public AbstractField get() {
+            return new DateField(DocRefEntity.CREATE_TIME);
         }
     }
 
@@ -94,22 +84,10 @@ public class QueryableEntity implements Serializable {
         this.createTime = createTime;
     }
 
-    public static class UpdateTimeField implements Supplier<DataSourceField> {
-
+    public static class UpdateTimeField implements Supplier<AbstractField> {
         @Override
-        public DataSourceField get() {
-            return new DataSourceField.Builder()
-                    .type(DataSourceField.DataSourceFieldType.DATE_FIELD)
-                    .name(DocRefEntity.UPDATE_TIME)
-                    .queryable(true)
-                    .addConditions(
-                            ExpressionTerm.Condition.BETWEEN,
-                            ExpressionTerm.Condition.EQUALS,
-                            ExpressionTerm.Condition.GREATER_THAN,
-                            ExpressionTerm.Condition.GREATER_THAN_OR_EQUAL_TO,
-                            ExpressionTerm.Condition.LESS_THAN,
-                            ExpressionTerm.Condition.LESS_THAN_OR_EQUAL_TO
-                    ).build();
+        public AbstractField get() {
+            return new DateField(DocRefEntity.UPDATE_TIME);
         }
     }
 
@@ -122,20 +100,10 @@ public class QueryableEntity implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public static class CreateUserField implements Supplier<DataSourceField> {
-
+    public static class CreateUserField implements Supplier<AbstractField> {
         @Override
-        public DataSourceField get() {
-            return new DataSourceField.Builder()
-                    .type(DataSourceField.DataSourceFieldType.FIELD)
-                    .name(DocRefEntity.CREATE_USER)
-                    .queryable(true)
-                    .addConditions(
-                            ExpressionTerm.Condition.EQUALS,
-                            ExpressionTerm.Condition.CONTAINS,
-                            ExpressionTerm.Condition.IN,
-                            ExpressionTerm.Condition.IN_DICTIONARY
-                    ).build();
+        public AbstractField get() {
+            return new TextField(DocRefEntity.CREATE_USER);
         }
     }
 
@@ -148,20 +116,10 @@ public class QueryableEntity implements Serializable {
         this.createUser = createUser;
     }
 
-    public static class UpdateUserField implements Supplier<DataSourceField> {
-
+    public static class UpdateUserField implements Supplier<AbstractField> {
         @Override
-        public DataSourceField get() {
-            return new DataSourceField.Builder()
-                    .type(DataSourceField.DataSourceFieldType.FIELD)
-                    .name(DocRefEntity.UPDATE_USER)
-                    .queryable(true)
-                    .addConditions(
-                            ExpressionTerm.Condition.EQUALS,
-                            ExpressionTerm.Condition.CONTAINS,
-                            ExpressionTerm.Condition.IN,
-                            ExpressionTerm.Condition.IN_DICTIONARY
-                    ).build();
+        public AbstractField get() {
+            return new TextField(DocRefEntity.UPDATE_USER);
         }
     }
 
@@ -207,6 +165,7 @@ public class QueryableEntity implements Serializable {
             this.instance.setDataSourceUuid(value);
             return self();
         }
+
         public CHILD_CLASS createUser(final String value) {
             this.instance.setCreateUser(value);
             return self();

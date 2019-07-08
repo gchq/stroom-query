@@ -2,8 +2,8 @@ package stroom.query.testing.jooq.app;
 
 import org.jooq.Field;
 import org.jooq.impl.DSL;
-import stroom.datasource.api.v2.DataSourceField;
-import stroom.query.api.v2.ExpressionTerm;
+import stroom.datasource.api.v2.AbstractField;
+import stroom.datasource.api.v2.TextField;
 import stroom.query.audit.model.IsDataSourceField;
 import stroom.query.jooq.JooqEntity;
 import stroom.query.jooq.QueryableJooqEntity;
@@ -24,18 +24,10 @@ public class TestQueryableJooqEntity extends QueryableJooqEntity {
 
     private String colour;
 
-    public static class ColourField implements Supplier<DataSourceField> {
-
+    public static class ColourField implements Supplier<AbstractField> {
         @Override
-        public DataSourceField get() {
-            return new DataSourceField.Builder().type(
-                    DataSourceField.DataSourceFieldType.FIELD)
-                    .name(COLOUR)
-                    .queryable(true)
-                    .addConditions(ExpressionTerm.Condition.EQUALS,
-                            ExpressionTerm.Condition.IN,
-                            ExpressionTerm.Condition.IN_DICTIONARY
-                    ).build();
+        public AbstractField get() {
+            return new TextField(COLOUR);
         }
     }
 
@@ -50,19 +42,10 @@ public class TestQueryableJooqEntity extends QueryableJooqEntity {
         this.colour = colour;
     }
 
-    public static class IdField implements Supplier<DataSourceField> {
-
+    public static class IdField implements Supplier<AbstractField> {
         @Override
-        public DataSourceField get() {
-            return new DataSourceField.Builder()
-                    .type(DataSourceField.DataSourceFieldType.ID)
-                    .name(ID)
-                    .queryable(true)
-                    .addConditions(
-                            ExpressionTerm.Condition.EQUALS,
-                            ExpressionTerm.Condition.IN,
-                            ExpressionTerm.Condition.IN_DICTIONARY
-                    ).build();
+        public AbstractField get() {
+            return new stroom.datasource.api.v2.IdField(ID);
         }
     }
 

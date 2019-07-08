@@ -11,25 +11,16 @@ import stroom.query.hibernate.HasFlywayFactory;
 import stroom.query.security.HasTokenConfig;
 import stroom.query.security.TokenConfig;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
 public class HibernateConfig extends Configuration implements HasAuthorisationConfig, HasTokenConfig, HasFlywayFactory, HasDataSourceFactory {
-    @Valid
-    @NotNull
     @JsonProperty("database")
     private DataSourceFactory dataSourceFactory = new DataSourceFactory();
 
-    @Valid
-    @NotNull
     @JsonProperty("flyway")
     private FlywayFactory flywayFactory = new FlywayFactory();
 
-    @NotNull
     @JsonProperty("token")
     private TokenConfig tokenConfig;
 
-    @NotNull
     @JsonProperty("authorisationService")
     private AuthorisationServiceConfig authorisationServiceConfig;
 

@@ -25,8 +25,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import stroom.datasource.api.v2.DataSource;
-import stroom.datasource.api.v2.DataSourceField;
-import stroom.datasource.api.v2.DataSourceField.DataSourceFieldType;
+import stroom.datasource.api.v2.LongField;
+import stroom.datasource.api.v2.TextField;
 import stroom.query.api.v2.DateTimeFormat;
 import stroom.query.api.v2.ExpressionOperator;
 import stroom.query.api.v2.ExpressionOperator.Op;
@@ -70,18 +70,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class TestSerialisation {
     private static DataSource getDataSource() {
         return new DataSource.Builder()
-                .addFields(new DataSourceField.Builder()
-                        .type(DataSourceFieldType.FIELD)
-                        .name("field1")
-                        .queryable(true)
-                        .addConditions(Condition.EQUALS, Condition.CONTAINS)
-                        .build())
-                .addFields(new DataSourceField.Builder()
-                        .type(DataSourceFieldType.NUMERIC_FIELD)
-                        .name("field2")
-                        .queryable(true)
-                        .addConditions(Condition.EQUALS)
-                        .build())
+                .addFields(new TextField("field1"), new LongField("field2"))
                 .build();
     }
 

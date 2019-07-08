@@ -1,6 +1,6 @@
 package stroom.query.audit.model;
 
-import stroom.datasource.api.v2.DataSourceField;
+import stroom.datasource.api.v2.AbstractField;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface IsDataSourceField {
-    Class<? extends Supplier<DataSourceField>> fieldSupplier();
+    Class<? extends Supplier<AbstractField>> fieldSupplier();
 
 
 }

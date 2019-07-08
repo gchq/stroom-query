@@ -5,7 +5,7 @@ import org.eclipse.jetty.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.datasource.api.v2.DataSource;
-import stroom.datasource.api.v2.DataSourceField;
+import stroom.datasource.api.v2.AbstractField;
 import stroom.docref.DocRef;
 import stroom.query.api.v2.*;
 import stroom.query.audit.model.DocRefEntity;
@@ -110,7 +110,7 @@ class TestJooqQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDocRefJooq
     @Override
     protected void assertValidDataSource(final DataSource dataSource) {
         final Set<String> resultFieldNames = dataSource.getFields().stream()
-                .map(DataSourceField::getName)
+                .map(AbstractField::getName)
                 .collect(Collectors.toSet());
 
         assertThat(resultFieldNames.contains(DocRefEntity.CREATE_TIME)).isTrue();

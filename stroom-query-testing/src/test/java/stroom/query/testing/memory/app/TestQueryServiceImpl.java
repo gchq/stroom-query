@@ -1,9 +1,8 @@
 package stroom.query.testing.memory.app;
 
 import stroom.datasource.api.v2.DataSource;
-import stroom.datasource.api.v2.DataSourceField;
+import stroom.datasource.api.v2.TextField;
 import stroom.docref.DocRef;
-import stroom.query.api.v2.ExpressionTerm;
 import stroom.query.api.v2.QueryKey;
 import stroom.query.api.v2.SearchRequest;
 import stroom.query.api.v2.SearchResponse;
@@ -39,15 +38,7 @@ public class TestQueryServiceImpl implements QueryService {
         }
 
         return Optional.of(new DataSource.Builder()
-                .addFields(new DataSourceField.Builder()
-                        .type(DataSourceField.DataSourceFieldType.FIELD)
-                        .name(TestDocRefEntity.INDEX_NAME)
-                        .queryable(true)
-                        .addConditions(
-                                ExpressionTerm.Condition.EQUALS,
-                                ExpressionTerm.Condition.IN,
-                                ExpressionTerm.Condition.IN_DICTIONARY)
-                        .build())
+                .addFields(new TextField(TestDocRefEntity.INDEX_NAME))
                 .build());
     }
 

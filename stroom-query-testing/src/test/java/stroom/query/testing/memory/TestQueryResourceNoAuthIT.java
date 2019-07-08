@@ -4,7 +4,7 @@ package stroom.query.testing.memory;
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import org.junit.jupiter.api.extension.ExtendWith;
 import stroom.datasource.api.v2.DataSource;
-import stroom.datasource.api.v2.DataSourceField;
+import stroom.datasource.api.v2.AbstractField;
 import stroom.docref.DocRef;
 import stroom.query.api.v2.*;
 import stroom.query.testing.DropwizardAppExtensionWithClients;
@@ -65,7 +65,7 @@ class TestQueryResourceNoAuthIT extends QueryResourceNoAuthIT<TestDocRefEntity, 
     @Override
     protected void assertValidDataSource(final DataSource dataSource) {
         final Set<String> resultFieldNames = dataSource.getFields().stream()
-                .map(DataSourceField::getName)
+                .map(AbstractField::getName)
                 .collect(Collectors.toSet());
 
         assertThat(resultFieldNames.contains(TestDocRefEntity.INDEX_NAME)).isTrue();

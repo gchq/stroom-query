@@ -14,15 +14,9 @@ class DataSourceBuilderTest {
 
         // When
         final DataSource dataSource = new DataSource.Builder()
-                .addFields(new DataSourceField.Builder()
-                        .name(field0)
-                        .build())
-                .addFields(new DataSourceField.Builder()
-                        .name(field1)
-                        .build())
-                .addFields(new DataSourceField.Builder()
-                        .name(field2)
-                        .build())
+                .addFields(new TextField(field0),
+                        new TextField(field1),
+                        new TextField(field2))
                 .build();
 
         // Then

@@ -8,7 +8,7 @@ import stroom.dashboard.expression.v1.FieldIndexMap;
 import stroom.dashboard.expression.v1.Val;
 import stroom.dashboard.expression.v1.ValString;
 import stroom.datasource.api.v2.DataSource;
-import stroom.datasource.api.v2.DataSourceField;
+import stroom.datasource.api.v2.AbstractField;
 import stroom.docref.DocRef;
 import stroom.query.api.v2.ExpressionItem;
 import stroom.query.api.v2.ExpressionOperator;
@@ -68,7 +68,7 @@ public class QueryServiceCriteriaImpl<
 
     private final Class<QUERYABLE_ENTITY> dtoClass;
 
-    private final List<DataSourceField> fields;
+    private final List<AbstractField> fields;
 
     private final DocRefService<DOC_REF_ENTITY> docRefService;
 

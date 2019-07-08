@@ -19,6 +19,10 @@ package stroom.query.api.v2;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import stroom.datasource.api.v2.BooleanField;
+import stroom.datasource.api.v2.AbstractField;
+import stroom.datasource.api.v2.DocRefField;
+import stroom.datasource.api.v2.NumberField;
 import stroom.docref.DocRef;
 import stroom.docref.HasDisplayValue;
 
@@ -281,6 +285,68 @@ public final class ExpressionOperator extends ExpressionItem {
                             .condition(condition)
                             .value(value)
                             .build());
+        }
+
+        /**
+         * A convenience function for adding terms in one go, the parameters should read fairly clearly
+         *
+         * @param field     The field name
+         * @param condition The condition to apply to the value
+         * @param value     The value
+         * @return this builder, with the completed term added.
+         */
+        public Builder addTerm(final AbstractField field,
+                               final ExpressionTerm.Condition condition,
+                               final String value) {
+            return addTerm(
+                    new ExpressionTerm.Builder()
+                            .field(field.getName())
+                            .condition(condition)
+                            .value(value)
+                            .build());
+        }
+
+        public Builder addTerm(final BooleanField field,
+                               final ExpressionTerm.Condition condition,
+                               final boolean value) {
+            return addTerm(
+                    new ExpressionTerm.Builder()
+                            .field(field.getName())
+                            .condition(condition)
+                            .value(String.valueOf(value))
+                            .build());
+        }
+
+        public Builder addTerm(final NumberField field,
+                               final ExpressionTerm.Condition condition,
+                               final int value) {
+            return addTerm(
+                    new ExpressionTerm.Builder()
+                            .field(field.getName())
+                            .condition(condition)
+                            .value(String.valueOf(value))
+                            .build());
+        }
+
+        public Builder addTerm(final NumberField field,
+                               final ExpressionTerm.Condition condition,
+                               final long value) {
+            return addTerm(
+                    new ExpressionTerm.Builder()
+                            .field(field.getName())
+                            .condition(condition)
+                            .value(String.valueOf(value))
+                            .build());
+        }
+
+        public Builder addTerm(final DocRefField field,
+                               final ExpressionTerm.Condition condition,
+                               final DocRef docRef) {
+            return addTerm(new ExpressionTerm.Builder()
+                    .field(field.getName())
+                    .condition(condition)
+                    .docRef(docRef)
+                    .build());
         }
 
         /**

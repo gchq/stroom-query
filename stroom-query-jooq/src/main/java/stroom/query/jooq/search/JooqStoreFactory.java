@@ -9,7 +9,7 @@ import org.jooq.impl.DSL;
 import stroom.dashboard.expression.v1.FieldIndexMap;
 import stroom.dashboard.expression.v1.Val;
 import stroom.dashboard.expression.v1.ValString;
-import stroom.datasource.api.v2.DataSourceField;
+import stroom.datasource.api.v2.AbstractField;
 import stroom.query.api.v2.ExpressionItem;
 import stroom.query.api.v2.ExpressionOperator;
 import stroom.query.api.v2.ExpressionTerm;
@@ -218,7 +218,7 @@ public class JooqStoreFactory implements StoreFactory {
 
             //TODO should probably drive this off a new fieldIndexMap.getEntries() method or similar
             //then we only loop round fields we car about
-            final List<DataSourceField> fields = dataSourceProvider.getFields();
+            final List<AbstractField> fields = dataSourceProvider.getFields();
             for (int x = 0; x < fields.size(); x++) {
                 final Object value = criteriaDataPoint.get(x);
                 final String fieldName = fields.get(x).getName();
