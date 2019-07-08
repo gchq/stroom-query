@@ -20,13 +20,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import stroom.datasource.api.v2.BooleanField;
-import stroom.datasource.api.v2.AbstractField;
 import stroom.datasource.api.v2.DateField;
 import stroom.datasource.api.v2.DocRefField;
 import stroom.datasource.api.v2.IdField;
 import stroom.datasource.api.v2.IntegerField;
 import stroom.datasource.api.v2.LongField;
-import stroom.datasource.api.v2.NumberField;
 import stroom.datasource.api.v2.TextField;
 import stroom.docref.DocRef;
 import stroom.docref.HasDisplayValue;
@@ -373,6 +371,16 @@ public final class ExpressionOperator extends ExpressionItem {
                             .condition(condition)
                             .value(value)
                             .build());
+        }
+
+        public Builder addTerm(final String field,
+                               final ExpressionTerm.Condition condition,
+                               final DocRef docRef) {
+            return addTerm(new ExpressionTerm.Builder()
+                    .field(field)
+                    .condition(condition)
+                    .docRef(docRef)
+                    .build());
         }
     }
 }

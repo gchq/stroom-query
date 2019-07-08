@@ -150,11 +150,7 @@ public abstract class AbstractField implements Serializable, HasDisplayValue {
 
     @Override
     public String toString() {
-        return "DataSourceField{" +
-                ", name='" + name + '\'' +
-                ", queryable=" + queryable +
-                ", conditions=" + conditions +
-                '}';
+        return name;
     }
 
     //

@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [v4.0-beta.31] - 2019-07-08
+## [v4.0-beta.32] - 2019-07-08
 
 * Added type info.
 
@@ -259,7 +259,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.31...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.32...HEAD
+[v4.0-beta.32]: https://github.com/gchq/stroom-query/compare/v4.0-beta.31...v4.0-beta.32
 [v4.0-beta.31]: https://github.com/gchq/stroom-query/compare/v4.0-beta.30...v4.0-beta.31
 [v4.0-beta.30]: https://github.com/gchq/stroom-query/compare/v4.0-beta.29...v4.0-beta.30
 [v4.0-beta.29]: https://github.com/gchq/stroom-query/compare/v4.0-beta.28...v4.0-beta.29
