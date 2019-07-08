@@ -313,12 +313,12 @@ public final class ExpressionOperator extends ExpressionItem {
 
         public Builder addTerm(final DateField field,
                                final ExpressionTerm.Condition condition,
-                               final long value) {
+                               final String value) {
             return addTerm(
                     new ExpressionTerm.Builder()
                             .field(field.getName())
                             .condition(condition)
-                            .value(String.valueOf(value))
+                            .value(value)
                             .build());
         }
 
