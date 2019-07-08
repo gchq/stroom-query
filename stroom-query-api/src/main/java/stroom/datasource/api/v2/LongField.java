@@ -19,6 +19,9 @@ package stroom.datasource.api.v2;
 public class LongField extends NumberField {
     private static final long serialVersionUID = 1272545271946712570L;
 
+    public LongField() {
+    }
+
     public LongField(final String name) {
         super(name);
     }

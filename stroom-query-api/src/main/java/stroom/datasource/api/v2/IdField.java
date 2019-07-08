@@ -30,6 +30,9 @@ public class IdField extends NumberField {
         DEFAULT_CONDITIONS.add(Condition.IN);
     }
 
+    public IdField() {
+    }
+
     public IdField(final String name) {
         super(name, Boolean.TRUE, DEFAULT_CONDITIONS);
     }

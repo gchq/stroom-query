@@ -90,6 +90,9 @@ public abstract class AbstractField implements Serializable, HasDisplayValue {
             required = true)
     private List<Condition> conditions;
 
+    public AbstractField() {
+    }
+
     public AbstractField(final String name,
                          final Boolean queryable,
                          final List<Condition> conditions) {

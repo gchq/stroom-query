@@ -46,6 +46,9 @@ public class DocRefField extends AbstractField {
             required = true)
     private String docRefType;
 
+    public DocRefField() {
+    }
+
     public DocRefField(final String docRefType,
                        final String name) {
         super(name, Boolean.TRUE, DEFAULT_CONDITIONS);

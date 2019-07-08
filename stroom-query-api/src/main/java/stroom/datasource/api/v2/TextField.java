@@ -32,6 +32,9 @@ public class TextField extends AbstractField {
         DEFAULT_CONDITIONS.add(Condition.IN_DICTIONARY);
     }
 
+    public TextField() {
+    }
+
     public TextField(final String name) {
         super(name, Boolean.TRUE, DEFAULT_CONDITIONS);
     }

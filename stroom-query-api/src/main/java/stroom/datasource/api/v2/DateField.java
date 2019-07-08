@@ -34,6 +34,9 @@ public class DateField extends AbstractField {
         DEFAULT_CONDITIONS.add(Condition.LESS_THAN_OR_EQUAL_TO);
     }
 
+    public DateField() {
+    }
+
     public DateField(final String name) {
         super(name, Boolean.TRUE, DEFAULT_CONDITIONS);
     }

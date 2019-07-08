@@ -36,6 +36,9 @@ public class NumberField extends AbstractField {
         DEFAULT_CONDITIONS.add(Condition.LESS_THAN_OR_EQUAL_TO);
     }
 
+    public NumberField() {
+    }
+
     public NumberField(final String name) {
         super(name, Boolean.TRUE, DEFAULT_CONDITIONS);
     }

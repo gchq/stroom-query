@@ -30,6 +30,9 @@ public class BooleanField extends AbstractField {
         DEFAULT_CONDITIONS.add(Condition.EQUALS);
     }
 
+    public BooleanField() {
+    }
+
     public BooleanField(final String name) {
         super(name, Boolean.TRUE, DEFAULT_CONDITIONS);
     }

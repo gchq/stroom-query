@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [v4.0-beta.28] - 2019-07-08
+## [v4.0-beta.29] - 2019-07-08
 
 * Experimental change to field type definitions.
 
@@ -255,7 +255,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.28...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.29...HEAD
+[v4.0-beta.29]: https://github.com/gchq/stroom-query/compare/v4.0-beta.28...v4.0-beta.29
 [v4.0-beta.28]: https://github.com/gchq/stroom-query/compare/v4.0-beta.27...v4.0-beta.28
 [v4.0-beta.27]: https://github.com/gchq/stroom-query/compare/v4.0-beta.26...v4.0-beta.27
 [v4.0-beta.26]: https://github.com/gchq/stroom-query/compare/v4.0-beta.25...v4.0-beta.26
