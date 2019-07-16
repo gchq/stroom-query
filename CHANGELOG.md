@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **gchq/stroom#1200** : Fixed search hanging due to a blocking queue being used when it shouldn't be.
+
+* Issue **gchq/stroom#1154** : Fixed broken tests.
+
 ## [v4.0-beta.32] - 2019-07-08
 
 * Added type info.

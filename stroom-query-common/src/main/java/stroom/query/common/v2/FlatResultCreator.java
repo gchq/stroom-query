@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import stroom.dashboard.expression.v1.FieldIndexMap;
 import stroom.dashboard.expression.v1.Generator;
 import stroom.dashboard.expression.v1.Val;
+import stroom.mapreduce.v2.UnsafePairQueue;
 import stroom.query.api.v2.Field;
 import stroom.query.api.v2.FlatResult;
 import stroom.query.api.v2.Format.Type;
@@ -307,7 +308,8 @@ public class FlatResultCreator implements ResultCreator {
     private static class Mapper {
         private final String[] parentFields;
         private final FieldIndexMap fieldIndexMap;
-        private final TableCoprocessor tableCoprocessor;
+        private final CompiledFields compiledFields;
+        private final CompiledDepths compiledDepths;
         private final TablePayloadHandler tablePayloadHandler;
         private final int maxItems;
 
@@ -326,9 +328,11 @@ public class FlatResultCreator implements ResultCreator {
             fieldIndexMap = new FieldIndexMap(true);
 
             final TableCoprocessorSettings tableCoprocessorSettings = new TableCoprocessorSettings(child);
-            tableCoprocessor = new TableCoprocessor(tableCoprocessorSettings,
-                    fieldIndexMap,
-                    paramMap);
+            final TableSettings tableSettings = tableCoprocessorSettings.getTableSettings();
+
+            final List<Field> fields = tableSettings.getFields();
+            compiledDepths = new CompiledDepths(fields, tableSettings.showDetail());
+            compiledFields = new CompiledFields(fields, fieldIndexMap, paramMap);
 
             // Create a set of max result sizes that are determined by the supplied max results or default to integer max value.
             final Sizes maxResults = Sizes.create(child.getMaxResults(), Integer.MAX_VALUE);
@@ -336,8 +340,10 @@ public class FlatResultCreator implements ResultCreator {
         }
 
         public Data map(final Data data) {
-            // Get top level items.
+            // Create a new table coprocessor to receive data.
+            final TableCoprocessor tableCoprocessor = new TableCoprocessor(new UnsafePairQueue<>(), compiledFields, compiledDepths);
 
+            // Get top level items.
             // TODO : Add an option to get detail level items rather than root level items.
             final Items<Item> items = data.getChildMap().get(null);
 
