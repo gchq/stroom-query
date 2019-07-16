@@ -49,6 +49,13 @@ public class TableCoprocessor implements Coprocessor {
         mapper = new ItemMapper(queue, compiledFields, compiledDepths.getMaxDepth(), compiledDepths.getMaxGroupDepth());
     }
 
+    public TableCoprocessor(final PairQueue<GroupKey, Item> queue, final CompiledFields compiledFields, final CompiledDepths compiledDepths) {
+        this.queue = queue;
+        this.compiledFields = compiledFields;
+        this.compiledDepths = compiledDepths;
+        mapper = new ItemMapper(queue, compiledFields, compiledDepths.getMaxDepth(), compiledDepths.getMaxGroupDepth());
+    }
+
     @Override
     public void receive(final Val[] values) {
         mapper.collect(null, values);
