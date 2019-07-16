@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.0-beta.33] - 2019-07-16
+
 * Issue **gchq/stroom#1200** : Fixed search hanging due to a blocking queue being used when it shouldn't be.
 
 * Issue **gchq/stroom#1154** : Fixed broken tests.
@@ -263,7 +265,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.32...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.33...HEAD
+[v4.0-beta.33]: https://github.com/gchq/stroom-query/compare/v4.0-beta.32...v4.0-beta.33
 [v4.0-beta.32]: https://github.com/gchq/stroom-query/compare/v4.0-beta.31...v4.0-beta.32
 [v4.0-beta.31]: https://github.com/gchq/stroom-query/compare/v4.0-beta.30...v4.0-beta.31
 [v4.0-beta.30]: https://github.com/gchq/stroom-query/compare/v4.0-beta.29...v4.0-beta.30
