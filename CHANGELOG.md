@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **#stroom#1143** : Added mechanism to inject statically mapped values so that dashboard parameters can be echoed by expressions to create dashboard links.
+
 ## [v2.2-beta.5] - 2019-07-16
 
 * Issue **gchq/stroom#1200** : Fixed search hanging due to a blocking queue being used when it shouldn't be.
