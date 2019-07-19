@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.2-beta.6] - 2019-07-19
+
 * Issue **#stroom#1143** : Added mechanism to inject statically mapped values so that dashboard parameters can be echoed by expressions to create dashboard links.
 
 ## [v2.2-beta.5] - 2019-07-16
@@ -260,7 +262,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.2-beta.5...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.2-beta.6...HEAD
+[v2.2-beta.6]: https://github.com/gchq/stroom-query/compare/v2.2-beta.5...v2.2-beta.6
 [v2.2-beta.5]: https://github.com/gchq/stroom-query/compare/v2.2-beta.4...v2.2-beta.5
 [v2.2-beta.4]: https://github.com/gchq/stroom-query/compare/v2.2-beta.3...v2.2-beta.4
 [v2.2-beta.3]: https://github.com/gchq/stroom-query/compare/v2.2-beta.2...v2.2-beta.3
