@@ -34,7 +34,8 @@ public class CompiledFields implements Iterable<CompiledField> {
     private final List<CompiledField> compiledFields;
 
     public CompiledFields(final List<Field> fields,
-                          final FieldIndexMap fieldIndexMap, final Map<String, String> paramMap) {
+                          final FieldIndexMap fieldIndexMap,
+                          final Map<String, String> paramMap) {
         if (null != fields) {
             compiledFields = new ArrayList<>(fields.size());
 
@@ -49,6 +50,7 @@ public class CompiledFields implements Iterable<CompiledField> {
                 if (fieldIndexMap != null && field.getExpression() != null && field.getExpression().trim().length() > 0) {
                     try {
                         expression = expressionParser.parse(fieldIndexMap, field.getExpression());
+                        expression.setStaticMappedValues(paramMap);
                     } catch (final ParseException e) {
                         throw new RuntimeException(e.getMessage(), e);
                     }
