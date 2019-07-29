@@ -39,7 +39,7 @@ ext.versions = [
         stroomQuery       : getPropertyOrDefault('version', 'SNAPSHOT'),
 
         //------Stroom-libs---------------
-        stroomExpression  : 'v2.0.7',
+        stroomExpression  : 'v2.0.8',
         eventLogging      : 'v4.0.5_schema-v3.2.4',
 
         //------------3rd-party------------
