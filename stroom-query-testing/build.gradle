@@ -32,8 +32,6 @@ dependencies {
     implementation libs.dropwizard_testing
     implementation libs.guice
     implementation libs.google_findbugs
-    implementation libs.hibernate_core
-    implementation libs.hibernate_jpa
     implementation libs.javax_ws;
     implementation libs.jackson_core
     implementation libs.jackson_databind
@@ -46,8 +44,7 @@ dependencies {
     implementation libs.wiremock
     implementation libs.test_containers
     implementation libs.test_containers_mysql
-    
-    testImplementation project(':stroom-query-hibernate')
+
     testImplementation project(':stroom-query-jooq')
 
     testImplementation libs.assertj_core

@@ -30,7 +30,7 @@ public class CreateTestDataJooqImpl implements CreateTestDataResource {
         this.table = Optional.ofNullable(TestQueryableJooqEntity.class.getAnnotation(JooqEntity.class))
                 .map(JooqEntity::tableName)
                 .map(DSL::table)
-                .orElseThrow(() -> new IllegalArgumentException("The TestQueryableHibernateEntity Class must be annotated with JooqEntity"));
+                .orElseThrow(() -> new IllegalArgumentException("The TestQueryableJooqEntity Class must be annotated with JooqEntity"));
     }
 
     @Override

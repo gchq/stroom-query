@@ -74,7 +74,6 @@ ext.libs = [
         //------------3rd-party------------
         assertj_core        : 'org.assertj:assertj-core:3.10.0',
         dropwizard_core     : "io.dropwizard:dropwizard-core:$versions.dropwizard",
-        dropwizard_hibernate: "io.dropwizard:dropwizard-hibernate:$versions.dropwizard",
         dropwizard_db       : "io.dropwizard:dropwizard-db:$versions.dropwizard",
         dropwizard_auth     : "io.dropwizard:dropwizard-auth:$versions.dropwizard",
         dropwizard_auth_jwt : "com.github.toastshaman:dropwizard-auth-jwt:1.0.2-0",
@@ -89,8 +88,6 @@ ext.libs = [
         guava               : "com.google.guava:guava:$versions.guava", //>=v21 removes MoreExecutors.sameThreadExecutor() which is needed by curator 2.11
         guice               : "com.google.inject:guice:4.2.0",
         google_findbugs     : "com.google.code.findbugs:jsr305:3.0.2",
-        hibernate_core      : "org.hibernate:hibernate-core:5.2.12.Final",
-        hibernate_jpa       : "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final",
         jackson_annotations : "com.fasterxml.jackson.core:jackson-annotations:$versions.jackson",
         jackson_core        : "com.fasterxml.jackson.core:jackson-core:$versions.jackson",
         jackson_databind    : "com.fasterxml.jackson.core:jackson-databind:$versions.jackson",
@@ -115,8 +112,8 @@ ext.libs = [
         mockito_core        : "org.mockito:mockito-core:2.23.4",
         slf4j_api           : "org.slf4j:slf4j-api:$versions.slf4j",
         swagger_annotations : "io.swagger:swagger-annotations:$versions.swagger",
-        test_containers     : "org.testcontainers:testcontainers:1.8.0",
-        test_containers_mysql: "org.testcontainers:mysql:1.8.0",
+        test_containers     : "org.testcontainers:testcontainers:1.12.0",
+        test_containers_mysql: "org.testcontainers:mysql:1.12.0",
         ws_rs_api           : "javax.ws.rs:javax.ws.rs-api:2.0.1",
         wiremock            : 'com.github.tomakehurst:wiremock:2.14.0',
         zzDUMMYzz           : "makes sorting easier"
@@ -448,7 +445,7 @@ task aggregatedJavadocs(
     destinationDir = file("$buildDir/docs/javadoc")
     title = "$project.name $version API"
     options.author true
-    options.links 'http://docs.oracle.com/javase/8/docs/api/'
+//    options.links 'https://docs.oracle.com/javase/8/docs/api/'
     options.addStringOption 'Xdoclint:none', '-quiet'
 
     // this switch is needed in java10

@@ -26,7 +26,6 @@ deploy:
       - stroom-query-api/build/libs/stroom-query-api-*.jar
       - stroom-query-common/build/libs/stroom-query-common-*.jar
       - stroom-query-audit/build/libs/stroom-query-audit-*.jar
-      - stroom-query-hibernate/build/libs/stroom-query-hibernate-*.jar
       - stroom-query-testing/build/libs/stroom-query-testing-*.jar
     skip_cleanup: true
     on:
