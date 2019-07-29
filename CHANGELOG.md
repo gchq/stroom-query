@@ -6,9 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.0-beta.34] - 2019-07-29
+
 * Issue **#stroom#1143** : Added mechanism to inject statically mapped values so that dashboard parameters can be echoed by expressions to create dashboard links.
 
 * Issue **gchq/stroom#1200** : Fixed search hanging due to a blocking queue being used when it shouldn't be.
+
+## [v4.0-beta.33] - 2019-07-08
 
 * Issue **gchq/stroom#1154** : Fixed broken tests.
 
@@ -265,7 +269,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.33...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.34...HEAD
+[v4.0-beta.34]: https://github.com/gchq/stroom-query/compare/v4.0-beta.33...v4.0-beta.34
 [v4.0-beta.33]: https://github.com/gchq/stroom-query/compare/v4.0-beta.32...v4.0-beta.33
 [v4.0-beta.32]: https://github.com/gchq/stroom-query/compare/v4.0-beta.31...v4.0-beta.32
 [v4.0-beta.31]: https://github.com/gchq/stroom-query/compare/v4.0-beta.30...v4.0-beta.31
