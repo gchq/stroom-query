@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.2-beta.7] - 2019-08-08
+
 * Issue **#stroom#1215** : Fixed limiting max results.
 
 ## [v2.2-beta.6] - 2019-07-19
@@ -264,7 +266,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.2-beta.6...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.2-beta.7...HEAD
+[v2.2-beta.7]: https://github.com/gchq/stroom-query/compare/v2.2-beta.6...v2.2-beta.7
 [v2.2-beta.6]: https://github.com/gchq/stroom-query/compare/v2.2-beta.5...v2.2-beta.6
 [v2.2-beta.5]: https://github.com/gchq/stroom-query/compare/v2.2-beta.4...v2.2-beta.5
 [v2.2-beta.4]: https://github.com/gchq/stroom-query/compare/v2.2-beta.3...v2.2-beta.4
