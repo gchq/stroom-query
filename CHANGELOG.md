@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **#stroom#1215** : Fixed limiting max results.
+
 ## [v4.0-beta.35] - 2019-07-29
 
 * Remove unwanted hibernate stuff.
