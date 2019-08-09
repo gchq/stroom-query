@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.0-beta.36] - 2019-08-09
+
 * Issue **#stroom#1215** : Fixed limiting max results.
 
 ## [v4.0-beta.35] - 2019-07-29
@@ -275,7 +277,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.35...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.36...HEAD
+[v4.0-beta.36]: https://github.com/gchq/stroom-query/compare/v4.0-beta.35...v4.0-beta.36
 [v4.0-beta.35]: https://github.com/gchq/stroom-query/compare/v4.0-beta.34...v4.0-beta.35
 [v4.0-beta.34]: https://github.com/gchq/stroom-query/compare/v4.0-beta.33...v4.0-beta.34
 [v4.0-beta.33]: https://github.com/gchq/stroom-query/compare/v4.0-beta.32...v4.0-beta.33
