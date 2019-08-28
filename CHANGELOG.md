@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.2.0] - 2019-08-28
+
 * Issue **#stroom#1244** : Updated dropwizard to version 1.3.14 to remove memory leak.
 
 ## [v2.2-beta.7] - 2019-08-08
@@ -268,7 +270,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.2-beta.7...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.2.0...HEAD
+[v2.2.0]: https://github.com/gchq/stroom-query/compare/v2.2-beta.6...v2.2.0
 [v2.2-beta.7]: https://github.com/gchq/stroom-query/compare/v2.2-beta.6...v2.2-beta.7
 [v2.2-beta.6]: https://github.com/gchq/stroom-query/compare/v2.2-beta.5...v2.2-beta.6
 [v2.2-beta.5]: https://github.com/gchq/stroom-query/compare/v2.2-beta.4...v2.2-beta.5
