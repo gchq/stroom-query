@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Upgraded stroom expression to v1.5.2.
+
 ## [v2.2.0] - 2019-08-28
 
 * Issue **#stroom#1244** : Updated dropwizard to version 1.3.14 to remove memory leak.
