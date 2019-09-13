@@ -29,11 +29,13 @@ import java.time.temporal.WeekFields;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DateExpressionParser {
-    private static final Pattern DURATION_PATTERN = Pattern.compile("[+-]?[ ]*\\d+[ ]*[smhdwMy]");
+    private static final Pattern DURATION_PATTERN = Pattern.compile("[+\\- ]*(?:\\d+[smhdwMy])+");
+    private static final Pattern WHITESPACE = Pattern.compile("\\s");
 
     private DateExpressionParser() {
     }
@@ -84,78 +86,21 @@ public class DateExpressionParser {
         // Now validate and try and perform date calculation.
         ZonedDateTime time = null;
 
-        Sign sign = Sign.PLUS;
         for (final Part part : parts) {
             if (part != null) {
                 if (part.getObject() instanceof ZonedDateTime) {
                     if (time != null) {
-                        throw new DateTimeException("Attempt to set the date and time twice with '" + part.toString() + "'. You cannot have more than one declaration of date and time");
+                        throw new DateTimeException("Attempt to set the date and time twice with '" + part.toString().trim() + "'. You cannot have more than one declaration of date and time.");
                     }
 
                     time = (ZonedDateTime) part.getObject();
 
-                } else if (part.getObject() instanceof MyDuration) {
+                } else if (part.getObject() instanceof TimeFunction) {
                     if (time == null) {
-                        throw new DateTimeException("You must specify a time or time constant before adding or subtracting duration '" + part.toString() + "'.");
+                        throw new DateTimeException("You must specify a time or time constant before adding or subtracting duration '" + part.toString().trim() + "'.");
                     }
-
-                    final MyDuration duration = (MyDuration) part.getObject();
-                    if (Sign.PLUS.equals(sign)) {
-                        switch (duration.getType()) {
-                            case 's':
-                                time = time.plusSeconds(duration.getValue());
-                                break;
-                            case 'm':
-                                time = time.plusMinutes(duration.getValue());
-                                break;
-                            case 'h':
-                                time = time.plusHours(duration.getValue());
-                                break;
-                            case 'd':
-                                time = time.plusDays(duration.getValue());
-                                break;
-                            case 'w':
-                                time = time.plusWeeks(duration.getValue());
-                                break;
-                            case 'M':
-                                time = time.plusMonths(duration.getValue());
-                                break;
-                            case 'y':
-                                time = time.plusYears(duration.getValue());
-                                break;
-                            default:
-                                throw new DateTimeException("Unknown duration type '" + duration.getType() + "'.");
-                        }
-                    } else {
-                        switch (duration.getType()) {
-                            case 's':
-                                time = time.minusSeconds(duration.getValue());
-                                break;
-                            case 'm':
-                                time = time.minusMinutes(duration.getValue());
-                                break;
-                            case 'h':
-                                time = time.minusHours(duration.getValue());
-                                break;
-                            case 'd':
-                                time = time.minusDays(duration.getValue());
-                                break;
-                            case 'w':
-                                time = time.minusWeeks(duration.getValue());
-                                break;
-                            case 'M':
-                                time = time.minusMonths(duration.getValue());
-                                break;
-                            case 'y':
-                                time = time.minusYears(duration.getValue());
-                                break;
-                            default:
-                                throw new DateTimeException("Unknown duration type '" + duration.getType() + "'.");
-                        }
-                    }
-
-                } else if (part.getObject() instanceof Sign) {
-                    sign = (Sign) part.getObject();
+                    final TimeFunction duration = (TimeFunction) part.getObject();
+                    time = duration.apply(time);
                 }
             }
         }
@@ -220,19 +165,29 @@ public class DateExpressionParser {
             final int end = matcher.end();
 
             // Find out if there is a sign.
+            char sign = 'x';
             int index = start;
-            char sign = chars[start];
-            if (sign == '+') {
-                parts[start] = new Part("+", Sign.PLUS);
-                index++;
-            } else if (sign == '-') {
-                parts[start] = new Part("-", Sign.MINUS);
-                index++;
-            }
+            boolean found;
+            do {
+                found = false;
+                char c = chars[index];
+                if (c == '+') {
+                    sign = c;
+                    index++;
+                    found = true;
+                } else if (c == '-') {
+                    sign = c;
+                    index++;
+                    found = true;
+                } else if (c == ' ') {
+                    // Advance past whitespace.
+                    index++;
+                    found = true;
+                }
+            } while (found);
 
-            // Advance past whitespace.
-            while (chars[index] == ' ') {
-                index++;
+            if (sign == 'x') {
+                throw new DateTimeException("You must specify a plus or minus operation before duration '" + new String(chars, start, end - start).trim() + "'.");
             }
 
             final String section = new String(chars, index, end - index);
@@ -240,28 +195,85 @@ public class DateExpressionParser {
             // Obliterate the matched part of the expression so it can't be matched by any other matcher.
             Arrays.fill(chars, start, end, ' ');
 
-
-            final MyDuration duration = parseDuration(section);
+            final TimeFunction duration = parseDuration(section, sign);
             parts[index] = new Part(section, duration);
         }
     }
 
-    private static MyDuration parseDuration(final String string) {
+    private static TimeFunction parseDuration(final String string, final char sign) {
+        // Strip out spaces.
+        final String expression = WHITESPACE.matcher(string).replaceAll("");
+
         int start = 0;
-        char[] chars = string.toCharArray();
+        char[] chars = expression.toCharArray();
 
-        // Get digits.
-        int numStart = start;
-        while (Character.isDigit(chars[start])) {
-            start++;
+        TimeFunction lastFunction = null;
+        while (start < chars.length) {
+            // Get digits.
+            int numStart = start;
+            while (Character.isDigit(chars[start])) {
+                start++;
+            }
+            long num = Long.parseLong(new String(chars, numStart, start - numStart));
+
+            // Get duration type.
+            final char type = chars[start++];
+
+            // Create my duration.
+            final TimeFunction function = createFunction(sign, type, num);
+            if (lastFunction != null) {
+                final TimeFunction innerFunction = lastFunction;
+                lastFunction = time -> function.apply(innerFunction.apply(time));
+            } else {
+                lastFunction = function;
+            }
         }
-        long num = Long.parseLong(new String(chars, numStart, start - numStart));
+        return lastFunction;
+    }
 
-        // Get duration type.
-        final char type = chars[chars.length - 1];
-
-        // Create my duration.
-        return new MyDuration(num, type);
+    private static TimeFunction createFunction(final char sign, final char type, final long value) {
+        switch (sign) {
+            case '+':
+                switch (type) {
+                    case 's':
+                        return time -> time.plusSeconds(value);
+                    case 'm':
+                        return time -> time.plusMinutes(value);
+                    case 'h':
+                        return time -> time.plusHours(value);
+                    case 'd':
+                        return time -> time.plusDays(value);
+                    case 'w':
+                        return time -> time.plusWeeks(value);
+                    case 'M':
+                        return time -> time.plusMonths(value);
+                    case 'y':
+                        return time -> time.plusYears(value);
+                    default:
+                        throw new DateTimeException("Unknown duration type '" + type + "'.");
+                }
+            case '-':
+                switch (type) {
+                    case 's':
+                        return time -> time.minusSeconds(value);
+                    case 'm':
+                        return time -> time.minusMinutes(value);
+                    case 'h':
+                        return time -> time.minusHours(value);
+                    case 'd':
+                        return time -> time.minusDays(value);
+                    case 'w':
+                        return time -> time.minusWeeks(value);
+                    case 'M':
+                        return time -> time.minusMonths(value);
+                    case 'y':
+                        return time -> time.minusYears(value);
+                    default:
+                        throw new DateTimeException("Unknown duration type '" + type + "'.");
+                }
+            default:
+                throw new DateTimeException("Unknown sign '" + sign + "'.");
+        }
     }
 
     private enum DatePoint {
@@ -276,10 +288,6 @@ public class DateExpressionParser {
         public String getFunction() {
             return function;
         }
-    }
-
-    private enum Sign {
-        PLUS, MINUS
     }
 
     private static class Part {
@@ -301,21 +309,6 @@ public class DateExpressionParser {
         }
     }
 
-    private static class MyDuration {
-        private final long value;
-        private final char type;
-
-        MyDuration(final long value, final char type) {
-            this.value = value;
-            this.type = type;
-        }
-
-        public long getValue() {
-            return value;
-        }
-
-        public char getType() {
-            return type;
-        }
+    private interface TimeFunction extends Function<ZonedDateTime, ZonedDateTime> {
     }
 }
