@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **#stroom#1263** : Fixed issue where date expressions were being allowed without '+' or '-' signs to add or subtract durations.
+
 ## [v4.0-beta.37] - 2019-08-30
 
 * Issue **#stroom#1244** : Updated dropwizard to version 1.3.14 to remove memory leak.
