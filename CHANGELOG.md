@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.2.2] - 2019-09-13
+
 * Issue **#stroom#1263** : Fixed issue where date expressions were being allowed without '+' or '-' signs to add or subtract durations.
 
 ## [v2.2.1] - 2019-09-12
@@ -276,7 +278,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.2.1...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.2.2...HEAD
+[v2.2.2]: https://github.com/gchq/stroom-query/compare/v2.2.1...v2.2.2
 [v2.2.1]: https://github.com/gchq/stroom-query/compare/v2.2.0...v2.2.1
 [v2.2.0]: https://github.com/gchq/stroom-query/compare/v2.2-beta.6...v2.2.0
 [v2.2-beta.7]: https://github.com/gchq/stroom-query/compare/v2.2-beta.6...v2.2-beta.7
