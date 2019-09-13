@@ -91,11 +91,16 @@ public class TableResultCreator implements ResultCreator {
         return new TableResult(resultRequest.getComponentId(), resultList, new OffsetRange(offset, resultList.size()), totalResults, error);
     }
 
-    private int addTableResults(final Data data, final List<Field> fields,
-                                final Sizes maxResults, final int offset,
-                                final int length, final Set<String> openGroups,
-                                final List<Row> resultList, final GroupKey parentKey,
-                                final int depth, final int position) {
+    private int addTableResults(final Data data,
+                                final List<Field> fields,
+                                final Sizes maxResults,
+                                final int offset,
+                                final int length,
+                                final Set<String> openGroups,
+                                final List<Row> resultList,
+                                final GroupKey parentKey,
+                                final int depth,
+                                final int position) {
         int maxResultsAtThisDepth = maxResults.size(depth);
         int pos = position;
         int resultCountAtThisLevel = 0;
@@ -103,10 +108,10 @@ public class TableResultCreator implements ResultCreator {
         final Items<Item> items = data.getChildMap().get(parentKey);
         if (items != null) {
             for (final Item item : items) {
+                // If the result is within the requested window (offset + length) then add it.
                 if (pos >= offset &&
                         resultList.size() < length) {
-                    // Convert all list into fully resolved objects evaluating
-                    // functions where necessary.
+                    // Convert all list into fully resolved objects evaluating functions where necessary.
                     final List<String> values = new ArrayList<>(item.getGenerators().length);
                     int i = 0;
 
@@ -116,8 +121,7 @@ public class TableResultCreator implements ResultCreator {
                         if (item.getGenerators().length > i) {
                             final Generator generator = item.getGenerators()[i];
                             if (generator != null) {
-                                // Convert all list into fully resolved
-                                // objects evaluating functions where necessary.
+                                // Convert all list into fully resolved objects evaluating functions where necessary.
                                 final Val val = generator.eval();
                                 string = fieldFormatter.format(field, val);
                             }
@@ -132,10 +136,9 @@ public class TableResultCreator implements ResultCreator {
                     } else {
                         resultList.add(new Row(null, values, item.getDepth()));
                     }
-                    resultCountAtThisLevel++;
                 }
 
-                // Increment the position.
+                // Increment the overall position.
                 pos++;
 
                 // Add child results if a node is open.
@@ -143,6 +146,10 @@ public class TableResultCreator implements ResultCreator {
                     pos = addTableResults(data, fields, maxResults, offset, length, openGroups, resultList,
                             item.getKey(), depth + 1, pos);
                 }
+
+                // Increment the total results at this depth.
+                resultCountAtThisLevel++;
+                // Stop adding results if we have reached the maximum for this level.
                 if (resultCountAtThisLevel >= maxResultsAtThisDepth) {
                     break;
                 }

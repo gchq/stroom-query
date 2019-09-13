@@ -19,6 +19,7 @@ package stroom.query.common.v2;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.time.DateTimeException;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -156,5 +157,41 @@ public class TestDateExpressionParser {
         Assertions.assertEquals(
                 ZonedDateTime.parse("2015-02-09T00:00:00.000Z"),
                 DateExpressionParser.parse("week()+1w", nowEpochMilli).get());
+    }
+
+    @Test
+    public void testMissingTime() {
+        testError("+1w", "You must specify a time or time constant before adding or subtracting duration '1w'.");
+    }
+
+    @Test
+    public void testTwoTimes1() {
+        testError("now()+now()", "Text '+' could not be parsed at index 1");
+    }
+
+    @Test
+    public void testTwoTimes2() {
+        testError("now() now()", "Attempt to set the date and time twice with 'now()'. You cannot have more than one declaration of date and time.");
+    }
+
+
+    @Test
+    public void testMissingSign1() {
+        testError("now() 1w", "You must specify a plus or minus operation before duration '1w'.");
+    }
+
+    @Test
+    public void testMissingSign2() {
+        testError("1w", "You must specify a plus or minus operation before duration '1w'.");
+    }
+
+    private void testError(final String expression, final String expectedMessage) {
+        DateTimeException dateTimeException = null;
+        try {
+            DateExpressionParser.parse(expression, nowEpochMilli).get();
+        } catch (DateTimeException e) {
+            dateTimeException = e;
+        }
+        Assert.assertEquals(expectedMessage, dateTimeException.getMessage());
     }
 }
