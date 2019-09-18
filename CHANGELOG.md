@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+## [v4.0-beta.38] - 2019-09-18
+
+* Reverted to **Java 8**, for greater interoperability (e.g. with Apache Spark)
 
 * Issue **#stroom#1263** : Fixed issue where date expressions were being allowed without '+' or '-' signs to add or subtract durations.
 
@@ -283,7 +286,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.37...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.38...HEAD
+[v4.0-beta.38]: https://github.com/gchq/stroom-query/compare/v4.0-beta.37...v4.0-beta.38
 [v4.0-beta.37]: https://github.com/gchq/stroom-query/compare/v4.0-beta.36...v4.0-beta.37
 [v4.0-beta.36]: https://github.com/gchq/stroom-query/compare/v4.0-beta.35...v4.0-beta.36
 [v4.0-beta.35]: https://github.com/gchq/stroom-query/compare/v4.0-beta.34...v4.0-beta.35

@@ -141,8 +141,8 @@ subprojects {
 //    apply plugin: 'ca.cutterslade.analyze'
     apply plugin: 'idea'
 
-    sourceCompatibility = JavaVersion.VERSION_1_10
-    targetCompatibility = JavaVersion.VERSION_1_10
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 
     repositories {
         mavenLocal()
