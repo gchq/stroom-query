@@ -355,8 +355,8 @@ configure(projectsToBePublished) {
     }
 
     javadoc {
-        // this switch is needed in java10
-        options.addBooleanOption('html5', true)
+        // this switch is needed in java 10
+      //  options.addBooleanOption('html5', true)
         options.addStringOption('Xdoclint:none', '-quiet')
     }
 
