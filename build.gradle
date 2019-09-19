@@ -1,4 +1,8 @@
+
 buildscript {
+    if(JavaVersion.current() != JavaVersion.VERSION_1_8)
+        throw new GradleException("This build requires Java 8. Current SDK version is "+JavaVersion.current())
+
     repositories {
         mavenLocal()
         jcenter()
@@ -39,7 +43,7 @@ ext.versions = [
         stroomQuery       : getPropertyOrDefault('version', 'SNAPSHOT'),
 
         //------Stroom-libs---------------
-        stroomExpression  : 'v2.0.8',
+        stroomExpression  : 'SNAPSHOT',
         eventLogging      : 'v4.0.5_schema-v3.2.4',
 
         //------------3rd-party------------
@@ -449,7 +453,7 @@ task aggregatedJavadocs(
     options.addStringOption 'Xdoclint:none', '-quiet'
 
     // this switch is needed in java10
-    options.addBooleanOption('html5', true)
+//    options.addBooleanOption('html5', true)
 
     projectsToBePublished.each { proj ->
         proj.tasks.withType(Javadoc).each { javadocTask ->
