@@ -1,4 +1,8 @@
+
 buildscript {
+    if(JavaVersion.current() != JavaVersion.VERSION_1_8)
+        throw new GradleException("This build requires Java 8. Current SDK version is "+JavaVersion.current())
+
     repositories {
         mavenLocal()
         jcenter()
@@ -36,10 +40,10 @@ ext.getPropertyOrDefault = { propName, defaultValue ->
 
 ext.versions = [
         //----------Stroom-----------------
-        stroomQuery       : getPropertyOrDefault('version', 'SNAPSHOT'),
+        stroomQuery       : getPropertyOrDefault('version', 'v4.0-beta.38'),
 
         //------Stroom-libs---------------
-        stroomExpression  : 'v2.0.8',
+        stroomExpression  : 'v3.0.0',
         eventLogging      : 'v4.0.5_schema-v3.2.4',
 
         //------------3rd-party------------
@@ -141,8 +145,8 @@ subprojects {
 //    apply plugin: 'ca.cutterslade.analyze'
     apply plugin: 'idea'
 
-    sourceCompatibility = JavaVersion.VERSION_1_10
-    targetCompatibility = JavaVersion.VERSION_1_10
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 
     repositories {
         mavenLocal()
@@ -355,8 +359,8 @@ configure(projectsToBePublished) {
     }
 
     javadoc {
-        // this switch is needed in java10
-        options.addBooleanOption('html5', true)
+        // this switch is needed in java 10
+      //  options.addBooleanOption('html5', true)
         options.addStringOption('Xdoclint:none', '-quiet')
     }
 
@@ -449,7 +453,7 @@ task aggregatedJavadocs(
     options.addStringOption 'Xdoclint:none', '-quiet'
 
     // this switch is needed in java10
-    options.addBooleanOption('html5', true)
+//    options.addBooleanOption('html5', true)
 
     projectsToBePublished.each { proj ->
         proj.tasks.withType(Javadoc).each { javadocTask ->

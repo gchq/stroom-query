@@ -2,6 +2,7 @@ package stroom.query.testing;
 
 import org.testcontainers.containers.MySQLContainer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseContainerExtension {
@@ -11,7 +12,11 @@ public class DatabaseContainerExtension {
 
     void beforeAll() {
         if (!dbContainer.isRunning()) {
-            dbContainer.setPortBindings(List.of(String.format("%d:%d", MYSQL_EXPOSED_PORT, MySQLContainer.MYSQL_PORT)));
+            String server = String.format("%d:%d", MYSQL_EXPOSED_PORT, MySQLContainer.MYSQL_PORT);
+            ArrayList<String> bindings = new ArrayList<>();
+            bindings.add(server);
+            dbContainer.setPortBindings(bindings);
+
             dbContainer.start();
         }
     }
