@@ -6,9 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [v2.2.3] - 2019-09-13
+## [v2.2.4] - 2019-10-24
 
-* Upgraded stroom expression to v1.5.3.
+* Added logging to diagnose NPE.
 
 ## [v2.2.2] - 2019-09-13
 
@@ -282,7 +282,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.2.3...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.2.4...HEAD
+[v2.2.4]: https://github.com/gchq/stroom-query/compare/v2.2.3...v2.2.4
 [v2.2.3]: https://github.com/gchq/stroom-query/compare/v2.2.2...v2.2.3
 [v2.2.2]: https://github.com/gchq/stroom-query/compare/v2.2.1...v2.2.2
 [v2.2.1]: https://github.com/gchq/stroom-query/compare/v2.2.0...v2.2.1
