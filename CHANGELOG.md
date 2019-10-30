@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.2.5] - 2019-10-30
+
 * Upgraded stroom expression to v1.5.4.
 
 ## [v2.2.4] - 2019-10-24
@@ -284,7 +286,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.2.4...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.2.5...HEAD
+[v2.2.5]: https://github.com/gchq/stroom-query/compare/v2.2.4...v2.2.5
 [v2.2.4]: https://github.com/gchq/stroom-query/compare/v2.2.3...v2.2.4
 [v2.2.3]: https://github.com/gchq/stroom-query/compare/v2.2.2...v2.2.3
 [v2.2.2]: https://github.com/gchq/stroom-query/compare/v2.2.1...v2.2.2
