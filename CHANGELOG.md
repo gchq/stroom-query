@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Upgraded stroom expression to v1.5.4.
+
 ## [v2.2.4] - 2019-10-24
 
 * Added logging to diagnose NPE.
