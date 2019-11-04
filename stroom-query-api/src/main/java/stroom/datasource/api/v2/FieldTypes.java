@@ -27,6 +27,8 @@ public class FieldTypes {
     public static final String ID = "Id";
     public static final String INTEGER = "Integer";
     public static final String LONG = "Long";
+    public static final String FLOAT = "Float";
+    public static final String DOUBLE = "Double";
     public static final String NUMBER = "Number";
     public static final String TEXT = "Text";
 

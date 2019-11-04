@@ -47,6 +47,8 @@ import java.util.Objects;
         @Type(value = IdField.class, name = FieldTypes.ID),
         @Type(value = IntegerField.class, name = FieldTypes.INTEGER),
         @Type(value = LongField.class, name = FieldTypes.LONG),
+        @Type(value = FloatField.class, name = FieldTypes.FLOAT),
+        @Type(value = DoubleField.class, name = FieldTypes.DOUBLE),
         @Type(value = NumberField.class, name = FieldTypes.NUMBER),
         @Type(value = TextField.class, name = FieldTypes.TEXT)
 })
