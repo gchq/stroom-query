@@ -41,16 +41,15 @@ import java.util.Objects;
         use = JsonTypeInfo.Id.NAME,
         property = "type")
 @JsonSubTypes({
-        @Type(value = BooleanField.class, name = FieldTypes.BOOLEAN),
-        @Type(value = DateField.class, name = FieldTypes.DATE),
-        @Type(value = DocRefField.class, name = FieldTypes.DOC_REF),
         @Type(value = IdField.class, name = FieldTypes.ID),
+        @Type(value = BooleanField.class, name = FieldTypes.BOOLEAN),
         @Type(value = IntegerField.class, name = FieldTypes.INTEGER),
         @Type(value = LongField.class, name = FieldTypes.LONG),
         @Type(value = FloatField.class, name = FieldTypes.FLOAT),
         @Type(value = DoubleField.class, name = FieldTypes.DOUBLE),
-        @Type(value = NumberField.class, name = FieldTypes.NUMBER),
-        @Type(value = TextField.class, name = FieldTypes.TEXT)
+        @Type(value = DateField.class, name = FieldTypes.DATE),
+        @Type(value = TextField.class, name = FieldTypes.TEXT),
+        @Type(value = DocRefField.class, name = FieldTypes.DOC_REF)
 })
 
 @XmlType(name = "DataSourceField", propOrder = {"type", "docRefType", "name", "queryable", "conditions"})

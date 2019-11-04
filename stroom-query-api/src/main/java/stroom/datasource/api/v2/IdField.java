@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IdField extends NumberField {
+public class IdField extends AbstractNumericField {
     private static final long serialVersionUID = 1272545271946712570L;
 
     private static List<Condition> DEFAULT_CONDITIONS = new ArrayList<>();

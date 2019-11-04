@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.xml.bind.annotation.XmlTransient;
 
-public class DoubleField extends NumberField {
+public class DoubleField extends AbstractNumericField {
     private static final long serialVersionUID = 1272545271946712570L;
 
     public DoubleField() {
