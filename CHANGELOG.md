@@ -6,6 +6,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Upgraded stroom expression to v1.5.4.
+
+* Added logging to diagnose NPE.
+
+* Upgraded stroom expression to v1.5.3.
+
+* Issue **#stroom#1263** : Fixed issue where date expressions were being allowed without '+' or '-' signs to add or subtract durations.
+
+* Upgraded stroom expression to v1.5.2.
+
+* Issue **#stroom#1244** : Updated dropwizard to version 1.3.14 to remove memory leak.
+
+* Issue **#stroom#1215** : Fixed limiting max results.
+
+* Issue **#stroom#1143** : Added mechanism to inject statically mapped values so that dashboard parameters can be echoed by expressions to create dashboard links.
+
 * Issue **gchq/stroom#1200** : Fixed search hanging due to a blocking queue being used when it shouldn't be.
 
 * Issue **gchq/stroom#1154** : Fixed broken tests.
