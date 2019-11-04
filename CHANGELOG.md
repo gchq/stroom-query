@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.0-beta.42] - 2019-11-04
+
+* Updated stroom expression and added float and double field types. 
+
 ## [v4.0-beta.41] - 2019-11-04
 
 * Updated stroom expression and added float and double field types. 
@@ -299,7 +303,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.41...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.42...HEAD
+[v4.0-beta.42]: https://github.com/gchq/stroom-query/compare/v4.0-beta.41...v4.0-beta.42
 [v4.0-beta.41]: https://github.com/gchq/stroom-query/compare/v4.0-beta.40...v4.0-beta.41
 [v4.0-beta.40]: https://github.com/gchq/stroom-query/compare/v4.0-beta.39...v4.0-beta.40
 [v4.0-beta.39]: https://github.com/gchq/stroom-query/compare/v4.0-beta.38...v4.0-beta.39
