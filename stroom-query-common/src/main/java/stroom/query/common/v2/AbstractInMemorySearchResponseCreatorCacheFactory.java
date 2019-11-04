@@ -8,8 +8,6 @@ import com.google.common.cache.RemovalNotification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.function.Function;
-
 @SuppressWarnings("unused")
 public abstract class AbstractInMemorySearchResponseCreatorCacheFactory implements SearchResponseCreatorCacheFactory {
 
@@ -17,8 +15,19 @@ public abstract class AbstractInMemorySearchResponseCreatorCacheFactory implemen
 
     @Override
     public SearchResponseCreatorCache create(final StoreFactory storeFactory) {
-
-        final CacheLoader<SearchResponseCreatorCache.Key, SearchResponseCreator> cacheLoader = buildLoaderFunc(storeFactory);
+        final CacheLoader<SearchResponseCreatorCache.Key, SearchResponseCreator> cacheLoader = new CacheLoader<SearchResponseCreatorCache.Key, SearchResponseCreator>() {
+            @Override
+            public SearchResponseCreator load(final SearchResponseCreatorCache.Key key) {
+                try {
+                    LOGGER.debug("Creating new store for key {}", key);
+                    final Store store = storeFactory.create(key.getSearchRequest());
+                    return new SearchResponseCreator(store);
+                } catch (final RuntimeException e) {
+                    LOGGER.error(e.getMessage(), e);
+                    throw e;
+                }
+            }
+        };
 
         final CacheBuilder<SearchResponseCreatorCache.Key, SearchResponseCreator> cacheBuilder = CacheBuilder.newBuilder()
                 .removalListener(AbstractInMemorySearchResponseCreatorCacheFactory::onRemove);
@@ -45,17 +54,9 @@ public abstract class AbstractInMemorySearchResponseCreatorCacheFactory implemen
         }
     }
 
-    private CacheLoader<SearchResponseCreatorCache.Key, SearchResponseCreator> buildLoaderFunc(final StoreFactory storeFactory) {
-        final Function<SearchResponseCreatorCache.Key, SearchResponseCreator> loaderFunc = (SearchResponseCreatorCache.Key key) -> {
-            LOGGER.debug("Loading new store for key {}", key);
-            final Store store = storeFactory.create(key.getSearchRequest());
-            return new SearchResponseCreator(store);
-        };
-        return CacheLoader.from(loaderFunc::apply);
-    }
-
     protected abstract void addAdditionalBuildOptions(
             final CacheBuilder<SearchResponseCreatorCache.Key, SearchResponseCreator> cacheBuilder);
+
     /**
      * Allows for the cache and its builder to be registered with a cache manager
      */
