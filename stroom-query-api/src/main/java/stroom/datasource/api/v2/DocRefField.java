@@ -59,6 +59,13 @@ public class DocRefField extends AbstractField {
 
     public DocRefField(final String docRefType,
                        final String name,
+                       final Boolean queryable) {
+        super(name, queryable, DEFAULT_CONDITIONS);
+        this.docRefType = docRefType;
+    }
+
+    public DocRefField(final String docRefType,
+                       final String name,
                        final Boolean queryable,
                        final List<Condition> conditions) {
         super(name, queryable, conditions);

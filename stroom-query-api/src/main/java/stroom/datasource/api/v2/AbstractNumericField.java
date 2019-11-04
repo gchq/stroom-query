@@ -45,6 +45,11 @@ public abstract class AbstractNumericField extends AbstractField {
     }
 
     public AbstractNumericField(final String name,
+                                final Boolean queryable) {
+        super(name, queryable, DEFAULT_CONDITIONS);
+    }
+
+    public AbstractNumericField(final String name,
                                 final Boolean queryable,
                                 final List<Condition> conditions) {
         super(name, queryable, conditions);

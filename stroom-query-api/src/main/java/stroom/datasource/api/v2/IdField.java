@@ -39,9 +39,11 @@ public class IdField extends AbstractNumericField {
         super(name, Boolean.TRUE, DEFAULT_CONDITIONS);
     }
 
-    public IdField(final String name,
-                   final Boolean queryable,
-                   final List<Condition> conditions) {
+    public IdField(final String name, final Boolean queryable) {
+        super(name, queryable);
+    }
+
+    public IdField(final String name, final Boolean queryable, final List<Condition> conditions) {
         super(name, queryable, conditions);
     }
 
