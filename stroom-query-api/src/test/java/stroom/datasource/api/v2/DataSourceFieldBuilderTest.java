@@ -1,6 +1,7 @@
 package stroom.datasource.api.v2;
 
 import org.junit.Test;
+import stroom.datasource.api.v2.DataSourceField.DataSourceFieldType;
 import stroom.query.api.v2.ExpressionTerm;
 
 import static org.junit.Assert.assertEquals;
@@ -11,7 +12,7 @@ public class DataSourceFieldBuilderTest {
         // Given
         final String name = "someField";
         final ExpressionTerm.Condition condition = ExpressionTerm.Condition.BETWEEN;
-        final DataSourceField.DataSourceFieldType type = DataSourceField.DataSourceFieldType.NUMERIC_FIELD;
+        final DataSourceField.DataSourceFieldType type = DataSourceFieldType.LONG_FIELD;
 
         // When
         final DataSourceField field = new DataSourceField.Builder()
