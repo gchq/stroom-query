@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FieldTypes {
-    public static final String DOC_REF = "DocRef";
     public static final String ID = "Id";
     public static final String BOOLEAN = "Boolean";
     public static final String INTEGER = "Integer";
@@ -30,6 +29,7 @@ public class FieldTypes {
     public static final String DOUBLE = "Double";
     public static final String DATE = "Date";
     public static final String TEXT = "Text";
+    public static final String DOC_REF = "DocRef";
 
-    public static final List<String> TYPES = new ArrayList<>(Arrays.asList(DOC_REF, ID, BOOLEAN, INTEGER, LONG, FLOAT, DOUBLE, DATE, TEXT));
+    public static final List<String> TYPES = new ArrayList<>(Arrays.asList(ID, BOOLEAN, INTEGER, LONG, FLOAT, DOUBLE, DATE, TEXT, DOC_REF));
 }
