@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Upgraded stroom expression to v1.5.4.
+
+* Added logging to diagnose NPE.
+
 * Upgraded stroom expression to v1.5.3.
 
 * Issue **#stroom#1263** : Fixed issue where date expressions were being allowed without '+' or '-' signs to add or subtract durations.
