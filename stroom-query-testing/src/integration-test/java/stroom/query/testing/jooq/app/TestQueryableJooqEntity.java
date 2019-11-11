@@ -30,7 +30,7 @@ public class TestQueryableJooqEntity extends QueryableJooqEntity {
         @Override
         public DataSourceField get() {
             return new DataSourceField.Builder().type(
-                    DataSourceField.DataSourceFieldType.FIELD)
+                    DataSourceField.DataSourceFieldType.TEXT_FIELD)
                     .name(COLOUR)
                     .queryable(true)
                     .addConditions(ExpressionTerm.Condition.EQUALS,
@@ -56,7 +56,7 @@ public class TestQueryableJooqEntity extends QueryableJooqEntity {
         @Override
         public DataSourceField get() {
             return new DataSourceField.Builder()
-                    .type(DataSourceField.DataSourceFieldType.ID)
+                    .type(DataSourceField.DataSourceFieldType.ID_FIELD)
                     .name(ID)
                     .queryable(true)
                     .addConditions(

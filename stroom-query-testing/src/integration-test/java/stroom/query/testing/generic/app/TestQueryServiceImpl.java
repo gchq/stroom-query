@@ -2,11 +2,16 @@ package stroom.query.testing.generic.app;
 
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
-import stroom.query.api.v2.*;
-import stroom.security.ServiceUser;
+import stroom.datasource.api.v2.DataSourceField.DataSourceFieldType;
+import stroom.query.api.v2.DocRef;
+import stroom.query.api.v2.ExpressionTerm;
+import stroom.query.api.v2.QueryKey;
+import stroom.query.api.v2.SearchRequest;
+import stroom.query.api.v2.SearchResponse;
 import stroom.query.audit.service.DocRefService;
 import stroom.query.audit.service.QueryApiException;
 import stroom.query.audit.service.QueryService;
+import stroom.security.ServiceUser;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -36,7 +41,7 @@ public class TestQueryServiceImpl implements QueryService {
 
         return Optional.of(new DataSource.Builder()
                 .addFields(new DataSourceField.Builder()
-                        .type(DataSourceField.DataSourceFieldType.FIELD)
+                        .type(DataSourceFieldType.TEXT_FIELD)
                         .name(TestDocRefEntity.INDEX_NAME)
                         .queryable(true)
                         .addConditions(

@@ -1,6 +1,7 @@
 package stroom.query.testing.hibernate.app;
 
 import stroom.datasource.api.v2.DataSourceField;
+import stroom.datasource.api.v2.DataSourceField.DataSourceFieldType;
 import stroom.query.api.v2.ExpressionTerm;
 import stroom.query.audit.model.IsDataSourceField;
 import stroom.query.hibernate.QueryableHibernateEntity;
@@ -24,7 +25,7 @@ public class TestQueryableHibernateEntity extends QueryableHibernateEntity {
         @Override
         public DataSourceField get() {
             return new DataSourceField.Builder().type(
-                    DataSourceField.DataSourceFieldType.FIELD)
+                    DataSourceFieldType.TEXT_FIELD)
                     .name(FLAVOUR)
                     .queryable(true)
                     .addConditions(ExpressionTerm.Condition.EQUALS,
@@ -50,7 +51,7 @@ public class TestQueryableHibernateEntity extends QueryableHibernateEntity {
         @Override
         public DataSourceField get() {
             return new DataSourceField.Builder()
-                    .type(DataSourceField.DataSourceFieldType.ID)
+                    .type(DataSourceFieldType.ID_FIELD)
                     .name(ID)
                     .queryable(true)
                     .addConditions(
