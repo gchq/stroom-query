@@ -42,6 +42,11 @@ public class TextField extends AbstractField {
     }
 
     public TextField(final String name,
+                     final Boolean queryable) {
+        super(name, queryable, DEFAULT_CONDITIONS);
+    }
+
+    public TextField(final String name,
                      final Boolean queryable,
                      final List<Condition> conditions) {
         super(name, queryable, conditions);

@@ -8,8 +8,6 @@ import stroom.query.audit.model.IsDataSourceField;
 import stroom.query.jooq.JooqEntity;
 import stroom.query.jooq.QueryableJooqEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
 import java.util.function.Supplier;
 
 @JooqEntity(tableName = "test_jooq_entity")
@@ -31,8 +29,6 @@ public class TestQueryableJooqEntity extends QueryableJooqEntity {
         }
     }
 
-    @Id
-    @Column(name = COLOUR)
     @IsDataSourceField(fieldSupplier = ColourField.class)
     public String getColour() {
         return colour;
@@ -49,8 +45,6 @@ public class TestQueryableJooqEntity extends QueryableJooqEntity {
         }
     }
 
-    @Id
-    @Column(name = ID)
     @IsDataSourceField(fieldSupplier = IdField.class)
     public String getId() {
         return id;

@@ -3,6 +3,7 @@ package stroom.query.testing.jooq;
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.testcontainers.containers.MySQLContainer;
 import stroom.query.testing.*;
 import stroom.query.testing.jooq.app.JooqApp;
 import stroom.query.testing.jooq.app.JooqConfig;
@@ -42,7 +43,7 @@ class TestJooqDocRefResourceIT extends DocRefResourceIT<TestDocRefJooqEntity, Jo
     @Test
     public void whenSelectQueryExecuted_thenResulstsReturned()
             throws Exception {
-        var dbContainer = dbRule.getDbContainer();
+        MySQLContainer dbContainer = dbRule.getDbContainer();
         String jdbcUrl = dbContainer.getJdbcUrl();
         String username = dbContainer.getUsername();
         String password = dbContainer.getPassword();

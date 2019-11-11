@@ -8,21 +8,39 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Upgraded stroom expression to v1.5.4.
 
-* Added logging to diagnose NPE.
+## [v4.0-beta.40] - 2019-11-04
 
-* Upgraded stroom expression to v1.5.3.
+* Updated stroom expression and added float and double field types.
+
+## [v4.0-beta.39] - 2019-11-04
+
+* Updated stroom expression and added float and double field types.
+
+## [v4.0-beta.38] - 2019-09-18
+
+* Reverted to **Java 8**, for greater interoperability (e.g. with Apache Spark)
 
 * Issue **#stroom#1263** : Fixed issue where date expressions were being allowed without '+' or '-' signs to add or subtract durations.
 
-* Upgraded stroom expression to v1.5.2.
+## [v4.0-beta.37] - 2019-08-30
 
 * Issue **#stroom#1244** : Updated dropwizard to version 1.3.14 to remove memory leak.
 
 * Issue **#stroom#1215** : Fixed limiting max results.
 
+## [v4.0-beta.36] - 2019-07-29
+
+## [v4.0-beta.35] - 2019-07-29
+
+* Remove unwanted hibernate stuff.
+
+## [v4.0-beta.34] - 2019-07-29
+
 * Issue **#stroom#1143** : Added mechanism to inject statically mapped values so that dashboard parameters can be echoed by expressions to create dashboard links.
 
 * Issue **gchq/stroom#1200** : Fixed search hanging due to a blocking queue being used when it shouldn't be.
+
+## [v4.0-beta.33] - 2019-07-08
 
 * Issue **gchq/stroom#1154** : Fixed broken tests.
 
@@ -279,7 +297,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.32...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.42...HEAD
+[v4.0-beta.42]: https://github.com/gchq/stroom-query/compare/v4.0-beta.41...v4.0-beta.42
+[v4.0-beta.41]: https://github.com/gchq/stroom-query/compare/v4.0-beta.40...v4.0-beta.41
+[v4.0-beta.40]: https://github.com/gchq/stroom-query/compare/v4.0-beta.39...v4.0-beta.40
+[v4.0-beta.39]: https://github.com/gchq/stroom-query/compare/v4.0-beta.38...v4.0-beta.39
+[v4.0-beta.38]: https://github.com/gchq/stroom-query/compare/v4.0-beta.37...v4.0-beta.38
+[v4.0-beta.37]: https://github.com/gchq/stroom-query/compare/v4.0-beta.36...v4.0-beta.37
+[v4.0-beta.36]: https://github.com/gchq/stroom-query/compare/v4.0-beta.35...v4.0-beta.36
+[v4.0-beta.35]: https://github.com/gchq/stroom-query/compare/v4.0-beta.34...v4.0-beta.35
+[v4.0-beta.34]: https://github.com/gchq/stroom-query/compare/v4.0-beta.33...v4.0-beta.34
+[v4.0-beta.33]: https://github.com/gchq/stroom-query/compare/v4.0-beta.32...v4.0-beta.33
 [v4.0-beta.32]: https://github.com/gchq/stroom-query/compare/v4.0-beta.31...v4.0-beta.32
 [v4.0-beta.31]: https://github.com/gchq/stroom-query/compare/v4.0-beta.30...v4.0-beta.31
 [v4.0-beta.30]: https://github.com/gchq/stroom-query/compare/v4.0-beta.29...v4.0-beta.30

@@ -29,7 +29,10 @@ public class StroomAuthenticationExtensionSupport implements BeforeAllCallback, 
     }
 
     private static Object get(Field member, Object instance) throws IllegalAccessException {
-        if (!member.canAccess(instance)) {
+
+        //Java 8 does not provide Field.canAccess()
+        //if (!member.canAccess(instance)) {
+        if (true){
             member.setAccessible(true);
         }
 

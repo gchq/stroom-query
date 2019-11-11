@@ -44,6 +44,11 @@ public class DateField extends AbstractField {
     }
 
     public DateField(final String name,
+                     final Boolean queryable) {
+        super(name, queryable, DEFAULT_CONDITIONS);
+    }
+
+    public DateField(final String name,
                      final Boolean queryable,
                      final List<Condition> conditions) {
         super(name, queryable, conditions);

@@ -22,6 +22,8 @@ import io.swagger.annotations.ApiModelProperty;
 import stroom.datasource.api.v2.BooleanField;
 import stroom.datasource.api.v2.DateField;
 import stroom.datasource.api.v2.DocRefField;
+import stroom.datasource.api.v2.DoubleField;
+import stroom.datasource.api.v2.FloatField;
 import stroom.datasource.api.v2.IdField;
 import stroom.datasource.api.v2.IntegerField;
 import stroom.datasource.api.v2.LongField;
@@ -352,6 +354,28 @@ public final class ExpressionOperator extends ExpressionItem {
         }
 
         public Builder addTerm(final LongField field,
+                               final ExpressionTerm.Condition condition,
+                               final long value) {
+            return addTerm(
+                    new ExpressionTerm.Builder()
+                            .field(field.getName())
+                            .condition(condition)
+                            .value(String.valueOf(value))
+                            .build());
+        }
+
+        public Builder addTerm(final FloatField field,
+                               final ExpressionTerm.Condition condition,
+                               final long value) {
+            return addTerm(
+                    new ExpressionTerm.Builder()
+                            .field(field.getName())
+                            .condition(condition)
+                            .value(String.valueOf(value))
+                            .build());
+        }
+
+        public Builder addTerm(final DoubleField field,
                                final ExpressionTerm.Condition condition,
                                final long value) {
             return addTerm(

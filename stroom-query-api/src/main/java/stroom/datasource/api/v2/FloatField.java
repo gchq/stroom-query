@@ -20,30 +20,23 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import stroom.query.api.v2.ExpressionTerm.Condition;
 
 import javax.xml.bind.annotation.XmlTransient;
-import java.util.ArrayList;
 import java.util.List;
 
-public class IdField extends AbstractNumericField {
+public class FloatField extends AbstractNumericField {
     private static final long serialVersionUID = 1272545271946712570L;
 
-    private static List<Condition> DEFAULT_CONDITIONS = new ArrayList<>();
-    static {
-        DEFAULT_CONDITIONS.add(Condition.EQUALS);
-        DEFAULT_CONDITIONS.add(Condition.IN);
+    public FloatField() {
     }
 
-    public IdField() {
+    public FloatField(final String name) {
+        super(name);
     }
 
-    public IdField(final String name) {
-        super(name, Boolean.TRUE, DEFAULT_CONDITIONS);
-    }
-
-    public IdField(final String name, final Boolean queryable) {
+    public FloatField(final String name, final Boolean queryable) {
         super(name, queryable);
     }
 
-    public IdField(final String name, final Boolean queryable, final List<Condition> conditions) {
+    public FloatField(final String name, final Boolean queryable, final List<Condition> conditions) {
         super(name, queryable, conditions);
     }
 
@@ -51,6 +44,6 @@ public class IdField extends AbstractNumericField {
     @XmlTransient
     @Override
     public String getType() {
-        return FieldTypes.ID;
+        return FieldTypes.FLOAT;
     }
 }

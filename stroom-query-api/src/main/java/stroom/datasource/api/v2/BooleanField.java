@@ -40,6 +40,11 @@ public class BooleanField extends AbstractField {
     }
 
     public BooleanField(final String name,
+                        final Boolean queryable) {
+        super(name, queryable, DEFAULT_CONDITIONS);
+    }
+
+    public BooleanField(final String name,
                         final Boolean queryable,
                         final List<Condition> conditions) {
         super(name, queryable, conditions);

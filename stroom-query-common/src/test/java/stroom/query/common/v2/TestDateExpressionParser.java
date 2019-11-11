@@ -157,6 +157,6 @@ class TestDateExpressionParser {
         } catch (DateTimeException e) {
             dateTimeException = e;
         }
-        Assertions.assertEquals(expectedMessage, dateTimeException.getMessage());
+        assertThat(dateTimeException.getMessage()).isEqualTo(expectedMessage);
     }
 }

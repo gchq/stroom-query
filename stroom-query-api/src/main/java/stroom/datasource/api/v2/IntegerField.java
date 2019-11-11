@@ -17,10 +17,12 @@
 package stroom.datasource.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import stroom.query.api.v2.ExpressionTerm.Condition;
 
 import javax.xml.bind.annotation.XmlTransient;
+import java.util.List;
 
-public class IntegerField extends NumberField {
+public class IntegerField extends AbstractNumericField {
     private static final long serialVersionUID = 1272545271946712570L;
 
     public IntegerField() {
@@ -28,6 +30,14 @@ public class IntegerField extends NumberField {
 
     public IntegerField(final String name) {
         super(name);
+    }
+
+    public IntegerField(final String name, final Boolean queryable) {
+        super(name, queryable);
+    }
+
+    public IntegerField(final String name, final Boolean queryable, final List<Condition> conditions) {
+        super(name, queryable, conditions);
     }
 
     @JsonIgnore

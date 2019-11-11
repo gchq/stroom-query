@@ -23,10 +23,11 @@ import javax.xml.bind.annotation.XmlTransient;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NumberField extends AbstractField {
+public abstract class AbstractNumericField extends AbstractField {
     private static final long serialVersionUID = 1272545271946712570L;
 
     private static List<Condition> DEFAULT_CONDITIONS = new ArrayList<>();
+
     static {
         DEFAULT_CONDITIONS.add(Condition.EQUALS);
         DEFAULT_CONDITIONS.add(Condition.BETWEEN);
@@ -36,16 +37,21 @@ public class NumberField extends AbstractField {
         DEFAULT_CONDITIONS.add(Condition.LESS_THAN_OR_EQUAL_TO);
     }
 
-    public NumberField() {
+    public AbstractNumericField() {
     }
 
-    public NumberField(final String name) {
+    public AbstractNumericField(final String name) {
         super(name, Boolean.TRUE, DEFAULT_CONDITIONS);
     }
 
-    public NumberField(final String name,
-                       final Boolean queryable,
-                       final List<Condition> conditions) {
+    public AbstractNumericField(final String name,
+                                final Boolean queryable) {
+        super(name, queryable, DEFAULT_CONDITIONS);
+    }
+
+    public AbstractNumericField(final String name,
+                                final Boolean queryable,
+                                final List<Condition> conditions) {
         super(name, queryable, conditions);
     }
 
@@ -54,12 +60,5 @@ public class NumberField extends AbstractField {
     @Override
     public boolean isNumeric() {
         return true;
-    }
-
-    @JsonIgnore
-    @XmlTransient
-    @Override
-    public String getType() {
-        return FieldTypes.NUMBER;
     }
 }
