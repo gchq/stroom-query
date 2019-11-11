@@ -6,21 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [v4.0-beta.42] - 2019-11-04
-
-* Updated stroom expression and added float and double field types. 
-
-## [v4.0-beta.41] - 2019-11-04
-
-* Updated stroom expression and added float and double field types. 
+* Upgraded stroom expression to v1.5.4.
 
 ## [v4.0-beta.40] - 2019-11-04
 
-* Updated stroom expression and added float and double field types. 
+* Updated stroom expression and added float and double field types.
 
 ## [v4.0-beta.39] - 2019-11-04
 
-* Updated stroom expression and added float and double field types. 
+* Updated stroom expression and added float and double field types.
 
 ## [v4.0-beta.38] - 2019-09-18
 
