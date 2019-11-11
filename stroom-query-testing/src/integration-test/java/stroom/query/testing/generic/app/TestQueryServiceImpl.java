@@ -2,6 +2,7 @@ package stroom.query.testing.generic.app;
 
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.DataSourceField;
+import stroom.datasource.api.v2.DataSourceField.DataSourceFieldType;
 import stroom.docref.DocRef;
 import stroom.query.api.v2.ExpressionTerm;
 import stroom.query.api.v2.QueryKey;
@@ -40,7 +41,7 @@ public class TestQueryServiceImpl implements QueryService {
 
         return Optional.of(new DataSource.Builder()
                 .addFields(new DataSourceField.Builder()
-                        .type(DataSourceField.DataSourceFieldType.FIELD)
+                        .type(DataSourceFieldType.TEXT_FIELD)
                         .name(TestDocRefEntity.INDEX_NAME)
                         .queryable(true)
                         .addConditions(

@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Added new field types.
+
 * Upgraded stroom expression to v1.5.4.
 
 * Added logging to diagnose NPE.

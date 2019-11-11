@@ -11,14 +11,14 @@ public class DataSourceFieldBuilderTest {
         // Given
         final String name = "someField";
         final ExpressionTerm.Condition condition = ExpressionTerm.Condition.BETWEEN;
-        final DataSourceField.DataSourceFieldType type = DataSourceField.DataSourceFieldType.NUMERIC_FIELD;
+        final DataSourceField.DataSourceFieldType type = DataSourceField.DataSourceFieldType.LONG_FIELD;
 
         // When
         final DataSourceField field = new DataSourceField.Builder()
-                    .addConditions(condition)
-                    .name(name)
-                    .queryable(true)
-                    .type(type)
+                .addConditions(condition)
+                .name(name)
+                .queryable(true)
+                .type(type)
                 .build();
 
         // Then

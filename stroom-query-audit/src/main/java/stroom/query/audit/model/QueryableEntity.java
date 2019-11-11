@@ -1,6 +1,7 @@
 package stroom.query.audit.model;
 
 import stroom.datasource.api.v2.DataSourceField;
+import stroom.datasource.api.v2.DataSourceField.DataSourceFieldType;
 import stroom.query.api.v2.ExpressionTerm;
 
 import java.io.Serializable;
@@ -127,7 +128,7 @@ public class QueryableEntity implements Serializable {
         @Override
         public DataSourceField get() {
             return new DataSourceField.Builder()
-                    .type(DataSourceField.DataSourceFieldType.FIELD)
+                    .type(DataSourceFieldType.TEXT_FIELD)
                     .name(DocRefEntity.CREATE_USER)
                     .queryable(true)
                     .addConditions(
@@ -153,7 +154,7 @@ public class QueryableEntity implements Serializable {
         @Override
         public DataSourceField get() {
             return new DataSourceField.Builder()
-                    .type(DataSourceField.DataSourceFieldType.FIELD)
+                    .type(DataSourceFieldType.TEXT_FIELD)
                     .name(DocRefEntity.UPDATE_USER)
                     .queryable(true)
                     .addConditions(
