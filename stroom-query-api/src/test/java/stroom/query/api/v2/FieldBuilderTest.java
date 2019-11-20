@@ -20,6 +20,7 @@ public class FieldBuilderTest {
         final Boolean numberFormatUseSeperator = true;
 
         final Field field = new Field.Builder()
+                .id(name)
                 .name(name)
                 .expression(expression)
                 .sort(new Sort.Builder()
