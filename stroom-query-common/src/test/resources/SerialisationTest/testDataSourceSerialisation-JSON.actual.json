@@ -1,11 +1,11 @@
 {
   "fields" : [ {
-    "type" : "FIELD",
+    "type" : "TEXT_FIELD",
     "name" : "field1",
     "queryable" : true,
     "conditions" : [ "EQUALS", "CONTAINS" ]
   }, {
-    "type" : "NUMERIC_FIELD",
+    "type" : "LONG_FIELD",
     "name" : "field2",
     "queryable" : true,
     "conditions" : [ "EQUALS" ]

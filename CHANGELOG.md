@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Add `id` to field and add fields to table results to identify what field each row value belongs to.
+
 ## [v2.2.7] - 2019-11-13
 
 * Upgraded stroom expression to v1.5.5.

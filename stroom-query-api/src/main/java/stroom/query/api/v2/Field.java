@@ -25,9 +25,10 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.Objects;
 
-@JsonPropertyOrder({"name", "expression", "sort", "filter", "format", "group"})
-@XmlType(name = "Field", propOrder = {"name", "expression", "sort", "filter", "format", "group"})
+@JsonPropertyOrder({"id", "name", "expression", "sort", "filter", "format", "group"})
+@XmlType(name = "Field", propOrder = {"id", "name", "expression", "sort", "filter", "format", "group"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = "Describes a field in a result set. The field can have various expressions applied to it, " +
         "e.g. SUM(), along with sorting, filtering, formatting and grouping")
@@ -35,9 +36,11 @@ public final class Field implements Serializable {
     private static final long serialVersionUID = 7327802315955158337L;
 
     @XmlElement
-    @ApiModelProperty(
-            value = "The name of the field for display purposes",
-            required = false)
+    @ApiModelProperty(value = "The internal id of the field for equality purposes")
+    private String id;
+
+    @XmlElement
+    @ApiModelProperty(value = "The name of the field for display purposes")
     private String name;
 
     @XmlElement
@@ -48,39 +51,41 @@ public final class Field implements Serializable {
     private String expression;
 
     @XmlElement
-    @ApiModelProperty(required = false)
     private Sort sort;
 
     @XmlElement
-    @ApiModelProperty(required = false)
     private Filter filter;
 
     @XmlElement
-    @ApiModelProperty(required = false)
     private Format format;
 
     @XmlElement
     @ApiModelProperty(
             value = "If this field is to be grouped then this defines the level of grouping, with 0 being the top " +
-                    "level of grouping, 1 being the next level down, etc.",
-            required = false)
+                    "level of grouping, 1 being the next level down, etc.")
     private Integer group;
 
     public Field() {
     }
 
-    public Field(final String name,
+    public Field(final String id,
+                 final String name,
                  final String expression,
                  final Sort sort,
                  final Filter filter,
                  final Format format,
                  final Integer group) {
+        this.id = id;
         this.name = name;
         this.expression = expression;
         this.sort = sort;
         this.filter = filter;
         this.format = format;
         this.group = group;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getName() {
@@ -122,33 +127,21 @@ public final class Field implements Serializable {
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (!(o instanceof Field)) return false;
-
+        if (o == null || getClass() != o.getClass()) return false;
         final Field field = (Field) o;
-
-        if (name != null ? !name.equals(field.name) : field.name != null) return false;
-        if (expression != null ? !expression.equals(field.expression) : field.expression != null) return false;
-        if (sort != null ? !sort.equals(field.sort) : field.sort != null) return false;
-        if (filter != null ? !filter.equals(field.filter) : field.filter != null) return false;
-        if (format != null ? !format.equals(field.format) : field.format != null) return false;
-        return group != null ? group.equals(field.group) : field.group == null;
+        return id.equals(field.id);
     }
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (expression != null ? expression.hashCode() : 0);
-        result = 31 * result + (sort != null ? sort.hashCode() : 0);
-        result = 31 * result + (filter != null ? filter.hashCode() : 0);
-        result = 31 * result + (format != null ? format.hashCode() : 0);
-        result = 31 * result + (group != null ? group.hashCode() : 0);
-        return result;
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
         return "Field{" +
-                "name='" + name + '\'' +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
                 ", expression='" + expression + '\'' +
                 ", sort=" + sort +
                 ", filter=" + filter +
@@ -161,7 +154,7 @@ public final class Field implements Serializable {
      * Builder for constructing a {@link Field}
      */
     public static class Builder {
-
+        private String id;
         private String name;
         private String expression;
         private Sort sort;
@@ -170,7 +163,7 @@ public final class Field implements Serializable {
         private Integer group;
 
         /**
-         * @param name The name of the field for display purposes
+         * @param name       The name of the field for display purposes
          * @param expression The expression to use to generate the value for this field
          */
         public Builder(final String name,
@@ -187,8 +180,16 @@ public final class Field implements Serializable {
         }
 
         /**
+         * @param value The internal id of the field for equality purposes
+         * @return The {@link Builder}, enabling method chaining
+         */
+        public Builder id(final String value) {
+            this.id = value;
+            return this;
+        }
+
+        /**
          * @param value The name of the field for display purposes
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder name(final String value) {
@@ -198,7 +199,6 @@ public final class Field implements Serializable {
 
         /**
          * @param value The expression to use to generate the value for this field
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder expression(final String value) {
@@ -208,7 +208,6 @@ public final class Field implements Serializable {
 
         /**
          * @param value The sorting configuration to use
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder sort(final Sort value) {
@@ -218,7 +217,6 @@ public final class Field implements Serializable {
 
         /**
          * @param value Any regex filtering to apply to the values
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder filter(final Filter value) {
@@ -228,7 +226,6 @@ public final class Field implements Serializable {
 
         /**
          * @param value Formatting to apply to the value
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder format(final Format value) {
@@ -238,7 +235,6 @@ public final class Field implements Serializable {
 
         /**
          * @param value Formatting type to apply to the value
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder format(final Format.Type value) {
@@ -248,6 +244,7 @@ public final class Field implements Serializable {
 
         /**
          * Set the group level
+         *
          * @param group The group level to apply to this field
          * @return The {@link Builder}, enabling method chaining
          */
@@ -257,7 +254,10 @@ public final class Field implements Serializable {
         }
 
         public Field build() {
-            return new Field(name, expression, sort, filter, format, group);
+            Objects.requireNonNull(id, "Id must not be null");
+            Objects.requireNonNull(name, "Name must not be null");
+            Objects.requireNonNull(expression, "Expression must not be null");
+            return new Field(id, name, expression, sort, filter, format, group);
         }
     }
 }

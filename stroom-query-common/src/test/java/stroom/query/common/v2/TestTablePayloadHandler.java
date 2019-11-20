@@ -54,6 +54,7 @@ public class TestTablePayloadHandler {
 
         final TableSettings tableSettings = new TableSettings.Builder()
                 .addFields(new Field.Builder()
+                        .id("Text")
                         .name("Text")
                         .expression(ParamUtil.makeParam("Text"))
                         .format(Format.Type.TEXT)
@@ -109,6 +110,7 @@ public class TestTablePayloadHandler {
 
         final TableSettings tableSettings = new TableSettings.Builder()
                 .addFields(new Field.Builder()
+                        .id("Text")
                         .name("Text")
                         .expression(ParamUtil.makeParam("Text"))
                         .sort(sort)
@@ -153,6 +155,7 @@ public class TestTablePayloadHandler {
 
         final TableSettings tableSettings = new TableSettings.Builder()
                 .addFields(new Field.Builder()
+                        .id("Number")
                         .name("Number")
                         .expression(ParamUtil.makeParam("Number"))
                         .sort(sort)
@@ -190,6 +193,7 @@ public class TestTablePayloadHandler {
 //        final DataSourceFieldsMap dataSourceFieldsMap = new DataSourceFieldsMap();
 
         final Field count = new Field.Builder()
+                .id("Count")
                 .name("Count")
                 .expression("count()")
                 .sort(sort)
@@ -202,6 +206,7 @@ public class TestTablePayloadHandler {
 
         final TableSettings tableSettings = new TableSettings.Builder()
                 .addFields(new Field.Builder()
+                        .id("Text")
                         .name("Text")
                         .expression(ParamUtil.makeParam("Text"))
                         .group(0)
@@ -246,10 +251,12 @@ public class TestTablePayloadHandler {
 
         final TableSettings tableSettings = new TableSettings.Builder()
                 .addFields(new Field.Builder()
+                        .id("Count")
                         .name("Count")
                         .expression("count()")
                         .build())
                 .addFields(new Field.Builder()
+                        .id("Text")
                         .name("Text")
                         .expression(ParamUtil.makeParam("Text"))
                         .sort(sort)
@@ -294,10 +301,12 @@ public class TestTablePayloadHandler {
 
         final TableSettings tableSettings = new TableSettings.Builder()
                 .addFields(new Field.Builder()
+                        .id("Count")
                         .name("Count")
                         .expression("count()")
                         .build())
                 .addFields(new Field.Builder()
+                        .id("Text")
                         .name("Text")
                         .expression(ParamUtil.makeParam("Text"))
                         .sort(sort)
