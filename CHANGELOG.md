@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.2.8] - 2019-11-20
+
 * Add `id` to field and add fields to table results to identify what field each row value belongs to.
 
 ## [v2.2.7] - 2019-11-13
@@ -296,7 +298,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.2.7...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.2.8...HEAD
+[v2.2.8]: https://github.com/gchq/stroom-query/compare/v2.2.7...v2.2.8
 [v2.2.7]: https://github.com/gchq/stroom-query/compare/v2.2.6...v2.2.7
 [v2.2.6]: https://github.com/gchq/stroom-query/compare/v2.2.5...v2.2.6
 [v2.2.5]: https://github.com/gchq/stroom-query/compare/v2.2.4...v2.2.5
