@@ -61,6 +61,7 @@ public class TestHibernateQueryResourceNoAuthIT extends QueryResourceNoAuthIT<Te
                                 .extractValues(false)
                                 .showDetail(false)
                                 .addFields(new Field.Builder()
+                                        .id(TestQueryableEntity.FLAVOUR)
                                         .name(TestQueryableEntity.FLAVOUR)
                                         .expression("${" + TestQueryableEntity.FLAVOUR + "}")
                                         .build())
