@@ -26,6 +26,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.Objects;
 
 @JsonPropertyOrder({"type", "numberFormat", "dateTimeFormat"})
 @XmlType(name = "Format", propOrder = {"type", "numberFormat", "dateTimeFormat"})
@@ -51,7 +52,7 @@ public final class Format implements Serializable {
             required = false)
     private DateTimeFormat dateTimeFormat;
 
-    private Format() {
+    public Format() {
     }
 
     public Format(final Type type) {
@@ -90,21 +91,15 @@ public final class Format implements Serializable {
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         final Format format = (Format) o;
-
-        if (type != format.type) return false;
-        if (numberFormat != null ? !numberFormat.equals(format.numberFormat) : format.numberFormat != null)
-            return false;
-        return dateTimeFormat != null ? dateTimeFormat.equals(format.dateTimeFormat) : format.dateTimeFormat == null;
+        return type == format.type &&
+                Objects.equals(numberFormat, format.numberFormat) &&
+                Objects.equals(dateTimeFormat, format.dateTimeFormat);
     }
 
     @Override
     public int hashCode() {
-        int result = type != null ? type.hashCode() : 0;
-        result = 31 * result + (numberFormat != null ? numberFormat.hashCode() : 0);
-        result = 31 * result + (dateTimeFormat != null ? dateTimeFormat.hashCode() : 0);
-        return result;
+        return Objects.hash(type, numberFormat, dateTimeFormat);
     }
 
     @Override
@@ -143,6 +138,19 @@ public final class Format implements Serializable {
         private NumberFormat numberFormat;
 
         private DateTimeFormat dateTimeFormat;
+
+        public Builder() {
+        }
+
+        public Builder(final Format format) {
+            this.type = format.type;
+            if (format.numberFormat != null) {
+                this.numberFormat = new NumberFormat.Builder(format.numberFormat).build();
+            }
+            if (format.dateTimeFormat != null) {
+                this.dateTimeFormat = format.dateTimeFormat;
+            }
+        }
 
         /**
          * @param value XXXXXXXXXXXXXXXX

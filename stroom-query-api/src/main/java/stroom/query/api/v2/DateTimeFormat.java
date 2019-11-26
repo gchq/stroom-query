@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Class for describing the format to use for formatting a date time value
@@ -51,7 +52,7 @@ public final class DateTimeFormat implements Serializable {
     /**
      * Default constructor for deserialisation
      */
-    private DateTimeFormat() {
+    public DateTimeFormat() {
     }
 
     /**
@@ -81,19 +82,15 @@ public final class DateTimeFormat implements Serializable {
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (!(o instanceof DateTimeFormat)) return false;
-
+        if (o == null || getClass() != o.getClass()) return false;
         final DateTimeFormat that = (DateTimeFormat) o;
-
-        if (pattern != null ? !pattern.equals(that.pattern) : that.pattern != null) return false;
-        return timeZone != null ? timeZone.equals(that.timeZone) : that.timeZone == null;
+        return Objects.equals(pattern, that.pattern) &&
+                Objects.equals(timeZone, that.timeZone);
     }
 
     @Override
     public int hashCode() {
-        int result = pattern != null ? pattern.hashCode() : 0;
-        result = 31 * result + (timeZone != null ? timeZone.hashCode() : 0);
-        return result;
+        return Objects.hash(pattern, timeZone);
     }
 
     @Override
@@ -111,6 +108,16 @@ public final class DateTimeFormat implements Serializable {
         private String pattern;
 
         private TimeZone timeZone;
+
+        public Builder() {
+        }
+
+        public Builder(final DateTimeFormat dateTimeFormat) {
+            this.pattern = dateTimeFormat.pattern;
+            if (dateTimeFormat.timeZone != null) {
+                this.timeZone = new TimeZone.Builder(dateTimeFormat.timeZone).build();
+            }
+        }
 
         /**
          * @param value The format pattern string, conforming to {@link java.time.format.DateTimeFormatter}

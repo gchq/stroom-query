@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Added ability to copy a field with builders.
+
 ## [v2.2.8] - 2019-11-20
 
 * Add `id` to field and add fields to table results to identify what field each row value belongs to.

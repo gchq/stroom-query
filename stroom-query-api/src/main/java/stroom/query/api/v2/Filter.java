@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.Objects;
 
 @JsonPropertyOrder({"includes", "excludes"})
 @XmlType(name = "Filter", propOrder = {"includes", "excludes"})
@@ -48,10 +49,10 @@ public final class Filter implements Serializable {
             required = false)
     private String excludes;
 
-    private Filter() {
+    public Filter() {
     }
 
-    public Filter(String includes, String excludes) {
+    public Filter(final String includes, final String excludes) {
         this.includes = includes;
         this.excludes = excludes;
     }
@@ -67,19 +68,15 @@ public final class Filter implements Serializable {
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (!(o instanceof Filter)) return false;
-
+        if (o == null || getClass() != o.getClass()) return false;
         final Filter filter = (Filter) o;
-
-        if (includes != null ? !includes.equals(filter.includes) : filter.includes != null) return false;
-        return excludes != null ? excludes.equals(filter.excludes) : filter.excludes == null;
+        return Objects.equals(includes, filter.includes) &&
+                Objects.equals(excludes, filter.excludes);
     }
 
     @Override
     public int hashCode() {
-        int result = includes != null ? includes.hashCode() : 0;
-        result = 31 * result + (excludes != null ? excludes.hashCode() : 0);
-        return result;
+        return Objects.hash(includes, excludes);
     }
 
     @Override
@@ -96,6 +93,14 @@ public final class Filter implements Serializable {
     public static class Builder {
         private String includes;
         private String excludes;
+
+        public Builder() {
+        }
+
+        public Builder(final Filter filter) {
+            this.includes = filter.includes;
+            this.excludes = filter.excludes;
+        }
 
         /**
          * Set the inclusion regex

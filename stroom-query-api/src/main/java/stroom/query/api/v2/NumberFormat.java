@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
+import java.util.Objects;
 
 @JsonPropertyOrder({"decimalPlaces", "useSeparator"})
 @XmlType(name = "NumberFormat", propOrder = {"decimalPlaces", "useSeparator"})
@@ -47,7 +48,7 @@ public final class NumberFormat implements Serializable {
             required = false)
     private Boolean useSeparator;
 
-    private NumberFormat() {
+    public NumberFormat() {
     }
 
     public NumberFormat(Integer decimalPlaces, Boolean useSeparator) {
@@ -70,20 +71,15 @@ public final class NumberFormat implements Serializable {
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (!(o instanceof NumberFormat)) return false;
-
+        if (o == null || getClass() != o.getClass()) return false;
         final NumberFormat that = (NumberFormat) o;
-
-        if (decimalPlaces != null ? !decimalPlaces.equals(that.decimalPlaces) : that.decimalPlaces != null)
-            return false;
-        return useSeparator != null ? useSeparator.equals(that.useSeparator) : that.useSeparator == null;
+        return Objects.equals(decimalPlaces, that.decimalPlaces) &&
+                Objects.equals(useSeparator, that.useSeparator);
     }
 
     @Override
     public int hashCode() {
-        int result = decimalPlaces != null ? decimalPlaces.hashCode() : 0;
-        result = 31 * result + (useSeparator != null ? useSeparator.hashCode() : 0);
-        return result;
+        return Objects.hash(decimalPlaces, useSeparator);
     }
 
     @Override
@@ -100,6 +96,14 @@ public final class NumberFormat implements Serializable {
     public static class Builder {
         private Integer decimalPlaces;
         private Boolean useSeparator;
+
+        public Builder() {
+        }
+
+        public Builder(final NumberFormat numberFormat) {
+            this.decimalPlaces = numberFormat.decimalPlaces;
+            this.useSeparator = numberFormat.useSeparator;
+        }
 
         /**
          * @param value Number of decimal places to apply to the number format

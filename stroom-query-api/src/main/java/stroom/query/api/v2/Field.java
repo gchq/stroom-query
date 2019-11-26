@@ -129,12 +129,18 @@ public final class Field implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final Field field = (Field) o;
-        return id.equals(field.id);
+        return Objects.equals(id, field.id) &&
+                Objects.equals(name, field.name) &&
+                Objects.equals(expression, field.expression) &&
+                Objects.equals(sort, field.sort) &&
+                Objects.equals(filter, field.filter) &&
+                Objects.equals(format, field.format) &&
+                Objects.equals(group, field.group);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, name, expression, sort, filter, format, group);
     }
 
     @Override
@@ -176,7 +182,22 @@ public final class Field implements Serializable {
          * No args constructor, allow all building using chained methods
          */
         public Builder() {
+        }
 
+        public Builder(final Field field) {
+            this.id = field.id;
+            this.name = field.name;
+            this.expression = field.expression;
+            if (field.sort != null) {
+                this.sort = new Sort.Builder(field.sort).build();
+            }
+            if (field.filter != null) {
+                this.filter = new Filter.Builder(field.filter).build();
+            }
+            if (field.format != null) {
+                this.format = new Format.Builder(field.format).build();
+            }
+            this.group = field.group;
         }
 
         /**
@@ -254,9 +275,6 @@ public final class Field implements Serializable {
         }
 
         public Field build() {
-            Objects.requireNonNull(id, "Id must not be null");
-            Objects.requireNonNull(name, "Name must not be null");
-            Objects.requireNonNull(expression, "Expression must not be null");
             return new Field(id, name, expression, sort, filter, format, group);
         }
     }
