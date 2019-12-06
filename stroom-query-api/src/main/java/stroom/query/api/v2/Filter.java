@@ -49,10 +49,10 @@ public final class Filter implements Serializable {
             required = false)
     private String excludes;
 
-    private Filter() {
+    public Filter() {
     }
 
-    public Filter(String includes, String excludes) {
+    public Filter(final String includes, final String excludes) {
         this.includes = includes;
         this.excludes = excludes;
     }
@@ -66,10 +66,10 @@ public final class Filter implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Filter filter = (Filter) o;
+        final Filter filter = (Filter) o;
         return Objects.equals(includes, filter.includes) &&
                 Objects.equals(excludes, filter.excludes);
     }
@@ -93,6 +93,14 @@ public final class Filter implements Serializable {
     public static class Builder {
         private String includes;
         private String excludes;
+
+        public Builder() {
+        }
+
+        public Builder(final Filter filter) {
+            this.includes = filter.includes;
+            this.excludes = filter.excludes;
+        }
 
         /**
          * Set the inclusion regex

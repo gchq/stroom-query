@@ -63,7 +63,7 @@ public final class TimeZone implements Serializable {
             required = false)
     private Integer offsetMinutes;
 
-    private TimeZone() {
+    public TimeZone() {
     }
 
     public TimeZone(final Use use, final String id, final Integer offsetHours, final Integer offsetMinutes) {
@@ -117,10 +117,10 @@ public final class TimeZone implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TimeZone timeZone = (TimeZone) o;
+        final TimeZone timeZone = (TimeZone) o;
         return use == timeZone.use &&
                 Objects.equals(id, timeZone.id) &&
                 Objects.equals(offsetHours, timeZone.offsetHours) &&
@@ -177,6 +177,16 @@ public final class TimeZone implements Serializable {
         private Integer offsetHours;
 
         private Integer offsetMinutes;
+
+        public Builder() {
+        }
+
+        public Builder(final TimeZone timeZone) {
+            this.use = timeZone.use;
+            this.id = timeZone.id;
+            this.offsetHours = timeZone.offsetHours;
+            this.offsetMinutes = timeZone.offsetMinutes;
+        }
 
         /**
          * @param value The required type of time zone

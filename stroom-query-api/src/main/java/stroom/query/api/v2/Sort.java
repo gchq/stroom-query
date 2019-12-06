@@ -50,7 +50,7 @@ public final class Sort implements Serializable {
             required = true)
     private SortDirection direction;
 
-    private Sort() {
+    public Sort() {
     }
 
     public Sort(final Integer order, final SortDirection direction) {
@@ -67,10 +67,10 @@ public final class Sort implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Sort sort = (Sort) o;
+        final Sort sort = (Sort) o;
         return Objects.equals(order, sort.order) &&
                 direction == sort.direction;
     }
@@ -110,6 +110,14 @@ public final class Sort implements Serializable {
         private Integer order;
 
         private SortDirection direction;
+
+        public Builder() {
+        }
+
+        public Builder(final Sort sort) {
+            this.order = sort.order;
+            this.direction = sort.direction;
+        }
 
         /**
          * @param value Where multiple fields are sorted this value describes the sort order,

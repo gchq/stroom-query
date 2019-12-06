@@ -48,7 +48,7 @@ public final class NumberFormat implements Serializable {
             required = false)
     private Boolean useSeparator;
 
-    private NumberFormat() {
+    public NumberFormat() {
     }
 
     public NumberFormat(Integer decimalPlaces, Boolean useSeparator) {
@@ -69,10 +69,10 @@ public final class NumberFormat implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        NumberFormat that = (NumberFormat) o;
+        final NumberFormat that = (NumberFormat) o;
         return Objects.equals(decimalPlaces, that.decimalPlaces) &&
                 Objects.equals(useSeparator, that.useSeparator);
     }
@@ -96,6 +96,14 @@ public final class NumberFormat implements Serializable {
     public static class Builder {
         private Integer decimalPlaces;
         private Boolean useSeparator;
+
+        public Builder() {
+        }
+
+        public Builder(final NumberFormat numberFormat) {
+            this.decimalPlaces = numberFormat.decimalPlaces;
+            this.useSeparator = numberFormat.useSeparator;
+        }
 
         /**
          * @param value Number of decimal places to apply to the number format

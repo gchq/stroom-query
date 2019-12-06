@@ -140,17 +140,17 @@ public final class FlatResult extends Result {
             return addFields(field);
         }
 
-        /**
-         * Singular Add headings to our data
-         *
-         * @param name Name of the field
-         * @param expression Expression to use for the field
-         *
-         * @return The {@link Builder}, enabling method chaining
-         */
-        public Builder addField(final String name, final String expression) {
-            return addFields(new Field.Builder().name(name).expression(expression).build());
-        }
+//        /**
+//         * Singular Add headings to our data
+//         *
+//         * @param name Name of the field
+//         * @param expression Expression to use for the field
+//         *
+//         * @return The {@link Builder}, enabling method chaining
+//         */
+//        public Builder addField(final String name, final String expression) {
+//            return addFields(new Field.Builder().name(name).expression(expression).build());
+//        }
 
         /**
          * @param values A collection of 'rows' to add to our values

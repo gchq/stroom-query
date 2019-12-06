@@ -117,6 +117,7 @@ class stroom.query.api.v2.Field - public final void java.lang.Object.wait(long,i
 class stroom.query.api.v2.Field - public int stroom.query.api.v2.Field.hashCode()
 class stroom.query.api.v2.Field - public java.lang.Integer stroom.query.api.v2.Field.getGroup()
 class stroom.query.api.v2.Field - public java.lang.String stroom.query.api.v2.Field.getExpression()
+class stroom.query.api.v2.Field - public java.lang.String stroom.query.api.v2.Field.getId()
 class stroom.query.api.v2.Field - public java.lang.String stroom.query.api.v2.Field.getName()
 class stroom.query.api.v2.Field - public java.lang.String stroom.query.api.v2.Field.toString()
 class stroom.query.api.v2.Field - public stroom.query.api.v2.Field stroom.query.api.v2.Field.copy()
