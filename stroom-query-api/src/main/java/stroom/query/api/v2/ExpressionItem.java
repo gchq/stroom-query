@@ -16,26 +16,31 @@
 
 package stroom.query.api.v2;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.Optional;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
         property = "type"
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(value = ExpressionOperator.class, name = "operator"),
         @JsonSubTypes.Type(value = ExpressionTerm.class, name = "term")
 })
+@JsonInclude(Include.NON_DEFAULT)
 @XmlType(name = "ExpressionItem", propOrder = {"enabled"})
 @XmlSeeAlso({ExpressionOperator.class, ExpressionTerm.class})
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -44,42 +49,37 @@ import java.util.Optional;
         subTypes = {ExpressionOperator.class, ExpressionTerm.class})
 public abstract class ExpressionItem implements Serializable {
     private static final long serialVersionUID = -8483817637655853635L;
-    private static final Boolean ENABLED_DEFAULT = Boolean.TRUE;
 
     @XmlElement
     @ApiModelProperty(
             value = "Whether this item in the expression tree is enabled or not",
-            example = "true",
-            required = true)
-    private Boolean enabled;
+            example = "true")
+    @JsonProperty(value = "enabled",
+            defaultValue = "true")
+    private boolean enabled = true;
 
     ExpressionItem() {
     }
 
-    public ExpressionItem(final Boolean enabled) {
+    public ExpressionItem(final boolean enabled) {
         this.enabled = enabled;
     }
 
-    public Boolean getEnabled() {
-        return Optional.ofNullable(enabled).orElse(ENABLED_DEFAULT);
-    }
-
-    @JsonIgnore
-    public boolean enabled() {
-        return enabled == null || enabled;
+    public boolean isEnabled() {
+        return enabled;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ExpressionItem that = (ExpressionItem) o;
-        return Objects.equals(getEnabled(), that.getEnabled());
+        if (!(o instanceof ExpressionItem)) return false;
+        final ExpressionItem that = (ExpressionItem) o;
+        return enabled == that.enabled;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getEnabled());
+        return Objects.hash(enabled);
     }
 
     abstract void append(final StringBuilder sb, final String pad, final boolean singleLine);
@@ -102,21 +102,20 @@ public abstract class ExpressionItem implements Serializable {
      * of ExpressionItem should provide a builder that extends this one.
      */
     public static abstract class Builder<T extends ExpressionItem, CHILD_CLASS extends Builder<T, ?>> {
-        private Boolean enabled;
+        private boolean enabled = true;
 
         public Builder() {
         }
 
-        public Builder(final Boolean enabled) {
+        public Builder(final boolean enabled) {
             this.enabled = enabled;
         }
 
         /**
          * @param value Sets the terms state to enabled if true or null, disabled if false
-         *
          * @return The Builder Builder, enabling method chaining
          */
-        public CHILD_CLASS enabled(final Boolean value) {
+        public CHILD_CLASS enabled(final boolean value) {
             this.enabled = value;
             return self();
         }
@@ -126,7 +125,7 @@ public abstract class ExpressionItem implements Serializable {
          *
          * @return Whether the expression is enabled or not
          */
-        protected Boolean getEnabled() {
+        protected boolean isEnabled() {
             return enabled;
         }
 

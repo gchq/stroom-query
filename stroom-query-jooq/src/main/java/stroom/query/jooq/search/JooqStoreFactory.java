@@ -97,7 +97,7 @@ public class JooqStoreFactory implements StoreFactory {
     }
 
     private Condition getCondition(final ExpressionItem item) {
-        if (!item.getEnabled()) {
+        if (!item.isEnabled()) {
             return null;
         }
 

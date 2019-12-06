@@ -1,13 +1,13 @@
 {
   "fields" : [ {
-    "type" : "TEXT_FIELD",
+    "type" : "Text",
     "name" : "field1",
     "queryable" : true,
-    "conditions" : [ "EQUALS", "CONTAINS" ]
+    "conditions" : [ "CONTAINS", "EQUALS", "IN", "IN_DICTIONARY" ]
   }, {
-    "type" : "LONG_FIELD",
+    "type" : "Long",
     "name" : "field2",
     "queryable" : true,
-    "conditions" : [ "EQUALS" ]
+    "conditions" : [ "EQUALS", "BETWEEN", "GREATER_THAN", "GREATER_THAN_OR_EQUAL_TO", "LESS_THAN", "LESS_THAN_OR_EQUAL_TO" ]
   } ]
 }

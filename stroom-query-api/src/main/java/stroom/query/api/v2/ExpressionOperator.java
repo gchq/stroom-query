@@ -16,6 +16,8 @@
 
 package stroom.query.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -44,6 +46,7 @@ import java.util.List;
 import java.util.Objects;
 
 @JsonPropertyOrder({"op", "children"})
+@JsonInclude(Include.NON_DEFAULT)
 @XmlType(name = "ExpressionOperator", propOrder = {"op", "children"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(
@@ -108,7 +111,7 @@ public final class ExpressionOperator extends ExpressionItem {
 
     @Override
     void append(final StringBuilder sb, final String pad, final boolean singleLine) {
-        if (getEnabled()) {
+        if (isEnabled()) {
             if (!singleLine && sb.length() > 0) {
                 sb.append("\n");
                 sb.append(pad);
@@ -123,7 +126,7 @@ public final class ExpressionOperator extends ExpressionItem {
                 final String padding = pad + "  ";
                 boolean firstItem = true;
                 for (final ExpressionItem expressionItem : children) {
-                    if (expressionItem.getEnabled()) {
+                    if (expressionItem.isEnabled()) {
                         if (singleLine && !firstItem) {
                             sb.append(", ");
                         }
@@ -178,7 +181,7 @@ public final class ExpressionOperator extends ExpressionItem {
 
         @Override
         public ExpressionOperator build() {
-            return new ExpressionOperator(getEnabled(), op, children);
+            return new ExpressionOperator(isEnabled(), op, children);
         }
 
         /**
