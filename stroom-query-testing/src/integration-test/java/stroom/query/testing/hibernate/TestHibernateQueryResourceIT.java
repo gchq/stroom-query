@@ -60,6 +60,7 @@ public class TestHibernateQueryResourceIT extends QueryResourceIT<TestDocRefHibe
                                 .extractValues(false)
                                 .showDetail(false)
                                 .addFields(new Field.Builder()
+                                        .id(TestQueryableHibernateEntity.FLAVOUR)
                                         .name(TestQueryableHibernateEntity.FLAVOUR)
                                         .expression("${" + TestQueryableHibernateEntity.FLAVOUR + "}")
                                         .build())

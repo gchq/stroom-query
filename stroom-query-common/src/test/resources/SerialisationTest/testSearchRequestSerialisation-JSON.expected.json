@@ -18,7 +18,8 @@
         "value" : "value1"
       }, {
         "type" : "operator",
-        "op" : "AND"
+        "op" : "AND",
+        "children" : [ ]
       }, {
         "type" : "term",
         "field" : "field2",
@@ -39,6 +40,7 @@
     "mappings" : [ {
       "queryId" : "someQueryId",
       "fields" : [ {
+        "id" : "id1",
         "name" : "name1",
         "expression" : "expression1",
         "sort" : {
@@ -58,6 +60,7 @@
         },
         "group" : 1
       }, {
+        "id" : "id2",
         "name" : "name2",
         "expression" : "expression2",
         "sort" : {
@@ -83,9 +86,9 @@
       } ],
       "extractValues" : false,
       "extractionPipeline" : {
-        "type" : "docRefType2",
+        "type" : "docRefName2",
         "uuid" : "docRefUuid2",
-        "name" : "docRefName2"
+        "name" : "docRefType2"
       },
       "maxResults" : [ 1, 2 ],
       "showDetail" : false
@@ -94,7 +97,7 @@
       "offset" : 1,
       "length" : 100
     },
-    "resultStyle" : "TABLE"
+    "openGroups" : [ ]
   } ],
   "dateTimeLocale" : "en-gb",
   "incremental" : true

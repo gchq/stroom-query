@@ -52,7 +52,7 @@ public final class DateTimeFormat implements Serializable {
     /**
      * Default constructor for deserialisation
      */
-    private DateTimeFormat() {
+    public DateTimeFormat() {
     }
 
     /**
@@ -80,10 +80,10 @@ public final class DateTimeFormat implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DateTimeFormat that = (DateTimeFormat) o;
+        final DateTimeFormat that = (DateTimeFormat) o;
         return Objects.equals(pattern, that.pattern) &&
                 Objects.equals(timeZone, that.timeZone);
     }
@@ -108,6 +108,16 @@ public final class DateTimeFormat implements Serializable {
         private String pattern;
 
         private TimeZone timeZone;
+
+        public Builder() {
+        }
+
+        public Builder(final DateTimeFormat dateTimeFormat) {
+            this.pattern = dateTimeFormat.pattern;
+            if (dateTimeFormat.timeZone != null) {
+                this.timeZone = new TimeZone.Builder(dateTimeFormat.timeZone).build();
+            }
+        }
 
         /**
          * @param value The format pattern string, conforming to {@link java.time.format.DateTimeFormatter}

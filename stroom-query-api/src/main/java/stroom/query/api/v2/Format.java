@@ -52,7 +52,7 @@ public final class Format implements Serializable {
             required = false)
     private DateTimeFormat dateTimeFormat;
 
-    private Format() {
+    public Format() {
     }
 
     public Format(final Type type) {
@@ -88,10 +88,10 @@ public final class Format implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Format format = (Format) o;
+        final Format format = (Format) o;
         return type == format.type &&
                 Objects.equals(numberFormat, format.numberFormat) &&
                 Objects.equals(dateTimeFormat, format.dateTimeFormat);
@@ -138,6 +138,19 @@ public final class Format implements Serializable {
         private NumberFormat numberFormat;
 
         private DateTimeFormat dateTimeFormat;
+
+        public Builder() {
+        }
+
+        public Builder(final Format format) {
+            this.type = format.type;
+            if (format.numberFormat != null) {
+                this.numberFormat = new NumberFormat.Builder(format.numberFormat).build();
+            }
+            if (format.dateTimeFormat != null) {
+                this.dateTimeFormat = format.dateTimeFormat;
+            }
+        }
 
         /**
          * @param value XXXXXXXXXXXXXXXX

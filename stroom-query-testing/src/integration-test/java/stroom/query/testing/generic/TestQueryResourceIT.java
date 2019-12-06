@@ -58,6 +58,7 @@ public class TestQueryResourceIT extends QueryResourceIT<TestDocRefEntity, Confi
                                 .extractValues(false)
                                 .showDetail(false)
                                 .addFields(new Field.Builder()
+                                        .id(TestDocRefEntity.INDEX_NAME)
                                         .name(TestDocRefEntity.INDEX_NAME)
                                         .expression("${" + TestDocRefEntity.INDEX_NAME + "}")
                                         .build())

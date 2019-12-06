@@ -25,7 +25,11 @@ public class FlatResultBuilderTest {
                 .error(error);
         IntStream.range(0, numberFields).forEach(x ->
                 flatResultBuilder
-                        .addField(String.format("field%d", x), "expression")
+                        .addField(new Field.Builder()
+                                .id(String.format("id%d", x))
+                                .name(String.format("field%d", x))
+                                .expression("expression")
+                                .build())
         );
         IntStream.range(0, numberResultSets).forEach(x -> {
             final List<Object> values = IntStream.range(0, numberFields).mapToObj(y ->

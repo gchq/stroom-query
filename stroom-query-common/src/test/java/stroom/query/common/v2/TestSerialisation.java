@@ -67,7 +67,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-@Ignore("TODO: fails intermittently")
 public class TestSerialisation {
     private static DataSource getDataSource() {
         return new DataSource.Builder()
@@ -108,13 +107,16 @@ public class TestSerialisation {
                         .addMappings(new TableSettings.Builder()
                                 .queryId("someQueryId")
                                 .addFields(new Field.Builder()
-                                        .name("name1").expression("expression1")
+                                        .id("id1")
+                                        .name("name1")
+                                        .expression("expression1")
                                         .sort(new Sort(1, Sort.SortDirection.ASCENDING))
                                         .filter(new Filter("include1", "exclude1"))
                                         .format(new Format(new NumberFormat(1, false)))
                                         .group(1)
                                         .build())
                                 .addFields(new Field.Builder()
+                                        .id("id2")
                                         .name("name2")
                                         .expression("expression2")
                                         .sort(new Sort(2, Sort.SortDirection.DESCENDING))
@@ -219,19 +221,20 @@ public class TestSerialisation {
     }
 
     private SearchResponse getSearchResponse() {
+        final List<Field> fields = Collections.singletonList(new Field.Builder().id("test").name("test").expression("${test}").build());
         final List<String> values = Collections.singletonList("test");
         final List<Row> rows = Collections.singletonList(new Row("groupKey", values, 5));
 
-        final TableResult tableResult = new TableResult("table-1234", rows, new OffsetRange(1, 2), 1, "tableResultError");
+        final TableResult tableResult = new TableResult("table-1234", fields, rows, new OffsetRange(1, 2), 1, "tableResultError");
         return new SearchResponse(Arrays.asList("highlight1", "highlight2"), Arrays.asList(tableResult, getVisResult1()), Collections.singletonList("some error"), false);
     }
 
     private FlatResult getVisResult1() {
         final List<Field> structure = new ArrayList<>();
-        structure.add(new Field.Builder().name("val1").format(Type.GENERAL).build());
-        structure.add(new Field.Builder().name("val2").format(Type.NUMBER).build());
-        structure.add(new Field.Builder().name("val3").format(Type.NUMBER).build());
-        structure.add(new Field.Builder().name("val4").format(Type.GENERAL).build());
+        structure.add(new Field.Builder().id("val1").name("val1").expression("${val1}").format(Type.GENERAL).build());
+        structure.add(new Field.Builder().id("val2").name("val2").expression("${val2}").format(Type.NUMBER).build());
+        structure.add(new Field.Builder().id("val3").name("val3").expression("${val3}").format(Type.NUMBER).build());
+        structure.add(new Field.Builder().id("val4").name("val4").expression("${val4}").format(Type.GENERAL).build());
 
         final List<List<Object>> data = new ArrayList<>();
         data.add(Arrays.asList("test0", 0.4, 234, "this0"));
