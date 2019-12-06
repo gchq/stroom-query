@@ -74,13 +74,13 @@ public final class ExpressionOperator extends ExpressionItem {
     private ExpressionOperator() {
     }
 
-    public ExpressionOperator(final Boolean enabled, final Op op, final List<ExpressionItem> children) {
+    public ExpressionOperator(final boolean enabled, final Op op, final List<ExpressionItem> children) {
         super(enabled);
         this.op = op;
         this.children = children;
     }
 
-    public ExpressionOperator(final Boolean enabled, final Op op, final ExpressionItem... children) {
+    public ExpressionOperator(final boolean enabled, final Op op, final ExpressionItem... children) {
         super(enabled);
         this.op = op;
         this.children = Arrays.asList(children);
@@ -197,7 +197,7 @@ public final class ExpressionOperator extends ExpressionItem {
          * @param enabled Is this Expression Operator enabled
          * @param op      The op
          */
-        public Builder(final Boolean enabled, final Op op) {
+        public Builder(final boolean enabled, final Op op) {
             super(enabled);
             op(op);
         }

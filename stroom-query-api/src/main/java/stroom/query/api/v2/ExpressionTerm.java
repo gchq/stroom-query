@@ -66,14 +66,14 @@ public final class ExpressionTerm extends ExpressionItem {
     }
 
     public ExpressionTerm(final String field, final Condition condition, final String value) {
-        this(null, field, condition, value, null);
+        this(true, field, condition, value, null);
     }
 
     public ExpressionTerm(final String field, final Condition condition, final DocRef docRef) {
-        this(null, field, condition, null, docRef);
+        this(true, field, condition, null, docRef);
     }
 
-    public ExpressionTerm(final Boolean enabled,
+    public ExpressionTerm(final boolean enabled,
                           final String field,
                           final Condition condition,
                           final String value,
