@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Added ability to copy a field with builders.
+
+* Add `id` to field and add fields to table results to identify what field each row value belongs to.
+
 * Upgraded stroom expression to v1.5.5.
 
 * Added new field types.

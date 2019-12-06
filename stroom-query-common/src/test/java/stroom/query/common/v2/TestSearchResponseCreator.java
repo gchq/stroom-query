@@ -243,14 +243,17 @@ class TestSearchResponseCreator {
                                 .queryId("someQueryId")
                                 .addFields(
                                         new Field.Builder()
+                                                .id("field1")
                                                 .name("field1")
                                                 .expression("expression1")
                                                 .build(),
                                         new Field.Builder()
+                                                .id("field2")
                                                 .name("field2")
                                                 .expression("expression1")
                                                 .build(),
                                         new Field.Builder()
+                                                .id("field3")
                                                 .name("field3")
                                                 .expression("expression2")
                                                 .build())

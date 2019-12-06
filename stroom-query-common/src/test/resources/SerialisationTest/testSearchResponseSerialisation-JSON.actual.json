@@ -3,6 +3,11 @@
   "results" : [ {
     "type" : "table",
     "componentId" : "table-1234",
+    "fields" : [ {
+      "id" : "test",
+      "name" : "test",
+      "expression" : "${test}"
+    } ],
     "rows" : [ {
       "groupKey" : "groupKey",
       "values" : [ "test" ],
@@ -18,22 +23,30 @@
     "type" : "vis",
     "componentId" : "vis-1234",
     "structure" : [ {
+      "id" : "val1",
       "name" : "val1",
+      "expression" : "${val1}",
       "format" : {
         "type" : "GENERAL"
       }
     }, {
+      "id" : "val2",
       "name" : "val2",
+      "expression" : "${val2}",
       "format" : {
         "type" : "NUMBER"
       }
     }, {
+      "id" : "val3",
       "name" : "val3",
+      "expression" : "${val3}",
       "format" : {
         "type" : "NUMBER"
       }
     }, {
+      "id" : "val4",
       "name" : "val4",
+      "expression" : "${val4}",
       "format" : {
         "type" : "GENERAL"
       }

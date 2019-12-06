@@ -88,7 +88,7 @@ public class TableResultCreator implements ResultCreator {
             error = e.getMessage();
         }
 
-        return new TableResult(resultRequest.getComponentId(), resultList, new OffsetRange(offset, resultList.size()), totalResults, error);
+        return new TableResult(resultRequest.getComponentId(), latestFields, resultList, new OffsetRange(offset, resultList.size()), totalResults, error);
     }
 
     private int addTableResults(final Data data,
