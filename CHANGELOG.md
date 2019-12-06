@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [v4.0-beta.44] - 2019-12-06
+## [v4.0-beta.45] - 2019-12-06
 
 * Added ability to copy a field with builders.
 
@@ -305,7 +305,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.44...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.45...HEAD
+[v4.0-beta.45]: https://github.com/gchq/stroom-query/compare/v4.0-beta.44...v4.0-beta.45
 [v4.0-beta.44]: https://github.com/gchq/stroom-query/compare/v4.0-beta.43...v4.0-beta.44
 [v4.0-beta.43]: https://github.com/gchq/stroom-query/compare/v4.0-beta.42...v4.0-beta.43
 [v4.0-beta.42]: https://github.com/gchq/stroom-query/compare/v4.0-beta.41...v4.0-beta.42
