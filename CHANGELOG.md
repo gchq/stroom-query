@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.0-beta.43] - 2019-12-06
+
 * Added ability to copy a field with builders.
 
 * Add `id` to field and add fields to table results to identify what field each row value belongs to.
@@ -303,7 +305,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.42...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.43...HEAD
+[v4.0-beta.43]: https://github.com/gchq/stroom-query/compare/v4.0-beta.42...v4.0-beta.43
 [v4.0-beta.42]: https://github.com/gchq/stroom-query/compare/v4.0-beta.41...v4.0-beta.42
 [v4.0-beta.41]: https://github.com/gchq/stroom-query/compare/v4.0-beta.40...v4.0-beta.41
 [v4.0-beta.40]: https://github.com/gchq/stroom-query/compare/v4.0-beta.39...v4.0-beta.40
