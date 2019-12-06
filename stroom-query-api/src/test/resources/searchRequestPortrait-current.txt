@@ -63,8 +63,8 @@ class stroom.query.api.v2.DateTimeFormat - public int stroom.query.api.v2.DateTi
 class stroom.query.api.v2.DateTimeFormat - public java.lang.String stroom.query.api.v2.DateTimeFormat.getPattern()
 class stroom.query.api.v2.DateTimeFormat - public java.lang.String stroom.query.api.v2.DateTimeFormat.toString()
 class stroom.query.api.v2.DateTimeFormat - public stroom.query.api.v2.TimeZone stroom.query.api.v2.DateTimeFormat.getTimeZone()
-class stroom.query.api.v2.ExpressionItem - public boolean stroom.query.api.v2.ExpressionItem.enabled()
 class stroom.query.api.v2.ExpressionItem - public boolean stroom.query.api.v2.ExpressionItem.equals(java.lang.Object)
+class stroom.query.api.v2.ExpressionItem - public boolean stroom.query.api.v2.ExpressionItem.isEnabled()
 class stroom.query.api.v2.ExpressionItem - public final native java.lang.Class<?> java.lang.Object.getClass()
 class stroom.query.api.v2.ExpressionItem - public final native void java.lang.Object.notify()
 class stroom.query.api.v2.ExpressionItem - public final native void java.lang.Object.notifyAll()
@@ -72,10 +72,9 @@ class stroom.query.api.v2.ExpressionItem - public final native void java.lang.Ob
 class stroom.query.api.v2.ExpressionItem - public final void java.lang.Object.wait() throws java.lang.InterruptedException
 class stroom.query.api.v2.ExpressionItem - public final void java.lang.Object.wait(long,int) throws java.lang.InterruptedException
 class stroom.query.api.v2.ExpressionItem - public int stroom.query.api.v2.ExpressionItem.hashCode()
-class stroom.query.api.v2.ExpressionItem - public java.lang.Boolean stroom.query.api.v2.ExpressionItem.getEnabled()
 class stroom.query.api.v2.ExpressionItem - public java.lang.String stroom.query.api.v2.ExpressionItem.toMultiLineString()
 class stroom.query.api.v2.ExpressionItem - public java.lang.String stroom.query.api.v2.ExpressionItem.toString()
-class stroom.query.api.v2.ExpressionOperator - public boolean stroom.query.api.v2.ExpressionItem.enabled()
+class stroom.query.api.v2.ExpressionOperator - public boolean stroom.query.api.v2.ExpressionItem.isEnabled()
 class stroom.query.api.v2.ExpressionOperator - public boolean stroom.query.api.v2.ExpressionOperator.equals(java.lang.Object)
 class stroom.query.api.v2.ExpressionOperator - public final native java.lang.Class<?> java.lang.Object.getClass()
 class stroom.query.api.v2.ExpressionOperator - public final native void java.lang.Object.notify()
@@ -84,7 +83,6 @@ class stroom.query.api.v2.ExpressionOperator - public final native void java.lan
 class stroom.query.api.v2.ExpressionOperator - public final void java.lang.Object.wait() throws java.lang.InterruptedException
 class stroom.query.api.v2.ExpressionOperator - public final void java.lang.Object.wait(long,int) throws java.lang.InterruptedException
 class stroom.query.api.v2.ExpressionOperator - public int stroom.query.api.v2.ExpressionOperator.hashCode()
-class stroom.query.api.v2.ExpressionOperator - public java.lang.Boolean stroom.query.api.v2.ExpressionItem.getEnabled()
 class stroom.query.api.v2.ExpressionOperator - public java.lang.String stroom.query.api.v2.ExpressionItem.toMultiLineString()
 class stroom.query.api.v2.ExpressionOperator - public java.lang.String stroom.query.api.v2.ExpressionItem.toString()
 class stroom.query.api.v2.ExpressionOperator - public java.util.List<stroom.query.api.v2.ExpressionItem> stroom.query.api.v2.ExpressionOperator.getChildren()
