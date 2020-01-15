@@ -58,7 +58,8 @@ public abstract class ExpressionItem implements Serializable {
             defaultValue = "true")
     private boolean enabled = true;
 
-    ExpressionItem() {
+    public ExpressionItem() {
+        // Required for GWT JSON serialisation.
     }
 
     public ExpressionItem(final boolean enabled) {

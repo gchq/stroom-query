@@ -62,7 +62,8 @@ public final class ExpressionTerm extends ExpressionItem {
             value = "The DocRef that the field value is being evaluated against if the condition is IN_DICTIONARY, IN_FOLDER or IS_DOC_REF")
     private DocRef docRef;
 
-    private ExpressionTerm() {
+    public ExpressionTerm() {
+        // Required for GWT JSON serialisation.
     }
 
     public ExpressionTerm(final String field, final Condition condition, final String value) {
@@ -133,15 +134,17 @@ public final class ExpressionTerm extends ExpressionItem {
             if (condition != null) {
                 sb.append(condition.getDisplayValue());
             }
-            sb.append(" ");
-            if (Condition.IN_DICTIONARY.equals(condition)) {
-                appendDocRef(sb, docRef);
-            } else if (Condition.IN_FOLDER.equals(condition)) {
-                appendDocRef(sb, docRef);
-            } else if (Condition.IS_DOC_REF.equals(condition)) {
-                appendDocRef(sb, docRef);
-            } else if (value != null) {
-                sb.append(value);
+            if (!Condition.IS_NULL.equals(condition) && !Condition.IS_NOT_NULL.equals(condition)) {
+                sb.append(" ");
+                if (Condition.IN_DICTIONARY.equals(condition)) {
+                    appendDocRef(sb, docRef);
+                } else if (Condition.IN_FOLDER.equals(condition)) {
+                    appendDocRef(sb, docRef);
+                } else if (Condition.IS_DOC_REF.equals(condition)) {
+                    appendDocRef(sb, docRef);
+                } else if (value != null) {
+                    sb.append(value);
+                }
             }
         }
     }

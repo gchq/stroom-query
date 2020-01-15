@@ -71,7 +71,8 @@ public final class ExpressionOperator extends ExpressionItem {
             required = false)
     private List<ExpressionItem> children;
 
-    private ExpressionOperator() {
+    public ExpressionOperator() {
+        // Required for GWT JSON serialisation.
     }
 
     public ExpressionOperator(final boolean enabled, final Op op, final List<ExpressionItem> children) {
