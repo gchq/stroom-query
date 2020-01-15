@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.0-beta.46] - 2020-01-15
+
+* Added public constructors for GWT JSON serialisation.
+
 ## [v4.0-beta.45] - 2019-12-06
 
 * Added ability to copy a field with builders.
@@ -305,7 +309,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.45...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.46...HEAD
+[v4.0-beta.46]: https://github.com/gchq/stroom-query/compare/v4.0-beta.45...v4.0-beta.46
 [v4.0-beta.45]: https://github.com/gchq/stroom-query/compare/v4.0-beta.44...v4.0-beta.45
 [v4.0-beta.44]: https://github.com/gchq/stroom-query/compare/v4.0-beta.43...v4.0-beta.44
 [v4.0-beta.43]: https://github.com/gchq/stroom-query/compare/v4.0-beta.42...v4.0-beta.43
