@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.0-beta.47] - 2020-02-05
+
+* Added setters to DocRef.
+
 ## [v4.0-beta.46] - 2020-01-15
 
 * Added public constructors for GWT JSON serialisation.
@@ -309,7 +313,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.46...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.47...HEAD
+[v4.0-beta.47]: https://github.com/gchq/stroom-query/compare/v4.0-beta.46...v4.0-beta.47
 [v4.0-beta.46]: https://github.com/gchq/stroom-query/compare/v4.0-beta.45...v4.0-beta.46
 [v4.0-beta.45]: https://github.com/gchq/stroom-query/compare/v4.0-beta.44...v4.0-beta.45
 [v4.0-beta.44]: https://github.com/gchq/stroom-query/compare/v4.0-beta.43...v4.0-beta.44
