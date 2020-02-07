@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.0-beta.49] - 2020-02-07
+
+* Changes for Rest.
+
 ## [v4.0-beta.48] - 2020-02-07
 
 * Changes for Rest.
@@ -317,7 +321,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.48...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.49...HEAD
+[v4.0-beta.49]: https://github.com/gchq/stroom-query/compare/v4.0-beta.48...v4.0-beta.49
 [v4.0-beta.48]: https://github.com/gchq/stroom-query/compare/v4.0-beta.47...v4.0-beta.48
 [v4.0-beta.47]: https://github.com/gchq/stroom-query/compare/v4.0-beta.46...v4.0-beta.47
 [v4.0-beta.46]: https://github.com/gchq/stroom-query/compare/v4.0-beta.45...v4.0-beta.46
