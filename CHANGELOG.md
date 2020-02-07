@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.0-beta.48] - 2020-02-07
+
+* Changes for Rest.
+
 ## [v4.0-beta.47] - 2020-02-05
 
 * Added setters to DocRef.
@@ -313,7 +317,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.47...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.48...HEAD
+[v4.0-beta.48]: https://github.com/gchq/stroom-query/compare/v4.0-beta.47...v4.0-beta.48
 [v4.0-beta.47]: https://github.com/gchq/stroom-query/compare/v4.0-beta.46...v4.0-beta.47
 [v4.0-beta.46]: https://github.com/gchq/stroom-query/compare/v4.0-beta.45...v4.0-beta.46
 [v4.0-beta.45]: https://github.com/gchq/stroom-query/compare/v4.0-beta.44...v4.0-beta.45
