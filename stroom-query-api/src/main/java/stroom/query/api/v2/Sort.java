@@ -62,8 +62,16 @@ public final class Sort implements Serializable {
         return order;
     }
 
+    public void setOrder(final Integer order) {
+        this.order = order;
+    }
+
     public SortDirection getDirection() {
         return direction;
+    }
+
+    public void setDirection(final SortDirection direction) {
+        this.direction = direction;
     }
 
     @Override

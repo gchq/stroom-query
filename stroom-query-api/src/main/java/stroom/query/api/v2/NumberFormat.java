@@ -60,8 +60,16 @@ public final class NumberFormat implements Serializable {
         return decimalPlaces;
     }
 
+    public void setDecimalPlaces(final Integer decimalPlaces) {
+        this.decimalPlaces = decimalPlaces;
+    }
+
     public Boolean getUseSeparator() {
         return useSeparator;
+    }
+
+    public void setUseSeparator(final Boolean useSeparator) {
+        this.useSeparator = useSeparator;
     }
 
     public boolean useSeparator() {

@@ -47,7 +47,7 @@ public final class TableResult extends Result {
     @ApiModelProperty(value = "The total number of results in this result set")
     private Integer totalResults;
 
-    TableResult() {
+    public TableResult() {
     }
 
     public TableResult(final String componentId,
@@ -79,16 +79,32 @@ public final class TableResult extends Result {
         return fields;
     }
 
+    public void setFields(final List<Field> fields) {
+        this.fields = fields;
+    }
+
     public List<Row> getRows() {
         return rows;
+    }
+
+    public void setRows(final List<Row> rows) {
+        this.rows = rows;
     }
 
     public OffsetRange getResultRange() {
         return resultRange;
     }
 
+    public void setResultRange(final OffsetRange resultRange) {
+        this.resultRange = resultRange;
+    }
+
     public Integer getTotalResults() {
         return totalResults;
+    }
+
+    public void setTotalResults(final Integer totalResults) {
+        this.totalResults = totalResults;
     }
 
     @Override

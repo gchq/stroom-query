@@ -90,16 +90,32 @@ public final class ExpressionTerm extends ExpressionItem {
         return field;
     }
 
+    public void setField(final String field) {
+        this.field = field;
+    }
+
     public Condition getCondition() {
         return condition;
+    }
+
+    public void setCondition(final Condition condition) {
+        this.condition = condition;
     }
 
     public String getValue() {
         return value;
     }
 
+    public void setValue(final String value) {
+        this.value = value;
+    }
+
     public DocRef getDocRef() {
         return docRef;
+    }
+
+    public void setDocRef(final DocRef docRef) {
+        this.docRef = docRef;
     }
 
     @Override

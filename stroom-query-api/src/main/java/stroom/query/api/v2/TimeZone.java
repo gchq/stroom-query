@@ -104,16 +104,32 @@ public final class TimeZone implements Serializable {
         return use;
     }
 
+    public void setUse(final Use use) {
+        this.use = use;
+    }
+
     public String getId() {
         return id;
+    }
+
+    public void setId(final String id) {
+        this.id = id;
     }
 
     public Integer getOffsetHours() {
         return offsetHours;
     }
 
+    public void setOffsetHours(final Integer offsetHours) {
+        this.offsetHours = offsetHours;
+    }
+
     public Integer getOffsetMinutes() {
         return offsetMinutes;
+    }
+
+    public void setOffsetMinutes(final Integer offsetMinutes) {
+        this.offsetMinutes = offsetMinutes;
     }
 
     @Override

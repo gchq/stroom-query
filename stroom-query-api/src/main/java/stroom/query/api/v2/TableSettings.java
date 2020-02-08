@@ -83,7 +83,7 @@ public final class TableSettings implements Serializable {
             required = false)
     private Boolean showDetail;
 
-    TableSettings() {
+    public TableSettings() {
     }
 
     public TableSettings(final String queryId,
@@ -104,12 +104,24 @@ public final class TableSettings implements Serializable {
         return queryId;
     }
 
+    public void setQueryId(final String queryId) {
+        this.queryId = queryId;
+    }
+
     public List<Field> getFields() {
         return fields;
     }
 
+    public void setFields(final List<Field> fields) {
+        this.fields = fields;
+    }
+
     public Boolean getExtractValues() {
         return extractValues;
+    }
+
+    public void setExtractValues(final Boolean extractValues) {
+        this.extractValues = extractValues;
     }
 
     public boolean extractValues() {
@@ -123,12 +135,24 @@ public final class TableSettings implements Serializable {
         return extractionPipeline;
     }
 
+    public void setExtractionPipeline(final DocRef extractionPipeline) {
+        this.extractionPipeline = extractionPipeline;
+    }
+
     public List<Integer> getMaxResults() {
         return maxResults;
     }
 
+    public void setMaxResults(final List<Integer> maxResults) {
+        this.maxResults = maxResults;
+    }
+
     public Boolean getShowDetail() {
         return showDetail;
+    }
+
+    public void setShowDetail(final Boolean showDetail) {
+        this.showDetail = showDetail;
     }
 
     public boolean showDetail() {

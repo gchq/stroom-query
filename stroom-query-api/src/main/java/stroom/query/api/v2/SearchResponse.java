@@ -65,7 +65,7 @@ public final class SearchResponse implements Serializable {
             value = "True if the query has returned all known results")
     private Boolean complete;
 
-    private SearchResponse() {
+    public SearchResponse() {
     }
 
     /**
@@ -92,12 +92,20 @@ public final class SearchResponse implements Serializable {
         return highlights;
     }
 
+    public void setHighlights(final List<String> highlights) {
+        this.highlights = highlights;
+    }
+
     /**
      * @return A list of {@link Result result} objects, corresponding to the {@link ResultRequest resultRequests} in
      * the {@link SearchRequest searchRequest}
      */
     public List<Result> getResults() {
         return results;
+    }
+
+    public void setResults(final List<Result> results) {
+        this.results = results;
     }
 
     /**
@@ -107,12 +115,20 @@ public final class SearchResponse implements Serializable {
         return errors;
     }
 
+    public void setErrors(final List<String> errors) {
+        this.errors = errors;
+    }
+
     /**
      * @return The completed status of the search.  A value of false or null indicates the search has not yet
      * found all results.
      */
     public Boolean getComplete() {
         return complete;
+    }
+
+    public void setComplete(final Boolean complete) {
+        this.complete = complete;
     }
 
     /**

@@ -61,8 +61,16 @@ public final class Filter implements Serializable {
         return includes;
     }
 
+    public void setExcludes(final String excludes) {
+        this.excludes = excludes;
+    }
+
     public String getExcludes() {
         return excludes;
+    }
+
+    public void setIncludes(final String includes) {
+        this.includes = includes;
     }
 
     @Override

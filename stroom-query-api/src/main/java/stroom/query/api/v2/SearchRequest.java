@@ -87,7 +87,7 @@ public final class SearchRequest implements Serializable {
             required = false)
     private Long timeout;
 
-    private SearchRequest() {
+    public SearchRequest() {
     }
 
     /**
@@ -156,11 +156,19 @@ public final class SearchRequest implements Serializable {
         return key;
     }
 
+    public void setKey(final QueryKey key) {
+        this.key = key;
+    }
+
     /**
      * @return The {@link Query query} object containing the search terms
      */
     public Query getQuery() {
         return query;
+    }
+
+    public void setQuery(final Query query) {
+        this.query = query;
     }
 
     /**
@@ -170,11 +178,19 @@ public final class SearchRequest implements Serializable {
         return resultRequests;
     }
 
+    public void setResultRequests(final List<ResultRequest> resultRequests) {
+        this.resultRequests = resultRequests;
+    }
+
     /**
      * @return The locale ID, see {@link java.time.ZoneId}, for the date values uses in the search response.
      */
     public String getDateTimeLocale() {
         return dateTimeLocale;
+    }
+
+    public void setDateTimeLocale(final String dateTimeLocale) {
+        this.dateTimeLocale = dateTimeLocale;
     }
 
     /**
@@ -185,11 +201,19 @@ public final class SearchRequest implements Serializable {
         return incremental;
     }
 
+    public void setIncremental(final Boolean incremental) {
+        this.incremental = incremental;
+    }
+
     /**
      * @return The timeout period in ms. Can be null.
      */
     public Long getTimeout() {
         return timeout;
+    }
+
+    public void setTimeout(final Long timeout) {
+        this.timeout = timeout;
     }
 
     /**

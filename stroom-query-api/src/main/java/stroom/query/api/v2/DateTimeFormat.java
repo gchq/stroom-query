@@ -72,11 +72,19 @@ public final class DateTimeFormat implements Serializable {
         return pattern;
     }
 
+    public void setPattern(final String pattern) {
+        this.pattern = pattern;
+    }
+
     /**
      * @return The the {@link TimeZone timeZone} to use when formatting the date
      */
     public TimeZone getTimeZone() {
         return timeZone;
+    }
+
+    public void setTimeZone(final TimeZone timeZone) {
+        this.timeZone = timeZone;
     }
 
     @Override

@@ -42,7 +42,7 @@ public final class QueryKey implements Serializable {
             required = true)
     private String uuid;
 
-    private QueryKey() {
+    public QueryKey() {
     }
 
     public QueryKey(final String uuid) {
@@ -51,6 +51,10 @@ public final class QueryKey implements Serializable {
 
     public String getUuid() {
         return uuid;
+    }
+
+    public void setUuid(final String uuid) {
+        this.uuid = uuid;
     }
 
     @Override

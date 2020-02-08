@@ -47,7 +47,7 @@ public final class Param implements Serializable {
             required = true)
     private String value;
 
-    private Param() {
+    public Param() {
     }
 
     public Param(final String key, final String value) {
@@ -59,8 +59,16 @@ public final class Param implements Serializable {
         return key;
     }
 
+    public void setKey(final String key) {
+        this.key = key;
+    }
+
     public String getValue() {
         return value;
+    }
+
+    public void setValue(final String value) {
+        this.value = value;
     }
 
     @Override

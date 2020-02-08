@@ -67,7 +67,7 @@ public final class ResultRequest implements Serializable {
             required = false)
     private Fetch fetch;
 
-    private ResultRequest() {
+    public ResultRequest() {
     }
 
     public ResultRequest(final String componentId) {
@@ -107,20 +107,40 @@ public final class ResultRequest implements Serializable {
         return componentId;
     }
 
+    public void setComponentId(final String componentId) {
+        this.componentId = componentId;
+    }
+
     public List<TableSettings> getMappings() {
         return mappings;
+    }
+
+    public void setMappings(final List<TableSettings> mappings) {
+        this.mappings = mappings;
     }
 
     public OffsetRange getRequestedRange() {
         return requestedRange;
     }
 
+    public void setRequestedRange(final OffsetRange requestedRange) {
+        this.requestedRange = requestedRange;
+    }
+
     public List<String> getOpenGroups() {
         return openGroups;
     }
 
+    public void setOpenGroups(final List<String> openGroups) {
+        this.openGroups = openGroups;
+    }
+
     public ResultStyle getResultStyle() {
         return resultStyle;
+    }
+
+    public void setResultStyle(final ResultStyle resultStyle) {
+        this.resultStyle = resultStyle;
     }
 
     /**
@@ -130,6 +150,10 @@ public final class ResultRequest implements Serializable {
      */
     public Fetch getFetch() {
         return fetch;
+    }
+
+    public void setFetch(final Fetch fetch) {
+        this.fetch = fetch;
     }
 
     @Override

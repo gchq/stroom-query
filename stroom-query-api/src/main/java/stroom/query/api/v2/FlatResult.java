@@ -49,7 +49,7 @@ public final class FlatResult extends Result {
     @ApiModelProperty(value = "The size of the result set being returned")
     private Long size;
 
-    private FlatResult() {
+    public FlatResult() {
     }
 
     public FlatResult(final String componentId,
@@ -77,12 +77,24 @@ public final class FlatResult extends Result {
         return structure;
     }
 
+    public void setStructure(final List<Field> structure) {
+        this.structure = structure;
+    }
+
     public List<List<Object>> getValues() {
         return values;
     }
 
+    public void setValues(final List<List<Object>> values) {
+        this.values = values;
+    }
+
     public Long getSize() {
         return size;
+    }
+
+    public void setSize(final Long size) {
+        this.size = size;
     }
 
     @Override

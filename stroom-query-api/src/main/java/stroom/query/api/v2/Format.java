@@ -79,12 +79,24 @@ public final class Format implements Serializable {
         return type;
     }
 
+    public void setType(final Type type) {
+        this.type = type;
+    }
+
     public NumberFormat getNumberFormat() {
         return numberFormat;
     }
 
+    public void setNumberFormat(final NumberFormat numberFormat) {
+        this.numberFormat = numberFormat;
+    }
+
     public DateTimeFormat getDateTimeFormat() {
         return dateTimeFormat;
+    }
+
+    public void setDateTimeFormat(final DateTimeFormat dateTimeFormat) {
+        this.dateTimeFormat = dateTimeFormat;
     }
 
     @Override

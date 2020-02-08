@@ -70,6 +70,10 @@ public abstract class ExpressionItem implements Serializable {
         return enabled;
     }
 
+    public void setEnabled(final boolean enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;

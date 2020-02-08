@@ -55,7 +55,7 @@ public abstract class Result implements Serializable {
             "of the error")
     private String error;
 
-    Result() {
+    public Result() {
     }
 
     public Result(final String componentId, final String error) {
@@ -67,8 +67,16 @@ public abstract class Result implements Serializable {
         return componentId;
     }
 
+    public void setComponentId(final String componentId) {
+        this.componentId = componentId;
+    }
+
     public String getError() {
         return error;
+    }
+
+    public void setError(final String error) {
+        this.error = error;
     }
 
     @Override
