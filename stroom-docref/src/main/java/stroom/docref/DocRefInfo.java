@@ -16,18 +16,44 @@
 
 package stroom.docref;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Objects;
 
+@JsonInclude(Include.NON_DEFAULT)
 public class DocRefInfo {
+    @JsonProperty
     private DocRef docRef;
+    @JsonProperty
     private Long createTime;
+    @JsonProperty
     private Long updateTime;
+    @JsonProperty
     private String createUser;
+    @JsonProperty
     private String updateUser;
+    @JsonProperty
     private String otherInfo;
 
     public DocRefInfo() {
+    }
 
+    @JsonCreator
+    public DocRefInfo(@JsonProperty("docRef") final DocRef docRef,
+                      @JsonProperty("createTime") final Long createTime,
+                      @JsonProperty("updateTime") final Long updateTime,
+                      @JsonProperty("createUser") final String createUser,
+                      @JsonProperty("updateUser") final String updateUser,
+                      @JsonProperty("otherInfo") final String otherInfo) {
+        this.docRef = docRef;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+        this.createUser = createUser;
+        this.updateUser = updateUser;
+        this.otherInfo = otherInfo;
     }
 
     public DocRef getDocRef() {

@@ -16,7 +16,11 @@
 
 package stroom.datasource.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModelProperty;
 import stroom.query.api.v2.ExpressionTerm.Condition;
@@ -28,11 +32,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @JsonPropertyOrder({"type", "docRefType", "name", "queryable", "conditions"})
-@XmlType(name = "DataSourceField", propOrder = {"type", "docRefType", "name", "queryable", "conditions"})
+@JsonInclude(Include.NON_DEFAULT)
 public class DocRefField extends AbstractField {
     private static final long serialVersionUID = 1272545271946712570L;
 
     private static List<Condition> DEFAULT_CONDITIONS = new ArrayList<>();
+
     static {
         DEFAULT_CONDITIONS.add(Condition.IS_DOC_REF);
         DEFAULT_CONDITIONS.add(Condition.CONTAINS);
@@ -42,14 +47,8 @@ public class DocRefField extends AbstractField {
         DEFAULT_CONDITIONS.add(Condition.IN_FOLDER);
     }
 
-    @XmlElement
-    @ApiModelProperty(
-            value = "The doc ref type for the field",
-            required = true)
+    @JsonProperty
     private String docRefType;
-
-    public DocRefField() {
-    }
 
     public DocRefField(final String docRefType,
                        final String name) {
@@ -64,10 +63,11 @@ public class DocRefField extends AbstractField {
         this.docRefType = docRefType;
     }
 
-    public DocRefField(final String docRefType,
-                       final String name,
-                       final Boolean queryable,
-                       final List<Condition> conditions) {
+    @JsonCreator
+    public DocRefField(@JsonProperty("docRefType") final String docRefType,
+                       @JsonProperty("name") final String name,
+                       @JsonProperty("queryable") final Boolean queryable,
+                       @JsonProperty("conditions") final List<Condition> conditions) {
         super(name, queryable, conditions);
         this.docRefType = docRefType;
     }
@@ -77,7 +77,6 @@ public class DocRefField extends AbstractField {
     }
 
     @JsonIgnore
-    @XmlTransient
     @Override
     public String getType() {
         return FieldTypes.DOC_REF;

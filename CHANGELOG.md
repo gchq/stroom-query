@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.0-beta.53] - 2020-02-24
+
+* Changes for Rest.
+
 ## [v4.0-beta.52] - 2020-02-08
 
 * Changes for Rest.

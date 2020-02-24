@@ -16,22 +16,18 @@
 
 package stroom.datasource.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import stroom.docref.HasDisplayValue;
 import stroom.query.api.v2.ExpressionTerm.Condition;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -51,60 +47,26 @@ import java.util.Objects;
         @Type(value = TextField.class, name = FieldTypes.TEXT),
         @Type(value = DocRefField.class, name = FieldTypes.DOC_REF)
 })
-
-@XmlType(name = "DataSourceField", propOrder = {"type", "docRefType", "name", "queryable", "conditions"})
-@XmlAccessorType(XmlAccessType.FIELD)
-@ApiModel(description = "The definition of a field within a data source")
+@JsonInclude(Include.NON_DEFAULT)
 public abstract class AbstractField implements Serializable, HasDisplayValue {
     private static final long serialVersionUID = 1272545271946712570L;
 
-//    @XmlElement
-//    @ApiModelProperty(
-//            value = "The data type for the field",
-//            required = true)
-//    private DataSourceFieldType type;
-
-
-    @XmlElement
-    @ApiModelProperty(
-            value = "The name of the field",
-            example = "field1",
-            required = true)
+    @JsonProperty
     private String name;
-
-    @XmlElement
-    @ApiModelProperty(
-            value = "Whether the field can be used in predicate in a query",
-            example = "true",
-            required = true)
+    @JsonProperty
     private Boolean queryable;
-
-    /**
-     * Defines a list of the {@link Condition} values supported by this field,
-     * can be null in which case a default set will be returned. Not persisted
-     * in the XML
-     */
-    @XmlElementWrapper(name = "conditions")
-    @XmlElement(name = "condition")
-    @ApiModelProperty(
-            value = "The supported predicate conditions for this field",
-            required = true)
+    @JsonProperty
     private List<Condition> conditions;
 
-    public AbstractField() {
-    }
-
-    public AbstractField(final String name,
-                         final Boolean queryable,
-                         final List<Condition> conditions) {
-//        this.type = type;
+    @JsonCreator
+    public AbstractField(@JsonProperty("name") final String name,
+                         @JsonProperty("queryable") final Boolean queryable,
+                         @JsonProperty("conditions") final List<Condition> conditions) {
         this.name = name;
         this.queryable = queryable;
         this.conditions = conditions;
     }
 
-    @JsonIgnore
-    @XmlTransient
     public abstract String getType();
 
     public String getName() {
@@ -124,13 +86,11 @@ public abstract class AbstractField implements Serializable, HasDisplayValue {
     }
 
     @JsonIgnore
-    @XmlTransient
     public boolean isNumeric() {
         return false;
     }
 
     @JsonIgnore
-    @XmlTransient
     @Override
     public String getDisplayValue() {
         return name;
@@ -153,77 +113,4 @@ public abstract class AbstractField implements Serializable, HasDisplayValue {
     public String toString() {
         return name;
     }
-
-    //
-//    @Override
-//    public String toString() {
-//        return "DataSourceField{" +
-//                ", name='" + name + '\'' +
-//                ", queryable=" + queryable +
-//                ", conditions=" + conditions +
-//                '}';
-//    }
-
-//    public enum DataSourceFieldType implements HasDisplayValue {
-//        FIELD("Text", false),
-//        BOOLEAN_FIELD("Boolean", false),
-//        NUMERIC_FIELD("Number", true),
-//        DATE_FIELD("Date", false),
-//        ID("Id", true),
-//        DOC_REF("DocRef", false);
-//
-//        private final String displayValue;
-//        private final boolean numeric;
-//
-//        DataSourceFieldType(final String displayValue, final boolean numeric) {
-//            this.displayValue = displayValue;
-//            this.numeric = numeric;
-//        }
-//
-//        public boolean isNumeric() {
-//            return numeric;
-//        }
-//
-//        @Override
-//        public String getDisplayValue() {
-//            return displayValue;
-//        }
-//    }
-
-//    public static class Builder {
-//        private DataSourceFieldType type;
-//        private String docRefType;
-//        private String name;
-//        private Boolean queryable;
-//        private final List<Condition> conditions = new ArrayList<>();
-//
-//        public Builder type(final DataSourceFieldType value) {
-//            this.type = value;
-//            return this;
-//        }
-//
-//        public Builder docRefType(final String docRefType) {
-//            this.docRefType = docRefType;
-//            return type(DataSourceFieldType.DOC_REF);
-//        }
-//
-//        public Builder name(final String value) {
-//            this.name = value;
-//            return this;
-//        }
-//
-//        public Builder queryable(final Boolean value) {
-//            this.queryable = value;
-//            return this;
-//        }
-//
-//        public Builder addConditions(final Condition... values) {
-//            this.conditions.addAll(Arrays.asList(values));
-//            return this;
-//        }
-//
-//        public DataSourceField build() {
-//            return new DataSourceField(type, docRefType, name, queryable, conditions);
-//        }
-//    }
 }

@@ -16,17 +16,19 @@
 
 package stroom.datasource.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import stroom.query.api.v2.ExpressionTerm.Condition;
 
 import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
 
+@JsonInclude(Include.NON_DEFAULT)
 public class FloatField extends AbstractNumericField {
     private static final long serialVersionUID = 1272545271946712570L;
-
-    public FloatField() {
-    }
 
     public FloatField(final String name) {
         super(name);
@@ -36,12 +38,14 @@ public class FloatField extends AbstractNumericField {
         super(name, queryable);
     }
 
-    public FloatField(final String name, final Boolean queryable, final List<Condition> conditions) {
+    @JsonCreator
+    public FloatField(@JsonProperty("name") final String name,
+                      @JsonProperty("queryable") final Boolean queryable,
+                      @JsonProperty("conditions") final List<Condition> conditions) {
         super(name, queryable, conditions);
     }
 
     @JsonIgnore
-    @XmlTransient
     @Override
     public String getType() {
         return FieldTypes.FLOAT;

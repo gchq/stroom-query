@@ -16,23 +16,26 @@
 
 package stroom.datasource.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import stroom.query.api.v2.ExpressionTerm.Condition;
 
 import javax.xml.bind.annotation.XmlTransient;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonInclude(Include.NON_DEFAULT)
 public class IdField extends AbstractNumericField {
     private static final long serialVersionUID = 1272545271946712570L;
 
     private static List<Condition> DEFAULT_CONDITIONS = new ArrayList<>();
+
     static {
         DEFAULT_CONDITIONS.add(Condition.EQUALS);
         DEFAULT_CONDITIONS.add(Condition.IN);
-    }
-
-    public IdField() {
     }
 
     public IdField(final String name) {
@@ -43,12 +46,14 @@ public class IdField extends AbstractNumericField {
         super(name, queryable);
     }
 
-    public IdField(final String name, final Boolean queryable, final List<Condition> conditions) {
+    @JsonCreator
+    public IdField(@JsonProperty("name") final String name,
+                   @JsonProperty("queryable") final Boolean queryable,
+                   @JsonProperty("conditions") final List<Condition> conditions) {
         super(name, queryable, conditions);
     }
 
     @JsonIgnore
-    @XmlTransient
     @Override
     public String getType() {
         return FieldTypes.ID;

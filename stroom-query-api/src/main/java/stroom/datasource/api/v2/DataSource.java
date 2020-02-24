@@ -16,6 +16,10 @@
 
 package stroom.datasource.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -27,23 +31,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-@JsonPropertyOrder({"fields"})
-@XmlType(name = "DataSource", propOrder = "fields")
-@XmlRootElement(name = "dataSource")
-@XmlAccessorType(XmlAccessType.FIELD)
-@ApiModel(description = "The definition of a data source, describing the fields available")
+@JsonInclude(Include.NON_DEFAULT)
 public final class DataSource implements Serializable {
     private static final long serialVersionUID = 1272545271946712570L;
 
-    @XmlElementWrapper(name = "fields")
-    @XmlElement(name = "field")
-    @ApiModelProperty(required = true)
+    @JsonProperty
     private List<AbstractField> fields;
 
-    private DataSource() {
-    }
-
-    public DataSource(final List<AbstractField> fields) {
+    @JsonCreator
+    public DataSource(@JsonProperty("fields") final List<AbstractField> fields) {
         this.fields = fields;
     }
 
@@ -75,7 +71,7 @@ public final class DataSource implements Serializable {
 
         private final List<AbstractField> fields = new ArrayList<>();
 
-        public Builder addFields(final AbstractField...values) {
+        public Builder addFields(final AbstractField... values) {
             this.fields.addAll(Arrays.asList(values));
             return this;
         }

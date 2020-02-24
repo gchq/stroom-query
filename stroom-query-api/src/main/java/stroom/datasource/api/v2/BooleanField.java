@@ -16,13 +16,18 @@
 
 package stroom.datasource.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import stroom.query.api.v2.ExpressionTerm.Condition;
 
 import javax.xml.bind.annotation.XmlTransient;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonInclude(Include.NON_DEFAULT)
 public class BooleanField extends AbstractField {
     private static final long serialVersionUID = 1272545271946712570L;
 
@@ -30,9 +35,6 @@ public class BooleanField extends AbstractField {
 
     static {
         DEFAULT_CONDITIONS.add(Condition.EQUALS);
-    }
-
-    public BooleanField() {
     }
 
     public BooleanField(final String name) {
@@ -44,14 +46,14 @@ public class BooleanField extends AbstractField {
         super(name, queryable, DEFAULT_CONDITIONS);
     }
 
-    public BooleanField(final String name,
-                        final Boolean queryable,
-                        final List<Condition> conditions) {
+    @JsonCreator
+    public BooleanField(@JsonProperty("name") final String name,
+                        @JsonProperty("queryable") final Boolean queryable,
+                        @JsonProperty("conditions") final List<Condition> conditions) {
         super(name, queryable, conditions);
     }
 
     @JsonIgnore
-    @XmlTransient
     @Override
     public String getType() {
         return FieldTypes.BOOLEAN;
