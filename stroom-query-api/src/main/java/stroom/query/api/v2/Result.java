@@ -16,6 +16,10 @@
 
 package stroom.query.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.swagger.annotations.ApiModel;
@@ -34,6 +38,7 @@ import java.util.Objects;
         @JsonSubTypes.Type(value = TableResult.class, name = "table"),
         @JsonSubTypes.Type(value = FlatResult.class, name = "vis")
 })
+@JsonInclude(Include.NON_DEFAULT)
 @XmlType(name = "Result", propOrder = "componentId")
 @XmlSeeAlso({TableResult.class, FlatResult.class})
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -48,17 +53,21 @@ public abstract class Result implements Serializable {
     @ApiModelProperty(
             value = "The ID of the component that this result set was requested for. See ResultRequest in SearchRequest",
             required = true)
+    @JsonProperty
     private String componentId;
 
     @XmlElement
     @ApiModelProperty(value = "If an error has occurred producing this result set then this will have details " +
             "of the error")
+    @JsonProperty
     private String error;
 
     public Result() {
     }
 
-    public Result(final String componentId, final String error) {
+    @JsonCreator
+    public Result(@JsonProperty("componentId") final String componentId,
+                  @JsonProperty("error") final String error) {
         this.componentId = componentId;
         this.error = error;
     }

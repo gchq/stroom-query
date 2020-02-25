@@ -16,6 +16,10 @@
 
 package stroom.query.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -28,6 +32,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @JsonPropertyOrder({"offset", "length"})
+@JsonInclude(Include.NON_DEFAULT)
 @XmlType(name = "OffsetRange", propOrder = {"offset", "length"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = "The offset and length of a range of data in a sub-set of a query result set")
@@ -40,6 +45,7 @@ public final class OffsetRange implements Serializable {
                     "in the full result set",
             example = "0",
             required = true)
+    @JsonProperty
     private Long offset;
 
     @XmlElement
@@ -47,6 +53,7 @@ public final class OffsetRange implements Serializable {
             value = "The length in records of the sub-set of results",
             example = "100",
             required = true)
+    @JsonProperty
     private Long length;
 
     public OffsetRange() {
@@ -57,7 +64,9 @@ public final class OffsetRange implements Serializable {
         this.length = length.longValue();
     }
 
-    public OffsetRange(final Long offset, final Long length) {
+    @JsonCreator
+    public OffsetRange(@JsonProperty("offset") final Long offset,
+                       @JsonProperty("length") final Long length) {
         this.offset = offset;
         this.length = length;
     }

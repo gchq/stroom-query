@@ -16,6 +16,10 @@
 
 package stroom.query.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -32,6 +36,7 @@ import java.util.Objects;
 @XmlType(name = "TimeZone", propOrder = {"use", "id", "offsetHours", "offsetMinutes"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = "The timezone to apply to a date time value")
+@JsonInclude(Include.NON_DEFAULT)
 public final class TimeZone implements Serializable {
     private static final long serialVersionUID = 1200175661441813029L;
 
@@ -40,33 +45,38 @@ public final class TimeZone implements Serializable {
     @ApiModelProperty(
             value = "The required type of time zone",
             required = true)
+    @JsonProperty
     private Use use;
 
     @XmlElement
     @ApiModelProperty(
             value = "The id of the time zone, conforming to java.time.ZoneId",
-            example = "GMT",
-            required = false)
+            example = "GMT")
+    @JsonProperty
     private String id;
 
     @XmlElement
     @ApiModelProperty(
             value = "The number of hours this timezone is offset from UTC",
-            example = "-1",
-            required = false)
+            example = "-1")
+    @JsonProperty
     private Integer offsetHours;
 
     @XmlElement
     @ApiModelProperty(
             value = "The number of minutes this timezone is offset from UTC",
-            example = "-30",
-            required = false)
+            example = "-30")
+    @JsonProperty
     private Integer offsetMinutes;
 
     public TimeZone() {
     }
 
-    public TimeZone(final Use use, final String id, final Integer offsetHours, final Integer offsetMinutes) {
+    @JsonCreator
+    public TimeZone(@JsonProperty("use") final Use use,
+                    @JsonProperty("id") final String id,
+                    @JsonProperty("offsetHours") final Integer offsetHours,
+                    @JsonProperty("offsetMinutes") final Integer offsetMinutes) {
         this.use = use;
         this.id = id;
         this.offsetHours = offsetHours;

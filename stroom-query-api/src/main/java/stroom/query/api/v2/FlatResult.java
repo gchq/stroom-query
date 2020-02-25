@@ -16,6 +16,10 @@
 
 package stroom.query.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -29,6 +33,7 @@ import java.util.List;
 import java.util.Objects;
 
 @JsonPropertyOrder({"componentId", "structure", "values", "size", "error"})
+@JsonInclude(Include.NON_DEFAULT)
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(
         description = "A result structure used primarily for visualisation data",
@@ -38,15 +43,18 @@ public final class FlatResult extends Result {
     private static final long serialVersionUID = 3826654996795750099L;
 
     @XmlElement
+    @JsonProperty
     private List<Field> structure;
 
     @XmlElement
     @ApiModelProperty(value = "The 2 dimensional array containing the result set. The positions in the inner array " +
             "correspond to the positions in the 'structure' property")
+    @JsonProperty
     private List<List<Object>> values;
 
     @XmlElement
     @ApiModelProperty(value = "The size of the result set being returned")
+    @JsonProperty
     private Long size;
 
     public FlatResult() {
@@ -62,11 +70,12 @@ public final class FlatResult extends Result {
         this.size = (long) values.size();
     }
 
-    public FlatResult(final String componentId,
-                      final List<Field> structure,
-                      final List<List<Object>> values,
-                      final Long size,
-                      final String error) {
+    @JsonCreator
+    public FlatResult(@JsonProperty("componentId") final String componentId,
+                      @JsonProperty("structure") final List<Field> structure,
+                      @JsonProperty("values") final List<List<Object>> values,
+                      @JsonProperty("size") final Long size,
+                      @JsonProperty("error") final String error) {
         super(componentId, error);
         this.structure = structure;
         this.values = values;
@@ -133,10 +142,9 @@ public final class FlatResult extends Result {
          * Add headings to our data
          *
          * @param fields the fields which act as headings for our data
-         *
          * @return The {@link Builder}, enabling method chaining
          */
-        public Builder addFields(final Field...fields) {
+        public Builder addFields(final Field... fields) {
             structure.addAll(Arrays.asList(fields));
             return this;
         }
@@ -145,7 +153,6 @@ public final class FlatResult extends Result {
          * Singular Add headings to our data
          *
          * @param field the field which act as headings for our data
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder addField(final Field field) {
@@ -166,7 +173,6 @@ public final class FlatResult extends Result {
 
         /**
          * @param values A collection of 'rows' to add to our values
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder addValues(final List<Object> values) {
@@ -176,6 +182,7 @@ public final class FlatResult extends Result {
 
         /**
          * Fix the reported size of the result set.
+         *
          * @param value The size to use
          * @return The {@link Builder}, enabling method chaining
          */

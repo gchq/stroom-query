@@ -16,6 +16,10 @@
 
 package stroom.query.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -28,6 +32,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @JsonPropertyOrder({"includes", "excludes"})
+@JsonInclude(Include.NON_DEFAULT)
 @XmlType(name = "Filter", propOrder = {"includes", "excludes"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = "A pair of regular expression filters (inclusion and exclusion) to apply to the field.  Either or " +
@@ -38,21 +43,23 @@ public final class Filter implements Serializable {
     @XmlElement
     @ApiModelProperty(
             value = "Only results matching this filter will be included",
-            example = "^[0-9]{3}$",
-            required = false)
+            example = "^[0-9]{3}$")
+    @JsonProperty
     private String includes;
 
     @XmlElement
     @ApiModelProperty(
             value = "Only results NOT matching this filter will be included",
-            example = "^[0-9]{3}$",
-            required = false)
+            example = "^[0-9]{3}$")
+    @JsonProperty
     private String excludes;
 
     public Filter() {
     }
 
-    public Filter(final String includes, final String excludes) {
+    @JsonCreator
+    public Filter(@JsonProperty("includes") final String includes,
+                  @JsonProperty("excludes") final String excludes) {
         this.includes = includes;
         this.excludes = excludes;
     }

@@ -16,6 +16,10 @@
 
 package stroom.query.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -29,6 +33,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @JsonPropertyOrder({"type", "numberFormat", "dateTimeFormat"})
+@JsonInclude(Include.NON_DEFAULT)
 @XmlType(name = "Format", propOrder = {"type", "numberFormat", "dateTimeFormat"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = "Describes the formatting that will be applied to values in a field")
@@ -40,16 +45,15 @@ public final class Format implements Serializable {
             value = "The formatting type to apply",
             example = "NUMBER",
             required = true)
+    @JsonProperty
     private Type type;
 
     @XmlElement
-    @ApiModelProperty(
-            required = false)
+    @JsonProperty
     private NumberFormat numberFormat;
 
     @XmlElement
-    @ApiModelProperty(
-            required = false)
+    @JsonProperty
     private DateTimeFormat dateTimeFormat;
 
     public Format() {
@@ -69,7 +73,10 @@ public final class Format implements Serializable {
         this.dateTimeFormat = dateTimeFormat;
     }
 
-    public Format(final Type type, final NumberFormat numberFormat, final DateTimeFormat dateTimeFormat) {
+    @JsonCreator
+    public Format(@JsonProperty("type") final Type type,
+                  @JsonProperty("numberFormat") final NumberFormat numberFormat,
+                  @JsonProperty("dateTimeFormat") final DateTimeFormat dateTimeFormat) {
         this.type = type;
         this.numberFormat = numberFormat;
         this.dateTimeFormat = dateTimeFormat;

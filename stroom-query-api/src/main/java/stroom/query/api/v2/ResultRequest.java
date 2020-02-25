@@ -16,6 +16,11 @@
 
 package stroom.query.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -23,6 +28,8 @@ import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.*;
 
+@JsonPropertyOrder({"componentId", "mappings", "requestedRange", "openGroups", "resultStyle", "fetch"})
+@JsonInclude(Include.NON_DEFAULT)
 @XmlType(name = "ResultRequest", propOrder = {"componentId", "mappings", "requestedRange", "openGroups", "resultStyle", "fetch"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = "A definition for how to return the raw results of the query in the SearchResponse, " +
@@ -34,15 +41,18 @@ public final class ResultRequest implements Serializable {
     @ApiModelProperty(
             value = "The ID of the component that will receive the results corresponding to this ResultRequest",
             required = true)
+    @JsonProperty
     private String componentId;
 
     @XmlElementWrapper(name = "mappings")
     @XmlElement(name = "mappings")
     @ApiModelProperty(required = true)
+    @JsonProperty
     private List<TableSettings> mappings;
 
     @XmlElement
     @ApiModelProperty(required = true)
+    @JsonProperty
     private OffsetRange requestedRange;
 
     @XmlElementWrapper(name = "openGroups")
@@ -51,6 +61,7 @@ public final class ResultRequest implements Serializable {
     @ApiModelProperty(
             value = "TODO",
             required = true)
+    @JsonProperty
     private List<String> openGroups;
 
     @XmlElement
@@ -58,13 +69,14 @@ public final class ResultRequest implements Serializable {
             value = "The style of results required. FLAT will provide a FlatResult object, while TABLE will " +
                     "provide a TableResult object",
             required = true)
+    @JsonProperty
     private ResultStyle resultStyle;
 
     @XmlElement
     @ApiModelProperty(
             value = "The fetch mode for the query. NONE means fetch no data, ALL means fetch all known results, " +
-                    "CHANGES means fetch only those records not see in previous requests",
-            required = false)
+                    "CHANGES means fetch only those records not see in previous requests")
+    @JsonProperty
     private Fetch fetch;
 
     public ResultRequest() {
@@ -89,12 +101,13 @@ public final class ResultRequest implements Serializable {
         this.resultStyle = ResultStyle.FLAT;
     }
 
-    public ResultRequest(final String componentId,
-                         final List<TableSettings> mappings,
-                         final OffsetRange requestedRange,
-                         final List<String> openGroups,
-                         final ResultStyle resultStyle,
-                         final Fetch fetch) {
+    @JsonCreator
+    public ResultRequest(@JsonProperty("componentId") final String componentId,
+                         @JsonProperty("mappings") final List<TableSettings> mappings,
+                         @JsonProperty("requestedRange") final OffsetRange requestedRange,
+                         @JsonProperty("openGroups") final List<String> openGroups,
+                         @JsonProperty("resultStyle") final ResultStyle resultStyle,
+                         @JsonProperty("fetch") final Fetch fetch) {
         this.componentId = componentId;
         this.mappings = mappings;
         this.requestedRange = requestedRange;

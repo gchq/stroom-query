@@ -16,6 +16,10 @@
 
 package stroom.query.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -28,6 +32,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @JsonPropertyOrder({"uuid"})
+@JsonInclude(Include.NON_DEFAULT)
 @XmlType(name = "QueryKey", propOrder = {"uuid"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = "A unique key to identify the instance of the search by. This key is used to " +
@@ -40,12 +45,14 @@ public final class QueryKey implements Serializable {
             value = "The UUID that makes up the query key",
             example = "7740bcd0-a49e-4c22-8540-044f85770716",
             required = true)
+    @JsonProperty
     private String uuid;
 
     public QueryKey() {
     }
 
-    public QueryKey(final String uuid) {
+    @JsonCreator
+    public QueryKey(@JsonProperty("uuid") final String uuid) {
         this.uuid = uuid;
     }
 

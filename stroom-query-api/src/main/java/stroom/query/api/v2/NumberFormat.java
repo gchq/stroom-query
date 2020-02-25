@@ -16,6 +16,10 @@
 
 package stroom.query.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -28,6 +32,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @JsonPropertyOrder({"decimalPlaces", "useSeparator"})
+@JsonInclude(Include.NON_DEFAULT)
 @XmlType(name = "NumberFormat", propOrder = {"decimalPlaces", "useSeparator"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = "The definition of a format to apply to numeric data")
@@ -39,19 +44,22 @@ public final class NumberFormat implements Serializable {
             value = "The number of decimal places",
             example = "2",
             required = true)
+    @JsonProperty
     private Integer decimalPlaces;
 
     @XmlElement
     @ApiModelProperty(
             value = "Whether to use a thousands separator or not. Defaults to false",
-            example = "true",
-            required = false)
+            example = "true")
+    @JsonProperty
     private Boolean useSeparator;
 
     public NumberFormat() {
     }
 
-    public NumberFormat(Integer decimalPlaces, Boolean useSeparator) {
+    @JsonCreator
+    public NumberFormat(@JsonProperty("decimalPlaces") final Integer decimalPlaces,
+                        @JsonProperty("useSeparator") final Boolean useSeparator) {
         this.decimalPlaces = decimalPlaces;
         this.useSeparator = useSeparator;
     }

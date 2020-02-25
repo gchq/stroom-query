@@ -16,6 +16,10 @@
 
 package stroom.query.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -37,6 +41,7 @@ import java.util.Objects;
  * should be returned
  */
 @JsonPropertyOrder({"key", "query", "resultRequests", "dateTimeLocale", "incremental", "timeout"})
+@JsonInclude(Include.NON_DEFAULT)
 @XmlRootElement(name = "searchRequest")
 @XmlType(name = "SearchRequest", propOrder = {"key", "query", "resultRequests", "dateTimeLocale", "incremental", "timeout"})
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -46,15 +51,18 @@ public final class SearchRequest implements Serializable {
 
     @XmlElement
     @ApiModelProperty(required = true)
+    @JsonProperty
     private QueryKey key;
 
     @XmlElement
     @ApiModelProperty(required = true)
+    @JsonProperty
     private Query query;
 
     @XmlElementWrapper(name = "resultRequests")
     @XmlElement(name = "resultRequest")
     @ApiModelProperty(required = true)
+    @JsonProperty
     private List<ResultRequest> resultRequests;
 
 
@@ -63,6 +71,7 @@ public final class SearchRequest implements Serializable {
             value = "The locale to use when formatting date values in the search results. The " +
                     "value is the string form of a java.time.ZoneId",
             required = true)
+    @JsonProperty
     private String dateTimeLocale;
 
     @XmlElement
@@ -72,6 +81,7 @@ public final class SearchRequest implements Serializable {
                     "longer running searches to allow partial result sets to be returned as soon as they are " +
                     "available rather than waiting for the full result set.",
             required = true)
+    @JsonProperty
     private Boolean incremental;
 
     @XmlElement
@@ -83,8 +93,8 @@ public final class SearchRequest implements Serializable {
                     "(i.e. returning immediately) and for a non-incremental query the server's default timeout period will be " +
                     "used. For an incremental query, if the query has not completed by the end of the timeout period, it will " +
                     "return the currently know results with complete=false, however for a non-incremental query it will return " +
-                    "no results, complete=false and details of the timeout in the error field",
-            required = false)
+                    "no results, complete=false and details of the timeout in the error field")
+    @JsonProperty
     private Long timeout;
 
     public SearchRequest() {
@@ -113,12 +123,13 @@ public final class SearchRequest implements Serializable {
      *                       return the currently know results with complete=false, however for a non-incremental query it will return
      *                       no results, complete=false and details of the timeout in the error field
      */
-    public SearchRequest(final QueryKey key,
-                         final Query query,
-                         final List<ResultRequest> resultRequests,
-                         final String dateTimeLocale,
-                         final Boolean incremental,
-                         final Long timeout) {
+    @JsonCreator
+    public SearchRequest(@JsonProperty("key") final QueryKey key,
+                         @JsonProperty("query") final Query query,
+                         @JsonProperty("resultRequests") final List<ResultRequest> resultRequests,
+                         @JsonProperty("dateTimeLocale") final String dateTimeLocale,
+                         @JsonProperty("incremental") final Boolean incremental,
+                         @JsonProperty("timeout") final Long timeout) {
         this.key = key;
         this.query = query;
         this.resultRequests = resultRequests;

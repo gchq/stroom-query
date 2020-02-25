@@ -16,6 +16,10 @@
 
 package stroom.query.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -31,6 +35,7 @@ import java.util.List;
 import java.util.Objects;
 
 @JsonPropertyOrder({"field", "condition", "value", "docRef"})
+@JsonInclude(Include.NON_DEFAULT)
 @XmlType(name = "ExpressionTerm", propOrder = {"field", "condition", "value", "docRef"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(
@@ -44,22 +49,26 @@ public final class ExpressionTerm extends ExpressionItem {
     @ApiModelProperty(
             value = "The name of the field that is being evaluated in this predicate term",
             required = true)
+    @JsonProperty
     private String field;
 
     @XmlElement
     @ApiModelProperty(
             value = "The condition of the predicate term",
             required = true)
+    @JsonProperty
     private Condition condition;
 
     @XmlElement
     @ApiModelProperty(
             value = "The value that the field value is being evaluated against. Not required if a dictionary is supplied")
+    @JsonProperty
     private String value;
 
     @XmlElement
     @ApiModelProperty(
             value = "The DocRef that the field value is being evaluated against if the condition is IN_DICTIONARY, IN_FOLDER or IS_DOC_REF")
+    @JsonProperty
     private DocRef docRef;
 
     public ExpressionTerm() {
@@ -74,11 +83,12 @@ public final class ExpressionTerm extends ExpressionItem {
         this(true, field, condition, null, docRef);
     }
 
-    public ExpressionTerm(final boolean enabled,
-                          final String field,
-                          final Condition condition,
-                          final String value,
-                          final DocRef docRef) {
+    @JsonCreator
+    public ExpressionTerm(@JsonProperty("enabled") final boolean enabled,
+                          @JsonProperty("field") final String field,
+                          @JsonProperty("condition") final Condition condition,
+                          @JsonProperty("value") final String value,
+                          @JsonProperty("docRef") final DocRef docRef) {
         super(enabled);
         this.field = field;
         this.condition = condition;

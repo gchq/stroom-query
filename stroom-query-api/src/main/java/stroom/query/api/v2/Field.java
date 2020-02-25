@@ -16,6 +16,10 @@
 
 package stroom.query.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -28,6 +32,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @JsonPropertyOrder({"id", "name", "expression", "sort", "filter", "format", "group"})
+@JsonInclude(Include.NON_DEFAULT)
 @XmlType(name = "Field", propOrder = {"id", "name", "expression", "sort", "filter", "format", "group"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = "Describes a field in a result set. The field can have various expressions applied to it, " +
@@ -37,10 +42,12 @@ public final class Field implements Serializable {
 
     @XmlElement
     @ApiModelProperty(value = "The internal id of the field for equality purposes")
+    @JsonProperty
     private String id;
 
     @XmlElement
     @ApiModelProperty(value = "The name of the field for display purposes")
+    @JsonProperty
     private String name;
 
     @XmlElement
@@ -48,33 +55,39 @@ public final class Field implements Serializable {
             value = "The expression to use to generate the value for this field",
             required = true,
             example = "SUM(${count})")
+    @JsonProperty
     private String expression;
 
     @XmlElement
+    @JsonProperty
     private Sort sort;
 
     @XmlElement
+    @JsonProperty
     private Filter filter;
 
     @XmlElement
+    @JsonProperty
     private Format format;
 
     @XmlElement
     @ApiModelProperty(
             value = "If this field is to be grouped then this defines the level of grouping, with 0 being the top " +
                     "level of grouping, 1 being the next level down, etc.")
+    @JsonProperty
     private Integer group;
 
     public Field() {
     }
 
-    public Field(final String id,
-                 final String name,
-                 final String expression,
-                 final Sort sort,
-                 final Filter filter,
-                 final Format format,
-                 final Integer group) {
+    @JsonCreator
+    public Field(@JsonProperty("id") final String id,
+                 @JsonProperty("name") final String name,
+                 @JsonProperty("expression") final String expression,
+                 @JsonProperty("sort") final Sort sort,
+                 @JsonProperty("filter") final Filter filter,
+                 @JsonProperty("format") final Format format,
+                 @JsonProperty("group") final Integer group) {
         this.id = id;
         this.name = name;
         this.expression = expression;

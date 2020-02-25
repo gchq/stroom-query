@@ -16,6 +16,10 @@
 
 package stroom.query.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -35,6 +39,7 @@ import java.util.Objects;
 
 @JsonPropertyOrder({"queryId", "fields", "extractValues", "extractionPipeline", "maxResults",
         "showDetail"})
+@JsonInclude(Include.NON_DEFAULT)
 @XmlType(
         name = "TableSettings",
         propOrder = {"queryId", "fields", "extractValues", "extractionPipeline", "maxResults", "showDetail"})
@@ -48,21 +53,23 @@ public final class TableSettings implements Serializable {
     @ApiModelProperty(
             value = "TODO",
             required = true)
+    @JsonProperty
     private String queryId;
 
     @XmlElementWrapper(name = "fields")
     @XmlElement(name = "field")
     @ApiModelProperty(required = true)
+    @JsonProperty
     private List<Field> fields;
 
     @XmlElement
     @ApiModelProperty(
-            value = "TODO",
-            required = false)
+            value = "TODO")
+    @JsonProperty
     private Boolean extractValues;
 
     @XmlElement
-    @ApiModelProperty(required = false)
+    @JsonProperty
     private DocRef extractionPipeline;
 
     @XmlElementWrapper(name = "maxResults")
@@ -71,27 +78,28 @@ public final class TableSettings implements Serializable {
             value = "Defines the maximum number of results to return at each grouping level, e.g. '1000,10,1' means " +
                     "1000 results at group level 0, 10 at level 1 and 1 at level 2. In the absence of this field " +
                     "system defaults will apply",
-            required = false,
             example = "1000,10,1")
+    @JsonProperty
     private List<Integer> maxResults;
 
     @XmlElement
     @ApiModelProperty(
             value = "When grouping is used a value of true indicates that the results will include the full detail of " +
                     "any results aggregated into a group as well as their aggregates. A value of false will only " +
-                    "include the aggregated values for each group. Defaults to false.",
-            required = false)
+                    "include the aggregated values for each group. Defaults to false.")
+    @JsonProperty
     private Boolean showDetail;
 
     public TableSettings() {
     }
 
-    public TableSettings(final String queryId,
-                         final List<Field> fields,
-                         final Boolean extractValues,
-                         final DocRef extractionPipeline,
-                         final List<Integer> maxResults,
-                         final Boolean showDetail) {
+    @JsonCreator
+    public TableSettings(@JsonProperty("queryId") final String queryId,
+                         @JsonProperty("fields") final List<Field> fields,
+                         @JsonProperty("extractValues") final Boolean extractValues,
+                         @JsonProperty("extractionPipeline") final DocRef extractionPipeline,
+                         @JsonProperty("maxResults") final List<Integer> maxResults,
+                         @JsonProperty("showDetail") final Boolean showDetail) {
         this.queryId = queryId;
         this.fields = fields;
         this.extractValues = extractValues;

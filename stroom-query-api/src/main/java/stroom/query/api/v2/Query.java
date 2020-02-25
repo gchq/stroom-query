@@ -16,6 +16,10 @@
 
 package stroom.query.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -32,6 +36,7 @@ import java.util.Objects;
  * {@value #CLASS_DESC}
  */
 @JsonPropertyOrder({"dataSource", "expression", "params"})
+@JsonInclude(Include.NON_DEFAULT)
 @XmlType(name = "Query", propOrder = {"dataSource", "expression", "params"})
 @XmlRootElement(name = "query")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -45,19 +50,21 @@ public final class Query implements Serializable {
     @XmlElement
     @ApiModelProperty(
             required = true)
+    @JsonProperty
     private DocRef dataSource;
 
     @XmlElement
     @ApiModelProperty(
             value = "The root logical operator in the query expression tree",
             required = true)
+    @JsonProperty
     private ExpressionOperator expression;
 
     @XmlElementWrapper(name = "params")
     @XmlElement(name = "param")
     @ApiModelProperty(
-            value = "A list of key/value pairs that provide additional information about the query",
-            required = false)
+            value = "A list of key/value pairs that provide additional information about the query")
+    @JsonProperty
     private List<Param> params;
 
     public Query() {
@@ -67,7 +74,10 @@ public final class Query implements Serializable {
         this(dataSource, expression, null);
     }
 
-    public Query(final DocRef dataSource, final ExpressionOperator expression, final List<Param> params) {
+    @JsonCreator
+    public Query(@JsonProperty("dataSource") final DocRef dataSource,
+                 @JsonProperty("expression") final ExpressionOperator expression,
+                 @JsonProperty("params") final List<Param> params) {
         this.dataSource = dataSource;
         this.expression = expression;
         this.params = params;

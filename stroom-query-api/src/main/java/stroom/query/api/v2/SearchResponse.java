@@ -16,11 +16,21 @@
 
 package stroom.query.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +41,7 @@ import java.util.Objects;
  * Object describing the response to a {@link SearchRequest searchRequest} which may or may not contains results
  */
 @JsonPropertyOrder({"highlights", "results", "errors", "complete"})
+@JsonInclude(Include.NON_DEFAULT)
 @XmlRootElement(name = "searchResponse")
 @XmlType(name = "SearchResponse", propOrder = {"highlights", "results", "errors", "complete"})
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -45,6 +56,7 @@ public final class SearchResponse implements Serializable {
     @ApiModelProperty(
             value = "A list of strings to highlight in the UI that should correlate with the search query.",
             required = true)
+    @JsonProperty
     private List<String> highlights;
 
     @XmlElementWrapper(name = "results")
@@ -52,17 +64,20 @@ public final class SearchResponse implements Serializable {
             @XmlElement(name = "table", type = TableResult.class),
             @XmlElement(name = "vis", type = FlatResult.class)
     })
+    @JsonProperty
     private List<Result> results;
 
     @XmlElementWrapper(name = "errors")
     @XmlElement(name = "error")
     @ApiModelProperty(
             value = "A list of errors that occurred in running the query")
+    @JsonProperty
     private List<String> errors;
 
     @XmlElement
     @ApiModelProperty(
             value = "True if the query has returned all known results")
+    @JsonProperty
     private Boolean complete;
 
     public SearchResponse() {
@@ -75,10 +90,11 @@ public final class SearchResponse implements Serializable {
      * @param errors     Any errors that have been generated during searching.
      * @param complete   Complete means that the search has finished and there are no more results to come.
      */
-    public SearchResponse(final List<String> highlights,
-                          final List<Result> results,
-                          final List<String> errors,
-                          final Boolean complete) {
+    @JsonCreator
+    public SearchResponse(@JsonProperty("highlights") final List<String> highlights,
+                          @JsonProperty("results") final List<Result> results,
+                          @JsonProperty("errors") final List<String> errors,
+                          @JsonProperty("complete") final Boolean complete) {
         this.highlights = highlights;
         this.results = results;
         this.errors = errors;
@@ -214,7 +230,6 @@ public final class SearchResponse implements Serializable {
 
         /**
          * @param value are the results considered complete
-         *
          * @return The {@link Builder}, enabling method chaining
          */
         public final CHILD_CLASS complete(final Boolean value) {

@@ -16,6 +16,7 @@
 
 package stroom.query.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -62,7 +63,8 @@ public abstract class ExpressionItem implements Serializable {
         // Required for GWT JSON serialisation.
     }
 
-    public ExpressionItem(final boolean enabled) {
+    @JsonCreator
+    public ExpressionItem(@JsonProperty("enabled") final boolean enabled) {
         this.enabled = enabled;
     }
 

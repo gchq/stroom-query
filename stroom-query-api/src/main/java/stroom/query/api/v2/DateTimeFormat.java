@@ -16,6 +16,10 @@
 
 package stroom.query.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -34,6 +38,7 @@ import java.util.Objects;
 @XmlType(name = "DateTimeFormat", propOrder = {"pattern", "timeZone"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = "The string formatting to apply to a date value")
+@JsonInclude(Include.NON_DEFAULT)
 public final class DateTimeFormat implements Serializable {
     private static final long serialVersionUID = 9145624653060319801L;
 
@@ -42,11 +47,13 @@ public final class DateTimeFormat implements Serializable {
             value = "A date time formatting pattern string conforming to the specification of " +
                     "java.time.format.DateTimeFormatter",
             required = true)
+    @JsonProperty
     private String pattern;
 
     @XmlElement
     @ApiModelProperty(
             required = true)
+    @JsonProperty
     private TimeZone timeZone;
 
     /**
@@ -60,7 +67,9 @@ public final class DateTimeFormat implements Serializable {
      * {@link java.time.format.DateTimeFormatter}
      * @param timeZone The time zone to use when formatting the date time value
      */
-    public DateTimeFormat(final String pattern, final TimeZone timeZone) {
+    @JsonCreator
+    public DateTimeFormat(@JsonProperty("pattern") final String pattern,
+                          @JsonProperty("timeZone") final TimeZone timeZone) {
         this.pattern = pattern;
         this.timeZone = timeZone;
     }

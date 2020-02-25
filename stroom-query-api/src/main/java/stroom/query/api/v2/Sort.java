@@ -16,6 +16,10 @@
 
 package stroom.query.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -29,6 +33,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @JsonPropertyOrder({"order", "direction"})
+@JsonInclude(Include.NON_DEFAULT)
 @XmlType(name = "Sort", propOrder = {"order", "direction"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = "Describes the sorting applied to a field")
@@ -41,6 +46,7 @@ public final class Sort implements Serializable {
                     "field to sort on",
             example = "0",
             required = true)
+    @JsonProperty
     private Integer order;
 
     @XmlElement
@@ -48,12 +54,15 @@ public final class Sort implements Serializable {
             value = "The direction to sort in, ASCENDING or DESCENDING",
             example = "ASCENDING",
             required = true)
+    @JsonProperty
     private SortDirection direction;
 
     public Sort() {
     }
 
-    public Sort(final Integer order, final SortDirection direction) {
+    @JsonCreator
+    public Sort(@JsonProperty("order") final Integer order,
+                @JsonProperty("direction") final SortDirection direction) {
         this.order = order;
         this.direction = direction;
     }

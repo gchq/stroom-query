@@ -16,6 +16,10 @@
 
 package stroom.query.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -26,6 +30,7 @@ import java.util.List;
 import java.util.Objects;
 
 @JsonPropertyOrder({"componentId", "fields", "rows", "resultRange", "totalResults", "error"})
+@JsonInclude(Include.NON_DEFAULT)
 @ApiModel(
         description = "Object for describing a set of results in a table form that supports grouped data",
         parent = Result.class)
@@ -34,28 +39,33 @@ public final class TableResult extends Result {
 
     @ApiModelProperty(
             required = true)
+    @JsonProperty
     private List<Field> fields;
 
     @ApiModelProperty(
             required = true)
+    @JsonProperty
     private List<Row> rows;
 
     @ApiModelProperty(
             required = true)
+    @JsonProperty
     private OffsetRange resultRange;
 
     @ApiModelProperty(value = "The total number of results in this result set")
+    @JsonProperty
     private Integer totalResults;
 
     public TableResult() {
     }
 
-    public TableResult(final String componentId,
-                       final List<Field> fields,
-                       final List<Row> rows,
-                       final OffsetRange resultRange,
-                       final Integer totalResults,
-                       final String error) {
+    @JsonCreator
+    public TableResult(@JsonProperty("componentId") final String componentId,
+                       @JsonProperty("fields") final List<Field> fields,
+                       @JsonProperty("rows") final List<Row> rows,
+                       @JsonProperty("resultRange") final OffsetRange resultRange,
+                       @JsonProperty("totalResults") final Integer totalResults,
+                       @JsonProperty("error") final String error) {
         super(componentId, error);
         this.fields = fields;
         this.rows = rows;

@@ -16,8 +16,10 @@
 
 package stroom.query.api.v2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -60,24 +62,30 @@ public final class ExpressionOperator extends ExpressionItem {
     @ApiModelProperty(
             value = "The logical addOperator type",
             required = true)
-    private Op op = Op.AND;
+    @JsonProperty
+    private Op op;
 
     @XmlElementWrapper(name = "children")
     @XmlElements({
             @XmlElement(name = "operator", type = ExpressionOperator.class),
             @XmlElement(name = "term", type = ExpressionTerm.class)
     })
-    @ApiModelProperty(
-            required = false)
     private List<ExpressionItem> children;
 
     public ExpressionOperator() {
-        // Required for GWT JSON serialisation.
+        op = Op.AND;
     }
 
-    public ExpressionOperator(final boolean enabled, final Op op, final List<ExpressionItem> children) {
+    @JsonCreator
+    public ExpressionOperator(@JsonProperty("enabled") final boolean enabled,
+                              @JsonProperty("op") final Op op,
+                              @JsonProperty("children") final List<ExpressionItem> children) {
         super(enabled);
-        this.op = op;
+        if (op != null) {
+            this.op = op;
+        } else {
+            this.op = Op.AND;
+        }
         this.children = children;
     }
 
