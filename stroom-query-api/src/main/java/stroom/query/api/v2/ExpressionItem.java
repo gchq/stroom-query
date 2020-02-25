@@ -57,15 +57,19 @@ public abstract class ExpressionItem implements Serializable {
             example = "true")
     @JsonProperty(value = "enabled",
             defaultValue = "true")
-    private boolean enabled = true;
+    private Boolean enabled;
 
     public ExpressionItem() {
-        // Required for GWT JSON serialisation.
+        enabled = true;
     }
 
     @JsonCreator
-    public ExpressionItem(@JsonProperty("enabled") final boolean enabled) {
-        this.enabled = enabled;
+    public ExpressionItem(@JsonProperty("enabled") final Boolean enabled) {
+        if (enabled != null) {
+            this.enabled = enabled;
+        } else {
+            this.enabled = true;
+        }
     }
 
     public boolean isEnabled() {

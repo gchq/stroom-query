@@ -77,7 +77,7 @@ public final class ExpressionOperator extends ExpressionItem {
     }
 
     @JsonCreator
-    public ExpressionOperator(@JsonProperty("enabled") final boolean enabled,
+    public ExpressionOperator(@JsonProperty("enabled") final Boolean enabled,
                               @JsonProperty("op") final Op op,
                               @JsonProperty("children") final List<ExpressionItem> children) {
         super(enabled);
@@ -89,7 +89,7 @@ public final class ExpressionOperator extends ExpressionItem {
         this.children = children;
     }
 
-    public ExpressionOperator(final boolean enabled, final Op op, final ExpressionItem... children) {
+    public ExpressionOperator(final Boolean enabled, final Op op, final ExpressionItem... children) {
         super(enabled);
         this.op = op;
         this.children = Arrays.asList(children);
