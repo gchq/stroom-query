@@ -70,6 +70,7 @@ public final class ExpressionOperator extends ExpressionItem {
             @XmlElement(name = "operator", type = ExpressionOperator.class),
             @XmlElement(name = "term", type = ExpressionTerm.class)
     })
+    @JsonProperty
     private List<ExpressionItem> children;
 
     public ExpressionOperator() {
