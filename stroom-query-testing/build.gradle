@@ -31,7 +31,6 @@ dependencies {
     implementation libs.dropwizard_jooq
     implementation libs.dropwizard_testing
     implementation libs.guice
-    implementation libs.google_findbugs
     implementation libs.javax_ws;
     implementation libs.jackson_core
     implementation libs.jackson_databind
