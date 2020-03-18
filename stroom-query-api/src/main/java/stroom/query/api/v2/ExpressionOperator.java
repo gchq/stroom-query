@@ -34,7 +34,6 @@ import stroom.datasource.api.v2.LongField;
 import stroom.datasource.api.v2.TextField;
 import stroom.docref.DocRef;
 import stroom.docref.HasDisplayValue;
-import stroom.query.api.v2.ExpressionTerm.Condition;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -47,7 +46,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @JsonPropertyOrder({"op", "children"})
 @JsonInclude(Include.NON_DEFAULT)
@@ -162,127 +160,6 @@ public final class ExpressionOperator extends ExpressionItem {
             }
         }
     }
-
-    ////////////////////////////////////////////////////////////////////////
-    // START QUICK EQUALS CONSTRUCTORS
-    ////////////////////////////////////////////////////////////////////////
-    public static ExpressionOperator equals(final String field, final String value) {
-        return new ExpressionOperator.Builder(Op.AND)
-                .addTerm(field, Condition.EQUALS, value)
-                .build();
-    }
-
-    public static ExpressionOperator equals(final BooleanField field, final boolean value) {
-        return new ExpressionOperator.Builder(Op.AND)
-                .addTerm(field, Condition.EQUALS, value)
-                .build();
-    }
-
-    public static ExpressionOperator equals(final DateField field, final String value) {
-        return new ExpressionOperator.Builder(Op.AND)
-                .addTerm(field, Condition.EQUALS, value)
-                .build();
-    }
-
-    public static ExpressionOperator equals(final DocRefField field, final DocRef value) {
-        return new ExpressionOperator.Builder(Op.AND)
-                .addTerm(field, Condition.EQUALS, value)
-                .build();
-    }
-
-    public static ExpressionOperator equals(final IdField field, final long value) {
-        return new ExpressionOperator.Builder(Op.AND)
-                .addTerm(field, Condition.EQUALS, value)
-                .build();
-    }
-
-    public static ExpressionOperator equals(final IntegerField field, final int value) {
-        return new ExpressionOperator.Builder(Op.AND)
-                .addTerm(field, Condition.EQUALS, value)
-                .build();
-    }
-
-    public static ExpressionOperator equals(final LongField field, final long value) {
-        return new ExpressionOperator.Builder(Op.AND)
-                .addTerm(field, Condition.EQUALS, value)
-                .build();
-    }
-
-    public static ExpressionOperator equals(final FloatField field, final float value) {
-        return new ExpressionOperator.Builder(Op.AND)
-                .addTerm(field, Condition.EQUALS, value)
-                .build();
-    }
-
-    public static ExpressionOperator equals(final DoubleField field, final double value) {
-        return new ExpressionOperator.Builder(Op.AND)
-                .addTerm(field, Condition.EQUALS, value)
-                .build();
-    }
-
-    public static ExpressionOperator equals(final TextField field, final String value) {
-        return new ExpressionOperator.Builder(Op.AND)
-                .addTerm(field, Condition.EQUALS, value)
-                .build();
-    }
-
-    public static ExpressionOperator equals(final String field, final DocRef value) {
-        return new ExpressionOperator.Builder(Op.AND)
-                .addTerm(field, Condition.EQUALS, value)
-                .build();
-    }
-    ////////////////////////////////////////////////////////////////////////
-    // END QUICK EQUALS CONSTRUCTORS
-    ////////////////////////////////////////////////////////////////////////
-
-    ////////////////////////////////////////////////////////////////////////
-    // START UTILITY METHODS
-    ////////////////////////////////////////////////////////////////////////
-    public int termCount() {
-        return terms(null).size();
-    }
-
-    public List<String> fields() {
-        return terms(null).stream().map(ExpressionTerm::getField).collect(Collectors.toList());
-    }
-
-    public List<String> fields(final String field) {
-        return terms(field).stream().map(ExpressionTerm::getField).collect(Collectors.toList());
-    }
-
-    public List<String> values() {
-        return terms(null).stream().map(ExpressionTerm::getValue).collect(Collectors.toList());
-    }
-
-    public List<String> values(final String field) {
-        return terms(field).stream().map(ExpressionTerm::getValue).collect(Collectors.toList());
-    }
-
-    public List<ExpressionTerm> terms(final String field) {
-        final List<ExpressionTerm> terms = new ArrayList<>();
-        addTerms(this, field, terms);
-        return terms;
-    }
-
-    private void addTerms(final ExpressionOperator expressionOperator, final String field, final List<ExpressionTerm> terms) {
-        if (expressionOperator != null && expressionOperator.isEnabled() && !Op.NOT.equals(expressionOperator.getOp())) {
-            for (final ExpressionItem item : expressionOperator.getChildren()) {
-                if (item.isEnabled()) {
-                    if (item instanceof ExpressionTerm) {
-                        final ExpressionTerm expressionTerm = (ExpressionTerm) item;
-                        if ((field == null || field.equals(expressionTerm.getField())) && expressionTerm.getValue() != null && expressionTerm.getValue().length() > 0) {
-                            terms.add(expressionTerm);
-                        }
-                    } else if (item instanceof ExpressionOperator) {
-                        addTerms((ExpressionOperator) item, field, terms);
-                    }
-                }
-            }
-        }
-    }
-    ////////////////////////////////////////////////////////////////////////
-    // END UTILITY METHODS
-    ////////////////////////////////////////////////////////////////////////
 
     public enum Op implements HasDisplayValue {
         AND("AND"), OR("OR"), NOT("NOT");
