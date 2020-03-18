@@ -48,6 +48,6 @@ class ModelChangeDetector {
         System.out.println("CURRENT\n" + currentPortrait);
         System.out.println("NEW\n" + newPortrait);
 
-        assertThat(currentPortrait).isEqualTo(newPortrait);
+        assertThat(newPortrait).isEqualTo(currentPortrait);
     }
 }
