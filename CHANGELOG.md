@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.0-beta.62] - 2020-03-18
+
+* Added quick equality methods.
+
 ## [v4.0-beta.61] - 2020-03-18
 
 * Added quick equality methods.
@@ -369,7 +373,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.61...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.62...HEAD
+[v4.0-beta.62]: https://github.com/gchq/stroom-query/compare/v4.0-beta.61...v4.0-beta.62
 [v4.0-beta.61]: https://github.com/gchq/stroom-query/compare/v4.0-beta.60...v4.0-beta.61
 [v4.0-beta.60]: https://github.com/gchq/stroom-query/compare/v4.0-beta.59...v4.0-beta.60
 [v4.0-beta.59]: https://github.com/gchq/stroom-query/compare/v4.0-beta.58...v4.0-beta.59
