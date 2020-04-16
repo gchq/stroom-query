@@ -22,7 +22,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.junit.jupiter.api.Disabled;
+import org.assertj.core.util.diff.DiffUtils;
+import org.assertj.core.util.diff.Patch;
 import org.junit.jupiter.api.Test;
 import stroom.datasource.api.v2.DataSource;
 import stroom.datasource.api.v2.LongField;
@@ -47,6 +48,7 @@ import stroom.query.api.v2.Sort;
 import stroom.query.api.v2.TableResult;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.api.v2.TimeZone;
+import stroom.query.test.util.ConsoleColour;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -63,6 +65,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -177,31 +180,101 @@ class TestSerialisation {
 
         final Path dir = TestFileUtil.getTestResourcesDir().resolve("SerialisationTest");
         Path expectedFile = dir.resolve(testName + "-JSON.expected.json");
-        Path actualFile = dir.resolve(testName + "-JSON.actual.json");
+        Path actualFileIn = dir.resolve(testName + "-JSON.actual.in.json");
+        Path actualFileOut = dir.resolve(testName + "-JSON.actual.out.json");
 
         String serialisedIn = mapper.writeValueAsString(objIn);
-        System.out.println(serialisedIn);
+//        System.out.println(serialisedIn);
 
         if (!Files.isRegularFile(expectedFile)) {
             StreamUtil.stringToFile(serialisedIn, expectedFile);
         }
-        StreamUtil.stringToFile(serialisedIn, actualFile);
+        StreamUtil.stringToFile(serialisedIn, actualFileIn);
+
+        // Compare serialised form to expected
+        final boolean areDifferent = diffFiles(actualFileIn, expectedFile);
+
+        if (areDifferent) {
+            System.out.println("\n If you are satisfied that the differences are justified, i.e. the java model has " +
+                    "changed then run the following:");
+            System.out.println("cp "
+                    + actualFileIn.toAbsolutePath().normalize()
+                    + " "
+                    + expectedFile.toAbsolutePath().normalize());
+        }
 
         final String expected = StreamUtil.fileToString(expectedFile);
         assertEqualsIgnoreWhitespace(expected, serialisedIn);
 
+        // Now deserialise the string from the serialised object
         T objOut = mapper.readValue(serialisedIn, type);
         String serialisedOut = mapper.writeValueAsString(objOut);
-        System.out.println(serialisedOut);
+//        System.out.println(serialisedOut);
+        StreamUtil.stringToFile(serialisedOut, actualFileOut);
+
+        diffFiles(actualFileOut, actualFileOut);
 
         assertEqualsIgnoreWhitespace(serialisedIn, serialisedOut);
         assertThat(objOut).isEqualTo(objIn);
     }
 
+    /**
+     * Show a proper coloured unified diff of the two files
+     */
+    private boolean diffFiles(final Path actualFile, final Path expectedFile) throws IOException {
+
+        final String expected = Files.readString(expectedFile);
+        final String actual = Files.readString(actualFile);
+
+        // The expected file has already had the DW lines removed
+        final List<String> expectedLines = expected.lines().collect(Collectors.toList());
+        final List<String> actualLines = actual.lines().collect(Collectors.toList());
+
+        // write the actual out so we can compare in other tools
+        Files.write(actualFile, actualLines);
+        final Patch<String> patch = DiffUtils.diff(expectedLines, actualLines);
+
+        final List<String> unifiedDiff = DiffUtils.generateUnifiedDiff(
+                expectedFile.toString(),
+                actualFile.toString(),
+                expectedLines,
+                patch,
+                3);
+
+        if (!unifiedDiff.isEmpty()) {
+            System.out.println("\n  Differences exist!");
+
+            System.out.println("");
+            unifiedDiff.forEach(diffLine -> {
+
+                final ConsoleColour lineColour;
+                if (diffLine.startsWith("+")) {
+                    lineColour = ConsoleColour.GREEN;
+                } else if (diffLine.startsWith("-")) {
+                    lineColour = ConsoleColour.RED;
+                } else {
+                    lineColour = ConsoleColour.NO_COLOUR;
+                }
+
+                System.out.println(ConsoleColour.colourise(diffLine, lineColour));
+            });
+            System.out.println("\n To see the diff in Vim run:");
+            System.out.println("vimdiff "
+                    + expectedFile.toAbsolutePath().normalize()
+                    + " "
+                    + actualFile.toAbsolutePath().normalize());
+            return true;
+        } else {
+            System.out.println("\n Files are the same");
+            return false;
+        }
+    }
+
     private void assertEqualsIgnoreWhitespace(final String expected, final String actual) {
-        final String str1 = removeWhitespace(expected);
-        final String str2 = removeWhitespace(actual);
-        assertThat(str2).isEqualTo(str1);
+//        final String str1 = removeWhitespace(expected);
+//        final String str2 = removeWhitespace(actual);
+//        assertThat(str2).isEqualTo(str1);
+        assertThat(expected).isEqualToIgnoringWhitespace(actual);
     }
 
     private String removeWhitespace(final String in) {
