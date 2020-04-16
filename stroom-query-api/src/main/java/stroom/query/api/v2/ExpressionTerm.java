@@ -18,7 +18,6 @@ package stroom.query.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
@@ -35,7 +34,7 @@ import java.util.List;
 import java.util.Objects;
 
 @JsonPropertyOrder({"field", "condition", "value", "docRef"})
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @XmlType(name = "ExpressionTerm", propOrder = {"field", "condition", "value", "docRef"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(

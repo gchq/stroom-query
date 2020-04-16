@@ -19,7 +19,6 @@ package stroom.datasource.api.v2;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -47,7 +46,7 @@ import java.util.Objects;
         @Type(value = TextField.class, name = FieldTypes.TEXT),
         @Type(value = DocRefField.class, name = FieldTypes.DOC_REF)
 })
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class AbstractField implements Serializable, HasDisplayValue {
     private static final long serialVersionUID = 1272545271946712570L;
 

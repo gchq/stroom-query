@@ -33,7 +33,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @JsonPropertyOrder({"type", "numberFormat", "dateTimeFormat"})
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(Include.NON_NULL)
 @XmlType(name = "Format", propOrder = {"type", "numberFormat", "dateTimeFormat"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = "Describes the formatting that will be applied to values in a field")

@@ -41,7 +41,7 @@ import java.util.Objects;
         @JsonSubTypes.Type(value = ExpressionOperator.class, name = "operator"),
         @JsonSubTypes.Type(value = ExpressionTerm.class, name = "term")
 })
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(Include.NON_NULL)
 @XmlType(name = "ExpressionItem", propOrder = {"enabled"})
 @XmlSeeAlso({ExpressionOperator.class, ExpressionTerm.class})
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -57,19 +57,15 @@ public abstract class ExpressionItem implements Serializable {
             example = "true")
     @JsonProperty(value = "enabled",
             defaultValue = "true")
-    private Boolean enabled;
+    private boolean enabled;
 
     public ExpressionItem() {
         enabled = true;
     }
 
     @JsonCreator
-    public ExpressionItem(@JsonProperty("enabled") final Boolean enabled) {
-        if (enabled != null) {
-            this.enabled = enabled;
-        } else {
-            this.enabled = true;
-        }
+    public ExpressionItem(@JsonProperty("enabled") final boolean enabled) {
+        this.enabled = enabled;
     }
 
     public boolean isEnabled() {

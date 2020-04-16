@@ -32,7 +32,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @JsonPropertyOrder({"key", "value"})
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(Include.NON_NULL)
 @XmlType(name = "Param", propOrder = {"key", "value"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = "A key value pair that describes a property of a query")

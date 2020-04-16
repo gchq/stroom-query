@@ -19,14 +19,12 @@ package stroom.datasource.api.v2;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import stroom.query.api.v2.ExpressionTerm.Condition;
 
-import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
 
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LongField extends AbstractNumericField {
     private static final long serialVersionUID = 1272545271946712570L;
 

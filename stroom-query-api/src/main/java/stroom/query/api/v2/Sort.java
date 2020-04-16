@@ -33,7 +33,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @JsonPropertyOrder({"order", "direction"})
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(Include.NON_NULL)
 @XmlType(name = "Sort", propOrder = {"order", "direction"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = "Describes the sorting applied to a field")

@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Change @JsonInclude annotation from NON_DEFAULT to NON_NULL
+
 * Issue **gchq/stroom#1450** : Include enabled state in the builder for ExpressionTerm, and in ExpressionUtil.
 
 

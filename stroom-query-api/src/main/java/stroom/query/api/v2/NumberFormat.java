@@ -32,7 +32,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @JsonPropertyOrder({"decimalPlaces", "useSeparator"})
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(Include.NON_NULL)
 @XmlType(name = "NumberFormat", propOrder = {"decimalPlaces", "useSeparator"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = "The definition of a format to apply to numeric data")

@@ -38,7 +38,7 @@ import java.util.Objects;
 @XmlType(name = "DateTimeFormat", propOrder = {"pattern", "timeZone"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = "The string formatting to apply to a date value")
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(Include.NON_NULL)
 public final class DateTimeFormat implements Serializable {
     private static final long serialVersionUID = 9145624653060319801L;
 

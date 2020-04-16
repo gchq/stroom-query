@@ -41,7 +41,7 @@ import java.util.Objects;
  * Object describing the response to a {@link SearchRequest searchRequest} which may or may not contains results
  */
 @JsonPropertyOrder({"highlights", "results", "errors", "complete"})
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(Include.NON_NULL)
 @XmlRootElement(name = "searchResponse")
 @XmlType(name = "SearchResponse", propOrder = {"highlights", "results", "errors", "complete"})
 @XmlAccessorType(XmlAccessType.FIELD)

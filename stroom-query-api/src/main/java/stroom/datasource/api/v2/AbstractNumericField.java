@@ -26,7 +26,7 @@ import stroom.query.api.v2.ExpressionTerm.Condition;
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(Include.NON_NULL)
 public abstract class AbstractNumericField extends AbstractField {
     private static final long serialVersionUID = 1272545271946712570L;
 

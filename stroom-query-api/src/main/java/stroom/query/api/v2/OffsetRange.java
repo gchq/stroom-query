@@ -32,7 +32,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @JsonPropertyOrder({"offset", "length"})
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(Include.NON_NULL)
 @XmlType(name = "OffsetRange", propOrder = {"offset", "length"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = "The offset and length of a range of data in a sub-set of a query result set")

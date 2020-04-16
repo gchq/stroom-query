@@ -38,7 +38,7 @@ import java.util.Objects;
         @JsonSubTypes.Type(value = TableResult.class, name = "table"),
         @JsonSubTypes.Type(value = FlatResult.class, name = "vis")
 })
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(Include.NON_NULL)
 @XmlType(name = "Result", propOrder = "componentId")
 @XmlSeeAlso({TableResult.class, FlatResult.class})
 @XmlAccessorType(XmlAccessType.FIELD)

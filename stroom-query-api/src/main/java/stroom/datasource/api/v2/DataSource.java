@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(Include.NON_NULL)
 public final class DataSource implements Serializable {
     private static final long serialVersionUID = 1272545271946712570L;
 

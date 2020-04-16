@@ -41,7 +41,7 @@ import java.util.Objects;
  * should be returned
  */
 @JsonPropertyOrder({"key", "query", "resultRequests", "dateTimeLocale", "incremental", "timeout"})
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(Include.NON_NULL)
 @XmlRootElement(name = "searchRequest")
 @XmlType(name = "SearchRequest", propOrder = {"key", "query", "resultRequests", "dateTimeLocale", "incremental", "timeout"})
 @XmlAccessorType(XmlAccessType.FIELD)

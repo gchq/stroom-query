@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Objects;
 
 @JsonPropertyOrder({"componentId", "fields", "rows", "resultRange", "totalResults", "error"})
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(Include.NON_NULL)
 @ApiModel(
         description = "Object for describing a set of results in a table form that supports grouped data",
         parent = Result.class)

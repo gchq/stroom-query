@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Objects;
 
 @JsonPropertyOrder({"componentId", "structure", "values", "size", "error"})
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(Include.NON_NULL)
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(
         description = "A result structure used primarily for visualisation data",

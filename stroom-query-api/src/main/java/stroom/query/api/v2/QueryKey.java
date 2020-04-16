@@ -32,7 +32,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @JsonPropertyOrder({"uuid"})
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(Include.NON_NULL)
 @XmlType(name = "QueryKey", propOrder = {"uuid"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = "A unique key to identify the instance of the search by. This key is used to " +

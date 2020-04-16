@@ -29,7 +29,7 @@ import java.io.Serializable;
 import java.util.*;
 
 @JsonPropertyOrder({"componentId", "mappings", "requestedRange", "openGroups", "resultStyle", "fetch"})
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(Include.NON_NULL)
 @XmlType(name = "ResultRequest", propOrder = {"componentId", "mappings", "requestedRange", "openGroups", "resultStyle", "fetch"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = "A definition for how to return the raw results of the query in the SearchResponse, " +

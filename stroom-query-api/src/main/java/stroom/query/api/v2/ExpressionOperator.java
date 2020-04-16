@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.Objects;
 
 @JsonPropertyOrder({"op", "children"})
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(Include.NON_NULL)
 @XmlType(name = "ExpressionOperator", propOrder = {"op", "children"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(

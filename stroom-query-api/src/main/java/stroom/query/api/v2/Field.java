@@ -32,7 +32,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @JsonPropertyOrder({"id", "name", "expression", "sort", "filter", "format", "group"})
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(Include.NON_NULL)
 @XmlType(name = "Field", propOrder = {"id", "name", "expression", "sort", "filter", "format", "group"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = "Describes a field in a result set. The field can have various expressions applied to it, " +

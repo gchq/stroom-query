@@ -39,7 +39,7 @@ import java.util.Objects;
 
 @JsonPropertyOrder({"queryId", "fields", "extractValues", "extractionPipeline", "maxResults",
         "showDetail"})
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(Include.NON_NULL)
 @XmlType(
         name = "TableSettings",
         propOrder = {"queryId", "fields", "extractValues", "extractionPipeline", "maxResults", "showDetail"})

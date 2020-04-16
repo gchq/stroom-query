@@ -19,7 +19,6 @@ package stroom.docref;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
@@ -42,7 +41,7 @@ import java.util.Objects;
 @XmlAccessorType(XmlAccessType.FIELD)
 @ApiModel(description = DocRef.CLASS_DESC)
 @JsonPropertyOrder({"type", "uuid", "name"})
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class DocRef implements Comparable<DocRef>, HasDisplayValue, Serializable {
     public static final String CLASS_DESC = "A class for describing a unique reference to a 'document' in stroom.  " +
             "A 'document' is an entity in stroom such as a data source dictionary or pipeline.";

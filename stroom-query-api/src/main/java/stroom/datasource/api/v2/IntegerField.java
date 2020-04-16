@@ -23,10 +23,9 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import stroom.query.api.v2.ExpressionTerm.Condition;
 
-import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
 
-@JsonInclude(Include.NON_DEFAULT)
+@JsonInclude(Include.NON_NULL)
 public class IntegerField extends AbstractNumericField {
     private static final long serialVersionUID = 1272545271946712570L;
 
