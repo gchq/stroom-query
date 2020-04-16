@@ -175,7 +175,7 @@ public class ExpressionUtil {
             return null;
         }
 
-        final ExpressionTerm.Builder builder = new ExpressionTerm.Builder();
+        final ExpressionTerm.Builder builder = new ExpressionTerm.Builder(term.isEnabled());
         builder.field(term.getField());
         builder.condition(term.getCondition());
         builder.value(term.getValue());

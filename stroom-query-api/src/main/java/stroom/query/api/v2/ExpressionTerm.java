@@ -235,6 +235,13 @@ public final class ExpressionTerm extends ExpressionItem {
 
         private DocRef docRef;
 
+        public Builder() {
+        }
+
+        public Builder(final boolean enabled) {
+            super(enabled);
+        }
+
         /**
          * @param value The name of the field that is being evaluated in this predicate term"
          * @return The {@link Builder}, enabling method chaining

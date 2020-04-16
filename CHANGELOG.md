@@ -6,73 +6,93 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **gchq/stroom#1450** : Include enabled state in the builder for ExpressionTerm, and in ExpressionUtil.
+
+
 ## [v4.0-beta.62] - 2020-03-18
 
 * Added quick equality methods.
+
 
 ## [v4.0-beta.61] - 2020-03-18
 
 * Added quick equality methods.
 
+
 ## [v4.0-beta.60] - 2020-03-18
 
 * Added quick equality methods.
+
 
 ## [v4.0-beta.59] - 2020-03-18
 
 * Added quick equality methods.
 
+
 ## [v4.0-beta.58] - 2020-02-26
 
 * Changes for Rest.
+
 
 ## [v4.0-beta.57] - 2020-02-25
 
 * Changes for Rest.
 
+
 ## [v4.0-beta.56] - 2020-02-25
 
 * Changes for Rest.
+
 
 ## [v4.0-beta.55] - 2020-02-25
 
 * Changes for Rest.
 
+
 ## [v4.0-beta.54] - 2020-02-24
 
 * Changes for Rest.
+
 
 ## [v4.0-beta.53] - 2020-02-24
 
 * Changes for Rest.
 
+
 ## [v4.0-beta.52] - 2020-02-08
 
 * Changes for Rest.
+
 
 ## [v4.0-beta.51] - 2020-02-08
 
 * Changes for Rest.
 
+
 ## [v4.0-beta.50] - 2020-02-07
 
 * Changes for Rest.
+
 
 ## [v4.0-beta.49] - 2020-02-07
 
 * Changes for Rest.
 
+
 ## [v4.0-beta.48] - 2020-02-07
 
 * Changes for Rest.
+
 
 ## [v4.0-beta.47] - 2020-02-05
 
 * Added setters to DocRef.
 
+
 ## [v4.0-beta.46] - 2020-01-15
 
 * Added public constructors for GWT JSON serialisation.
+
 
 ## [v4.0-beta.45] - 2019-12-06
 
@@ -84,13 +104,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Added new field types.
 
+
 ## [v4.0-beta.40] - 2019-11-04
 
 * Updated stroom expression and added float and double field types.
 
+
 ## [v4.0-beta.39] - 2019-11-04
 
 * Updated stroom expression and added float and double field types.
+
 
 ## [v4.0-beta.38] - 2019-09-18
 
@@ -98,17 +121,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **#stroom#1263** : Fixed issue where date expressions were being allowed without '+' or '-' signs to add or subtract durations.
 
+
 ## [v4.0-beta.37] - 2019-08-30
 
 * Issue **#stroom#1244** : Updated dropwizard to version 1.3.14 to remove memory leak.
 
 * Issue **#stroom#1215** : Fixed limiting max results.
 
+
 ## [v4.0-beta.36] - 2019-07-29
+
 
 ## [v4.0-beta.35] - 2019-07-29
 
 * Remove unwanted hibernate stuff.
+
 
 ## [v4.0-beta.34] - 2019-07-29
 
@@ -116,23 +143,28 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **gchq/stroom#1200** : Fixed search hanging due to a blocking queue being used when it shouldn't be.
 
+
 ## [v4.0-beta.33] - 2019-07-08
 
 * Issue **gchq/stroom#1154** : Fixed broken tests.
+
 
 ## [v4.0-beta.32] - 2019-07-08
 
 * Added type info.
 
+
 ## [v4.0-beta.29] - 2019-07-08
 
 * Experimental change to field type definitions.
+
 
 ## [v4.0-beta.27] - 2019-06-26
 
 * Added boolean field type.
 
 * Added `IS_NULL` and `IS_NOT_NULL` conditions.
+
 
 ## [v4.0-beta.26] - 2019-06-25
 
@@ -164,6 +196,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **gchq/stroom#791** : Fix total results count not updating.
 
+
 ## [v4.0-beta.7] - 2018-09-05
 
 * Added automatic module name for Java 9 builds.
@@ -174,25 +207,31 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Issue **stroom-#803** : Fix for dashboard group keys in visualisations.
 
+
 ## [v4.0-beta.3] - 2018-06-08
 
 * Update dependencies.
+
 
 ## [v3.1-beta.10] - 2018-06-20
 
 * Fixed the enabled flag to a default, removed the redundant accessor.
 
+
 ## [v3.1-beta.8] - 2018-06-08
 
 * Update dependencies.
+
 
 ## [v3.1-beta.4] - 2018-05-10
 
 * Made Wiremock based tests use dynamically allocated ports.
 
+
 ## [v3.1-beta.3] - 2018-05-10
 
 * Fix dependencies.
+
 
 ## [v3.1-beta.2] - 2018-05-10
 
@@ -202,15 +241,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Updated libs to keep in line with dropwizard 1.2.5.
 
+
 ## [v3.1-beta.1] - 2018-05-02
 
 * Fix DocRef equality.
 
 * Migrated to stroom-expression v1.3.1
 
+
 ## [v3.0-beta.8] - 2018-04-30
 
 * Fixed equals and hash codes for query api classes.
+
 
 ## [v3.0-beta.6] - 2018-04-25
 
@@ -221,9 +263,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Set response completion state prior to assembling results.
 
+
 ## [v3.0-beta.5] - 2018-04-12
 
 * Issue **#16** : Fix for Hessian serialisation of table coprocessor settings.
+
 
 ## [v3.0-beta.4] - 2018-04-12
 
@@ -233,15 +277,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Added custom service exceptions for query/docref services
 
+
 ## [v3.0-beta.3] - 2018-04-11
 
 * Add clear() to SearchResponseCreatorCache
+
 
 ## [v3.0-beta.2] - 2018-04-10
 
 * Issue **#12** : Add server side caching of search results to query-common.
 
 * Fix handling of InterruptedException in TablePayloadHandler
+
 
 ## [v3.0-beta.1] - 2018-04-04
 
