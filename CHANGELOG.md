@@ -7,7 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 
+## [v4.0-beta.64] - 2020-04-16
+
+* Change `ExpressionTerm` to use boolean instead of Boolean for enabled.
+
+
 ## [v4.0-beta.63] - 2020-04-16
+
+* Change `ExpressionItem` to use boolean instead of Boolean for enabled.
 
 * Change @JsonInclude annotation from NON_DEFAULT to NON_NULL
 
@@ -425,7 +432,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.63...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.64...HEAD
+[v4.0-beta.64]: https://github.com/gchq/stroom-query/compare/v4.0-beta.63...v4.0-beta.64
 [v4.0-beta.63]: https://github.com/gchq/stroom-query/compare/v4.0-beta.62...v4.0-beta.63
 [v4.0-beta.62]: https://github.com/gchq/stroom-query/compare/v4.0-beta.61...v4.0-beta.62
 [v4.0-beta.61]: https://github.com/gchq/stroom-query/compare/v4.0-beta.60...v4.0-beta.61

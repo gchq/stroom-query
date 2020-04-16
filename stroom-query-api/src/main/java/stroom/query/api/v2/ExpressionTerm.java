@@ -83,7 +83,7 @@ public final class ExpressionTerm extends ExpressionItem {
     }
 
     @JsonCreator
-    public ExpressionTerm(@JsonProperty("enabled") final Boolean enabled,
+    public ExpressionTerm(@JsonProperty("enabled") final boolean enabled,
                           @JsonProperty("field") final String field,
                           @JsonProperty("condition") final Condition condition,
                           @JsonProperty("value") final String value,
