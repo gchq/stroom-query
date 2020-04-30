@@ -78,7 +78,7 @@ public final class ExpressionOperator extends ExpressionItem {
     }
 
     @JsonCreator
-    public ExpressionOperator(@JsonProperty("enabled") final Boolean enabled,
+    public ExpressionOperator(@JsonProperty("enabled") final boolean enabled,
                               @JsonProperty("op") final Op op,
                               @JsonProperty("children") final List<ExpressionItem> children) {
         super(enabled);
