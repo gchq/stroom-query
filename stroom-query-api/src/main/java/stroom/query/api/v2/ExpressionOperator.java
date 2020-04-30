@@ -63,7 +63,7 @@ public final class ExpressionOperator extends ExpressionItem {
             value = "The logical addOperator type",
             required = true)
     @JsonProperty
-    private Op op = Op.AND;
+    private Op op;
 
     @XmlElementWrapper(name = "children")
     @XmlElements({

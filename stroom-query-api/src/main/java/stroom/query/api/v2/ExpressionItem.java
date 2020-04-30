@@ -57,7 +57,7 @@ public abstract class ExpressionItem implements Serializable {
             example = "true")
     @JsonProperty(value = "enabled",
             defaultValue = "true")
-    private boolean enabled = true;
+    private boolean enabled;
 
     public ExpressionItem() {
         enabled = true;
