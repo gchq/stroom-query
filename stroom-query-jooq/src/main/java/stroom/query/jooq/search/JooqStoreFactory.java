@@ -97,7 +97,7 @@ public class JooqStoreFactory implements StoreFactory {
     }
 
     private Condition getCondition(final ExpressionItem item) {
-        if (!item.isEnabled()) {
+        if (!item.enabled()) {
             return null;
         }
 
@@ -143,30 +143,32 @@ public class JooqStoreFactory implements StoreFactory {
         } else if (item instanceof ExpressionOperator) {
             final ExpressionOperator operator = (ExpressionOperator) item;
 
-            final Condition[] children = operator.getChildren().stream()
-                    .map(this::getCondition)
-                    .filter(Objects::nonNull)
-                    .toArray(Condition[]::new);
+            if (operator.getChildren() != null && operator.getChildren().size() > 0) {
+                final Condition[] children = operator.getChildren().stream()
+                        .map(this::getCondition)
+                        .filter(Objects::nonNull)
+                        .toArray(Condition[]::new);
 
-            switch (operator.getOp()) {
-                case AND:
-                    return and(children);
-                case OR:
-                    return or(children);
-                case NOT:
+                switch (operator.op()) {
+                    case AND:
+                        return and(children);
+                    case OR:
+                        return or(children);
+                    case NOT:
 
-                    if (children.length == 1) {
-                        // A single child, just apply the 'not' to that first item
-                        return not(children[0]);
-                    } else if (children.length > 1) {
-                        // If there are multiple children, apply an and around them all
-                        return and(Arrays.stream(children)
-                                .map(DSL::not)
-                                .toArray(Condition[]::new));
-                    }
-                default:
-                    // Fall through to null if there aren't any children
-                    break;
+                        if (children.length == 1) {
+                            // A single child, just apply the 'not' to that first item
+                            return not(children[0]);
+                        } else if (children.length > 1) {
+                            // If there are multiple children, apply an and around them all
+                            return and(Arrays.stream(children)
+                                    .map(DSL::not)
+                                    .toArray(Condition[]::new));
+                        }
+                    default:
+                        // Fall through to null if there aren't any children
+                        break;
+                }
             }
         }
 

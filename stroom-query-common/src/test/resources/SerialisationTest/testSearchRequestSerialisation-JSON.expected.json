@@ -10,26 +10,19 @@
     },
     "expression" : {
       "type" : "operator",
-      "op" : "AND",
       "children" : [ {
         "type" : "term",
         "field" : "field1",
         "condition" : "EQUALS",
-        "value" : "value1",
-        "enabled" : true
+        "value" : "value1"
       }, {
-        "type" : "operator",
-        "op" : "AND",
-        "children" : [ ],
-        "enabled" : true
+        "type" : "operator"
       }, {
         "type" : "term",
         "field" : "field2",
         "condition" : "BETWEEN",
-        "value" : "value2",
-        "enabled" : true
-      } ],
-      "enabled" : true
+        "value" : "value2"
+      } ]
     },
     "params" : [ {
       "key" : "param1",

@@ -27,7 +27,7 @@ class ExpressionBuilderTest {
 
         assertThat(rootChild2 instanceof ExpressionOperator).isTrue();
         ExpressionOperator child2Op = (ExpressionOperator) rootChild2;
-        assertThat(child2Op.getOp()).isEqualTo(ExpressionOperator.Op.OR);
+        assertThat(child2Op.op()).isEqualTo(ExpressionOperator.Op.OR);
         assertThat(child2Op.getChildren()).hasSize(2);
 
         assertThat(rootChild3 instanceof ExpressionTerm).isTrue();

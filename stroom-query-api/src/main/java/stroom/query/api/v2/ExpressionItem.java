@@ -55,25 +55,31 @@ public abstract class ExpressionItem implements Serializable {
     @ApiModelProperty(
             value = "Whether this item in the expression tree is enabled or not",
             example = "true")
-    @JsonProperty(value = "enabled",
-            defaultValue = "true")
-    private boolean enabled;
+    @JsonProperty(value = "enabled")
+    private Boolean enabled;
 
     public ExpressionItem() {
-        enabled = true;
     }
 
     @JsonCreator
-    public ExpressionItem(@JsonProperty("enabled") final boolean enabled) {
-        this.enabled = enabled;
+    public ExpressionItem(@JsonProperty("enabled") final Boolean enabled) {
+        setEnabled(enabled);
     }
 
-    public boolean isEnabled() {
+    public Boolean getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(final boolean enabled) {
-        this.enabled = enabled;
+    public void setEnabled(final Boolean enabled) {
+        if (enabled == null || Boolean.TRUE.equals(enabled)) {
+            this.enabled = null;
+        } else {
+            this.enabled = enabled;
+        }
+    }
+
+    public boolean enabled() {
+        return enabled == null || enabled;
     }
 
     @Override
@@ -81,7 +87,7 @@ public abstract class ExpressionItem implements Serializable {
         if (this == o) return true;
         if (!(o instanceof ExpressionItem)) return false;
         final ExpressionItem that = (ExpressionItem) o;
-        return enabled == that.enabled;
+        return Objects.equals(enabled, that.enabled);
     }
 
     @Override
@@ -119,11 +125,11 @@ public abstract class ExpressionItem implements Serializable {
         }
 
         /**
-         * @param value Sets the terms state to enabled if true or null, disabled if false
+         * @param enabled Sets the terms state to enabled if true or null, disabled if false
          * @return The Builder Builder, enabling method chaining
          */
-        public CHILD_CLASS enabled(final boolean value) {
-            this.enabled = value;
+        public CHILD_CLASS enabled(final boolean enabled) {
+            this.enabled = enabled;
             return self();
         }
 

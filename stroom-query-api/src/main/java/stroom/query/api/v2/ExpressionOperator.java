@@ -74,26 +74,23 @@ public final class ExpressionOperator extends ExpressionItem {
     private List<ExpressionItem> children;
 
     public ExpressionOperator() {
-        op = Op.AND;
     }
 
     @JsonCreator
-    public ExpressionOperator(@JsonProperty("enabled") final boolean enabled,
+    public ExpressionOperator(@JsonProperty("enabled") final Boolean enabled,
                               @JsonProperty("op") final Op op,
                               @JsonProperty("children") final List<ExpressionItem> children) {
         super(enabled);
-        if (op != null) {
-            this.op = op;
-        } else {
-            this.op = Op.AND;
-        }
-        this.children = children;
+        setOp(op);
+        setChildren(children);
     }
 
     public ExpressionOperator(final Boolean enabled, final Op op, final ExpressionItem... children) {
         super(enabled);
-        this.op = op;
-        this.children = Arrays.asList(children);
+        setOp(op);
+        if (children != null && children.length > 0) {
+            this.children = Arrays.asList(children);
+        }
     }
 
     public Op getOp() {
@@ -101,7 +98,18 @@ public final class ExpressionOperator extends ExpressionItem {
     }
 
     public void setOp(final Op op) {
-        this.op = op;
+        if (op == null || Op.AND.equals(op)) {
+            this.op = null;
+        } else {
+            this.op = op;
+        }
+    }
+
+    public Op op() {
+        if (op == null) {
+            return Op.AND;
+        }
+        return op;
     }
 
     public List<ExpressionItem> getChildren() {
@@ -109,7 +117,11 @@ public final class ExpressionOperator extends ExpressionItem {
     }
 
     public void setChildren(final List<ExpressionItem> children) {
-        this.children = children;
+        if (children != null && children.size() > 0) {
+            this.children = children;
+        } else {
+            this.children = null;
+        }
     }
 
     @Override
@@ -129,13 +141,13 @@ public final class ExpressionOperator extends ExpressionItem {
 
     @Override
     void append(final StringBuilder sb, final String pad, final boolean singleLine) {
-        if (isEnabled()) {
+        if (enabled()) {
             if (!singleLine && sb.length() > 0) {
                 sb.append("\n");
                 sb.append(pad);
             }
 
-            sb.append(op);
+            sb.append(op());
             if (singleLine) {
                 sb.append(" {");
             }
@@ -144,7 +156,7 @@ public final class ExpressionOperator extends ExpressionItem {
                 final String padding = pad + "  ";
                 boolean firstItem = true;
                 for (final ExpressionItem expressionItem : children) {
-                    if (expressionItem.isEnabled()) {
+                    if (expressionItem.enabled()) {
                         if (singleLine && !firstItem) {
                             sb.append(", ");
                         }
@@ -183,7 +195,7 @@ public final class ExpressionOperator extends ExpressionItem {
             extends ExpressionItem.Builder<ExpressionOperator, Builder> {
         private Op op;
 
-        private List<ExpressionItem> children = new ArrayList<>();
+        private final List<ExpressionItem> children = new ArrayList<>();
 
         /**
          * No args constructor, defaults to using AND as the operator.
@@ -215,7 +227,7 @@ public final class ExpressionOperator extends ExpressionItem {
          * @param enabled Is this Expression Operator enabled
          * @param op      The op
          */
-        public Builder(final boolean enabled, final Op op) {
+        public Builder(final Boolean enabled, final Op op) {
             super(enabled);
             op(op);
         }
@@ -227,8 +239,11 @@ public final class ExpressionOperator extends ExpressionItem {
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder op(final Op op) {
-            Objects.requireNonNull(op, "Attempt to set null operation");
-            this.op = op;
+            if (op == null) {
+                this.op = Op.AND;
+            } else {
+                this.op = op;
+            }
             return this;
         }
 

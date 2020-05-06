@@ -83,7 +83,7 @@ public final class ExpressionTerm extends ExpressionItem {
     }
 
     @JsonCreator
-    public ExpressionTerm(@JsonProperty("enabled") final boolean enabled,
+    public ExpressionTerm(@JsonProperty("enabled") final Boolean enabled,
                           @JsonProperty("field") final String field,
                           @JsonProperty("condition") final Condition condition,
                           @JsonProperty("value") final String value,
@@ -146,7 +146,7 @@ public final class ExpressionTerm extends ExpressionItem {
 
     @Override
     void append(final StringBuilder sb, final String pad, final boolean singleLine) {
-        if (isEnabled()) {
+        if (enabled()) {
             if (!singleLine && sb.length() > 0) {
                 sb.append("\n");
                 sb.append(pad);
@@ -237,7 +237,7 @@ public final class ExpressionTerm extends ExpressionItem {
         public Builder() {
         }
 
-        public Builder(final boolean enabled) {
+        public Builder(final Boolean enabled) {
             super(enabled);
         }
 
