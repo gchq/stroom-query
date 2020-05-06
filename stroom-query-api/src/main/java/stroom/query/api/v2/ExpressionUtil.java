@@ -134,7 +134,10 @@ public class ExpressionUtil {
     }
 
     private static void addTerms(final ExpressionOperator expressionOperator, final Collection<AbstractField> fields, final List<ExpressionTerm> terms) {
-        if (expressionOperator != null && expressionOperator.enabled() && !Op.NOT.equals(expressionOperator.op())) {
+        if (expressionOperator != null &&
+                expressionOperator.enabled() &&
+                expressionOperator.getChildren() != null &&
+                !Op.NOT.equals(expressionOperator.op())) {
             for (final ExpressionItem item : expressionOperator.getChildren()) {
                 if (item.enabled()) {
                     if (item instanceof ExpressionTerm) {
@@ -159,14 +162,16 @@ public class ExpressionUtil {
         }
 
         final ExpressionOperator.Builder builder = new ExpressionOperator.Builder(operator.getEnabled(), operator.getOp());
-        operator.getChildren().forEach(item -> {
-            if (item instanceof ExpressionOperator) {
-                builder.addOperator(copyOperator((ExpressionOperator) item));
+        if (operator.getChildren() != null) {
+            operator.getChildren().forEach(item -> {
+                if (item instanceof ExpressionOperator) {
+                    builder.addOperator(copyOperator((ExpressionOperator) item));
 
-            } else if (item instanceof ExpressionTerm) {
-                builder.addTerm(copyTerm((ExpressionTerm) item));
-            }
-        });
+                } else if (item instanceof ExpressionTerm) {
+                    builder.addTerm(copyTerm((ExpressionTerm) item));
+                }
+            });
+        }
         return builder.build();
     }
 
