@@ -201,24 +201,13 @@ public final class ExpressionOperator extends ExpressionItem {
          * No args constructor, defaults to using AND as the operator.
          */
         public Builder() {
-            this(Op.AND);
-        }
-
-        @Override
-        protected ExpressionOperator.Builder self() {
-            return this;
-        }
-
-        @Override
-        public ExpressionOperator build() {
-            return new ExpressionOperator(isEnabled(), op, children);
         }
 
         /**
          * @param op Set the logical operator to apply to all the children items
          */
         public Builder(final Op op) {
-            op(op);
+            this.op = op;
         }
 
         /**
@@ -229,7 +218,17 @@ public final class ExpressionOperator extends ExpressionItem {
          */
         public Builder(final Boolean enabled, final Op op) {
             super(enabled);
-            op(op);
+            this.op = op;
+        }
+
+        @Override
+        protected ExpressionOperator.Builder self() {
+            return this;
+        }
+
+        @Override
+        public ExpressionOperator build() {
+            return new ExpressionOperator(getEnabled(), op, children);
         }
 
         /**
@@ -239,11 +238,7 @@ public final class ExpressionOperator extends ExpressionItem {
          * @return The {@link Builder}, enabling method chaining
          */
         public Builder op(final Op op) {
-            if (op == null) {
-                this.op = Op.AND;
-            } else {
-                this.op = op;
-            }
+            this.op = op;
             return this;
         }
 

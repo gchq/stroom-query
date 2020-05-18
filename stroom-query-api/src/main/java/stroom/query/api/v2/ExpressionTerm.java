@@ -300,7 +300,7 @@ public final class ExpressionTerm extends ExpressionItem {
 
         @Override
         public ExpressionTerm build() {
-            return new ExpressionTerm(isEnabled(), field, condition, value, docRef);
+            return new ExpressionTerm(getEnabled(), field, condition, value, docRef);
         }
 
         @Override

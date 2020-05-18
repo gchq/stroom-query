@@ -115,12 +115,12 @@ public abstract class ExpressionItem implements Serializable {
      * of ExpressionItem should provide a builder that extends this one.
      */
     public static abstract class Builder<T extends ExpressionItem, CHILD_CLASS extends Builder<T, ?>> {
-        private boolean enabled = true;
+        private Boolean enabled;
 
         public Builder() {
         }
 
-        public Builder(final boolean enabled) {
+        public Builder(final Boolean enabled) {
             this.enabled = enabled;
         }
 
@@ -128,7 +128,7 @@ public abstract class ExpressionItem implements Serializable {
          * @param enabled Sets the terms state to enabled if true or null, disabled if false
          * @return The Builder Builder, enabling method chaining
          */
-        public CHILD_CLASS enabled(final boolean enabled) {
+        public CHILD_CLASS enabled(final Boolean enabled) {
             this.enabled = enabled;
             return self();
         }
@@ -138,7 +138,7 @@ public abstract class ExpressionItem implements Serializable {
          *
          * @return Whether the expression is enabled or not
          */
-        protected boolean isEnabled() {
+        protected Boolean getEnabled() {
             return enabled;
         }
 
