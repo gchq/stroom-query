@@ -85,7 +85,11 @@ public class TableResultCreator implements ResultCreator {
                     0,
                     0);
         } catch (final RuntimeException e) {
-            error = e.getMessage();
+            if (e.getMessage() == null || e.getMessage().isBlank()) {
+                error = e.getClass().getName();
+            } else {
+                error = e.getMessage();
+            }
         }
 
         return new TableResult(resultRequest.getComponentId(), latestFields, resultList, new OffsetRange(offset, resultList.size()), totalResults, error);

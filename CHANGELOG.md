@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 
+## [v4.0-beta.70] - 2020-05-22
+
+* Fix potential NPE.
+
+
 ## [v4.0-beta.69] - 2020-05-18
 
 * Change `ExpressionTerm` and `ExpressionOperator` back to use Boolean instead of boolean for enabled.
@@ -457,7 +462,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.69...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.70...HEAD
+[v4.0-beta.70]: https://github.com/gchq/stroom-query/compare/v4.0-beta.69...v4.0-beta.70
 [v4.0-beta.69]: https://github.com/gchq/stroom-query/compare/v4.0-beta.68...v4.0-beta.69
 [v4.0-beta.68]: https://github.com/gchq/stroom-query/compare/v4.0-beta.67...v4.0-beta.68
 [v4.0-beta.67]: https://github.com/gchq/stroom-query/compare/v4.0-beta.66...v4.0-beta.67

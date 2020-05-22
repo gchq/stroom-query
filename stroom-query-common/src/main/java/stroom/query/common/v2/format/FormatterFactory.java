@@ -27,15 +27,13 @@ public class FormatterFactory {
     }
 
     public Formatter create(final Field field) {
-        if (field == null) {
+        if (field == null ||
+                field.getFormat() == null ||
+                field.getFormat().getType() == null) {
             return Unformatted.create();
         }
 
-        Type type = Type.GENERAL;
-        if (field.getFormat() != null) {
-            type = field.getFormat().getType();
-        }
-
+        final Type type = field.getFormat().getType();
         switch (type) {
             case TEXT:
                 return StringFormatter.create();
