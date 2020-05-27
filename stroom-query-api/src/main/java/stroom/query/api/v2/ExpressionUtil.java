@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ExpressionUtil {
@@ -185,6 +186,32 @@ public class ExpressionUtil {
         builder.condition(term.getCondition());
         builder.value(term.getValue());
         builder.docRef(term.getDocRef());
+        return builder.build();
+    }
+
+    public static ExpressionOperator replaceExpressionParameters(final ExpressionOperator operator,
+                                                                 final Map<String, String> paramMap) {
+        final ExpressionOperator.Builder builder = new ExpressionOperator.Builder(operator.getEnabled(), operator.getOp());
+        if (operator.getChildren() != null) {
+            for (ExpressionItem child : operator.getChildren()) {
+                if (child instanceof ExpressionOperator) {
+                    final ExpressionOperator childOperator = (ExpressionOperator) child;
+                    builder.addOperator(replaceExpressionParameters(childOperator, paramMap));
+
+                } else if (child instanceof ExpressionTerm) {
+                    final ExpressionTerm term = (ExpressionTerm) child;
+                    final String value = term.getValue();
+                    final String replaced = ExpressionParamUtil.replaceParameters(value, paramMap);
+                    builder.addTerm(new ExpressionTerm.Builder()
+                            .enabled(term.enabled())
+                            .field(term.getField())
+                            .condition(term.getCondition())
+                            .value(replaced)
+                            .docRef(term.getDocRef())
+                            .build());
+                }
+            }
+        }
         return builder.build();
     }
 }
