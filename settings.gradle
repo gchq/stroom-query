@@ -5,6 +5,5 @@ include 'stroom-query-common'
 include 'stroom-query-sample'
 include 'stroom-query-audit'
 include 'stroom-query-testing'
-include 'stroom-query-jooq'
 include 'stroom-query-authorisation'
 

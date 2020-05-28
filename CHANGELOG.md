@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Removed unused JOOQ related code and tests.
+
 
 ## [v4.0-beta.72] - 2020-05-28
 

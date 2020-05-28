@@ -28,7 +28,6 @@ dependencies {
     implementation libs.dropwizard_auth
     implementation libs.dropwizard_core
     implementation libs.dropwizard_jersey
-    implementation libs.dropwizard_jooq
     implementation libs.dropwizard_testing
     implementation libs.guice
     implementation libs.javax_ws;
@@ -43,8 +42,6 @@ dependencies {
     implementation libs.wiremock
     implementation libs.test_containers
     implementation libs.test_containers_mysql
-
-    testImplementation project(':stroom-query-jooq')
 
     testImplementation libs.assertj_core
     testImplementation libs.dropwizard_core

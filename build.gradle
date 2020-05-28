@@ -48,13 +48,11 @@ ext.versions = [
 
         //------------3rd-party------------
         dropwizard        : '1.3.14',
-        dropwizard_jooq   : '1.1.0-0',
         dropwizard_metrics: '4.0.5', // in line with dropwizard 1.3.14
         flyway            : '5.2.4',
         glassfish         : '2.5.0-b32',
         javax_inject      : '1',
         javax_ws          : '2.1',
-        jooq              : '3.12.3',
         jose4j            : '0.5.2',
         junit             : '5.6.0',
         kafka             : '0.10.0.1',
@@ -75,7 +73,6 @@ ext.libs = [
         dropwizard_db       : "io.dropwizard:dropwizard-db", // version controlled by DW BOM
         dropwizard_auth     : "io.dropwizard:dropwizard-auth", // version controlled by DW BOM
         dropwizard_auth_jwt : "com.github.toastshaman:dropwizard-auth-jwt:1.0.2-0",
-        dropwizard_jooq     : "com.bendb.dropwizard:dropwizard-jooq:$versions.dropwizard_jooq",
         dropwizard_logging  : "io.dropwizard:dropwizard-logging", // version controlled by DW BOM
         dropwizard_jersey   : "io.dropwizard:dropwizard-jersey", // version controlled by DW BOM
         dropwizard_flyway   : 'io.dropwizard.modules:dropwizard-flyway:1.0.0-1',
@@ -100,7 +97,6 @@ ext.libs = [
         junit_jupiter_api   : "org.junit.jupiter:junit-jupiter-api:${versions.junit}",
         junit_jupiter_engine: "org.junit.jupiter:junit-jupiter-engine:${versions.junit}",
         jose4j              : "org.bitbucket.b_c:jose4j:$versions.jose4j",
-        jooq                : "org.jooq:jooq:$versions.jooq",
         logback_classic     : "ch.qos.logback:logback-classic", // version controlled by DW BOM
         logback_core        : "ch.qos.logback:logback-core", // version controlled by DW BOM
         kafka               : "org.apache.kafka:kafka-clients:$versions.kafka", // CDH5.10 uses kafka 10.0, Kafka <10.2 is picky about client and server versions.
