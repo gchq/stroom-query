@@ -105,6 +105,10 @@ public final class ExpressionParamUtil {
     }
 
     public static String replaceParameters(final String value, final Map<String, String> paramMap) {
+        if (value == null) {
+            return null;
+        }
+
         final StringBuilder sb = new StringBuilder();
 
         int paramStart = -1;

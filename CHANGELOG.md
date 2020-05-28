@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 
+## [v4.0-beta.72] - 2020-05-28
+
+* Fix NPE.
+
+
 ## [v4.0-beta.71] - 2020-05-27
 
 * Added expression parameter utilities.
@@ -467,7 +472,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.71...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.72...HEAD
+[v4.0-beta.72]: https://github.com/gchq/stroom-query/compare/v4.0-beta.71...v4.0-beta.72
 [v4.0-beta.71]: https://github.com/gchq/stroom-query/compare/v4.0-beta.70...v4.0-beta.71
 [v4.0-beta.70]: https://github.com/gchq/stroom-query/compare/v4.0-beta.69...v4.0-beta.70
 [v4.0-beta.69]: https://github.com/gchq/stroom-query/compare/v4.0-beta.68...v4.0-beta.69
