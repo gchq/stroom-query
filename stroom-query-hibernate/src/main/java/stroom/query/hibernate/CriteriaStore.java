@@ -4,6 +4,7 @@ import stroom.mapreduce.v2.UnsafePairQueue;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.common.v2.CompiledSorter;
 import stroom.query.common.v2.CompletionState;
+import stroom.query.common.v2.CompletionStateImpl;
 import stroom.query.common.v2.CoprocessorSettingsMap;
 import stroom.query.common.v2.Data;
 import stroom.query.common.v2.GroupKey;
@@ -28,7 +29,7 @@ public class CriteriaStore implements Store {
 
     private final Sizes defaultMaxResultsSizes;
     private final Sizes storeSize;
-    private final CompletionState completionState = new CompletionState();
+    private final CompletionState completionState = new CompletionStateImpl();
 
     public CriteriaStore(final Sizes defaultMaxResultsSizes,
                          final Sizes storeSize,

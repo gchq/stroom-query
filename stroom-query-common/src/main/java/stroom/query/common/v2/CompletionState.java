@@ -1,24 +1,11 @@
 package stroom.query.common.v2;
 
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-public class CompletionState {
-    private final AtomicBoolean complete = new AtomicBoolean();
-    private final CountDownLatch completeLatch = new CountDownLatch(1);
+public interface CompletionState {
+    boolean isComplete();
 
-    public boolean isComplete() {
-        return complete.get();
-    }
+    boolean await(long timeout, TimeUnit unit) throws InterruptedException;
 
-    public boolean await(long timeout, TimeUnit unit) throws InterruptedException {
-        return completeLatch.await(timeout, unit);
-    }
-
-    public void complete() {
-        if (complete.compareAndSet(false, true)) {
-            completeLatch.countDown();
-        }
-    }
+    void complete();
 }
