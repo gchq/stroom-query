@@ -68,17 +68,13 @@ public class QueryServiceCriteriaImpl<
 
     private final DocRefService<DOC_REF_ENTITY> docRefEntityDocRefService;
 
-    private final HasTerminate hasTerminate;
-
     @Inject
     public QueryServiceCriteriaImpl(final QueryableEntity.ClassProvider<QUERYABLE_ENTITY> dtoClassProvider,
                                     final DocRefService<DOC_REF_ENTITY> docRefEntityDocRefService,
-                                    final SessionFactory database,
-                                    final HasTerminate hasTerminate) {
+                                    final SessionFactory database) {
         this.database = database;
         this.docRefEntityDocRefService = docRefEntityDocRefService;
         this.dtoClass = dtoClassProvider.get();
-        this.hasTerminate = hasTerminate;
 
         this.fields = Arrays.stream(dtoClass.getMethods()).map(method -> method.getAnnotation(IsDataSourceField.class))
                 .filter(Objects::nonNull)
@@ -311,7 +307,6 @@ public class QueryServiceCriteriaImpl<
         final Sizes storeSize = Sizes.create(tuples.size());
         final CriteriaStore store = new CriteriaStore(storeSize, storeSize,
                 coprocessorSettingsMap,
-                coprocessorMap,
                 payloadMap);
 
         // defaultMaxResultsSizes could be obtained from the StatisticsStore but at this point that object is ephemeral.

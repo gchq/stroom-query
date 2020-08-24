@@ -3,8 +3,7 @@ package stroom.query.hibernate;
 import stroom.mapreduce.v2.UnsafePairQueue;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.common.v2.CompiledSorter;
-import stroom.query.common.v2.CompletionListener;
-import stroom.query.common.v2.Coprocessor;
+import stroom.query.common.v2.CompletionState;
 import stroom.query.common.v2.CoprocessorSettingsMap;
 import stroom.query.common.v2.Data;
 import stroom.query.common.v2.GroupKey;
@@ -16,41 +15,33 @@ import stroom.query.common.v2.Store;
 import stroom.query.common.v2.TableCoprocessorSettings;
 import stroom.query.common.v2.TablePayload;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Used to store the results from a query made on a {@link QueryServiceCriteriaImpl}
  */
 public class CriteriaStore implements Store {
-
     private final CoprocessorSettingsMap coprocessorSettingsMap;
-    private final Map<CoprocessorSettingsMap.CoprocessorKey, Coprocessor> coprocessorMap;
     private final Map<CoprocessorSettingsMap.CoprocessorKey, Payload> payloadMap;
 
     private final Sizes defaultMaxResultsSizes;
     private final Sizes storeSize;
-    private final List<CompletionListener> completionListeners = Collections.synchronizedList(new ArrayList<>());
-
-    //results are currently assembled synchronously in getData so the store is always complete
-    private final AtomicBoolean isComplete = new AtomicBoolean(true);
+    private final CompletionState completionState = new CompletionState();
 
     public CriteriaStore(final Sizes defaultMaxResultsSizes,
                          final Sizes storeSize,
                          final CoprocessorSettingsMap coprocessorSettingsMap,
-                         final Map<CoprocessorSettingsMap.CoprocessorKey, Coprocessor> coprocessorMap,
                          final Map<CoprocessorSettingsMap.CoprocessorKey, Payload> payloadMap) {
 
         this.defaultMaxResultsSizes = defaultMaxResultsSizes;
         this.storeSize = storeSize;
         this.coprocessorSettingsMap = coprocessorSettingsMap;
-        this.coprocessorMap = coprocessorMap;
         this.payloadMap = payloadMap;
+
+        // Results are currently assembled synchronously in getData so the store is always complete
+        completionState.complete();
     }
 
     @Override
@@ -59,8 +50,8 @@ public class CriteriaStore implements Store {
     }
 
     @Override
-    public boolean isComplete() {
-        return isComplete.get();
+    public CompletionState getCompletionState() {
+        return completionState;
     }
 
     @Override
@@ -109,16 +100,5 @@ public class CriteriaStore implements Store {
     @Override
     public Sizes getStoreSize() {
         return storeSize;
-    }
-
-    @Override
-    public void registerCompletionListener(final CompletionListener completionListener) {
-        if (isComplete.get()) {
-            //immediate notification
-            completionListener.onCompletion();
-        } else {
-            //TODO this is currently of no use but when incremenntal queries are implemented it will be needed
-            completionListeners.add(Objects.requireNonNull(completionListener));
-        }
     }
 }

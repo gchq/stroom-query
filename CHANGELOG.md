@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Improved completion state code.
+
 ## [v2.2.9] - 2019-11-26
 
 * Added ability to copy a field with builders.

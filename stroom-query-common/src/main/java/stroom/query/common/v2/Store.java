@@ -25,12 +25,11 @@ public interface Store {
     void destroy();
 
     /**
-     * Find out if the search has completed. There will be no new results once
-     * complete so we can stop requesting updates.
+     * Get the completion state of the search.
      *
-     * @return True if the search has completed.
+     * @return The completion state of the search.
      */
-    boolean isComplete();
+    CompletionState getCompletionState();
 
     /**
      * Get the current data that is available for the specified component.
@@ -71,11 +70,4 @@ public interface Store {
      * @return A non-null {@link Sizes} object
      */
     Sizes getStoreSize();
-
-    /**
-     * Register a listener to be informed when the store is deemed complete
-     * @param completionListener The listener to inform
-     */
-    void registerCompletionListener(final CompletionListener completionListener);
-
 }

@@ -37,7 +37,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 //TODO copy SearchResultCreatorManager from stroom into here for a common solution to
@@ -94,29 +93,25 @@ public class SearchResponseCreator {
     public SearchResponse create(final SearchRequest searchRequest, final HasTerminate hasTerminate) {
         final boolean didSearchComplete;
 
-        if (!store.isComplete()) {
+        final CompletionState completionState = store.getCompletionState();
+        if (!completionState.isComplete()) {
             LOGGER.debug("Store not complete so will wait for completion or timeout");
             try {
                 final Duration effectiveTimeout = getEffectiveTimeout(searchRequest);
-
                 LOGGER.debug("effectiveTimeout: {}", effectiveTimeout);
 
-                final CountDownLatch storeCompletionLatch = new CountDownLatch(1);
-
                 if (Duration.ZERO.equals(effectiveTimeout)) {
-                    // timeout is 0 so no point registering a completion listener
-                    didSearchComplete = store.isComplete();
-                } else {
-                    //When the store completes/terminates the latch will be counted down to release the block
-                    store.registerCompletionListener(storeCompletionLatch::countDown);
+                    // timeout is 0 so no waiting.
+                    didSearchComplete = completionState.isComplete();
 
-                    //block and wait for the store to notify us of its completion/termination, or
-                    //if the wait is too long we will timeout
-                    didSearchComplete = storeCompletionLatch.await(effectiveTimeout.toMillis(), TimeUnit.MILLISECONDS);
+                } else {
+                    // block and wait for the store to notify us of its completion/termination, or
+                    // if the wait is too long we will timeout
+                    didSearchComplete = completionState.await(effectiveTimeout.toMillis(), TimeUnit.MILLISECONDS);
                 }
 
                 if (!didSearchComplete && !searchRequest.incremental()) {
-                    //search didn't complete non-incremental search in time so return a timed out error response
+                    // search didn't complete non-incremental search in time so return a timed out error response
                     return createErrorResponse(
                             store,
                             Collections.singletonList(
@@ -135,7 +130,7 @@ public class SearchResponseCreator {
         //about completion state. Therefore assemble whatever results we currently have
         try {
             // Get completion state before we get results.
-            final boolean complete = store.isComplete();
+            final boolean complete = completionState.isComplete();
 
             List<Result> results = getResults(searchRequest, hasTerminate);
 
@@ -144,7 +139,7 @@ public class SearchResponseCreator {
             }
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Returning new SearchResponse with results: {}, complete: {}, isComplete: {}",
-                        (results == null ? "null" : results.size()), complete, store.isComplete());
+                        (results == null ? "null" : results.size()), complete, completionState.isComplete());
             }
             return new SearchResponse(store.getHighlights(), results, store.getErrors(), complete);
 
