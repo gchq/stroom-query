@@ -41,12 +41,11 @@ public class TablePayloadHandler implements PayloadHandler {
     private final Sizes storeSize;
     private final AtomicLong totalResults = new AtomicLong();
     private final LinkedBlockingQueue<UnsafePairQueue<GroupKey, Item>> pendingMerges = new LinkedBlockingQueue<>();
+    private final Lock lock = new ReentrantLock();
 
     private volatile PairQueue<GroupKey, Item> currentQueue;
     private volatile Data data;
     private volatile boolean hasEnoughData;
-
-    private final Lock lock = new ReentrantLock();
 
     public TablePayloadHandler(final List<Field> fields,
                                final boolean showDetails,
@@ -110,23 +109,23 @@ public class TablePayloadHandler implements PayloadHandler {
     }
 
     private void mergePending(final HasTerminate hasTerminate) {
-        if (hasTerminate.isTerminated() || hasEnoughData) {
-            // Clear the queue if we should terminate.
-            pendingMerges.clear();
+        UnsafePairQueue<GroupKey, Item> queue = pendingMerges.poll();
+        while (queue != null) {
+            if (hasTerminate.isTerminated() || hasEnoughData) {
+                // Clear the queue if we are done.
+                pendingMerges.clear();
 
-        } else {
-            UnsafePairQueue<GroupKey, Item> queue = pendingMerges.poll();
-            while (queue != null) {
+            } else {
                 try {
                     mergeQueue(queue);
                 } catch (final RuntimeException e) {
                     LOGGER.error(e.getMessage(), e);
                     throw e;
                 }
-
-                // Poll the next item.
-                queue = pendingMerges.poll();
             }
+
+            // Poll the next item.
+            queue = pendingMerges.poll();
         }
     }
 

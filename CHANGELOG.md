@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.2.14] - 2020-08-25
+
+* Improved completion state code.
+
 ## [v2.2.13] - 2020-08-25
 
 * Improved completion state code.
@@ -318,7 +322,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.2.13...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.2.14...HEAD
+[v2.2.14]: https://github.com/gchq/stroom-query/compare/v2.2.13...v2.2.14
 [v2.2.13]: https://github.com/gchq/stroom-query/compare/v2.2.12...v2.2.13
 [v2.2.12]: https://github.com/gchq/stroom-query/compare/v2.2.11...v2.2.12
 [v2.2.11]: https://github.com/gchq/stroom-query/compare/v2.2.10...v2.2.11
