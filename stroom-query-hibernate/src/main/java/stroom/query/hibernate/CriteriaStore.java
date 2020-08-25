@@ -3,8 +3,6 @@ package stroom.query.hibernate;
 import stroom.mapreduce.v2.UnsafePairQueue;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.common.v2.CompiledSorter;
-import stroom.query.common.v2.CompletionState;
-import stroom.query.common.v2.CompletionStateImpl;
 import stroom.query.common.v2.CoprocessorSettingsMap;
 import stroom.query.common.v2.Data;
 import stroom.query.common.v2.GroupKey;
@@ -19,6 +17,7 @@ import stroom.query.common.v2.TablePayload;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Used to store the results from a query made on a {@link QueryServiceCriteriaImpl}
@@ -29,7 +28,6 @@ public class CriteriaStore implements Store {
 
     private final Sizes defaultMaxResultsSizes;
     private final Sizes storeSize;
-    private final CompletionState completionState = new CompletionStateImpl();
 
     public CriteriaStore(final Sizes defaultMaxResultsSizes,
                          final Sizes storeSize,
@@ -40,9 +38,6 @@ public class CriteriaStore implements Store {
         this.storeSize = storeSize;
         this.coprocessorSettingsMap = coprocessorSettingsMap;
         this.payloadMap = payloadMap;
-
-        // Results are currently assembled synchronously in getData so the store is always complete
-        completionState.complete();
     }
 
     @Override
@@ -51,8 +46,13 @@ public class CriteriaStore implements Store {
     }
 
     @Override
-    public CompletionState getCompletionState() {
-        return completionState;
+    public boolean isComplete() {
+        return true;
+    }
+
+    @Override
+    public boolean awaitCompletion(final long timeout, final TimeUnit unit) {
+        return true;
     }
 
     @Override

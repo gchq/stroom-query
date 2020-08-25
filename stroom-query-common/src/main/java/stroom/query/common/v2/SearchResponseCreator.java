@@ -75,6 +75,13 @@ public class SearchResponseCreator {
     }
 
     /**
+     * Stop searching and destroy any stored data.
+     */
+    public void destroy() {
+        store.destroy();
+    }
+
+    /**
      * Build a {@link SearchResponse} from the passed {@link SearchRequest}.
      *
      * @param searchRequest The {@link SearchRequest} containing the query terms and the result requests
@@ -93,25 +100,19 @@ public class SearchResponseCreator {
     public SearchResponse create(final SearchRequest searchRequest, final HasTerminate hasTerminate) {
         final boolean didSearchComplete;
 
-        final CompletionState completionState = store.getCompletionState();
-        if (!completionState.isComplete()) {
+        if (!store.isComplete()) {
             LOGGER.debug("Store not complete so will wait for completion or timeout");
             try {
                 final Duration effectiveTimeout = getEffectiveTimeout(searchRequest);
+
                 LOGGER.debug("effectiveTimeout: {}", effectiveTimeout);
 
-                if (Duration.ZERO.equals(effectiveTimeout)) {
-                    // timeout is 0 so no waiting.
-                    didSearchComplete = completionState.isComplete();
-
-                } else {
-                    // block and wait for the store to notify us of its completion/termination, or
-                    // if the wait is too long we will timeout
-                    didSearchComplete = completionState.await(effectiveTimeout.toMillis(), TimeUnit.MILLISECONDS);
-                }
+                // Block and wait for the store to notify us of its completion/termination, or if the wait is too long
+                // we will timeout
+                didSearchComplete = store.awaitCompletion(effectiveTimeout.toMillis(), TimeUnit.MILLISECONDS);
 
                 if (!didSearchComplete && !searchRequest.incremental()) {
-                    // search didn't complete non-incremental search in time so return a timed out error response
+                    // Search didn't complete non-incremental search in time so return a timed out error response
                     return createErrorResponse(
                             store,
                             Collections.singletonList(
@@ -126,24 +127,25 @@ public class SearchResponseCreator {
             }
         }
 
-        //we will only get here if the search is complete or it is an incremental search in which case we don't care
-        //about completion state. Therefore assemble whatever results we currently have
+        // We will only get here if the search is complete or it is an incremental search in which case we don't care
+        // about completion state. Therefore assemble whatever results we currently have
         try {
             // Get completion state before we get results.
-            final boolean complete = completionState.isComplete();
+            final boolean complete = store.isComplete();
 
             List<Result> results = getResults(searchRequest, hasTerminate);
-
             if (results.size() == 0) {
                 results = null;
             }
+
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Returning new SearchResponse with results: {}, complete: {}, isComplete: {}",
-                        (results == null ? "null" : results.size()), complete, completionState.isComplete());
+                        (results == null ? "null" : results.size()), complete, store.isComplete());
             }
+
             return new SearchResponse(store.getHighlights(), results, store.getErrors(), complete);
 
-        } catch (Exception e) {
+        } catch (final RuntimeException e) {
             LOGGER.error("Error getting search results for query {}", searchRequest.getKey().toString(), e);
 
             return createErrorResponse(
@@ -189,10 +191,10 @@ public class SearchResponseCreator {
             return requestedTimeout;
         } else {
             if (searchRequest.incremental()) {
-                //no timeout supplied so they want a response immediately
+                // No timeout supplied so they want a response immediately
                 return Duration.ZERO;
             } else {
-                //this is synchronous so just use the service's default
+                // This is synchronous so just use the service's default
                 return defaultTimeout;
             }
         }
@@ -300,9 +302,5 @@ public class SearchResponseCreator {
         }
 
         return resultCreator;
-    }
-
-    public void destroy() {
-        store.destroy();
     }
 }

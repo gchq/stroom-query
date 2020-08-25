@@ -16,6 +16,8 @@
 
 package stroom.query.common.v2;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import stroom.mapreduce.v2.UnsafePairQueue;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.common.v2.CoprocessorSettingsMap.CoprocessorKey;
@@ -24,16 +26,20 @@ import stroom.util.shared.HasTerminate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
 public class SearchResultHandler implements ResultHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SearchResultHandler.class);
+
+    private final CompletionState completionState;
     private final CoprocessorSettingsMap coprocessorSettingsMap;
     private final Map<CoprocessorKey, TablePayloadHandler> handlerMap = new HashMap<>();
-    private final CompletionState completionState = new CompletionStateImpl();
 
-    public SearchResultHandler(final CoprocessorSettingsMap coprocessorSettingsMap,
+    public SearchResultHandler(final CompletionState completionState,
+                               final CoprocessorSettingsMap coprocessorSettingsMap,
                                final Sizes defaultMaxResultsSizes,
                                final Sizes storeSize) {
-
+        this.completionState = completionState;
         this.coprocessorSettingsMap = coprocessorSettingsMap;
 
         for (final Entry<CoprocessorKey, CoprocessorSettings> entry : coprocessorSettingsMap.getMap().entrySet()) {
@@ -70,6 +76,18 @@ public class SearchResultHandler implements ResultHandler {
                 }
             }
         }
+
+        // See if we should terminate.
+        boolean terminate = true;
+        for (final PayloadHandler payloadHandler : handlerMap.values()) {
+            if (!payloadHandler.shouldTerminateSearch()) {
+                terminate = false;
+                break;
+            }
+        }
+        if (hasTerminate.isTerminated() || terminate) {
+            completionState.complete();
+        }
     }
 
     public TablePayloadHandler getPayloadHandler(final String componentId) {
@@ -82,79 +100,36 @@ public class SearchResultHandler implements ResultHandler {
     }
 
     @Override
-    public boolean shouldTerminateSearch() {
-        boolean terminate = false;
-        if (handlerMap.size() == coprocessorSettingsMap.getMap().size()) {
-            terminate = true;
-            for (final PayloadHandler payloadHandler : handlerMap.values()) {
-                if (!payloadHandler.shouldTerminateSearch()) {
-                    terminate = false;
-                    break;
-                }
-            }
-        }
-
-        return terminate;
-    }
-
-    @Override
-    public CompletionState getCompletionState() {
-        return completionState;
-    }
-
-//    private boolean areHandlersBusy() {
-//        for (final TablePayloadHandler handler : handlerMap.values()) {
-//            if (handler.busy()) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-//
-//    @Override
-//    public void setComplete(final boolean complete) {
-//        final boolean isAlreadyComplete = this.complete.get();
-//        LOGGER.trace("setComplete({}), currentValue={}", complete, isAlreadyComplete);
-//        if (isAlreadyComplete && !complete) {
-//            throw new RuntimeException("Attempting to mark SearchResultHandler as not complete when it has " +
-//                    "already been completed");
-//        }
-//
-//        if (complete) {
-//            // We have been told the search is complete but the TablePayloadHandlers may still be doing work
-//            // so wait for them
-//            boolean hasPendingWorkFinished = false;
-//            for (final TablePayloadHandler handler : handlerMap.values()) {
-//                hasPendingWorkFinished = handler.waitForPendingWork(10, TimeUnit.SECONDS);
-//
-//                if (!hasPendingWorkFinished) {
-//                    LOGGER.trace("Work still pending after timeout");
-//                    break;
-//                }
-//            }
-//            LOGGER.trace("isPendingWorkFinished={}", hasPendingWorkFinished);
-//
-//            if (hasPendingWorkFinished) {
-//                LOGGER.trace("setting complete to {}", true);
-//                this.complete.set(true);
-//                //notify the listeners
-//                for (CompletionListener listener; (listener = completionListeners.poll()) != null; ) {
-//                    // when notified they will check isComplete
-//                    LOGGER.debug("Notifying {} {} that we are complete", listener.getClass().getName(), listener);
-//                    listener.onCompletion();
-//                }
-//            } else {
-//                LOGGER.trace("Handlers are busy so not setting complete");
-//            }
-//        }
-//    }
-
-    @Override
     public Data getResultStore(final String componentId) {
         final TablePayloadHandler tablePayloadHandler = getPayloadHandler(componentId);
         if (tablePayloadHandler != null) {
             return tablePayloadHandler.getData();
         }
         return null;
+    }
+
+    @Override
+    public boolean waitForPendingWork() {
+        // wait for each handler to complete any outstanding work
+        // We have been told the search is complete but the TablePayloadHandlers may still be doing work
+        // so wait for them
+        boolean hasPendingWorkFinished = false;
+        for (final TablePayloadHandler handler : handlerMap.values()) {
+            hasPendingWorkFinished = handler.waitForPendingWork(10, TimeUnit.SECONDS);
+
+            if (!hasPendingWorkFinished) {
+                LOGGER.trace("Work still pending after timeout");
+                break;
+            }
+        }
+        LOGGER.trace("isPendingWorkFinished={}", hasPendingWorkFinished);
+
+        if (hasPendingWorkFinished) {
+            LOGGER.trace("setting complete to {}", true);
+        } else {
+            LOGGER.trace("Handlers are busy so not setting complete");
+        }
+
+        return hasPendingWorkFinished;
     }
 }
