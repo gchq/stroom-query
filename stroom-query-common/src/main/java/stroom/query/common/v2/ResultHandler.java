@@ -26,5 +26,5 @@ public interface ResultHandler {
 
     Data getResultStore(String componentId);
 
-    boolean waitForPendingWork() throws InterruptedException;
+    void waitForPendingWork(HasTerminate hasTerminate);
 }

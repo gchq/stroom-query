@@ -16,8 +16,6 @@
 
 package stroom.query.common.v2;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import stroom.mapreduce.v2.UnsafePairQueue;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.common.v2.CoprocessorSettingsMap.CoprocessorKey;
@@ -26,20 +24,14 @@ import stroom.util.shared.HasTerminate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
 
 public class SearchResultHandler implements ResultHandler {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SearchResultHandler.class);
-
-    private final CompletionState completionState;
     private final CoprocessorSettingsMap coprocessorSettingsMap;
     private final Map<CoprocessorKey, TablePayloadHandler> handlerMap = new HashMap<>();
 
-    public SearchResultHandler(final CompletionState completionState,
-                               final CoprocessorSettingsMap coprocessorSettingsMap,
+    public SearchResultHandler(final CoprocessorSettingsMap coprocessorSettingsMap,
                                final Sizes defaultMaxResultsSizes,
                                final Sizes storeSize) {
-        this.completionState = completionState;
         this.coprocessorSettingsMap = coprocessorSettingsMap;
 
         for (final Entry<CoprocessorKey, CoprocessorSettings> entry : coprocessorSettingsMap.getMap().entrySet()) {
@@ -76,18 +68,6 @@ public class SearchResultHandler implements ResultHandler {
                 }
             }
         }
-
-        // See if we should terminate.
-        boolean terminate = true;
-        for (final PayloadHandler payloadHandler : handlerMap.values()) {
-            if (!payloadHandler.shouldTerminateSearch()) {
-                terminate = false;
-                break;
-            }
-        }
-        if (hasTerminate.isTerminated() || terminate) {
-            completionState.complete();
-        }
     }
 
     public TablePayloadHandler getPayloadHandler(final String componentId) {
@@ -109,27 +89,12 @@ public class SearchResultHandler implements ResultHandler {
     }
 
     @Override
-    public boolean waitForPendingWork() {
+    public void waitForPendingWork(final HasTerminate hasTerminate) {
         // wait for each handler to complete any outstanding work
         // We have been told the search is complete but the TablePayloadHandlers may still be doing work
         // so wait for them
-        boolean hasPendingWorkFinished = false;
         for (final TablePayloadHandler handler : handlerMap.values()) {
-            hasPendingWorkFinished = handler.waitForPendingWork(10, TimeUnit.SECONDS);
-
-            if (!hasPendingWorkFinished) {
-                LOGGER.trace("Work still pending after timeout");
-                break;
-            }
+            handler.waitForPendingWork(hasTerminate);
         }
-        LOGGER.trace("isPendingWorkFinished={}", hasPendingWorkFinished);
-
-        if (hasPendingWorkFinished) {
-            LOGGER.trace("setting complete to {}", true);
-        } else {
-            LOGGER.trace("Handlers are busy so not setting complete");
-        }
-
-        return hasPendingWorkFinished;
     }
 }
