@@ -38,7 +38,7 @@ class TestSearchResponseCreator {
 
     @BeforeEach
     void setup() {
-        //default mock behaviour
+        // Default mock behaviour
         Mockito.when(mockStore.getErrors()).thenReturn(Collections.emptyList());
         Mockito.when(mockStore.getHighlights()).thenReturn(Collections.emptyList());
         Mockito.when(mockStore.getData(Mockito.any())).thenReturn(createSingleItemDataObject());

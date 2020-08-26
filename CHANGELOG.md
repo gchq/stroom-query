@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Improved completion state code.
+
 
 ## [v4.0-beta.73] - 2020-05-28
 

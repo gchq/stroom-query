@@ -21,7 +21,6 @@ import stroom.query.common.v2.CoprocessorSettingsMap.CoprocessorKey;
 import java.util.Map;
 
 public interface ResultHandler {
-
     void handle(Map<CoprocessorKey, Payload> payloadMap);
 
     Data getResultStore(String componentId);

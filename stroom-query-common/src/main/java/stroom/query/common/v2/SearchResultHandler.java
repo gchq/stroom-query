@@ -21,8 +21,6 @@ import org.slf4j.LoggerFactory;
 import stroom.mapreduce.v2.UnsafePairQueue;
 import stroom.query.api.v2.TableSettings;
 import stroom.query.common.v2.CoprocessorSettingsMap.CoprocessorKey;
-import stroom.query.util.LambdaLogger;
-import stroom.query.util.LambdaLoggerFactory;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -30,20 +28,18 @@ import java.util.stream.Collectors;
 
 public class SearchResultHandler implements ResultHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchResultHandler.class);
-    private static final LambdaLogger LAMBDA_LOGGER = LambdaLoggerFactory.getLogger(SearchResultHandler.class);
 
     private final CoprocessorSettingsMap coprocessorSettingsMap;
-    private final CompletionState completionState;
     private final Map<CoprocessorKey, TablePayloadHandler> handlerMap;
 
-    public SearchResultHandler(final CompletionState completionState,
-                               final CoprocessorSettingsMap coprocessorSettingsMap,
+    public SearchResultHandler(final CoprocessorSettingsMap coprocessorSettingsMap,
                                final Sizes defaultMaxResultsSizes,
                                final Sizes storeSize) {
-
-        this.completionState = completionState;
         this.coprocessorSettingsMap = coprocessorSettingsMap;
-        this.handlerMap = coprocessorSettingsMap.getMap().entrySet().stream()
+        this.handlerMap = coprocessorSettingsMap
+                .getMap()
+                .entrySet()
+                .stream()
                 .filter(entry -> entry.getValue() instanceof TableCoprocessorSettings)
                 .collect(Collectors.toMap(Entry::getKey, entry -> {
                     final TableCoprocessorSettings tableCoprocessorSettings = (TableCoprocessorSettings) entry.getValue();
@@ -70,18 +66,6 @@ public class SearchResultHandler implements ResultHandler {
                 }
             }
         }
-
-        // See if we should terminate.
-        boolean terminate = true;
-        for (final PayloadHandler payloadHandler : handlerMap.values()) {
-            if (!payloadHandler.shouldTerminateSearch()) {
-                terminate = false;
-                break;
-            }
-        }
-        if (terminate) {
-            completionState.complete();
-        }
     }
 
     private TablePayloadHandler getPayloadHandler(final String componentId) {
@@ -104,7 +88,8 @@ public class SearchResultHandler implements ResultHandler {
 
     @Override
     public void waitForPendingWork() throws InterruptedException {
-        // wait for each handler to complete any outstanding work
+        // Wait for each handler to complete any outstanding work
+        // We have been told the search is complete but the TablePayloadHandlers may still be doing work so wait for them.
         for (final TablePayloadHandler handler : handlerMap.values()) {
             LOGGER.trace("About to wait for handler {}", handler);
             handler.waitForPendingWork();

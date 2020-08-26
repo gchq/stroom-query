@@ -64,7 +64,8 @@ public class SearchResponseCreator {
      * @param defaultTimeout The service's default timeout period to use for waiting for the store to complete. This
      *                       will be used when the search request hasn't specified a timeout period.
      */
-    public SearchResponseCreator(final Store store, final Duration defaultTimeout) {
+    public SearchResponseCreator(final Store store,
+                                 final Duration defaultTimeout) {
         this.store = Objects.requireNonNull(store);
         this.defaultTimeout = Objects.requireNonNull(defaultTimeout);
     }

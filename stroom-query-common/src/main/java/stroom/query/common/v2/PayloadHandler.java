@@ -17,5 +17,4 @@
 package stroom.query.common.v2;
 
 public interface PayloadHandler {
-    boolean shouldTerminateSearch();
 }
