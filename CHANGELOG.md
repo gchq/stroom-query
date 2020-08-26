@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+
+## [v4.0-beta.74] - 2020-08-26
+
 * Improved completion state code.
 
 
@@ -479,7 +482,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.73...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.74...HEAD
+[v4.0-beta.74]: https://github.com/gchq/stroom-query/compare/v4.0-beta.73...v4.0-beta.74
 [v4.0-beta.73]: https://github.com/gchq/stroom-query/compare/v4.0-beta.72...v4.0-beta.73
 [v4.0-beta.72]: https://github.com/gchq/stroom-query/compare/v4.0-beta.71...v4.0-beta.72
 [v4.0-beta.71]: https://github.com/gchq/stroom-query/compare/v4.0-beta.70...v4.0-beta.71
