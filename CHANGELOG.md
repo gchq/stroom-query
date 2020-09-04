@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Upgraded stroom expression to v1.5.6.
+
 ## [v2.2.14] - 2020-08-25
 
 * Improved completion state code.
