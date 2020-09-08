@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+
+## [v4.0-beta.75] - 2020-09-08
+
 * Issue **#stroom#1083** : Added `any()`, `first()`, `last()`, `nth()`, `top()` and `bottom()` selection functions to select child values of grouped items.
 
 * Issue **#stroom#1083** : Added `any()`, `first()`, `last()`, `nth()`, `top()` and `bottom()` selection functions to select child values of grouped items.
@@ -488,7 +491,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.74...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.75...HEAD
+[v4.0-beta.75]: https://github.com/gchq/stroom-query/compare/v4.0-beta.74...v4.0-beta.75
 [v4.0-beta.74]: https://github.com/gchq/stroom-query/compare/v4.0-beta.73...v4.0-beta.74
 [v4.0-beta.73]: https://github.com/gchq/stroom-query/compare/v4.0-beta.72...v4.0-beta.73
 [v4.0-beta.72]: https://github.com/gchq/stroom-query/compare/v4.0-beta.71...v4.0-beta.72
