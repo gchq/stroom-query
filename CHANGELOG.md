@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **#stroom#1083** : Added `any()`, `first()`, `last()`, `nth()`, `top()` and `bottom()` selection functions to select child values of grouped items.
+
+* Upgraded stroom expression to v1.5.10.
+
 ## [v2.2.17] - 2020-09-04
 
 * Upgraded stroom expression to v1.5.8.

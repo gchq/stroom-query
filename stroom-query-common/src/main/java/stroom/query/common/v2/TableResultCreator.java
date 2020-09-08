@@ -17,6 +17,7 @@
 package stroom.query.common.v2;
 
 import stroom.dashboard.expression.v1.Generator;
+import stroom.dashboard.expression.v1.Selector;
 import stroom.dashboard.expression.v1.Val;
 import stroom.query.api.v2.Field;
 import stroom.query.api.v2.OffsetRange;
@@ -108,6 +109,8 @@ public class TableResultCreator implements ResultCreator {
         final Items<Item> items = data.getChildMap().get(parentKey);
         if (items != null) {
             for (final Item item : items) {
+                final GroupKey groupKey = item.getKey();
+
                 // If the result is within the requested window (offset + length) then add it.
                 if (pos >= offset &&
                         resultList.size() < length) {
@@ -121,8 +124,33 @@ public class TableResultCreator implements ResultCreator {
                         if (item.getGenerators().length > i) {
                             final Generator generator = item.getGenerators()[i];
                             if (generator != null) {
-                                // Convert all list into fully resolved objects evaluating functions where necessary.
-                                final Val val = generator.eval();
+                                Val val;
+
+                                if (generator instanceof Selector) {
+                                    // If the generator is a selector then select a child row.
+                                    final Selector selector = (Selector) generator;
+                                    if (groupKey != null) {
+                                        final Items<Item> childItems = data.getChildMap().get(groupKey);
+                                        if (childItems != null && childItems.size() > 0) {
+                                            final List<Generator> childGenerators = new ArrayList<>(childItems.size());
+                                            for (final Item childItem : childItems) {
+                                                final Generator childGenerator = childItem.getGenerators()[i];
+                                                childGenerators.add(childGenerator);
+                                            }
+                                            val = selector.select(childGenerators.toArray(new Generator[0]));
+
+                                        } else {
+                                            val = selector.select(new Generator[0]);
+                                        }
+                                    } else {
+                                        val = selector.select(new Generator[0]);
+                                    }
+
+                                } else {
+                                    // Convert all list into fully resolved objects evaluating functions where necessary.
+                                    val = generator.eval();
+                                }
+
                                 string = fieldFormatter.format(field, val);
                             }
                         }
@@ -142,7 +170,7 @@ public class TableResultCreator implements ResultCreator {
                 pos++;
 
                 // Add child results if a node is open.
-                if (item.getKey() != null && openGroups != null && openGroups.contains(item.getKey().toString())) {
+                if (groupKey != null && openGroups != null && openGroups.contains(item.getKey().toString())) {
                     pos = addTableResults(data, fields, maxResults, offset, length, openGroups, resultList,
                             item.getKey(), depth + 1, pos);
                 }
