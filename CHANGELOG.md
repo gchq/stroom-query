@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **#stroom#1083** : Added `any()`, `first()`, `last()`, `nth()`, `top()` and `bottom()` selection functions to select child values of grouped items.
+
 ## [v2.2.18] - 2020-09-08
 
 * Issue **#stroom#1083** : Added `any()`, `first()`, `last()`, `nth()`, `top()` and `bottom()` selection functions to select child values of grouped items.
