@@ -63,18 +63,6 @@ public final class TableResult extends Result {
         this.totalResults = totalResults;
     }
 
-    public TableResult(final String componentId,
-                       final List<Field> fields,
-                       final List<Row> rows,
-                       final OffsetRange resultRange,
-                       final String error) {
-        super(componentId, error);
-        this.fields = fields;
-        this.rows = rows;
-        this.resultRange = resultRange;
-        this.totalResults = rows.size();
-    }
-
     public List<Field> getFields() {
         return fields;
     }
@@ -160,7 +148,7 @@ public final class TableResult extends Result {
 
         @Override
         public TableResult build() {
-            return new TableResult(getComponentId(), fields, rows, resultRange, getError());
+            return new TableResult(getComponentId(), fields, rows, resultRange, rows.size(), getError());
         }
     }
 }
