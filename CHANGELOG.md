@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.2.21] - 2020-10-19
+
 * Issue **#stroom#1906** : Change to allow search to terminate when enough results have been found.
 
 ## [v2.2.20] - 2020-10-16
@@ -350,7 +352,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.2.20...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.2.21...HEAD
+[v2.2.21]: https://github.com/gchq/stroom-query/compare/v2.2.20...v2.2.21
 [v2.2.20]: https://github.com/gchq/stroom-query/compare/v2.2.19...v2.2.20
 [v2.2.19]: https://github.com/gchq/stroom-query/compare/v2.2.18...v2.2.19
 [v2.2.18]: https://github.com/gchq/stroom-query/compare/v2.2.17...v2.2.18
