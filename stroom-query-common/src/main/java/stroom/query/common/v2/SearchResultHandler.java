@@ -52,9 +52,17 @@ public class SearchResultHandler implements ResultHandler {
         }
     }
 
+    /**
+     * Handle a set of search result payloads from a node.
+     * @param payloadMap
+     * @param hasTerminate
+     * @return
+     */
     @Override
-    public void handle(final Map<CoprocessorKey, Payload> payloadMap, final HasTerminate hasTerminate) {
-        if (payloadMap != null) {
+    public boolean handle(final Map<CoprocessorKey, Payload> payloadMap, final HasTerminate hasTerminate) {
+        boolean partialSuccess = true;
+        if (payloadMap != null && payloadMap.size() > 0) {
+            partialSuccess = false;
             for (final Entry<CoprocessorKey, Payload> entry : payloadMap.entrySet()) {
                 final Payload payload = entry.getValue();
                 if (payload instanceof TablePayload) {
@@ -63,11 +71,15 @@ public class SearchResultHandler implements ResultHandler {
                     final TablePayloadHandler payloadHandler = handlerMap.get(entry.getKey());
                     final UnsafePairQueue<GroupKey, Item> newQueue = tablePayload.getQueue();
                     if (newQueue != null) {
-                        payloadHandler.addQueue(newQueue, hasTerminate);
+                        final boolean success = payloadHandler.addQueue(newQueue, hasTerminate);
+                        if (success) {
+                            partialSuccess = true;
+                        }
                     }
                 }
             }
         }
+        return partialSuccess;
     }
 
     public TablePayloadHandler getPayloadHandler(final String componentId) {
@@ -86,15 +98,5 @@ public class SearchResultHandler implements ResultHandler {
             return tablePayloadHandler.getData();
         }
         return null;
-    }
-
-    @Override
-    public void waitForPendingWork(final HasTerminate hasTerminate) {
-        // wait for each handler to complete any outstanding work
-        // We have been told the search is complete but the TablePayloadHandlers may still be doing work
-        // so wait for them
-        for (final TablePayloadHandler handler : handlerMap.values()) {
-            handler.waitForPendingWork(hasTerminate);
-        }
     }
 }

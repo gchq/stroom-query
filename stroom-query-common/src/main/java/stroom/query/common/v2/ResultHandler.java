@@ -22,9 +22,7 @@ import stroom.util.shared.HasTerminate;
 import java.util.Map;
 
 public interface ResultHandler {
-    void handle(Map<CoprocessorKey, Payload> payloadMap, HasTerminate hasTerminate);
+    boolean handle(Map<CoprocessorKey, Payload> payloadMap, HasTerminate hasTerminate);
 
     Data getResultStore(String componentId);
-
-    void waitForPendingWork(HasTerminate hasTerminate);
 }
