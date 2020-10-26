@@ -1,0 +1,16 @@
+stroom.datasource.api.v2
+stroom.docref
+stroom.mapreduce.v2
+stroom.query.api.v2
+stroom.query.audit
+stroom.query.audit.client
+stroom.query.audit.logback
+stroom.query.audit.model
+stroom.query.audit.rest
+stroom.query.audit.service
+stroom.query.authorisation
+stroom.query.common.v2
+stroom.query.common.v2.format
+stroom.query.security
+stroom.query.shared.v2
+stroom.query.util
