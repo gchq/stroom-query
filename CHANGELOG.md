@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Issue **#stroom#1906** : Change to allow search to terminate when enough results have been found.
+
+* Issue **#stroom#1907** : Fixed NPE.
 
 ## [v4.0-beta.75] - 2020-09-08
 
