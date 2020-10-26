@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.0-beta.76] - 2020-10-26
+
 * Issue **#stroom#1906** : Change to allow search to terminate when enough results have been found.
 
 * Issue **#stroom#1907** : Fixed NPE.
@@ -494,7 +496,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Removed null from fields and values in toString()
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.75...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v4.0-beta.76...HEAD
+[v4.0-beta.76]: https://github.com/gchq/stroom-query/compare/v4.0-beta.75...v4.0-beta.76
 [v4.0-beta.75]: https://github.com/gchq/stroom-query/compare/v4.0-beta.74...v4.0-beta.75
 [v4.0-beta.74]: https://github.com/gchq/stroom-query/compare/v4.0-beta.73...v4.0-beta.74
 [v4.0-beta.73]: https://github.com/gchq/stroom-query/compare/v4.0-beta.72...v4.0-beta.73
