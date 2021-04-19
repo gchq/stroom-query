@@ -17,7 +17,7 @@ sourceSets {
     // This lets us use different directories for our integration tests.
     integrationTest {
         java {
-            compileClasspath += main.output + test.output
+            
             runtimeClasspath += main.output + test.output
             srcDir file('src/integration-test/java')
         }
@@ -27,13 +27,13 @@ sourceSets {
 
 configurations {
     // This means our integration tests get all the dependencies from our tests and we don't need to specify them twice.
-    integrationTestCompile.extendsFrom testCompile
-    integrationTestRuntime.extendsFrom testRuntime
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
 }
 
 // This task lets us run the actual integration tests.
 task integrationTest(type: Test) {
-    testClassesDir = sourceSets.integrationTest.output.classesDir
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
     classpath = sourceSets.integrationTest.runtimeClasspath
     testLogging {
         events "standardOut", "started", "passed", "skipped", "failed"
@@ -51,31 +51,33 @@ tasks.withType(Test) {
 
 dependencies {
     //--------Project----------
-    compile project(':stroom-query-api')
-    compile project(':stroom-query-common')
-    compile project(':stroom-query-audit')
+    implementation project(':stroom-query-api')
+    implementation project(':stroom-query-common')
+    implementation project(':stroom-query-audit')
 
     //--------Stroom libs------
-    compile libs.eventLogging
-    compile libs.stroomExpression
+    implementation libs.eventLogging
+    implementation libs.stroomExpression
 
     //--------3rd party--------
-    compile libs.kafka
-    compile libs.dropwizard_auth
-    compile libs.dropwizard_auth_jwt
-    compile libs.slf4j_api
+    implementation libs.kafka
+    implementation libs.dropwizard_auth
+    implementation libs.dropwizard_auth_jwt
+    implementation libs.dropwizard_hibernate
+    implementation libs.slf4j_api
 
-    compile libs.junit
-    compile libs.assertj
-    compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
-    compile libs.wiremock
+    implementation libs.junit
+    implementation libs.assertj
+    implementation 'org.apache.directory.studio:org.apache.commons.io:2.4'
+    implementation libs.wiremock
 
-    compile libs.dropwizard_testing
+    implementation libs.dropwizard_testing
 
-    integrationTestCompile libs.dropwizard_core
-    integrationTestCompile libs.jackson_annotations
-    integrationTestCompile libs.dropwizard_flyway
-    integrationTestCompile project(':stroom-query-hibernate')
-    integrationTestRuntime libs.mariadb_connector
-    integrationTestRuntime 'org.apache.derby:derby:10.8.2.2'
+    integrationTestImplementation libs.dropwizard_core
+    integrationTestImplementation libs.jackson_annotations
+    integrationTestImplementation libs.dropwizard_flyway
+    integrationTestImplementation project(':stroom-query-hibernate')
+    integrationTestImplementation project(':stroom-query-testing') // so the ITs can see the classes in main/java
+    integrationTestRuntimeOnly libs.mariadb_connector
+    integrationTestRuntimeOnly 'org.apache.derby:derby:10.8.2.2'
 }

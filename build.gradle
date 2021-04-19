@@ -1,6 +1,6 @@
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.1'
-}
+//task wrapper(type: Wrapper) {
+    //gradleVersion = '4.1'
+//}
 
 //if the project has a value for the passed property (i.e from the cmd line via -PpropName=xxx)
 //use that, else use a default value
@@ -72,7 +72,7 @@ buildscript {
     }
     dependencies {
         classpath 'ca.cutterslade.gradle:gradle-dependency-analyze:1.1.0'
-        classpath 'com.benjaminsproule:swagger-gradle-plugin:0.1.2'
+        classpath 'com.benjaminsproule:swagger-gradle-plugin:1.0.14'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
     }
 }
@@ -114,8 +114,8 @@ subprojects {
     }
 
     dependencies {
-        testCompile libs.junit
-        testCompile libs.mockito_core
+        testImplementation libs.junit
+        testImplementation libs.mockito_core
     }
 
     task sourcesJar(type: Jar, dependsOn: classes) {
@@ -231,6 +231,8 @@ project(':stroom-query-testing') {
     }
 }
 
+// This is so we can publish the javadoc for all sub projects as a single aggregated set on
+// github pages. It is in addition to the javadoc generated for maven publishing.
 task aggregatedJavadocs(
     type: Javadoc, 
     description: 'Generate javadocs from all child projects as if it was a single project', 
