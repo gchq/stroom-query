@@ -16,8 +16,8 @@
 
 dependencies {
     //--------Project----------
-    implementation project(':stroom-query-api')
-    implementation project(':stroom-query-common')
+    api project(':stroom-query-api')
+    api project(':stroom-query-common')
 
     //--------Stroom libs------
     implementation libs.eventLogging
