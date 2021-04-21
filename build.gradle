@@ -2,6 +2,8 @@ buildscript {
     repositories {
         mavenLocal()
         mavenCentral()
+        // Public sonatype for when we are waiting for it to be synced with central
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
     dependencies {
         classpath 'ca.cutterslade.gradle:gradle-dependency-analyze:1.1.0'
@@ -33,7 +35,7 @@ ext.versions = [
     stroomQuery: getPropertyOrDefault('version', 'SNAPSHOT'),
 
     //------Stroom-libs---------------
-    stroomExpression: 'v1.5.10',
+    stroomExpression: '1.5.15',
     eventLogging: 'v3.1.2_schema-v3.1.2',
 
     //------------3rd-party------------
@@ -50,7 +52,7 @@ ext.versions = [
 ext.libs = [
     //------Stroom-libs---------------
     eventLogging: "event-logging:event-logging:$versions.eventLogging",
-    stroomExpression: "stroom:stroom-expression:$versions.stroomExpression",
+    stroomExpression: "uk.gov.gchq.stroom.expression:stroom-expression:$versions.stroomExpression",
 
     //------------3rd-party------------
     assertj: 'org.assertj:assertj-core:3.8.0',
@@ -148,6 +150,9 @@ subprojects {
     repositories {
         mavenLocal()
         mavenCentral()
+        // Public sonatype for when we are waiting for it to be synced with central
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+
         maven { url "https://dl.bintray.com/stroom/event-logging" }
         maven { url "https://dl.bintray.com/stroom/stroom" }
     }
