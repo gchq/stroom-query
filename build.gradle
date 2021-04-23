@@ -2,11 +2,9 @@ buildscript {
     repositories {
         mavenLocal()
         mavenCentral()
-        // Public sonatype for when we are waiting for it to be synced with central
-        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
     dependencies {
-        classpath 'ca.cutterslade.gradle:gradle-dependency-analyze:1.1.0'
+        classpath 'ca.cutterslade.gradle:gradle-dependency-analyze:1.5.2'
         classpath 'com.benjaminsproule:swagger-gradle-plugin:1.0.14'
     }
 }
@@ -16,13 +14,29 @@ plugins {
     id "io.github.gradle-nexus.publish-plugin" version "1.0.0"
 }
 
+ext.isPropertySet = { propName ->
+    if (!project.hasProperty(propName)) {
+        return false
+    } else {
+        def prop = project.getProperty(propName)
+        return (prop != "unspecified" && (prop != "" || prop != null))
+    }
+}
+
+ext.ensurePropertyIsSet = { propName -> 
+    if (!isPropertySet(propName)) {
+        throw new GradleException(
+            "Expecting project property [${propName}] or env var [ORG_GRADLE_PROJECT_${propName}] to be set.")
+    }
+}
+
 //if the project has a value for the passed property (i.e from the cmd line via -PpropName=xxx)
 //use that, else use a default value
-ext.getPropertyOrDefault = { propName, defaultValue -> 
+ext.getPropertyOrDefault = { propName, defaultValue ->
     def val;
-    if (project.hasProperty(propName) && project.getProperty(propName) != "unspecified" && project.getProperty(propName) != "") {
+    if (isPropertySet(propName)) {
         val = project.getProperty(propName)
-        println "Using property [$propName] with value [$val]"
+        println "Getting property [$propName] with value [$val]"
     } else {
         val = defaultValue
         println "Property [$propName] has no value, using default value [$val]"
@@ -32,11 +46,11 @@ ext.getPropertyOrDefault = { propName, defaultValue ->
 
 ext.versions = [
     //----------Stroom-----------------
-    stroomQuery: getPropertyOrDefault('version', 'SNAPSHOT'),
+    stroomQuery: getPropertyOrDefault('version', 'SNAPSHOT').replaceFirst(/^v/, ""),
 
     //------Stroom-libs---------------
     stroomExpression: '1.5.15',
-    eventLogging: 'v3.1.2_schema-v3.1.2',
+    eventLogging: '3.3.0_schema-v3.3.1',
 
     //------------3rd-party------------
     dropwizard: '1.3.14',
@@ -50,8 +64,8 @@ ext.versions = [
 
 //dependency strings for use in sub projects
 ext.libs = [
-    //------Stroom-libs---------------
-    eventLogging: "event-logging:event-logging:$versions.eventLogging",
+    //------GCHQ-libs---------------
+    eventLogging: "uk.gov.gchq.eventlogging:event-logging:$versions.eventLogging",
     stroomExpression: "uk.gov.gchq.stroom.expression:stroom-expression:$versions.stroomExpression",
 
     //------------3rd-party------------
@@ -79,13 +93,28 @@ ext.libs = [
     zzDUMMYzz: "makes sorting easier"
 ]
 
+ext.isReleaseBuild = !versions.stroomQuery.endsWith('SNAPSHOT')
 
-//defines a list of gradle projects that we will publish with maven/bintray
+if (isReleaseBuild) {
+    println "This is a release build for maven version [${versions.stroomQuery}]"
+    // Ensure the various props are set for signing and publishing to sonatype
+
+    // The username for Sonatype OSSRH Jira account
+    ensurePropertyIsSet("sonatypeUsername")
+    // The password for Sonatype OSSRH Jira account
+    ensurePropertyIsSet("sonatypePassword")
+    // The GPG2 secret key in ascii armour format, base64 encoded
+    ensurePropertyIsSet("signingKey")
+    // The password for the GPG2 secret key
+    ensurePropertyIsSet("signingPassword")
+}
+
+//defines a list of gradle projects that we will publish with maven
 def projectsToBePublished = subprojects.findAll { project ->
     project.path in [
-            ':stroom-query-api',
-            ':stroom-query-common',
-            ':stroom-query-audit',
+        ':stroom-query-api',
+        ':stroom-query-common',
+        ':stroom-query-audit',
     ]
 }
 
@@ -144,17 +173,13 @@ void configureSigning(Project project) {
 subprojects {
     apply plugin: 'java-library'
     apply plugin: 'idea'
+
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 
     repositories {
         mavenLocal()
         mavenCentral()
-        // Public sonatype for when we are waiting for it to be synced with central
-        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
-
-        maven { url "https://dl.bintray.com/stroom/event-logging" }
-        maven { url "https://dl.bintray.com/stroom/stroom" }
     }
 
     dependencies {
@@ -194,16 +219,9 @@ configure(projectsToBePublished) {
                     }
                     developers {
                         developer {
-                            id = 'at055612'
-                            name = 'at055612'
-                        }
-                        developer {
-                            id = 'gcdev373'
-                            name = 'gcdev373'
-                        }
-                        developer {
-                            id = 'stroomdev66'
-                            name = 'stroomdev66'
+                            name = 'GCHQDevelopers'
+                            organization = 'GCQH'
+                            organizationUrl = 'https://github.com/gchq'
                         }
                     }
                     scm {
@@ -220,7 +238,6 @@ configure(projectsToBePublished) {
     if(hasSigningKey) {
         configureSigning(project)
     }
-
 }
 
 // Uses sonotypeUsername and sonotypePassword
@@ -229,24 +246,6 @@ configure(projectsToBePublished) {
 nexusPublishing {
     repositories {
         sonatype()    //sonatypeUsername and sonatypePassword properties are used automatically
-        //sonatype {  //only for users registered in Sonatype after 24 Feb 2021
-            ////nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-            ////snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-            //nexusUrl.set(uri("http://localhost:8081/service/local/"))
-            //snapshotRepositoryUrl.set(uri("https://localhost:8081/content/repositories/snapshots/"))
-        //}
-
-        //myStroomQueryNexus {
-            ////nexusUrl = uri("http://localhost:8081/repository/maven-releases/")
-            //nexusUrl = uri("http://localhost:8081/nexus/service/local/")
-            //snapshotRepositoryUrl = uri("http://localhost:8081/repository/maven-snapshots/")
-
-            ////nexusUrl = uri('http://localhost:8081/nexus/content/repositories/releases/')
-            ////snapshotRepositoryUrl = uri('http://localhost:8081/nexus/content/repositories/internal-snapshots/')
-
-            //username = "admin" // defaults to project.properties["myNexusUsername"]
-            //password = "admin" // defaults to project.properties["myNexusPassword"]
-        //}
     }
     // these are not strictly required. The default timeouts are set to 1 minute. But Sonatype can be really slow.
     // If you get the error "java.net.SocketTimeoutException: timeout", these lines will help.
