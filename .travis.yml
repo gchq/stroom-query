@@ -20,7 +20,8 @@ deploy:
       branch: master
   - provider: releases
     api_key:
-      secure: jTnDLFXggrKm/Cz7aaXDTs7LBA8d247nw+65WMF6HAaTmtGqSPmD0oTwQbDdaywAtLhubP5q5fVjG1XLNvSSnugvb7fTeKH/XNQLQFauhlP8jpIT3izCqPpqbts8i6j33nbWxk93ZlKpYwGYNpuNoNSKMO9im4VlZnkcgYnErQ4YwrLyfZFmYTts/WP2LSzPq/eVCsVWA+Cw1/NhJ1pw8WF2uOk1cmIo/KdfKHMEyMNLBjpkdDHwp3tkK7uIlPYQrggUhV9jUysFrkKGyFXKQK0lTVh6UxySIlpnO4/7WQWSve3LLjGa8u7CBittX7PYPw0YC5wXf7qFw/MOx70L2Gp+9ctA4M9EyOCjGrWi6o79P8M+cWc3AweQNS9vAbDPGwhEqZPR6IgnxdDLxLiRA0eeGvbE/J6v3XC2VIeos6fbLc7ul6MnYQyY2UKaMS26bDkrr9DmS40G2G4FPddqlHhSVgbRBDFAFBhr843RmCl+nt0O84OxdYYzJavEJWb2fTVpzU3+5nZGYRMStZbiF80aIDFMiVqUMVy1Nhl8c7WI/sxGZGl0LvngM+RXItm8hB5QkeT2k3eqbnTnjZp1j+XjBTvRYZwZynlY/X8LALyfU52FbU8XzXmTVoC1jRH3/vkKY5oPZ0MTxeRUdR+IAT3aU9ZcQsprV2VgKwPaBQQ=
+      # travis encrypt -r gchq/stroom-query <github personal access token>
+      secure: "ZmGpSoZooj4qvKBu/64mV2UCZ/f/9HgTy79IhxEWj+sd9VufWM48DrLRqRyNJJQkNJy0JNJaZ7eM9A84Wlu2rXsqaeFIv0709rZ+N5Zssc+0JgHztftLVfiNbDeSN5YZQ8cHajZPouoS5HGc/g22A6/+w/efKteoXHxm8aHWO8LZpjqx5V8CePmyHn/QGtINlares835vFua1KUzfr/hj0G0Tbs6XYAOBylNafreWNH2MnthalCPMe7d4xwoBCYHrO2+tHnH++UrPG2PNVrx7DTwRdUewE5QlVzh4n3Vv8XXHd4t95a49A01X5r+LYGv3gLXU7/fkvLjx6kIXJXthRr4kYh5EJ9z52pjY6QrMxYVbAAbUVcOxjJoBsatBeEclQ8r5Rst29Gjl9ZPE14d00uom977znEUMRuqJ1pXXQ7lYJxD7AHeA/Q5sN8wBnyWHNiic3H5nSegzXF4emNLKL2vqATwNNg6n9XLZ4RZxJ1w4rSIV/r1Se4Zf+Wq5+JreRC+d1uSQHpbKhbr9D0SAW/Shu5cHeHIRA54mPgSejY4p5vfH6B+7g/WdPxKaQKuyYU04PtX0SwjqJu5KLAtp9CwN2oZujDlNGf1D7UnSZrRHqttZQoAFa8m7Ywh35OmJgYDOXQHrDwE2RXeW/C6kD4MlMjnMeCevMCq1/UAwBQ="
     file_glob: true
     file:
       - stroom-query-api/build/libs/stroom-query-api-*.jar
