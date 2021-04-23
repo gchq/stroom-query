@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v2.2.22] - 2021-04-23
+
 * Change to use event-logging v3.3.0_schema-v3.3.1 from maven central.
 * Change to use stroom-expression from maven central.
 
@@ -355,7 +357,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * Initial release
 
-[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.2.21...HEAD
+[Unreleased]: https://github.com/gchq/stroom-query/compare/v2.2.22...HEAD
+[v2.2.22]: https://github.com/gchq/stroom-query/compare/v2.2.21...v2.2.22
 [v2.2.21]: https://github.com/gchq/stroom-query/compare/v2.2.20...v2.2.21
 [v2.2.20]: https://github.com/gchq/stroom-query/compare/v2.2.19...v2.2.20
 [v2.2.19]: https://github.com/gchq/stroom-query/compare/v2.2.18...v2.2.19
