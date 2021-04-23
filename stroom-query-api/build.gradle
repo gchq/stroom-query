@@ -16,7 +16,7 @@
 
 
 dependencies {
-    api libs.jackson_annotations
-    api libs.swagger_annotations
+    implementation libs.jackson_annotations
+    implementation libs.swagger_annotations
 }
 

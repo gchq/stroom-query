@@ -22,6 +22,7 @@ dependencies {
     api libs.stroomExpression
 
     //--------3rd party api--------
+    // TODO are these really part of the api?
     api libs.jackson_databind
     api libs.jackson_annotations
     api libs.jackson_core
