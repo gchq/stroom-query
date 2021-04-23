@@ -16,20 +16,22 @@
 
 dependencies {
     //--------Project----------
-    compile project(':stroom-query-api')
+    api project(':stroom-query-api')
 
     //--------Stroom libs------
-    compile libs.stroomExpression
+    api libs.stroomExpression
 
-    //--------3rd party--------
-    compile libs.guava
-    compile libs.jackson_databind
-    compile libs.jackson_annotations
-    compile libs.jackson_core
-    compile libs.slf4j_api
+    //--------3rd party api--------
+    api libs.jackson_databind
+    api libs.jackson_annotations
+    api libs.jackson_core
+
+    //--------3rd party impl--------
+    implementation libs.guava
+    implementation libs.slf4j_api
 
     //--------testing----------
-    testCompile libs.assertj
-    testCompile libs.logback_classic
-    testCompile libs.logback_core
+    testImplementation libs.assertj
+    testImplementation libs.logback_classic
+    testImplementation libs.logback_core
 }

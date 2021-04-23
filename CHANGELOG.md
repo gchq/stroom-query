@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Change to use event-logging v3.3.0_schema-v3.3.1 from maven central.
+* Change to use stroom-expression from maven central.
+
 ## [v2.2.21] - 2020-10-19
 
 * Issue **#stroom#1906** : Change to allow search to terminate when enough results have been found.

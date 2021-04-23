@@ -18,14 +18,14 @@ apply plugin: 'com.benjaminsproule.swagger'
 
 dependencies {
     //--------Project----------
-    compile project(':stroom-query-api')
+    implementation project(':stroom-query-api')
 
     //--------3rd party--------
-    compile libs.jackson_databind
-    compile libs.jackson_annotations
-    compile libs.jackson_core
-    compile libs.swagger_annotations
-    compile libs.ws_rs_api
+    implementation libs.jackson_databind
+    implementation libs.jackson_annotations
+    implementation libs.jackson_core
+    implementation libs.swagger_annotations
+    implementation libs.ws_rs_api
 }
 
 //Generate swagger specs for the ExamplEndpoint
@@ -34,7 +34,7 @@ dependencies {
 swagger {
     apiSource {
         springmvc = false //makes it search for jersey annotations
-        outputFormats = 'json,yaml'
+        outputFormats =[ 'json', 'yaml']
         locations = [ 'stroom.query.api.v2.sample.ExampleEndpoint' ]
         schemes = [ 'http', 'https' ]
         host = 'localhost:8080'

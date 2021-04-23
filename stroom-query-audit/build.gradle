@@ -16,17 +16,17 @@
 
 dependencies {
     //--------Project----------
-    compile project(':stroom-query-api')
-    compile project(':stroom-query-common')
+    api project(':stroom-query-api')
+    api project(':stroom-query-common')
 
     //--------Stroom libs------
-    compile libs.eventLogging
-    compile libs.stroomExpression
+    implementation libs.eventLogging
+    implementation libs.stroomExpression
 
     //--------3rd party--------
-    compile libs.kafka
-    compile libs.dropwizard_core
-    compile libs.dropwizard_auth
-    compile libs.dropwizard_auth_jwt
-    compile libs.slf4j_api
+    implementation libs.kafka
+    implementation libs.dropwizard_core
+    implementation libs.dropwizard_auth
+    implementation libs.dropwizard_auth_jwt
+    implementation libs.slf4j_api
 }
