@@ -209,7 +209,7 @@ configure(projectsToBePublished) {
 
                 pom {
                     name = project['name']
-                    description = project['description']
+                    description = "Library for describing a search query, the required result presentation and its output."
                     url = 'https://github.com/gchq/stroom-query'
                     licenses {
                         license {
